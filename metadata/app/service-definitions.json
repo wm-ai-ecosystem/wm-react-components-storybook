@@ -1,0 +1,41 @@
+{
+  "serviceDefs": {
+    "randomuser_invoke": {
+      "id": "randomuser_invoke",
+      "crudOperationId": null,
+      "service": "randomuser",
+      "controller": "randomuser",
+      "operationType": null,
+      "type": "randomuser.RootResponse",
+      "wmServiceOperationInfo": {
+        "name": "invoke",
+        "methodType": "get",
+        "relativePath": "/randomuser/api/",
+        "directPath": "https://randomuser.me/api/",
+        "httpMethod": "get",
+        "parameters": [
+          {
+            "name": "results",
+            "parameterType": "query",
+            "required": false,
+            "type": "String",
+            "readOnly": false,
+            "contentType": null
+          }
+        ],
+        "definitions": {},
+        "produces": ["application/json"],
+        "consumes": ["application/json"],
+        "proxySettings": {
+          "web": false,
+          "mobile": false,
+          "withCredentials": false
+        },
+        "securityDefinitions": []
+      }
+    }
+  },
+  "securityDefinitions": {
+    "oauthProvider": {}
+  }
+}
