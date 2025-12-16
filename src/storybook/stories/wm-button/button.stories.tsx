@@ -17,7 +17,7 @@ const mockListener = {
 };
 
 const meta = {
-  title: "Components/Form/Button",
+  title: "Basic/Button",
   component: ButtonDefaultExport,
   argTypes: {
     caption: { control: "text" },

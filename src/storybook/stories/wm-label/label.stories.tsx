@@ -12,7 +12,7 @@ const mockListener = {
 };
 
 const meta = {
-  title: "Components/Basic/Label",
+  title: "Basic/Label",
   component: LabelDefaultExport,
   argTypes: {
     type: {

@@ -5,7 +5,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import AnchorDefaultExport from "../../../components/basic/anchor/index";
 
 const meta = {
-  title: "Components/Basic/Anchor",
+  title: "Basic/Anchor",
   component: AnchorDefaultExport,
   argTypes: {
     caption: { control: "text" },
