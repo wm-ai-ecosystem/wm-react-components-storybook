@@ -1,6 +1,8 @@
 import type { Preview } from "@storybook/nextjs-vite";
 import React from "react";
+import { Provider } from "react-redux";
 import { WidgetProvider } from "../src/context/WidgetProvider";
+import { store } from "../src/store";
 
 // Mock page context for Storybook
 const createMockPageContext = () => ({
@@ -19,19 +21,22 @@ const createMockProxy = () => ({
   },
 });
 
-// Decorator to wrap components with WidgetProvider
-const withWidgetProvider = (Story: any) => {
+// Decorator to wrap components with Redux Provider and WidgetProvider
+const withProviders = (Story: any) => {
   const mockContext = {
     value: createMockPageContext(),
     proxy: createMockProxy(),
   };
 
   return React.createElement(
-    WidgetProvider,
-    { 
-      value: mockContext,
-      children: React.createElement(Story) 
-    }
+    Provider,
+    { store, children: React.createElement(
+      WidgetProvider,
+      {
+        value: mockContext,
+        children: React.createElement(Story)
+      }
+    )}
   );
 };
 
@@ -51,7 +56,7 @@ const preview: Preview = {
       test: "todo",
     },
   },
-  decorators: [withWidgetProvider],
+  decorators: [withProviders],
 };
 
 export default preview;
