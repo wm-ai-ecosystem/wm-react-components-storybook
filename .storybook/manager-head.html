@@ -1,0 +1,198 @@
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  rel="stylesheet"
+/>
+<meta
+  name="description"
+  content="Wavemaker ReactNative components"
+  key="desc"
+/>
+<style>
+  @font-face {
+    font-family: "neurial-grotesk-bold";
+    src: url("fonts/neurialgrotesk-bold-webfont.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "neurial-grotesk-light";
+    src: url("fonts/neurialgrotesk-light-webfont.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "neurial-grotesk-medium";
+    src: url("fonts/neurialgrotesk-medium-webfont.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "neurial-grotesk-regular";
+    src: url("fonts/neurialgrotesk-regular-webfont.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+  }
+</style>
+
+<script type="text/javascript" ;>
+  const componentIcons = {
+    accordion: "fa-thin fa-bars-staggered",
+    anchor: "fa-thin fa-link",
+    alert: "fa-thin fa-triangle-exclamation",
+    breadcrumb: "fa-thin fa-ellipsis-h",
+    button: "fa-thin fa-diagram-predecessor",
+    buttongroup: "fa-thin fa-bars-progress",
+    barcodescanner: "fa-thin fa-barcode",
+    camera: "fa-thin fa-camera",
+    calendar: "fa-thin fa-calendar",
+    card: "fa-thin fa-id-card",
+    carousel: "fa-thin fa-sliders-h",
+    chart: "fa-thin fa-chart-pie",
+    checkbox: "fa-thin fa-square-check",
+    checkboxset: "fa-thin fa-list-check",
+    container: "fa-thing fa-square-full",
+    currency: "fa-thin fa-dollar-sign",
+    confirm: "fa-thing fa-circle-check",
+    chips: "fa-thin fa-tag",
+    design: "fa-thin fa-object-group",
+    date: "fa fa-calendar-day",
+    datetime: "fa fa-calendar-alt",
+    form: "fa-thin fa-pen-to-square",
+    fileupload: "fa-thin fa-file-upload",
+    gridlayout: "fa-thing fa-table-cells",
+    icon: "fa-thin fa-icons",
+    label: "fa-thin fa-align-center",
+    list: "fa-thin fa-list",
+    lottie: "fa-thin fa-fire-flame-curved",
+    liveform: "fa-thin fa-file-pen",
+    linearlayout: "fa-thin fa-grip",
+    login: "fa fa-sign-in-alt",
+    map: "fa-thin fa-map",
+    message: "fa-thin fa-message",
+    menu: "fa-thin fa-circle-chevron-down",
+    number: "fa fa-hashtag",
+    navbar: "fa fa-bars",
+    popover: "fa fa-info-circle",
+    panel: "fa-thin fa-columns",
+    picture: "fa-thin fa-images",
+    progressbar: "fa-thin fa-bars-progress",
+    progresscircle: "fa-thin fa-circle-notch",
+    radioset: "fa-thin fa-circle-dot",
+    rating: "fa-thin fa-star",
+    search: "fa-thin fa-magnifying-glass",
+    slider: "fa-thin fa-sliders",
+    spinner: "fa-thin fa-spinner",
+    select: "fa fa-caret-down",
+    selectlocale: "fa fa-globe",
+    tabs: "fa-thin fa-window-restore",
+    tile: "fa-thin fa-square-poll-vertical",
+    table: "fa-thin fa-table",
+    text: "fa-thin fa-text-width",
+    textarea: "fa-thin fa-align-left",
+    time: "fa-thin fa-clock",
+    toggle: "fa-thin fa-toggle-on",
+    tooltip: "fa-thin fa-circle-info",
+    tree: "fa-thin fa-tree",
+    video: "fa-thin fa-video",
+    webview: "fa-thin fa-globe",
+    wizard: "fa-thin fa-circle-nodes",
+    areachart: "fa fa-chart-area",
+    barchart: "fa fa-chart-bar",
+    bubblechart: "fa fa-circle",
+    columnschart: "fa fa-chart-column",
+    donutchart: "fa fa-circle-notch",
+    linechart: "fa fa-chart-line",
+    piechart: "fa fa-pie-chart",
+    bottomsheet:'fa-thin fa-file'
+  };
+
+  document.addEventListener("DOMContentLoaded", () => {
+    // Function to replace SVGs with FontAwesome icons
+    const replaceSVGs = () => {
+      const sidebarItems = document.querySelectorAll(
+        '[data-nodetype="component"]:not(.icon-replaced)'
+      );
+
+      sidebarItems.forEach((sidebarItem) => {
+        sidebarItem.classList.add("icon-replaced");
+        const svgElement = sidebarItem.querySelector("button > div > svg");
+        if (svgElement) {
+          svgElement.remove();
+        }
+
+        const name = sidebarItem.getAttribute("data-item-id")?.split("-")[1];
+        const iconClass = componentIcons[name] || "fa-solid fa-border-all";
+
+        const newIcon = document.createElement("i");
+        newIcon.className = `fas ${iconClass}`;
+        newIcon.classList.add("css-1e3avu6");
+
+        const target = sidebarItem.querySelector("button > div");
+        if (target) {
+          target.prepend(newIcon);
+        }
+      });
+    };
+
+    // Function to handle auto-collapse logic
+    const setupAutoCollapse = () => {
+      const sidebarItems = document.querySelectorAll(
+        '[data-nodetype="component"]:not(.listener-added)'
+      );
+
+      // Keep track of the currently open item
+      let currentOpenItem = null;
+
+      // Find initially open item
+      sidebarItems.forEach((item) => {
+        if (item.querySelector('button[aria-expanded="true"]')) {
+          currentOpenItem = item;
+        }
+      });
+
+      sidebarItems.forEach((item) => {
+        item.classList.add("listener-added");
+        item.addEventListener("click", (event) => {
+          const button = item.querySelector("button");
+          const isExpanded = button?.getAttribute("aria-expanded") === "true";
+          // If clicking the same item that's already open, let Storybook handle it
+          if (currentOpenItem === item) {
+            currentOpenItem = null;
+            return;
+          }
+
+          // Close the previously open item if it exists
+          if (currentOpenItem) {
+            const prevButton = currentOpenItem.querySelector("button");
+            if (prevButton) {
+              prevButton.click();
+            }
+          }
+
+          if (!isExpanded) {
+            currentOpenItem = item;
+          }
+        });
+      });
+    };
+
+    // MutationObserver to monitor when the sidebar is added/updated
+    const observer = new MutationObserver((mutationsList) => {
+      for (const mutation of mutationsList) {
+        if (mutation.type === "childList") {
+          const sidebar = document.querySelector(".sidebar-container");
+          if (sidebar) {
+            replaceSVGs(); // Replace SVGs
+            setupAutoCollapse(); // Setup auto-collapse logic
+          }
+        }
+      }
+    });
+
+    // Start observing the DOM for sidebar injection
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+</script>
