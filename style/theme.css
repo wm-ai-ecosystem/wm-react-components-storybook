@@ -223,6 +223,22 @@ div.sidebar-item[data-selected=true], div.css-13zuqpq[data-selected=true].css-13
   color: var(--color-primary);
 }
 
+.sidebar-item .css-c33v33{
+  width: 100%;
+    cursor: pointer;
+    color: inherit;
+    display: flex;
+    gap: 6px;
+    flex: 1 1 0%;
+    align-items: center;
+    padding-left: 40px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 14px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
 /* leftnav beside search */
 .search-field + .css-m2r9xm{
   display: none !important;
