@@ -57,7 +57,8 @@ export const Basic: Story = {
     caption: "Label",
     required: false,
     type: "p",
-    className:"text-primary"
+    className:"text-primary",
+    hint:"This is a basic label"
   },  
 };
 

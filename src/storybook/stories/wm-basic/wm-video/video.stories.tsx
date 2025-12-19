@@ -62,6 +62,7 @@ export const Basic: Story = {
     loop:false,
     videopreload: "none",
     showcontrols: true,
+    muted: false,
   },
 };
 

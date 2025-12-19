@@ -62,6 +62,7 @@ export const Basic: Story = {
     type: "default",
     minvalue: 0,
     maxvalue: 100,
+    captionplacement: "inside",
   },
 };
 
