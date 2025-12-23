@@ -80,6 +80,9 @@ const WmNumber = memo(
         (value: number | null) => {
           const validation = validateNumber(value);
           setShowError(!validation.isValid);
+          if (prevDatavalue === value) {
+            return;
+          }
 
           if (onChange || listener?.onChange) {
             const syntheticEvent = {
@@ -144,8 +147,8 @@ const WmNumber = memo(
 
       if (updateon === "keypress") {
         debouncedUpdateValue(result.newVal);
+        onChange?.(event, listener?.Widgets?.[name], result.newVal, prevDatavalue);
       }
-      onChange?.(event, listener?.Widgets?.[name], result.newVal, prevDatavalue);
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -160,7 +163,7 @@ const WmNumber = memo(
 
       onBlur?.(e, listener?.Widgets?.[name]);
       const validation = validateNumber(datavalue);
-      if (!validation.isValid && required) {
+      if (!validation.isValid && (required || maxvalue || minvalue)) {
         setIsDirty(true);
       } else {
         setIsDirty(false);
@@ -216,11 +219,12 @@ const WmNumber = memo(
 
     useEffect(() => {
       if (inputEl.current) {
-        listener.onChange(props.name, {
-          focus: () => {
-            inputEl.current?.focus();
-          },
-        });
+        const focus = () => {
+          inputEl.current?.focus();
+        };
+        if (listener?.Widgets[name]) {
+          listener.Widgets[name].focus = focus;
+        }
       }
     }, []);
 
@@ -238,6 +242,7 @@ const WmNumber = memo(
     return (
       <TextField
         {...events}
+        hidden={props.hidden}
         title={hint || "Number Input"}
         name={name}
         inputRef={inputEl}
@@ -316,6 +321,8 @@ const WmNumber = memo(
       "minvalue",
       "maxvalue",
       "className",
+      "hidden",
+      "show",
     ];
     return keys.every(key => prev[key] === current[key]);
   }

@@ -76,6 +76,7 @@ export const WmIframe: React.FC<WmIframeProps> = props => {
       height={height}
       style={styles}
       title={hint}
+      hidden={props.hidden}
     >
       <Box
         seamless={true}

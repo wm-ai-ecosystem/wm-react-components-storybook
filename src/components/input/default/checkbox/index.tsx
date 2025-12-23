@@ -96,14 +96,14 @@ export const WmCheckbox = memo(
 
     const handleBlur = useCallback(
       (event: React.FocusEvent<HTMLInputElement>) => {
-        onBlur?.(event);
+        onBlur?.(event, listener?.Widgets[name]);
       },
       [onBlur]
     );
 
     const handleFocus = useCallback(
       (event: React.FocusEvent<HTMLInputElement>) => {
-        onFocus?.(event);
+        onFocus?.(event, listener?.Widgets[name]);
       },
       [onFocus]
     );
@@ -185,16 +185,19 @@ export const WmCheckbox = memo(
 
     return (
       <div
+        hidden={props.hidden ?? false}
         className={checkboxClasses}
-        style={props.styles}
+        style={{ height: "100%" }}
         {...((name ? { name } : {}) as HtmlHTMLAttributes<HTMLDivElement>)}
         {...((caption ? { caption } : {}) as HtmlHTMLAttributes<HTMLDivElement>)}
         {...(type === "toggle" ? { type: "toggle" } : {})}
+        disabled={disabled}
       >
         <Box
           component="label"
           className={`wm-checkbox-label ${!isChecked ? "unchecked" : ""} ${disabled || readonly ? "disabled" : ""} ${required && caption ? "required" : ""}`}
           onKeyDown={handleKeyDown}
+          style={props.styles}
         >
           <Input
             {...events}
@@ -231,7 +234,7 @@ export const WmCheckbox = memo(
           aria-hidden="true"
           tabIndex={-1}
           disabled={disabled}
-          value={actualValue === null || actualValue === undefined ? "" : String(actualValue)} // Handle null/undefined values
+          value={actualValue === null || actualValue === undefined ? "false" : String(actualValue)} // Handle null/undefined values
         />
       </div>
     );
@@ -249,6 +252,7 @@ export const WmCheckbox = memo(
       "tabindex",
       "type",
       "className",
+      "hidden",
     ];
     return keys.every(key => prev[key] === next[key]);
   }
@@ -256,4 +260,4 @@ export const WmCheckbox = memo(
 
 WmCheckbox.displayName = "WmCheckbox";
 
-export default withFormController(withBaseWrapper(WmCheckbox));
+export default withBaseWrapper(withFormController(WmCheckbox));

@@ -7,6 +7,8 @@ import appstore from "@wavemaker/react-runtime/core/appstore";
 import { getPrefabDefinitions } from "@wavemaker/react-runtime/store/slices/appConfigSlice";
 import PrefabProvider from "@wavemaker/react-runtime/context/PrefabContext";
 import { WmSpinner } from "@/components/basic/spinner";
+import withBaseWrapper from "./withBaseWrapper";
+import { metadataService } from "@wavemaker/react-runtime/variables/metadata.service";
 
 interface ComponentInfo {
   type: "PARTIAL" | "PREFAB";
@@ -41,13 +43,12 @@ export const BasePrefab = <P extends object>(
 
       const [loading, setLoading] = useState<boolean>(prefabDefinitions ? false : true);
       const [serviceDefs, setServiceDefs] = useState<Record<string, any>>(prefabDefinitions || {});
-      const baseUrl = appConfig?.url
-        ? `${appConfig.url}/services/prefabs/${prefabname}/servicedefs`
-        : "";
+      const baseUrl = appConfig?.url || "";
       // Fetch service definitions when component mounts only if not already in state
       useEffect(() => {
         // Skip fetching if we already have the definitions in state
         if (prefabDefinitions || !baseUrl) {
+          metadataService.setMetadata(prefabDefinitions || {}, prefabname);
           setLoading(false);
           return;
         }
@@ -59,17 +60,22 @@ export const BasePrefab = <P extends object>(
             return;
           }
           try {
+            // Dispatch Redux action to store in state
             const response = await dispatch(
               getPrefabDefinitions({
                 prefabName: prefabname,
-                baseUrl: appConfig.url || "",
+                baseUrl: baseUrl,
                 pages: pages || [],
               })
             ).unwrap();
             setServiceDefs(response || {});
+            metadataService.setMetadata(response?.serviceDefs || {}, prefabname);
             appstore.set(`${prefabname}-partials`, {
               partials: partials || [],
             });
+            // Call metadata service's load method to set metadata with correct base URL
+            // This is equivalent to Angular's this.$metadata.load(prefabName)
+            await metadataService.load(prefabname, baseUrl);
           } catch (error) {
             console.error("Failed to fetch service definitions:", error);
           } finally {
@@ -85,7 +91,14 @@ export const BasePrefab = <P extends object>(
       }
 
       if (loading) {
-        return <WmSpinner show={true} className="baseprefab-spinner" />;
+        return (
+          <WmSpinner
+            show={true}
+            className="baseprefab-spinner"
+            name="baseprefab-spinner"
+            listener={{}}
+          />
+        );
       }
 
       const appLocale = merge({}, i18n?.appLocale || {}, i18n?.prefabMessages?.[prefabname] || {});
@@ -127,19 +140,21 @@ export const BasePrefab = <P extends object>(
 
   const BasePrefabWithProvider = (props: any) => {
     return (
-      <PrefabProvider
-        value={{
-          inbound: props.inbound || {},
-          outbound: props.outbound || {},
-          prefabName: props.name,
-        }}
-      >
-        <BasePrefabWrapper {...props} />
-      </PrefabProvider>
+      <div hidden={props.hidden}>
+        <PrefabProvider
+          value={{
+            inbound: props.inbound || {},
+            outbound: props.outbound || {},
+            prefabName: props.name,
+          }}
+        >
+          <BasePrefabWrapper {...props} />
+        </PrefabProvider>
+      </div>
     );
   };
   BasePrefabWithProvider.displayName = "BasePrefabWithProvider";
-  return BasePrefabWithProvider;
+  return withBaseWrapper(BasePrefabWithProvider);
 };
 
 export default BasePrefab;

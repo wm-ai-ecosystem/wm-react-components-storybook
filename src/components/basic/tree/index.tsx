@@ -475,6 +475,7 @@ const WmTree = (props: WmTreeProps) => {
       name={name}
       tabIndex={tabindex}
       style={{ ...props.styles, width: width, height: height, textAlign: horizontalalign }}
+      hidden={props.hidden}
     >
       {sortedTreeNodes.length > 0 ? (
         sortedTreeNodes.map(node => (

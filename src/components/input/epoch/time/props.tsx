@@ -3,6 +3,7 @@ export interface WmTimeProps {
   required?: boolean;
   placeholder?: string;
   hint?: string;
+  showampmbuttons?: boolean;
   arialabel?: string;
   tabindex?: number;
   shortcutkey?: string;

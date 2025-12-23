@@ -1,6 +1,10 @@
 import { TChartInterpolation, TChartLegendPosition, TChartLegendType } from "../../props";
 
 export interface CumulativeLineChartProps {
+  offsettop?: number;
+  offsetbottom?: number;
+  offsetleft?: number;
+  offsetright?: number;
   data: any[];
   dataKeys: string[];
   selectedRegions: string[];

@@ -57,6 +57,7 @@ export const WmMessage = memo(
 
     return (
       <Box
+        hidden={props.hidden}
         component="div"
         style={styles}
         className={clsx(
@@ -98,6 +99,7 @@ export const WmMessage = memo(
       "onClose",
       "styles",
       "open",
+      "hidden",
     ];
     return keys.every(key => prev[key] === next[key]);
   }
@@ -109,12 +111,16 @@ const WmMessageWrapper = (Component: React.ComponentType<BaseProps>) => {
   const WrappedComponent = (props: WmMessageProps) => {
     const { onClose } = props;
     const [messageOpen, setMessageOpen] = useState(true);
+    const [messageCaption, setMessageCaption] = useState(props.caption);
 
     const hideMessage = () => {
       setMessageOpen(false);
     };
 
-    const showMessage = () => {
+    const showMessage = (caption?: any) => {
+      if (caption) {
+        setMessageCaption(caption);
+      }
       setMessageOpen(true);
     };
 
@@ -130,8 +136,9 @@ const WmMessageWrapper = (Component: React.ComponentType<BaseProps>) => {
         showMessage,
         close: handleClose,
         open: messageOpen,
+        ...(messageCaption !== undefined && { caption: messageCaption }),
       };
-    }, [props, messageOpen, handleClose]);
+    }, [props, messageOpen, handleClose, messageCaption]);
 
     return <Component {...updatedProps} />;
   };

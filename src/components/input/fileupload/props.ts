@@ -59,7 +59,7 @@ export interface WmFileUploadProps extends BaseProps {
     widget: any,
     selectedFiles: File[]
   ) => void;
-  onDelete?: ($event: React.MouseEvent | React.ChangeEvent, widget: any, file: File) => void;
+  onDelete?: ($event: React.MouseEvent | React.ChangeEvent, widget: any) => void;
   onBeforedelete?: ($event: React.MouseEvent | React.ChangeEvent, widget: any, file: File) => void;
   onError?: ($event: React.MouseEvent | React.ChangeEvent, widget: any, file: File) => void;
 }

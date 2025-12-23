@@ -43,8 +43,8 @@ const PanelHeader: React.FC<PanelHeaderProps> = ({
   onClose,
   onActionsclick,
 }) => {
-  const handleActionItemClick = (event: React.MouseEvent, item: ActionItem) => {
-    onActionsclick?.(event, item);
+  const handleActionItemClick = (item: ActionItem) => {
+    onActionsclick?.(item);
   };
 
   return (

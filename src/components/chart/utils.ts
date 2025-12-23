@@ -50,6 +50,12 @@ const barSpacingMap = {
   large: 0.8,
 };
 
+const barCategorySpacingPercentage = {
+  0.3: "10%",
+  0.5: "20%",
+  0.8: "30%",
+};
+
 const donutRatioMap = {
   small: 0.3,
   medium: 0.6,
@@ -440,6 +446,14 @@ export const getLodashOrderByFormat = (orderby: string) => {
 };
 
 export const getBarSpacingValue = (value: string, prop: string) => {
+  if (!isNaN(+value)) {
+    if (Number.isFinite(+value)) {
+      return (
+        barCategorySpacingPercentage[+value as keyof typeof barCategorySpacingPercentage] ??
+        +value * 100
+      );
+    }
+  }
   if (prop === "value") {
     return barSpacingMap[value as keyof typeof barSpacingMap];
   }

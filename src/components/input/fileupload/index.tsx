@@ -57,19 +57,14 @@ const WmFileUpload = memo(
       ...events
     } = useFileUpload(props);
 
-    const containerStyle = {
-      ...styles,
-      width: width !== "auto" ? width : undefined,
-      height: height || undefined,
-    };
-
     return (
       <Box
         component="div"
         className={clsx("app-fileupload", className)}
         id={id}
-        sx={containerStyle}
         title={hint}
+        hidden={props.hidden}
+        style={{ width: "100%" }}
       >
         {!multiple ? (
           <SingleFileUpload
@@ -192,6 +187,7 @@ const WmFileUpload = memo(
       "onDelete",
       "onBeforedelete",
       "onError",
+      "hidden",
     ];
 
     // Check if any props that affect rendering have changed

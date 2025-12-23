@@ -55,6 +55,7 @@ export const WmIcon = memo((props: WmIconProps) => {
       aria-label={arialabel}
       id={id}
       data-icon-position={iconposition}
+      hidden={props.hidden}
     >
       <Box component="span" className="sr-only">
         {caption} Icon

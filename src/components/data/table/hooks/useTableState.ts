@@ -34,7 +34,7 @@ export const useTableState = ({
   const isRowActive = useCallback(
     (rowId: string, isSelected: boolean): boolean => {
       // Check if the row is in the active rows array
-      return activeRowIds.includes(rowId);
+      return activeRowIds && Array.isArray(activeRowIds) && activeRowIds.includes(rowId);
     },
     [activeRowIds]
   );
@@ -48,15 +48,19 @@ export const useTableState = ({
   const setActiveRow = useCallback((rowIds: string | string[] | null) => {
     if (rowIds === null) {
       setActiveRowIds([]);
-    } else if (typeof rowIds === "string") {
-      setActiveRowIds([rowIds]);
-    } else {
+    } else if (typeof rowIds === "string" || typeof rowIds === "number") {
+      setActiveRowIds([String(rowIds)]);
+    } else if (Array.isArray(rowIds)) {
       setActiveRowIds(rowIds);
+    } else {
+      // Fallback for unexpected types
+      console.warn("Unexpected type for rowIds:", typeof rowIds, rowIds);
+      setActiveRowIds([]);
     }
   }, []);
 
   // For backwards compatibility, provide activeRowId as the first active row
-  const activeRowId = activeRowIds.length > 0 ? activeRowIds[0] : null;
+  const activeRowId = activeRowIds && activeRowIds.length > 0 ? activeRowIds[0] : null;
 
   return {
     activeRowIds,

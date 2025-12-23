@@ -229,10 +229,6 @@ const WmPagination = memo((props: WmPaginationProps) => {
           />
         ) : null;
 
-      case "Scroll":
-        // For scroll navigation, render a sentinel element for intersection observer
-        return null; // Navigation controls not needed for infinite scroll
-
       default:
         return null;
     }
@@ -240,6 +236,10 @@ const WmPagination = memo((props: WmPaginationProps) => {
 
   // Simple render function - avoid over-optimization that causes re-renders
   const renderPaginationContent = () => {
+    if (navigation === "None" || navigation === "Scroll") {
+      return null;
+    }
+
     const navigationComponent = renderNavigation();
 
     const content = (

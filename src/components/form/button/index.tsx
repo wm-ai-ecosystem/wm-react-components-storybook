@@ -45,6 +45,7 @@ export const WmButton = memo(
       onFocus,
       onBlur,
       onKeydown,
+      onKeypress,
       onKeyup,
       listener,
       name,
@@ -115,6 +116,11 @@ export const WmButton = memo(
       event.stopPropagation();
       onKeyup?.(event, props);
     }
+    function handleKeyPress(event: React.KeyboardEvent<HTMLButtonElement>) {
+      event.preventDefault();
+      event.stopPropagation();
+      onKeypress?.(event, props);
+    }
 
     const EVENTS = {
       ...(onBlur && { onBlur: handleOnBlur }),
@@ -125,6 +131,7 @@ export const WmButton = memo(
       ...(onKeydown && { onKeyDown: handleKeyDown }),
       ...(onKeyup && { onKeyUp: handleKeyUp }),
       ...(onClick && { onClick: handleClick }),
+      ...(onKeypress && { onKeyPress: handleKeyPress }),
     };
 
     return (
@@ -235,6 +242,7 @@ export const WmButton = memo(
       "caption",
       "badgevalue",
       "disabled",
+      "hidden",
     ];
     return keys.every(key => prev[key] === current[key]);
   }

@@ -65,6 +65,7 @@ export interface WmMenuExtendedProps extends Omit<WmMenuProps, "name"> {
   listener: Record<string, any>;
   name?: string;
   displayValue?: string;
+  onActionsclick?: (item: any) => void;
   nodes$?: {
     subscribe: (callback: () => void) => { unsubscribe: () => void };
   };

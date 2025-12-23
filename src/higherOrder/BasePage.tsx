@@ -1,8 +1,10 @@
+"use client";
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import isEqual from "lodash-es/isEqual";
 import cloneDeep from "lodash-es/cloneDeep";
 import merge from "lodash-es/merge";
+import compare from "@/core/util/compare";
 import { WidgetProvider } from "@wavemaker/react-runtime/context/WidgetProvider";
 import { WmSpinner } from "@wavemaker/react-runtime/components/basic/spinner";
 import { getAppVariablesInstance } from "@wavemaker/react-runtime/core/appVariablesStore";
@@ -23,7 +25,11 @@ import { getRouterInstance } from "@wavemaker/react-runtime/store/middleware/nav
 import { mergeVariablesAndActions } from "@wavemaker/react-runtime/higherOrder/helper";
 import { toastService } from "@wavemaker/react-runtime/actions/toast.service";
 import appstore from "@wavemaker/react-runtime/core/appstore";
-import { clearOverriddenProps } from "@wavemaker/react-runtime/core/script-registry";
+import {
+  clearOverriddenProps,
+  createOverriddenPropsRegistry,
+  OverriddenPropsRegistry,
+} from "@wavemaker/react-runtime/core/script-registry";
 import BaseAppProps from "./BaseAppProps";
 import formatters from "@/core/formatters";
 import { useAppProxy } from "@/context/AppContext";
@@ -35,10 +41,8 @@ import { useAppSpinner } from "@/context/AppSpinnerProvider";
 import { get } from "lodash";
 import { EVENTEMITTER_METHODS } from "@/core/constants/events";
 import { wrapWithThirdPartyErrorGuard } from "@/utils/lib-error-skipper";
-// Add global declaration for wm property
-declare global {
-  let wm: ProxyTarget;
-}
+import { viewportService } from "@/store/viewport.service";
+import { formatMessage } from "../core/util";
 
 export const withPageContext = <P extends object>(
   WrappedComponent: React.ComponentType<P>,
@@ -95,8 +99,7 @@ export const withPageContext = <P extends object>(
     const usedFallbackAppVarsRef = useRef<boolean>(false);
     const appVarSubscriptionsDoneRef = useRef<boolean>(false);
     const subscribedVariableNamesRef = useRef<Set<string>>(new Set());
-    const cleanupUtilRef = useRef<ReturnType<typeof createWidgetCleanup> | null>(null);
-    const isContentReadyRef = useRef<boolean>(false);
+    const overriddenPropsRegistryRef = useRef<OverriddenPropsRegistry>(null);
 
     // Initial page context state
     const [pageContext, setPageContext] = useState<PageContextState>({
@@ -114,7 +117,6 @@ export const withPageContext = <P extends object>(
       toaster: toastService,
       onContentReady,
       onChange: updateWidgetState,
-      cleanup,
       App: {},
       eval: appContext?.eval,
       appLocale: componentInfo.appLocale || i18n.appLocale || {},
@@ -123,6 +125,9 @@ export const withPageContext = <P extends object>(
       ...componentInfo,
       executeStartup,
       formatters,
+      Viewport: viewportService.getViewport(),
+      formatMessage: formatMessage,
+      overriddenPropsRegistryRef: overriddenPropsRegistryRef.current,
     });
     // Enhanced initial app config that inherits from app context if available
     const initialAppConfig = useMemo(() => appContext, [appContext]);
@@ -164,48 +169,6 @@ export const withPageContext = <P extends object>(
       componentInfo?.componentName,
       dispatch,
       securityConfig,
-    ]);
-
-    // Handle redirect from login page to landing page if already authenticated
-    useEffect(() => {
-      if (
-        componentInfo?.componentType !== "PAGE" ||
-        !isSecurityEnabled ||
-        !isAuthenticated ||
-        accessLoading
-      ) {
-        return;
-      }
-
-      const loginPage = securityConfig?.loginConfig?.pageName;
-      const landingPage = loggedInUser?.landingPage;
-
-      if (!loginPage || !landingPage) {
-        return;
-      }
-
-      // Extract the last segment of the pathname (the page name)
-      const currentPageName = componentInfo.componentName;
-      const isOnLoginPage = currentPageName === loginPage;
-
-      // If authenticated user is on login page, redirect to landing page
-      if (isOnLoginPage) {
-        const router = getRouterInstance();
-        if (router) {
-          console.log(
-            "BasePage: Redirecting authenticated user from login to landing page",
-            landingPage
-          );
-          router.push(`/${ROUTING_BASEPATH}/${landingPage}`);
-        }
-      }
-    }, [
-      componentInfo?.componentType,
-      isSecurityEnabled,
-      isAuthenticated,
-      accessLoading,
-      securityConfig,
-      loggedInUser?.landingPage,
     ]);
 
     // Check if we should proceed with initialization
@@ -260,7 +223,7 @@ export const withPageContext = <P extends object>(
           Actions: updatedActions,
         };
       });
-    }, [appContext?.isAppReady]);
+    }, [appContext?.isAppReady, appContext?.Variables, appContext?.Actions]);
 
     // Main initialization effect - runs only when conditions are met
     useEffect(() => {
@@ -279,18 +242,16 @@ export const withPageContext = <P extends object>(
 
       const initializeComponent = async () => {
         try {
+          // Create overridden props registry
+          overriddenPropsRegistryRef.current = createOverriddenPropsRegistry();
           // Create page proxy
-          const pageProxy = createStateProxy(pageContext, [], setPageContext);
+          const pageProxy = createStateProxy(
+            pageContext,
+            [],
+            setPageContext,
+            overriddenPropsRegistryRef.current
+          );
           pageProxyRef.current = pageProxy;
-
-          // Initialize cleanup utility
-          if (!cleanupUtilRef.current) {
-            cleanupUtilRef.current = createWidgetCleanup({
-              setPageContext,
-              proxyRef: pageProxyRef,
-              debounceDelay: 100,
-            });
-          }
 
           // Initialize variables and actions
           const pageVariables = getVariables(pageProxy);
@@ -334,6 +295,8 @@ export const withPageContext = <P extends object>(
           };
           (pageProxy as PageContextState).pageParams = { ...newParams };
           (pageProxy as PageContextState).selectedLocale = i18n.selectedLocale || "en";
+          (pageProxy as PageContextState).overriddenPropsRegistry =
+            overriddenPropsRegistryRef.current;
 
           // Setup variable event handlers
           setupVariableSubscriptions(pageVariables.Variables);
@@ -403,7 +366,8 @@ export const withPageContext = <P extends object>(
 
         // Clear pending startup operations
         pendingStartupOpsRef.current.clear();
-        clearOverriddenProps();
+        overriddenPropsRegistryRef.current?.clear();
+        // clearOverriddenProps();
 
         // Unsubscribe from events
         subscriptionsRef.current.forEach(({ variable, event, handler }) => {
@@ -416,9 +380,6 @@ export const withPageContext = <P extends object>(
           }
         });
         subscriptionsRef.current = [];
-
-        // Cancel any pending cleanup operations
-        cleanupUtilRef.current?.cancel();
       };
     }, [shouldInitialize]); // Only depend on shouldInitialize
 
@@ -579,15 +540,10 @@ export const withPageContext = <P extends object>(
       }
     };
 
-    // Cleanup function for unmounting widgets
-    function cleanup(name: string) {
-      cleanupUtilRef.current?.cleanup(name);
-    }
-
     // Widget state update function
     function updateWidgetState(widgetName: string, newProps: Record<string, any>) {
       if (!widgetName || !newProps || Object.keys(newProps).length === 0) return;
-      if (isEqual(pageContext.Widgets[widgetName], newProps)) return;
+      if (compare(pageContext.Widgets[widgetName], newProps)) return;
 
       setPageContext(prev => ({
         ...prev,
@@ -635,7 +591,7 @@ export const withPageContext = <P extends object>(
           ...prev,
           appLocale: newAppLocale,
         }));
-        pageContextRef.current.App.appLocale = newAppLocale;
+        pageProxyRef.current.App.appLocale = newAppLocale;
       }
     }, [i18n.appLocale]);
 
@@ -660,8 +616,8 @@ export const withPageContext = <P extends object>(
 
           requestAnimationFrame(async () => {
             if (isMountedRef.current && pageProxyRef.current) {
-              await onContentReady();
               await executeStartup();
+              await onContentReady();
               onStartupCompletedRef.current = true;
             }
           });
@@ -672,6 +628,8 @@ export const withPageContext = <P extends object>(
     useEffect(() => {
       return () => {
         isMountedRef.current = false;
+        // Cleanup viewport service when component unmounts
+        viewportService.destroy();
       };
     }, []);
 

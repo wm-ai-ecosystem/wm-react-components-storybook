@@ -127,21 +127,26 @@ export const registerFormFieldSafe = (
   widgetsContext[formName].formfields ??= {};
   widgetsContext[formName].formWidgets ??= {};
 
-  // ✅ Only add if not already present
-  widgetsContext[formName].formfields[formKey] = {
-    ...fieldProps,
-  };
+  // attachig exiting proxy instance instead of fieldProps
+  // fieldProps will not update the proxy from script since
+  const widgetProxy = (widgetsContext as any)[fieldProps.name as string];
 
-  widgetsContext[formName].formWidgets[fieldName] = {
-    ...fieldProps,
-  };
-  widgetsContext[formName].formfields[`${fieldName}_formWidget`] = {
-    ...fieldProps,
-  };
+  if (!widgetsContext[formName].formfields[formKey]) {
+    widgetsContext[formName].formfields[formKey] = widgetProxy ?? { ...fieldProps };
+  }
 
-  widgetsContext[formName].formWidgets[`${fieldName}_formWidget`] = {
-    ...fieldProps,
-  };
+  if (!widgetsContext[formName].formWidgets[fieldName]) {
+    widgetsContext[formName].formWidgets[fieldName] = widgetProxy ?? { ...fieldProps };
+  }
+
+  const formWidgetKey = `${fieldName}_formWidget`;
+  if (!widgetsContext[formName].formfields[formWidgetKey]) {
+    widgetsContext[formName].formfields[formWidgetKey] = widgetProxy ?? { ...fieldProps };
+  }
+
+  if (!widgetsContext[formName].formWidgets[formWidgetKey]) {
+    widgetsContext[formName].formWidgets[formWidgetKey] = widgetProxy ?? { ...fieldProps };
+  }
 };
 
 /**

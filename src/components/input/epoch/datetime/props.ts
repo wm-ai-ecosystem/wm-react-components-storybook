@@ -3,6 +3,7 @@ export interface WmDateTimeProps {
   name?: string;
   placeholder?: string;
   hint?: string;
+  showampmbuttons?: boolean;
   tabindex?: number;
   shortcutkey?: string;
   datavalue?: string | Date | null;

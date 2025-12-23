@@ -18,6 +18,7 @@ import {
   DEFAULT_CLASS,
   TIME_PICKER_STYLES,
   updateListener,
+  createWidgetEvent,
 } from "./utils";
 
 const WmTime = (props: WmTimeProps) => {
@@ -55,6 +56,7 @@ const WmTime = (props: WmTimeProps) => {
     onMouseEnter,
     onMouseLeave,
     onBeforeload,
+    showampmbuttons = false,
   } = props;
 
   // State
@@ -83,7 +85,7 @@ const WmTime = (props: WmTimeProps) => {
     []
   );
   const handleTimeChange = useCallback(
-    (newTime: Date | null, event?: React.SyntheticEvent, shouldClosePicker = false) => {
+    (newTime: Date | null, event: React.SyntheticEvent, shouldClosePicker = false) => {
       if (!newTime) {
         setInternalValue(null);
         setDisplayValue("");
@@ -110,12 +112,7 @@ const WmTime = (props: WmTimeProps) => {
           formatDisplayTimeValue(newTime, outputformat)
         );
         if (onChange && name && listener?.Widgets[name]) {
-          onChange(
-            {} as React.SyntheticEvent,
-            name && listener?.Widgets[name],
-            formattedValue,
-            displayValue
-          );
+          onChange(event, name && listener?.Widgets[name], formattedValue, displayValue);
         }
       }
       if (shouldClosePicker) setShowPicker?.(false);
@@ -125,7 +122,14 @@ const WmTime = (props: WmTimeProps) => {
   const handlePickerAccept = useCallback(
     (value: moment.Moment | null) => {
       if (value && value.isValid()) {
-        handleTimeChange(value.toDate(), undefined, true);
+        const changeEvent = createWidgetEvent({
+          type: "change",
+          name,
+          value: value,
+          anchor: anchorRef.current,
+          originalEvent: event,
+        });
+        handleTimeChange(value.toDate(), changeEvent, true);
       }
     },
     [handleTimeChange]
@@ -331,11 +335,16 @@ const WmTime = (props: WmTimeProps) => {
       props.listener?.Widgets?.[name] &&
       !onBeforeloadExecutedRef.current
     ) {
-      const syntheticEvent = {} as React.SyntheticEvent;
-      onBeforeload(syntheticEvent, props.listener?.Widgets?.[name]);
+      const beforeEvent = createWidgetEvent({
+        type: "beforeload",
+        name,
+        value: displayValue,
+        anchor: anchorRef.current,
+      });
+      onBeforeload(beforeEvent, props.listener?.Widgets?.[name]);
       onBeforeloadExecutedRef.current = true;
     }
-  }, [onBeforeload, name, props.listener]);
+  }, []);
 
   // Render the main TextField component
   const renderTextField = useCallback(
@@ -436,7 +445,7 @@ const WmTime = (props: WmTimeProps) => {
   if (timeFormatOptions.hasSeconds) views.push("seconds");
 
   return (
-    <Box className={clsx(DEFAULT_CLASS, className)}>
+    <Box hidden={props.hidden} className={clsx(DEFAULT_CLASS, className)}>
       {renderTextField()}
       {showPicker && (
         <TimePicker
@@ -449,7 +458,7 @@ const WmTime = (props: WmTimeProps) => {
           timeSteps={{ minutes: minutestep, hours: hourstep, seconds: secondsstep }}
           minTime={minTimeObj ? moment(minTimeObj) : undefined}
           maxTime={maxTimeObj ? moment(maxTimeObj) : undefined}
-          ampm={timeFormatOptions.is12Hour}
+          ampm={timeFormatOptions.is12Hour && showampmbuttons}
           views={views}
           skipDisabled
           ampmInClock={timeFormatOptions.is12Hour}
@@ -461,6 +470,7 @@ const WmTime = (props: WmTimeProps) => {
               placement: "bottom-start",
               sx: TIME_PICKER_STYLES,
             },
+            actionBar: { actions: ["accept"] },
           }}
         />
       )}

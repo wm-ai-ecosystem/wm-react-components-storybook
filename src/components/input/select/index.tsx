@@ -16,7 +16,7 @@ const WmSelect: React.FC<WmSelectProps> = React.memo(
       dataset,
       datavalue,
       disabled = false,
-      displayexpression,
+      displayExpression,
       displaylabel,
       displayfield = "value",
       groupby,
@@ -33,6 +33,7 @@ const WmSelect: React.FC<WmSelectProps> = React.memo(
       shortcutkey,
       listener,
       tabindex = 0,
+      match,
       onClick,
       onChange,
       onBlur,
@@ -60,10 +61,12 @@ const WmSelect: React.FC<WmSelectProps> = React.memo(
       datafield,
       displayfield,
       displaylabel,
-      displayexpression,
+      displayExpression,
       orderby,
       groupby,
-      dataPath
+      dataPath,
+      "",
+      match
     );
 
     const validateInput = useCallback(
@@ -83,7 +86,10 @@ const WmSelect: React.FC<WmSelectProps> = React.memo(
     );
 
     // Handle value change
-    const handleValueChange = (event: React.ChangeEvent<any>) => {
+    const handleValueChange = async (event: React.ChangeEvent<any>) => {
+      if (props.readonly || disabled) {
+        return;
+      }
       const newValue = multiple
         ? Array.from(event.target.selectedOptions, (option: HTMLOptionElement) => option.value)
         : event.target.selectedIndex;
@@ -102,7 +108,7 @@ const WmSelect: React.FC<WmSelectProps> = React.memo(
         if (listener?.onChange) {
           if (filteredValues.length === 0) {
             // If only placeholder is selected or no valid selections, return empty array
-            listener.onChange(props.fieldName || name, {
+            await listener.onChange(props.fieldName || name, {
               datavalue: [],
               displayValue: [],
             });
@@ -139,12 +145,12 @@ const WmSelect: React.FC<WmSelectProps> = React.memo(
 
         if (listener?.onChange) {
           if (newValue === 0 || event.target.value === placeholder) {
-            listener.onChange(props.fieldName || name, {
+            await listener.onChange(props.fieldName || name, {
               datavalue: "",
               displayValue: "",
             });
           } else {
-            listener.onChange(props.fieldName || name, {
+            await listener.onChange(props.fieldName || name, {
               datavalue: transformedDataset[newValue - 1].value,
               displayValue: transformedDataset[newValue - 1].label,
             });
@@ -244,6 +250,9 @@ const WmSelect: React.FC<WmSelectProps> = React.memo(
       } else {
         if (datavalue !== localDatavalue) {
           setLocalDatavalue(datavalue);
+          listener?.onChange?.(props.fieldName || name, {
+            datavalue: datavalue,
+          });
         }
       }
     }, [datavalue, multiple]);
@@ -296,8 +305,34 @@ const WmSelect: React.FC<WmSelectProps> = React.memo(
       ...(onMouseEnter ? { onMouseEnter: handleMouseEnter } : {}),
       ...(onMouseLeave ? { onMouseLeave: handleMouseLeave } : {}),
     };
+    const isLocalDatavalueObject = () => {
+      if (typeof localDatavalue === "object" && localDatavalue !== null) {
+        const matchingItem = transformedDataset.find(
+          item =>
+            item.value === localDatavalue ||
+            JSON.stringify(item.value) === JSON.stringify(localDatavalue)
+        );
+        if (matchingItem) {
+          listener?.onChange?.(props.fieldName || name, {
+            displayValue: matchingItem.label,
+          });
+          return matchingItem.key;
+        }
+      }
+      let displayValue =
+        (transformedDataset.length > 0 &&
+          transformedDataset.find(item => item.value == localDatavalue)?.label) ||
+        "";
+      if (displayValue) {
+        listener?.onChange?.(props.fieldName || name, {
+          displayValue: displayValue,
+        });
+      }
+      return localDatavalue;
+    };
     return (
       <Box
+        hidden={props.hidden}
         sx={{
           display: "inherit !important",
         }}
@@ -315,7 +350,7 @@ const WmSelect: React.FC<WmSelectProps> = React.memo(
               ? Array.isArray(localDatavalue)
                 ? localDatavalue
                 : []
-              : (localDatavalue ?? placeholder ?? "")
+              : (isLocalDatavalueObject() ?? placeholder ?? "")
           }
           {...events}
           sx={{
@@ -332,12 +367,13 @@ const WmSelect: React.FC<WmSelectProps> = React.memo(
             tabIndex: tabindex,
             "aria-label": arialabel,
             multiple,
-            disabled: disabled || readonly,
+            disabled: disabled,
             "aria-readonly": readonly,
             className: `app-select ${className} form-control ng-valid ng-touched ng-dirty wm-app `,
             accessKey: shortcutkey,
             title: hint,
           }}
+          readOnly={readonly}
         >
           <option
             value={placeholder}
@@ -383,7 +419,7 @@ const WmSelect: React.FC<WmSelectProps> = React.memo(
       "datafield",
       "displayfield",
       "displaylabel",
-      "displayexpression",
+      "displayExpression",
       "orderby",
       "groupby",
       "dataPath",
@@ -395,6 +431,8 @@ const WmSelect: React.FC<WmSelectProps> = React.memo(
       "readonly",
       "required",
       "datavalue",
+      "hidden",
+      "className",
     ];
     return keys.every(key => prevProps[key] === nextProps[key]);
   }

@@ -27,9 +27,6 @@ const MultipleFileUpload: React.FC<MultipleFileUploadProps> = ({
   onBeforeselect,
   styles,
 }) => {
-  const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
-    onBeforeselect?.(e);
-  };
   return (
     <div className="app-multi-file-upload">
       <div
@@ -53,14 +50,13 @@ const MultipleFileUpload: React.FC<MultipleFileUploadProps> = ({
               name="files"
               multiple={multiple}
               accept={chooseFilter}
-              disabled={disabled || readonly}
+              disabled={disabled}
               required={required}
               aria-label={arialabel || displayname || "File selection field"}
               onChange={onFileSelect}
               className="file-input"
               tabIndex={tabindex}
               style={{ display: "none" }}
-              onClick={handleClick}
             />
             <a
               className="app-anchor upload-label"

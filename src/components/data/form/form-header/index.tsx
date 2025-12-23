@@ -33,13 +33,13 @@ const WmFormHeader = (props: FormHeaderProps) => {
         {/* render header actions */}
         <div className="form-action panel-actions basic-btn-grp">
           {props?.headerActions &&
-            Object.keys(props?.headerActions)?.map((actionName: any, index: any) => {
-              return (
-                <div className="form-action panel-actions basic-btn-grp" key={index}>
-                  <WmFormActions {...props?.headerActions[actionName]} headeraction={true} />
-                </div>
-              );
-            })}
+            Object.keys(props?.headerActions)?.map((actionName: any, index: any) => (
+              <WmFormActions
+                key={index}
+                {...props?.headerActions[actionName]}
+                headeraction={true}
+              />
+            ))}
 
           {/* render collapsible icon if collapsible is true */}
           {props.collapsible && (

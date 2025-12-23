@@ -123,3 +123,45 @@ export const extendPrevFn = (
     updateStepFocus();
   }
 };
+
+// Append deduped dynamic steps to existing steps
+export const appendDatasetSteps = (
+  prev: WizardStepData[],
+  incoming: WizardStepData[]
+): WizardStepData[] => {
+  if (!incoming || incoming.length === 0) {
+    return prev;
+  }
+  const existingNames = new Set(prev.map(s => s.name));
+  const deduped = incoming.filter(s => {
+    if (existingNames.has(s.name)) {
+      return false;
+    }
+    existingNames.add(s.name);
+    return true;
+  });
+  return deduped.length ? [...prev, ...deduped] : prev;
+};
+
+// Trim steps to target length and normalize flags after shrink
+export const trimStepsToLength = (prev: WizardStepData[], targetLen: number): WizardStepData[] => {
+  const sliced = prev.slice(0, targetLen);
+  if (sliced.length === 0) {
+    return sliced;
+  }
+  let activeIndex = sliced.findIndex(s => s.active);
+  if (activeIndex === -1 || activeIndex >= targetLen) {
+    activeIndex = Math.max(0, targetLen - 1);
+  }
+  return sliced.map((s, idx) => ({
+    ...s,
+    active: idx === activeIndex,
+    isDone: false,
+    done: idx < activeIndex,
+    disabled: false,
+    isInitialized: idx === activeIndex ? true : s.isInitialized,
+    enableNext: idx === activeIndex ? true : s.enableNext,
+    isValid: idx === activeIndex ? true : s.isValid,
+    dynamicStepIndex: typeof s.dynamicStepIndex === "number" ? idx : s.dynamicStepIndex,
+  }));
+};

@@ -196,3 +196,7 @@ export const getItemLink = (item: any, props: any): string | undefined => {
   const linkProperty = props.itemlink || "link";
   return item[linkProperty];
 };
+
+export function hasOwnObjectProperty(obj: any, prop: string) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}

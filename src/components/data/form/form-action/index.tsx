@@ -38,7 +38,7 @@ const WmFormActions = memo((props: WmFormActionsProps) => {
 
   // register header action
   useEffect(() => {
-    if (formRef && isheaderaction && formRef.registerHeaderAction) {
+    if (formRef && position.includes("header") && formRef.registerHeaderAction) {
       formRef.registerHeaderAction(props.name, props);
     }
   }, [formRef, props]);

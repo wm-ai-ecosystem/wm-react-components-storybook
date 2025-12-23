@@ -229,6 +229,7 @@ const WmRating = memo((props: WmRatingProps) => {
       displaylabel,
       displayexpression,
       undefined,
+      undefined,
       undefined
     ) as RatingItem[];
 
@@ -355,7 +356,11 @@ const WmRating = memo((props: WmRatingProps) => {
       <Tooltip key={rate.key} title={rate.label} enterDelay={500} enterNextDelay={500}>
         <Box
           component="label"
-          onClick={() => handleRatingClick(rate)}
+          onClick={e => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleRatingClick(rate);
+          }}
           onMouseOver={() => handleMouseOver(rate)}
           onMouseLeave={handleMouseLeave}
           sx={sx}
@@ -380,6 +385,7 @@ const WmRating = memo((props: WmRatingProps) => {
 
   return (
     <Box
+      hidden={props.hidden}
       sx={{ ...styles, height: height, width: width }}
       className={clsx("app-ratings", { disabled: readonly })}
       ref={ratingsRef}
@@ -392,7 +398,9 @@ const WmRating = memo((props: WmRatingProps) => {
       >
         <Box className="rating-style">{ratingItems.map(renderStar)}</Box>
         {showcaptions && (selectedRatingValue !== 0 || hover) && (
-          <label className="caption">{currentCaption || caption || ""}</label>
+          <label className="caption">
+            {currentCaption || caption || (showcaptions ? datavalue : "")}
+          </label>
         )}
       </Box>
     </Box>

@@ -8,9 +8,10 @@ const DEFAULT_CLASS = "app-nav-item";
 
 export const WmNavItem = memo(
   (props: BaseProps) => {
-    const { className, styles, id, onMouseEnter, onMouseLeave } = props;
+    const { className, styles, id, onMouseEnter, onMouseLeave, ...rest } = props;
     return (
       <ListItem
+        {...rest}
         name={name}
         id={id}
         sx={{
@@ -30,7 +31,7 @@ export const WmNavItem = memo(
     );
   },
   (prev, current) => {
-    const keys: (keyof BaseProps)[] = ["className", "styles", "children"];
+    const keys: (keyof BaseProps)[] = ["className", "styles", "children", "hidden"];
     return keys.every(key => prev[key] === current[key]);
   }
 );

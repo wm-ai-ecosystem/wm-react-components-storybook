@@ -35,5 +35,5 @@ export interface PanelHeaderProps {
   onToggleFullScreen: (event: React.MouseEvent) => void;
   onToggleHelp: () => void;
   onClose: (event: React.MouseEvent) => void;
-  onActionsclick?: (event: React.MouseEvent, item: ActionItem) => void;
+  onActionsclick?: (item: ActionItem) => void;
 }

@@ -143,6 +143,7 @@ export function WmComposite(props: WmCompositeProps) {
         `${CAPTION_POSITION[captionposition]} ${required ? "required" : ""}`
       )}
       id={id}
+      hidden={props.hidden}
     >
       {childElements}
     </div>

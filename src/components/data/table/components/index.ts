@@ -7,3 +7,6 @@ export { TableBodyComponent } from "./TableBody";
 export { TableHeaderComponent } from "./TableHeader";
 export { RowExpansionButton } from "./RowExpansionButton";
 export { GlobalSearchFilter, TableFilterRow } from "./TableFilters";
+export { SummaryRowFooter } from "./SummaryRowFooter";
+export { SummaryRow } from "./SummaryRow";
+export { SummaryCell } from "./SummaryCell";

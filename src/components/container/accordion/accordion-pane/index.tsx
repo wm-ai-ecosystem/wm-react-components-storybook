@@ -51,6 +51,9 @@ const WmAccordionPane = memo((Props: WmAccordionPaneProps) => {
     <Accordion.Root
       tabIndex={props.tabindex}
       className={clsx(DEFAULT_CLASS, props.className, { active: props.active })}
+      name={props.name}
+      hidden={props.hidden || false}
+      show={props.show || true}
     >
       {/* Panel Header */}
       <AccordionSummary

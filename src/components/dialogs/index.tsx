@@ -56,6 +56,7 @@ const useBodyScrollLock = (lock: boolean) => {
 
 export const WmDialog = memo((props: WmDialogProps) => {
   const { children, className, open = false, onClose, modal = false, onTransitionEntered } = props;
+  useBodyScrollLock(open);
 
   const transitionType = FadeTransition;
   const pageRef = document.getElementsByClassName("app-page")[0] || null;
@@ -78,7 +79,6 @@ export const WmDialog = memo((props: WmDialogProps) => {
   if (!open) {
     return null;
   }
-  useBodyScrollLock(open);
 
   const sheetPositionStyles = {
     ...(props.sheetposition === "top" && {

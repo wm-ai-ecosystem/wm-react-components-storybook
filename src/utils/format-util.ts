@@ -118,17 +118,17 @@ export const validateNumericValue = (
   maxvalue?: number,
   regexp?: string
 ): { isValid: boolean; message: string } => {
-  if (!value && required) {
+  if ((value === undefined || value === null) && required) {
     return { isValid: false, message: "This field is required" };
   }
 
   const numValue = typeof value === "string" ? parseNumber(value) : value;
 
-  if (!numValue && required) {
+  if ((numValue === undefined || numValue === null) && required) {
     return { isValid: false, message: "This field is required" };
   }
 
-  if (!numValue) {
+  if (numValue === undefined || numValue === null) {
     return { isValid: !required, message: required ? "This field is required" : "" };
   }
 

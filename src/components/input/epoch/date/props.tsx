@@ -1,9 +1,8 @@
 import React from "react";
-export interface WmDateProps {
-  name?: string;
+import BaseProps from "@/higherOrder/props";
+export interface WmDateProps extends BaseProps {
   placeholder?: string;
   hint?: string;
-  className?: string;
   tabindex?: number;
   shortcutkey?: string;
   datavalue?: string | Date;
@@ -46,23 +45,6 @@ export interface WmDateProps {
   isValidDate?: (date: any) => boolean;
   minDateMaxDateValidationOnInput?: (date: Date, displayValue?: string) => boolean;
   formatValidation?: (newVal: Date, inputVal: string) => boolean;
-
-  // Additional callback functions
-  onChange?: (
-    event: React.SyntheticEvent,
-    widget: Record<string, any>,
-    newVal: any,
-    oldVal: any
-  ) => void;
-  onClick?: (event: React.MouseEvent, widget: Record<string, any>) => void;
-  onFocus?: (event: React.FocusEvent, widget: Record<string, any>) => void;
-  onBlur?: (event: React.FocusEvent, widget: Record<string, any>) => void;
-  onMouseEnter?: (event: React.MouseEvent, widget: Record<string, any>) => void;
-  onMouseLeave?: (event: React.MouseEvent, widget: Record<string, any>) => void;
-  onBeforeload?: (event: React.SyntheticEvent, widget: Record<string, any>) => void;
-  listener: Record<string, any>;
-  className?: string;
-  styles?: React.CSSProperties;
 }
 
 //DatePickerPopover props

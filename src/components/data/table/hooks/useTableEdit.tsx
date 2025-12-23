@@ -18,6 +18,7 @@ import {
 } from "../utils/validation";
 import { EditingStateConfig, FieldValidationState } from "../props";
 import { handleServerOperation } from "../utils/crud-handlers";
+import { useUpdateEditedCell, useEditedRowsContext } from "./use-edited-rows";
 
 // Mode-specific behavior configurations
 const MODE_CONFIGS: Record<TableEditMode, EditingStateConfig> = {
@@ -34,6 +35,12 @@ const MODE_CONFIGS: Record<TableEditMode, EditingStateConfig> = {
     cancelsAddNewRowOnEdit: false,
   },
   dialog: {
+    showNewRowFormByDefault: false,
+    startEditOnRowClick: false,
+    hasKeyboardNavigation: false,
+    cancelsAddNewRowOnEdit: false,
+  },
+  form: {
     showNewRowFormByDefault: false,
     startEditOnRowClick: false,
     hasKeyboardNavigation: false,
@@ -80,6 +87,8 @@ export const useTableEdit = ({
 }: UseTableEditProps & {
   renderFormWidget: UseFormWidgetReturn["renderFormWidget"];
 }): UseTableEditReturn => {
+  const updateCell = useUpdateEditedCell();
+  const { getEdits, removeRowEdits } = useEditedRowsContext();
   // Use the editing state hook
   const {
     editingRowId,
@@ -98,6 +107,7 @@ export const useTableEdit = ({
   const fieldRefs = useRef<Record<string, HTMLElement | null>>({});
   const fieldValidationErrorsRef = useRef<Record<string, boolean>>({});
   const cellUpdateCallbacksRef = useRef<Record<string, () => void>>({});
+  const originalRowDataRef = useRef<Record<string, any>>({});
 
   const validationState: FieldValidationState = {
     fieldRefs,
@@ -129,6 +139,8 @@ export const useTableEdit = ({
         return;
       }
 
+      originalRowDataRef.current = { ...rowData };
+
       // Cancel add new row if configured for this mode
       if (config.cancelsAddNewRowOnEdit && isAddingNewRow) {
         setIsAddingNewRow(false);
@@ -137,7 +149,11 @@ export const useTableEdit = ({
       // Reset editing data and start fresh
       resetEditingData();
       setEditingRowId(rowId);
-      editingRowDataRef.current = { ...rowData };
+
+      // Initialize with existing edits if available
+      const existingEdits = getEdits(rowId) || {};
+      editingRowDataRef.current = { ...rowData, ...existingEdits };
+
       resetValidationState(editMode === "quickedit" ? "all" : undefined);
       incrementSessionKey();
     },
@@ -150,11 +166,23 @@ export const useTableEdit = ({
       setIsAddingNewRow,
       incrementSessionKey,
       resetEditingData,
+      getEdits,
     ]
   );
 
   // Cancel editing function
   const cancelEditing = useCallback(() => {
+    // Clear persisted edits for this row if we are cancelling
+    if (editingRowId) {
+      removeRowEdits(editingRowId);
+      // Also clear cellState if it exists
+      if (cellState) {
+        // Note: cellState doesn't have a clearRow method exposed easily here without path iteration.
+        // But removeRowEdits handles the EditedRowsContext which drives the view.
+        // Ideally we should clear cellState too, but let's focus on the visual consistency first.
+      }
+    }
+
     setEditingRowId(null);
 
     // For inline mode, also cancel add new row
@@ -169,11 +197,14 @@ export const useTableEdit = ({
     incrementSessionKey();
   }, [
     editMode,
+    editingRowId,
     resetValidationState,
     setEditingRowId,
     setIsAddingNewRow,
     incrementSessionKey,
     resetEditingData,
+    removeRowEdits,
+    cellState,
   ]);
 
   // Generic save function that works for both edit modes
@@ -187,25 +218,56 @@ export const useTableEdit = ({
       const currentRowId = rowId || (isNewRow ? "new-row" : null);
       if (!currentRowId) return false;
 
-      // Get original row data
-      const originalRow =
-        !isNewRow && rowId ? internalDataset.find(row => row._wmTableRowId === rowId) : null;
-      const currentEditingData = rowDataRef.current;
+      // Capture value from active input element BEFORE blur
+      // This is needed because inputs use updateon="blur" and save triggers on mousedown (before blur)
+      // The blur event handler runs async, so we need to read the DOM value directly
+      const activeElement = document.activeElement as HTMLInputElement;
+      if (activeElement) {
+        // Get the field name from the closest editable cell container
+        const editableCellContainer = activeElement.closest("[data-field-name]");
+        if (editableCellContainer) {
+          const fieldName = editableCellContainer.getAttribute("data-field-name");
+          const inputValue = activeElement.value;
 
-      // For existing rows, check if there are any changes
-      if (!isNewRow && rowId && originalRow) {
-        const hasChanges = Object.keys(currentEditingData).some(
-          key => currentEditingData[key] !== originalRow[key]
-        );
+          // Update editingRowDataRef with the current DOM value
+          if (fieldName && inputValue !== undefined) {
+            rowDataRef.current = {
+              ...rowDataRef.current,
+              [fieldName]: inputValue,
+            };
+          }
+        }
+
+        // Now blur to clean up focus state
+        if (activeElement.blur) {
+          activeElement.blur();
+        }
+      }
+
+      // Get current editing data
+      const currentEditingData = rowDataRef.current;
+      const originalData = originalRowDataRef.current;
+
+      // Check if any changes were made (only for existing rows, not new rows)
+      if (!isNewRow && originalData && currentEditingData) {
+        const hasChanges = wmTableColumns.some(column => {
+          if (!column.field || column.readonly) return false;
+          const originalValue = get(originalData, column.field);
+          const currentValue = get(currentEditingData, column.field);
+          // Compare stringified values to handle type differences
+          return String(originalValue ?? "") !== String(currentValue ?? "");
+        });
 
         if (!hasChanges) {
-          if (showToast) {
-            showToast("No Changes Detected", "Info");
-          }
+          showToast?.("No changes detected", "Info");
+          // Still close edit mode even if no changes - call onSaveSuccess to reset state
           if (onSaveSuccess) {
+            if (rowId) {
+              removeRowEdits(rowId);
+            }
             onSaveSuccess();
           }
-          return true;
+          return true; // Return true to indicate edit mode should close
         }
       }
 
@@ -248,6 +310,10 @@ export const useTableEdit = ({
       });
 
       if (onSaveSuccess) {
+        // CLEAR EDITS ON SUCCESS
+        if (rowId) {
+          removeRowEdits(rowId);
+        }
         onSaveSuccess();
       }
 
@@ -269,6 +335,7 @@ export const useTableEdit = ({
       insertmessage,
       updatemessage,
       errormessage,
+      removeRowEdits,
     ]
   );
 
@@ -318,6 +385,21 @@ export const useTableEdit = ({
       // Update cellState if available (for tracking changes without re-renders)
       if (cellState && effectiveRowId !== "new-row") {
         cellState.setValue(["cells", effectiveRowId, fieldName], newValue);
+        updateCell(effectiveRowId, fieldName, newValue);
+      }
+
+      // FIX: Only update internalDataset for quickedit mode (real-time updates needed)
+      // For inline mode, skip this to avoid re-renders - dataset will be updated on save
+      if (editMode === "quickedit" && String(effectiveRowId) !== "new-row") {
+        setInternalDataset((prev: any[]) => {
+          return prev.map((row: any) => {
+            // Match by ID
+            if ((row._wmTableRowId || row.id) === effectiveRowId) {
+              return { ...row, [fieldName]: newValue };
+            }
+            return row;
+          });
+        });
       }
 
       // In quickedit mode, check if this update is for the new row
@@ -341,7 +423,7 @@ export const useTableEdit = ({
         validateField(effectiveRowId, fieldName, newValue, column, validationState);
       }
     },
-    [editMode, editingRowId, wmTableColumns, cellState]
+    [editMode, editingRowId, wmTableColumns, cellState, setInternalDataset]
   );
 
   // Save new row (for quickedit mode)
@@ -358,6 +440,22 @@ export const useTableEdit = ({
   // Handle keyboard events (for modes that support it)
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent, sourceRowId?: string) => {
+      // Handle Enter key for inline mode as well (not just quickedit)
+      if (editMode === "inline" && e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        saveEditing();
+        return;
+      }
+
+      // Handle Escape key for inline mode
+      if (editMode === "inline" && e.key === "Escape") {
+        e.preventDefault();
+        e.stopPropagation();
+        cancelEditing();
+        return;
+      }
+
       if (!config.hasKeyboardNavigation || editMode !== "quickedit") return;
 
       // Determine if the event is from the new row
@@ -421,7 +519,13 @@ export const useTableEdit = ({
             renderFormWidget={renderFormWidget}
             updateFieldValue={updateFieldValue}
             sessionKey={sessionKey}
-            onKeyDown={config.hasKeyboardNavigation ? e => handleKeyDown(e, rowId) : undefined}
+            onKeyDown={
+              // FIX: Pass onKeyDown for both inline and quickedit modes
+              // Inline mode now supports Enter/Escape keys
+              editMode === "inline" || config.hasKeyboardNavigation
+                ? (e: any) => handleKeyDown(e as React.KeyboardEvent, rowId)
+                : undefined
+            }
             editMode={editMode}
           />
         );
@@ -510,8 +614,9 @@ export const useTableEdit = ({
 
     // Determine which data ref to use
     const dataRef = editMode === "quickedit" ? newRowDataRef : editingRowDataRef;
+
     const onKeyDownHandler = config.hasKeyboardNavigation
-      ? (e: React.KeyboardEvent) => handleKeyDown(e, "new-row")
+      ? (e: any) => handleKeyDown(e as React.KeyboardEvent, "new-row")
       : undefined;
 
     // Wrapper function to render EditableCell

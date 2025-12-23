@@ -1,6 +1,10 @@
 import { TChartLegendType, TChartViewType } from "../../props";
 
 export interface BarColumnChartProps {
+  offsettop?: number;
+  offsetbottom?: number;
+  offsetleft?: number;
+  offsetright?: number;
   type: "Bar" | "Column";
   data: any[];
   dataKeys: string[];

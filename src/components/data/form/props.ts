@@ -1,6 +1,7 @@
 import BaseProps from "@wavemaker/react-runtime/higherOrder/props";
 
 interface FormProps extends BaseProps {
+  defaultmode: "create" | "edit" | "view";
   errormessage?: string;
   captionposition?: string;
   title?: string;

@@ -17,7 +17,9 @@ export const getServiceDefinitions = createAsyncThunk(
   "appConfig/getServiceDefinitions",
   async (baseUrl: string, { dispatch, rejectWithValue }) => {
     try {
-      const response = await axios.get(`${baseUrl}/services/servicedefs`);
+      const response = await axios.get(
+        `${baseUrl ?? ""}/services/servicedefs${baseUrl ? "" : ".json"}`
+      );
       const data = response?.data || {};
       const serviceDefinitions = data?.serviceDefs || {};
       dispatch(updateConfig(data));
@@ -35,7 +37,7 @@ export const getPrefabDefinitions = createAsyncThunk(
     { dispatch, rejectWithValue }
   ) => {
     try {
-      const url = `${baseUrl}/services/prefabs/${prefabName}/servicedefs`;
+      const url = `${baseUrl ?? ""}/services/prefabs/${prefabName}/servicedefs${baseUrl ? "" : ".json"}`;
       const response = await axios.get(url);
       const data = { serviceDefs: response?.data?.serviceDefs || {}, baseUrl: url, pages: pages };
       dispatch(addPrefab({ prefabName, data }));

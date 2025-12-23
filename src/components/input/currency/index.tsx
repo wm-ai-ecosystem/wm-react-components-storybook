@@ -302,6 +302,7 @@ const WmCurrency: React.FC<WmCurrencyProps> = props => {
   return (
     <Box
       component="div"
+      hidden={props.hidden}
       className={`${currencyConstants.DEFAULT_CLS} ${className || ""} ${isTouched ? "ng-touched" : "ng-untouched"}  ${isDirty ? "ng-invalid" : ""}`}
       inputMode={inputmode}
     >

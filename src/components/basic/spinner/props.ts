@@ -1,3 +1,4 @@
+import BaseProps from "@/higherOrder/props";
 import React from "react";
 
 export interface Subscription {
@@ -13,22 +14,15 @@ export const VariableEvents = {
   AFTER_INVOKE: "afterInvoke",
 };
 
-export interface WmSpinnerProps {
+export interface WmSpinnerProps extends BaseProps {
   caption?: string;
   type?: string;
   servicevariabletotrack?: string;
-  show?: boolean; // Handles string 'true'/'false' or boolean
   iconclass?: string;
   iconsize?: string;
   image?: string;
   imagewidth?: string;
   imageheight?: string;
   animation?: string;
-  name?: string;
-  styles?: React.CSSProperties;
-  className?: string;
-  id?: string;
-  listener?: Record<string, any>; // For HOC compatibility
-  hint?: string;
   arialabel?: string;
 }

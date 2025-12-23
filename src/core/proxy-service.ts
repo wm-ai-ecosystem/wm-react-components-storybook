@@ -1,7 +1,7 @@
 import { PageContextState, ProxyTarget } from "@wavemaker/react-runtime/types";
 import {
   getWidgetOverrides,
-  trackOverriddenProps,
+  OverriddenPropsRegistry,
 } from "@wavemaker/react-runtime/core/script-registry";
 import { isDOMElement, wrapWithNativeDOM } from "@wavemaker/react-runtime/core/util/dom";
 import {
@@ -9,6 +9,7 @@ import {
   widgetElementCallbacks,
 } from "@wavemaker/react-runtime/core/widget-observer";
 import BaseAppProps from "../higherOrder/BaseAppProps";
+import { ServiceVariable } from "../variables/service-variable";
 
 // WeakMap to store proxy flags without exposing them as props
 const proxyMap = new WeakMap();
@@ -180,7 +181,12 @@ const createStateArrayProxy = (
   return arrayProxy;
 };
 
-export const createWidgetProxy = (widget: any, widgetName: string, setPageContext: any) => {
+export const createWidgetProxy = (
+  widget: any,
+  widgetName: string,
+  setPageContext: any,
+  overriddenPropsRegistry?: OverriddenPropsRegistry
+) => {
   // If widget is already a proxy or is a DOM element, return it directly
   if (proxyMap.has(widget) || isDOMElement(widget)) {
     return widget;
@@ -202,7 +208,13 @@ export const createWidgetProxy = (widget: any, widgetName: string, setPageContex
       // track script-modified properties
       if (typeof prop === "string") {
         const widgetId = widget["data-widget-id"];
-        trackOverriddenProps(widgetName, prop, value, widgetId);
+        // Use page-specific registry if provided, otherwise fallback to global
+        if (
+          overriddenPropsRegistry &&
+          typeof overriddenPropsRegistry.trackOverriddenProps === "function"
+        ) {
+          overriddenPropsRegistry.trackOverriddenProps(widgetName, prop, value, widgetId);
+        }
       }
 
       Reflect.set(target, prop, value, receiver);
@@ -313,8 +325,9 @@ export const createWidgetProxy = (widget: any, widgetName: string, setPageContex
       const value = Reflect.get(target, prop, receiver);
 
       const widgetId = widget["data-widget-id"];
-      const widgetOverrides = getWidgetOverrides(widgetName, widgetId);
-      if (prop in widgetOverrides) {
+      // Use page-specific registry if provided, otherwise fallback to global
+      const widgetOverrides = overriddenPropsRegistry?.getWidgetOverrides(widgetName, widgetId);
+      if (widgetOverrides && prop in widgetOverrides) {
         return widgetOverrides[prop];
       }
 
@@ -342,7 +355,8 @@ export const createWidgetProxy = (widget: any, widgetName: string, setPageContex
 
 export const createPageProxy = (
   target: ProxyTarget,
-  setPageContext: React.Dispatch<React.SetStateAction<PageContextState>>
+  setPageContext: React.Dispatch<React.SetStateAction<PageContextState>>,
+  overriddenPropsRegistry?: OverriddenPropsRegistry
 ) => {
   // Cache for widget proxies
   const widgetProxies = new Map<string, any>();
@@ -390,7 +404,7 @@ export const createPageProxy = (
       }
 
       // Create and cache a new proxy
-      const proxy = createWidgetProxy(widget, widgetName, setPageContext);
+      const proxy = createWidgetProxy(widget, widgetName, setPageContext, overriddenPropsRegistry);
       widgetProxies.set(widgetName, proxy);
       return proxy;
     },
@@ -425,7 +439,12 @@ export const createPageProxy = (
         }
       } else if (widgetValue && typeof widgetValue === "object") {
         // Create a new proxy
-        const proxy = createWidgetProxy(widgetValue, widgetName, setPageContext);
+        const proxy = createWidgetProxy(
+          widgetValue,
+          widgetName,
+          setPageContext,
+          overriddenPropsRegistry
+        );
         widgetProxies.set(widgetName, proxy);
       }
 
@@ -439,7 +458,8 @@ export const createStateProxy = (
   path: string[] = [],
   setPageContext:
     | React.Dispatch<React.SetStateAction<PageContextState>>
-    | React.Dispatch<React.SetStateAction<BaseAppProps>>
+    | React.Dispatch<React.SetStateAction<BaseAppProps>>,
+  overriddenPropsRegistry?: OverriddenPropsRegistry
 ): ProxyTarget => {
   // Cache for nested proxies
   const nestedProxies = new Map<string, any>();
@@ -463,7 +483,8 @@ export const createStateProxy = (
             "Widgets",
             createPageProxy(
               target.Widgets,
-              setPageContext as React.Dispatch<React.SetStateAction<PageContextState>>
+              setPageContext as React.Dispatch<React.SetStateAction<PageContextState>>,
+              overriddenPropsRegistry
             )
           );
         }
@@ -481,12 +502,15 @@ export const createStateProxy = (
         return value;
       }
 
-      if (value?.constructor?.name === "ServiceVariable") {
+      if (value instanceof ServiceVariable) {
         return value;
       }
 
       // Return DOM elements directly without proxying
       if (isDOMElement(value)) {
+        return value;
+      }
+      if (value instanceof Map) {
         return value;
       }
 
@@ -505,11 +529,18 @@ export const createStateProxy = (
         return nestedProxies.get(prop);
       }
 
+      if (target?.prefab) {
+        if (nestedProxies.has(target.name)) {
+          return nestedProxies.get(target.name)[prop];
+        }
+      }
+
       // Create and cache a new nested proxy
       const nestedProxy = createStateProxy(
         value as PageContextState,
         [...path, prop],
-        setPageContext
+        setPageContext,
+        overriddenPropsRegistry
       );
       nestedProxies.set(prop, nestedProxy);
 
@@ -533,6 +564,15 @@ export const createStateProxy = (
         nestedProxies.has(prop)
       ) {
         nestedProxies.delete(prop);
+      }
+
+      if (target?.prefab) {
+        if (nestedProxies.has(target.name)) {
+          const existingProxy = nestedProxies.get(target.name);
+          existingProxy[prop] = value;
+        } else {
+          nestedProxies.set(target.name, createWidgetProxy(target, target.name, setPageContext));
+        }
       }
 
       setPageContext((prev: any) => {

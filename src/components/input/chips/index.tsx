@@ -10,6 +10,7 @@ import { WmChipsProps, DataSetItem, ChipItem } from "./props";
 import { withBaseWrapper } from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
 import SortableChip from "./SortableChip";
 import { generateStableKey, processDataset, performAddItem, performRemoveItem } from "./utils";
+import withFormController from "@wavemaker/react-runtime/components/data/form/form-controller/withFormController";
 
 const DEFAULT_CLASS = "app-chips nav nav-pills list-inline";
 
@@ -504,6 +505,8 @@ const WmChips = React.forwardRef<HTMLDivElement, WmChipsProps>((props, ref) => {
         gap={1}
         className={DEFAULT_CLASS}
         name={name}
+        aria-readonly={readonly}
+        readonly={readonly}
       >
         {inputposition === "first" && renderSearchInput()}
         {chipsList.map((chip, index) => (
@@ -574,7 +577,12 @@ const WmChips = React.forwardRef<HTMLDivElement, WmChipsProps>((props, ref) => {
     );
   };
   return (
-    <Box ref={ref} component="div" style={{ width: width, height: height, ...styles }}>
+    <Box
+      hidden={props.hidden ?? false}
+      ref={ref}
+      component="div"
+      style={{ width: width, height: height, ...styles }}
+    >
       {renderChipsList()}
     </Box>
   );
@@ -582,4 +590,4 @@ const WmChips = React.forwardRef<HTMLDivElement, WmChipsProps>((props, ref) => {
 
 WmChips.displayName = "WmChips";
 
-export default withBaseWrapper(WmChips);
+export default withBaseWrapper(withFormController(WmChips));

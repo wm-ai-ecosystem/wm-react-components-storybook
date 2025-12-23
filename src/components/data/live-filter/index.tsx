@@ -84,7 +84,9 @@ const WmLiveFilter = (prop: LiveFilterProps) => {
 
     // Sync runtime values from submitted data into field definitions
     fieldsArray.forEach((filterField: any) => {
-      const submitted = dataModel?.[filterField.field];
+      // Use fieldcol (or name) as the actual column identifier since field may contain "true"
+      const fieldKey = filterField.fieldcol || filterField.name || filterField.field;
+      const submitted = dataModel?.[fieldKey];
       if (filterField["isRange"]) {
         if (submitted && typeof submitted === "object") {
           filterField._minValue =
@@ -102,7 +104,8 @@ const WmLiveFilter = (prop: LiveFilterProps) => {
     fieldsArray.forEach((filterField: any) => {
       let fieldValue;
       let matchMode;
-      let colName = filterField.field;
+      // Use fieldcol (or name) as the actual column identifier since field may contain "true"
+      let colName = filterField.fieldcol || filterField.name || filterField.field;
       const minValue = filterField._minValue;
       const maxvalue = filterField._maxValue;
       /* if field is part of a related entity, column name will be 'entity.fieldName' */

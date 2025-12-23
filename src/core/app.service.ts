@@ -8,7 +8,7 @@ import appstore from "./appstore";
 
 export async function loadWmProperties(baseUrl: string) {
   try {
-    const response = await axios.get(`${baseUrl}/services/application/wmProperties.js`);
+    const response = await axios.get(`${baseUrl ?? ""}/services/application/wmProperties.js`);
     const text = response.data;
 
     const jsonData = text.substring(text.indexOf("{"), text.length - 1);

@@ -156,11 +156,24 @@ const WmList: React.FC<WmListProps> = props => {
   // is dataset from modal variable
   const [isDatasetFromModalVariable, setIsDatasetFromModalVariable] = useState(false);
 
-  // Ensure dataset is always an array and add unique IDs
+  // Calculate hash of dataset content to detect mutations
+  // This runs every render but is lightweight compared to recalculating safeDataset
+  const datasetHash =
+    Array.isArray(dataset) &&
+    (dataset ?? [])
+      .map((item, idx) => {
+        if (!item || typeof item !== "object") {
+          return `${idx}:${item}`;
+        }
+        // Hash all object values
+        return `${idx}:${Object.values(item).join("-")}`;
+      })
+      .join("|");
+
   const safeDataset = useMemo(() => {
     const data = getSafeDataset(dataset);
     return addUniqueRowIds(data, { type: "list" });
-  }, [dataset]);
+  }, [datasetHash]);
 
   // Initial render tracking
   const [initialRender, setinitialRender] = useState(true);

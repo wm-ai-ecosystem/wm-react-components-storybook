@@ -21,9 +21,6 @@ const SingleFileUpload: React.FC<SingleFileUploadProps> = ({
   onFileSelect,
   onBeforeselect,
 }) => {
-  const handleClick = (e: React.MouseEvent<HTMLInputElement>) => {
-    onBeforeselect?.(e);
-  };
   return (
     <div className="app-single-file-upload">
       <div className="app-button-wrapper">
@@ -33,21 +30,20 @@ const SingleFileUpload: React.FC<SingleFileUploadProps> = ({
             type="file"
             name="files"
             accept={chooseFilter}
-            disabled={disabled || readonly}
+            disabled={disabled}
             required={required}
             aria-label={arialabel || displayname || "File selection field"}
             onChange={onFileSelect}
             className="file-input"
             tabIndex={tabindex}
             style={{ display: "none" }}
-            onClick={handleClick}
           />
           <button
             id="dropzone"
             type="button"
             className="app-button btn btn-default"
             onClick={disabled || readonly ? undefined : triggerFileSelect}
-            disabled={disabled || readonly}
+            disabled={disabled}
             style={styles}
           >
             <i className={iconclass}></i>

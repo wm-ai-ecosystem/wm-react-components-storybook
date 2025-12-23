@@ -140,24 +140,26 @@ const WmCalendar = forwardRef<HTMLDivElement, WmCalendarProps>((props, ref) => {
 
   const invokeCallback = useCallback(
     (eventName: String, eventData: any) => {
+      const { $start, $end, $view, $data, $event, $newData, $oldData, $delta, $revertFunc, $ui } =
+        eventData;
       switch (eventName) {
         case "select":
-          onSelect?.(eventData);
+          onSelect?.($start, $end, $view, $data);
           break;
         case "beforerender":
           onBeforerender?.(eventData, listener?.Widgets[name]);
           break;
         case "eventdrop":
-          onEventdrop?.(eventData);
+          onEventdrop?.($event, $newData, $oldData, $delta, $revertFunc, $ui, $view);
           break;
         case "eventresize":
-          onEventresize?.(eventData);
+          onEventresize?.($event, $newData, $oldData, $delta, $revertFunc, $ui, $view);
           break;
         case "eventclick":
-          onEventclick?.(eventData);
+          onEventclick?.($event, $data, $view);
           break;
         case "eventrender":
-          onEventrender?.(eventData);
+          onEventrender?.($event, $data, $view);
           break;
         case "viewrender":
           onViewrender?.(eventData.$view);
@@ -200,7 +202,7 @@ const WmCalendar = forwardRef<HTMLDivElement, WmCalendarProps>((props, ref) => {
         selectable: selectionmode !== SELECTION_MODES.NONE,
         longPressDelay: 1000,
         headerToolbar: defaultHeaderOptions,
-        nextDayThreshold: NEXT_DAY_THRESHOLD.END,
+        nextDayThreshold: NEXT_DAY_THRESHOLD.START,
         eventSources: [dataSetEvents],
         views: {
           month: {
@@ -633,7 +635,7 @@ const WmCalendar = forwardRef<HTMLDivElement, WmCalendarProps>((props, ref) => {
     "aria-label": view ? view + " view" : "month view",
   };
   return (
-    <Box className="app-calendar" {...componentProps}>
+    <Box hidden={props.hidden ?? false} className="app-calendar" {...componentProps}>
       <Box className={props.className} ref={calendarRef}></Box>
     </Box>
   );

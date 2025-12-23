@@ -16,7 +16,7 @@ export interface WmCarouselTemplateProps extends BaseProps {
   index?: number;
 }
 
-const DEFAULT_CLASS = "app-carousel-item";
+const DEFAULT_CLASS = "app-carousel-item item";
 
 const WmCarouselTemplate = memo(
   (props: WmCarouselTemplateProps) => {

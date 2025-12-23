@@ -231,8 +231,12 @@ export class DataProvider {
 
   // Check if the variable is of type service variable and whether update is required
   init(component: any) {
-    if (component?.isUpdateRequired) {
-      return component?.isUpdateRequired();
+    let datasource = component?.datasource;
+    if (datasource) {
+      return (
+        (datasource?.pagination?.totalPages ?? 0) > 1 ||
+        (datasource?.serviceInfo?.parameters?.length ?? 0) > 0
+      );
     }
     return false;
   }
@@ -250,14 +254,20 @@ export class DataProvider {
       });
     }
 
-    // Use the onQuerySearch callback if available
-    if (component?.onQuerySearch) {
-      return new Promise((resolve, reject) => {
-        component?.onQuerySearch(
-          paramsObj,
-          (response: any) => resolve(response),
-          (error: any) => reject(error)
-        );
+    const datasource = component?.datasource;
+    if (datasource) {
+      if (datasource.category === "wm.LiveVariable") {
+        datasource.setFilter(paramsObj);
+      } else {
+        datasource.setInput(paramsObj);
+      }
+      return new Promise(async (resolve, reject) => {
+        try {
+          const result = await datasource.invoke();
+          resolve(result?.data || []);
+        } catch (err) {
+          resolve([]);
+        }
       });
     }
 

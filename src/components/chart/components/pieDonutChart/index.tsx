@@ -87,6 +87,10 @@ export const PieDonutChart: React.FC<PieDonutChartProps> = ({
   showLegend,
   xDataKeyArr,
   numberFormat,
+  offsetleft,
+  offsettop,
+  offsetright,
+  offsetbottom,
 }) => {
   const total = data.reduce((sum, item) => sum + item.value, 0);
   const filteredData = data.filter(item => selectedRegions.includes(item.name));
@@ -104,10 +108,15 @@ export const PieDonutChart: React.FC<PieDonutChartProps> = ({
   }));
 
   return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+    <div style={{ position: "relative", minWidth: "300px", width: "100%", height: "100%" }}>
       {/* Chart Container */}
       <ResponsiveContainer width="100%" height="100%">
-        <PieChart {...commonProps}>
+        <PieChart
+          {...commonProps}
+          style={{
+            transform: `translate(calc(${offsetleft ?? 0}px - ${offsetright ?? 0}px), calc(${offsettop ?? 0}px - ${offsetbottom ?? 0}px))`,
+          }}
+        >
           <Pie
             data={filteredData}
             dataKey="value"

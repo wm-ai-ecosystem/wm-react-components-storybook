@@ -192,7 +192,7 @@ const WmCarousel = memo(
               return newIndex;
             });
           }
-        }, animationinterval * 1000);
+        }, animationinterval * 500);
       }
     }, [animation, animationinterval, itemCount, isPaused]);
 

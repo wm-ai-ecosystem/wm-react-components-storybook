@@ -187,6 +187,8 @@ const WmNav = memo(
         role="navigation"
         className={clsx(DEFAULT_CLASS, className, `nav-${layout} ${NavClassTypes[type]}`)}
         id={id}
+        name={props.name}
+        hidden={props.hidden ?? false}
       >
         {renderNavItem()}
       </List>

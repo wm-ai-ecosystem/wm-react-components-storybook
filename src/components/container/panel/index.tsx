@@ -48,10 +48,10 @@ const WmPanel = (props: WmPanelProps) => {
     onExitfullscreen,
     onFullscreen,
     onLoad,
-    onMouseenter,
-    onMouseleave,
-    onMouseout,
-    onMouseover,
+    onMouseEnter,
+    onMouseLeave,
+    onMouseOut,
+    onMouseOver,
     // HOC related props - extract to prevent passing to DOM
     onPropertyChange,
     listener,
@@ -114,19 +114,19 @@ const WmPanel = (props: WmPanelProps) => {
   const toggleHelp = () => setHelpVisible(!helpVisible);
 
   const handleMouseEnter = (event: React.MouseEvent) => {
-    onMouseenter?.(event, listener?.Widgets?.[name as string]);
+    onMouseEnter?.(event, listener?.Widgets?.[name as string]);
   };
 
   const handleMouseLeave = (event: React.MouseEvent) => {
-    onMouseleave?.(event, listener?.Widgets?.[name as string]);
+    onMouseLeave?.(event, listener?.Widgets?.[name as string]);
   };
 
   const handleMouseOver = (event: React.MouseEvent) => {
-    onMouseover?.(event, listener?.Widgets?.[name as string]);
+    onMouseOver?.(event, listener?.Widgets?.[name as string]);
   };
 
   const handleMouseOut = (event: React.MouseEvent) => {
-    onMouseout?.(event, listener?.Widgets?.[name as string]);
+    onMouseOut?.(event, listener?.Widgets?.[name as string]);
   };
 
   // onLoad handler
@@ -235,6 +235,7 @@ const WmPanel = (props: WmPanelProps) => {
       hidden={!show}
       component="div"
       {...componentProps}
+      style={{ ...props.styles, ...props.conditionalstyle }}
     >
       {showHeader && (
         <Box className={clsx("panel-heading", { "show-help": helpVisible })} ref={panelHeaderRef}>

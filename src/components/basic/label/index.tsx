@@ -62,17 +62,20 @@ export const WmLabel = memo(
       type = "p",
       styles,
       className,
-      caption = "Label",
+      caption,
       hint,
       name,
       htmlFor,
       ...rest
     } = props;
 
+    const hasCaptionProp = Object.prototype.hasOwnProperty.call(props, "caption");
+    const safeCaption = hasCaptionProp ? caption : "Label";
+
     const ownerState = { type };
 
     const captionString = (
-      typeof caption === "string" ? caption : (JSON.stringify(caption) ?? "")
+      typeof safeCaption === "string" ? safeCaption : (JSON.stringify(safeCaption) ?? "")
     )?.replace(/&nbsp;|undefined|null/gi, " ");
 
     // Check if caption contains HTML tags

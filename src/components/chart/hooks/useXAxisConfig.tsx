@@ -11,6 +11,7 @@ type UseXAxisConfigParams = {
   xnumberformat?: string;
   showxaxis: boolean;
   xaxislabeldistance: number;
+  showxdistance: boolean;
 };
 
 export function useXAxisConfig({
@@ -22,6 +23,7 @@ export function useXAxisConfig({
   xnumberformat,
   showxaxis,
   xaxislabeldistance,
+  showxdistance = false,
 }: UseXAxisConfigParams): XAxisProps {
   const xAxisConfig = useMemo<XAxisProps>(() => {
     const tickFontSize = 12;
@@ -58,12 +60,19 @@ export function useXAxisConfig({
       let displayValue: any = rawValue;
       if (xnumberformat && typeof rawValue === "number") {
         displayValue = formatNumber(rawValue, xnumberformat);
-      } else if (
-        xDataKeyArr.length > 0 &&
-        typeof index === "number" &&
-        xDataKeyArr[index] !== undefined
-      ) {
-        displayValue = xDataKeyArr[index];
+      } else if (xDataKeyArr.length > 0) {
+        // For bubble/scatter charts, rawValue is the data index (numeric).
+        // Use rawValue to look up the label when it's a valid integer index.
+        // Fall back to tick index for other chart types where values match indices.
+        const dataIndex = typeof rawValue === "number" ? Math.round(rawValue) : index;
+        if (
+          Number.isInteger(dataIndex) &&
+          dataIndex >= 0 &&
+          dataIndex < xDataKeyArr.length &&
+          xDataKeyArr[dataIndex] !== undefined
+        ) {
+          displayValue = xDataKeyArr[dataIndex];
+        }
       }
       const fullText = String(displayValue ?? "");
       const needsEllipsis = fullText.length > maxChars;
@@ -85,11 +94,12 @@ export function useXAxisConfig({
     return {
       hide: !showxaxis,
       label: {
-        // value: getDefaultXAxisLabel(),
+        value: getDefaultXAxisLabel(),
         position: "insideBottom",
         offset: xaxislabeldistance,
         fill: "#000",
       },
+      tickLine: showxdistance,
       // Ensure all x-axis labels render
       interval: 0,
       // Provide extra space only when staggering is needed

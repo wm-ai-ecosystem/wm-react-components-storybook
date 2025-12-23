@@ -182,6 +182,7 @@ export const WmSpinner = memo(
             role="alert"
             aria-live="polite"
             aria-busy="true"
+            hidden={props.hidden}
           >
             <Box className="spinner-message">
               {renderSpinnerContent()}

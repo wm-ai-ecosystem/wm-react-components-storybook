@@ -1,7 +1,7 @@
 import BaseProps from "@wavemaker/react-runtime/higherOrder/props";
 import WmAnchorProps from "../../basic/anchor/props";
 
-type InteractionType = "click" | "hover" | "click and hover";
+type InteractionType = "click" | "hover" | "default" | "click and hover";
 type PopoverPlacementType = "top" | "bottom" | "left" | "right";
 type ContentSourceType = "partial" | "inline";
 type AutoCloseType = "outsideClick" | "always" | "disabled";

@@ -37,6 +37,15 @@ export const BaseAppInitialState = {
 
 export function importModule(moduleName: string) {
   if (moduleName === "moment") {
+    const guessedTz =
+      (moment.tz && typeof moment.tz.guess === "function" && moment.tz.guess()) ||
+      (typeof Intl !== "undefined" &&
+        Intl.DateTimeFormat &&
+        Intl.DateTimeFormat().resolvedOptions().timeZone) ||
+      "UTC";
+    if (moment.tz && typeof moment.tz.setDefault === "function") {
+      moment.tz.setDefault(guessedTz);
+    }
     return moment;
   }
 }

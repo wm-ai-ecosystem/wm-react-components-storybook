@@ -15,6 +15,7 @@ import { TableEditMode, WmTableProps } from "../props";
 import WmLiveFormProps from "../../live-form/props";
 import { WmDialogBody } from "@wavemaker/react-runtime/components/dialogs/dialog-body";
 import Box from "@mui/material/Box";
+import { useWidgetProxy } from "@wavemaker/react-runtime/context/WidgetProvider";
 
 interface WmLiveTableProps extends BaseProps {
   formlayout?: TableEditMode;
@@ -27,6 +28,7 @@ const WmLiveTable = (props: WmLiveTableProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState<any>(null);
   const [isAddingNewRow, setIsAddingNewRow] = useState(false);
+  const [formKey, setFormKey] = useState(0); // Key to force form re-creation
   const isDialogLayout = props.formlayout === "dialog";
 
   const { formlayout = "form", listener } = props;
@@ -57,6 +59,9 @@ const WmLiveTable = (props: WmLiveTableProps) => {
     return { tableChild, formChild };
   }, [props.children]);
 
+  const tableWidget = tableChild?.props.name ? useWidgetProxy(tableChild.props.name) : null;
+  const formWidget = formChild?.props.name ? useWidgetProxy(formChild.props.name) : null;
+
   const handleOpenDialog = useCallback(() => {
     setIsDialogOpen(true);
   }, []);
@@ -70,16 +75,16 @@ const WmLiveTable = (props: WmLiveTableProps) => {
   // Helper to get form widget - always get fresh value from listener
   const getFormWidget = useCallback(() => {
     // Always get fresh value from listener to ensure we have the latest registered methods
-    return listener?.Widgets?.[formChild?.props.name as string];
+    return formWidget;
   }, [formChild?.props.name]);
 
   const getTableWidget = useCallback(() => {
-    return listener?.Widgets?.[tableChild?.props.name as string];
-  }, [tableChild?.props.name]);
+    return tableWidget;
+  }, [tableWidget]);
 
   // Expose LiveTable methods through its own listener
   useEffect(() => {
-    if (!listener?.onChange || !formChild?.props.name) return;
+    if (!listener?.onChange || !formChild?.props.name || !tableWidget) return;
 
     const liveTableContext = {
       addNewRow: (event: any, widget: any, row: any) => {
@@ -90,11 +95,32 @@ const WmLiveTable = (props: WmLiveTableProps) => {
         setIsAddingNewRow(true);
 
         if (isDialogLayout) {
-          // Clear form data for new row
+          // Clear form data for new row and increment key to force form re-creation
           setFormData({});
+          setFormKey(prev => prev + 1); // Force new form instance
+          // Clear the global widget registry to prevent stale form values
+          if (formChild?.props.name && listener?.Widgets?.[formChild.props.name]) {
+            listener.Widgets[formChild.props.name].formdata = {};
+            // Clear formfields to reset individual field values
+            if (listener.Widgets[formChild.props.name].formfields) {
+              Object.keys(listener.Widgets[formChild.props.name].formfields).forEach(key => {
+                const field = listener.Widgets[formChild.props.name].formfields[key];
+                if (field) {
+                  field.datavalue = field.defaultvalue || "";
+                  field.value = field.defaultvalue || "";
+                }
+              });
+            }
+          }
           handleOpenDialog();
         } else if (formlayout === "form") {
-          // For non-dialog mode, just reset the form
+          // For non-dialog mode, clear form data by setting empty object
+          setFormData({});
+          // Also update the form widget's formdata in context
+          if (formWidget && formChild?.props.name && listener?.Widgets) {
+            listener.Widgets[formChild.props.name].formdata = {};
+          }
+          // Reset the form
           formWidget?.new();
         } else if (formlayout === "inline" || formlayout === "quickedit") {
           tableWidget?.addNewRow();
@@ -184,12 +210,12 @@ const WmLiveTable = (props: WmLiveTableProps) => {
       isLayoutDialog: isDialogLayout,
       onSuccess: handleFormSuccess,
       cancel: handleFormCancel,
-      // Pass form data directly when in dialog layout
-      ...(isDialogLayout && formData !== null && { formdata: formData }),
+      // Pass form data for both dialog and form layouts when explicitly set
+      ...(formData !== null && { formdata: formData }),
     };
 
     return cloneElement(formChild, newProps);
-  }, [formChild, isDialogLayout, handleFormSuccess, handleFormCancel, formData]);
+  }, [formChild, isDialogLayout, handleFormSuccess, handleFormCancel, formData, formKey]);
 
   const enhancedTableChild = useMemo(() => {
     if (!tableChild || !isValidElement(tableChild)) return tableChild;
@@ -217,7 +243,8 @@ const WmLiveTable = (props: WmLiveTableProps) => {
             dialogtype="design-dialog"
           >
             <WmDialogBody name="popup-body" listener={{}}>
-              {enhancedFormChild}
+              {/* Key on wrapper div forces complete form destruction and recreation */}
+              <div key={`form-wrapper-${formKey}`}>{enhancedFormChild}</div>
             </WmDialogBody>
           </WmDialog>
         )}

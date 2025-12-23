@@ -1,52 +1,51 @@
-import { useCallback, useRef, useEffect } from "react";
-import { UsePaginationStateProps, UsePaginationStateReturn } from "../props";
+import { useCallback, useState } from "react";
+import { UsePaginationStateProps, UsePaginationStateReturn, PaginationState } from "../props";
 
 /**
- * Hook to manage pagination state and behavior
+ * Hook to manage pagination state and behavior for TanStack Table
+ * Provides controlled pagination state management
  */
 export const usePaginationState = ({
-  table,
+  initialPage,
+  initialPageSize,
   editmode,
   internalDataset,
-  isAddingNewRow,
-  cancelEditing,
   datasource,
   isServerSidePagination,
 }: UsePaginationStateProps): UsePaginationStateReturn => {
-  const prevPageRef = useRef(table.getState().pagination.pageIndex);
+  // Local state for pagination - needed for controlled TanStack Table pagination
+  const [paginationState, setPaginationState] = useState<PaginationState>({
+    pageIndex: initialPage - 1, // Convert to 0-based index
+    pageSize: initialPageSize,
+  });
 
-  // Hide add new row when page changes
-  useEffect(() => {
-    const currentPage = table.getState().pagination.pageIndex;
-    if (currentPage !== prevPageRef.current && isAddingNewRow) {
-      cancelEditing();
-    }
-    prevPageRef.current = currentPage;
-  }, [table, isAddingNewRow, cancelEditing]);
-
+  // Direct pagination handler - avoids redundant table.setPageIndex() call
   const handlePaginationChange = useCallback(
     (event: any, widget: any, index: number) => {
+      const newPageIndex = index - 1; // Convert to 0-based index
+
+      // Handle quickedit edge case - prevent navigation to empty pages
       if (editmode === "quickedit" && !isServerSidePagination) {
-        const newPageIndex = index - 1; // Convert to 0-based index
-        const pageSize = table.getState().pagination.pageSize;
+        const pageSize = paginationState.pageSize;
         const dataLength = internalDataset.length;
         const startIdx = newPageIndex * pageSize;
 
-        // If this would be an empty page (no data on it), prevent navigation
         if (startIdx >= dataLength && dataLength > 0) {
-          // Calculate the correct page to navigate to
           const correctPage = Math.ceil(dataLength / pageSize);
           if (correctPage > 0) {
-            table.setPageIndex(correctPage - 1); // Convert to 0-based index
+            setPaginationState(prev => ({ ...prev, pageIndex: correctPage - 1 }));
             return;
           }
         }
       }
-      table.setPageIndex(index - 1);
+
+      // Directly update pagination state - no need for table.setPageIndex() roundtrip
+      setPaginationState(prev => ({ ...prev, pageIndex: newPageIndex }));
     },
-    [editmode, internalDataset, table, isServerSidePagination]
+    [editmode, isServerSidePagination, internalDataset.length, paginationState.pageSize]
   );
 
+  // Page size change handler
   const handlePageSizeChange = useCallback(
     (newPageSize: number) => {
       // Update datasource maxResults if datasource has paging capability
@@ -54,13 +53,15 @@ export const usePaginationState = ({
         datasource.maxResults = newPageSize;
       }
 
-      table.setPageSize(newPageSize);
-      table.setPageIndex(0); // Reset to first page
+      // Directly update pagination state - pageSize and reset to first page
+      setPaginationState({ pageIndex: 0, pageSize: newPageSize });
     },
-    [table, isServerSidePagination, datasource]
+    [isServerSidePagination, datasource]
   );
 
   return {
+    paginationState,
+    setPaginationState,
     handlePaginationChange,
     handlePageSizeChange,
   };

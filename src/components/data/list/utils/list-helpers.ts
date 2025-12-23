@@ -181,9 +181,10 @@ export const getSelectedItemWidgets = (
     }
     return result;
   }, {});
-  if (listener) {
+  const currentItem = currentItemWidgets;
+  if (listener && currentItem && Object.keys(currentItem).length > 0) {
     listener.onChange(name, {
-      selectedItemWidgets: currentItemWidgets,
+      selectedItemWidgets: currentItem,
     });
   }
 };

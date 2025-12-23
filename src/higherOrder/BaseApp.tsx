@@ -1,7 +1,10 @@
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import cloneDeep from "lodash-es/cloneDeep";
 import isEqual from "lodash-es/isEqual";
 import get from "lodash-es/get";
+// @ts-ignore
+import { wmSetDependency } from "@wavemaker/variables";
 
 import { useAppDispatch, useAppSelector } from "@/store";
 import { useAuth } from "@/hooks/useAuth";
@@ -10,7 +13,7 @@ import appstore from "@/core/appstore";
 import { getAppVariablesInstance } from "@/core/appVariablesStore";
 import BaseAppProps from "./BaseAppProps";
 import AppContext from "@/context/AppContext";
-import { CommonComponentInfo } from "@/types";
+import { CommonComponentInfo, ProxyTarget } from "@/types";
 import EventNotifier from "@/core/event-notifier";
 import DialogService from "@/core/dialog.service";
 import { handle401 } from "@/core/app.service";
@@ -18,6 +21,15 @@ import { createStateProxy } from "@/core/proxy-service";
 import { BaseAppInitialState, importModule } from "@/higherOrder/helper";
 import { defaultUserState } from "@/store/slices/authSlice";
 import AppSpinnerProvider from "@/context/AppSpinnerProvider";
+import formatters from "@/core/formatter";
+import { hasOwnObjectProperty } from "../core/util/utils";
+import { metadataService } from "../variables/metadata.service";
+
+// Add global declaration for wm property
+declare global {
+  let wm: ProxyTarget;
+}
+(global as ProxyTarget).wm ??= {};
 
 // HOC function that wraps the app component
 export const BaseApp = <P extends object>(
@@ -55,6 +67,9 @@ export const BaseApp = <P extends object>(
       importModule,
       Widgets: {},
       subscribe,
+      targetPlatform: "WEB",
+      hasOwnObjectProperty,
+      formatters,
       ...appInfo,
     });
 
@@ -220,7 +235,6 @@ export const BaseApp = <P extends object>(
             }
           }
         };
-
         await executeStartAppOperations();
 
         // Execute startup operations
@@ -394,6 +408,14 @@ export const BaseApp = <P extends object>(
         );
       });
     };
+
+    useEffect(() => {
+      metadataService.setMetadata(appContext?.serviceDefinitions);
+      wmSetDependency("metadata", metadataService);
+      wmSetDependency("appManager", {
+        notify,
+      });
+    }, []);
 
     return (
       <AppContext.Provider

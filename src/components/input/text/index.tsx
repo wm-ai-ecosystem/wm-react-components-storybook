@@ -6,7 +6,7 @@ import debounce from "lodash-es/debounce";
 import { withBaseWrapper } from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
 import withFormController from "@wavemaker/react-runtime/components/data/form/form-controller/withFormController";
 import { WmTextProps } from "./props";
-import { formatInput, removeDisplayFormat } from "./util";
+import { formatInput, removeDisplayFormat, applyAutoCapitalize, getFormatMaxLength } from "./util";
 import delay from "lodash/delay";
 
 const DEFAULT_CLASS = "form-control app-textbox";
@@ -36,7 +36,7 @@ const WmText = memo(
       tabindex,
       regexp,
       updateon = "blur",
-      autocapitalize,
+      autocapitalize = "none",
       autotrim,
       onChange,
       onBlur,
@@ -231,31 +231,40 @@ const WmText = memo(
 
       const inputEl = e.target;
       let newValue = inputEl.value;
+      const previousValue = rawValue;
       cursorPositionRef.current = inputEl.selectionStart || 0;
 
-      // Extract digits for validation if displayformat is present
-      const digitsOnly = displayformat ? newValue.replace(/\D/g, "") : newValue;
+      // Manual autocapitalize implementation
+      const capitalizeResult = applyAutoCapitalize(
+        newValue,
+        previousValue,
+        cursorPositionRef.current,
+        autocapitalize
+      );
+      newValue = capitalizeResult.value;
+
+      // Extract meaningful characters for validation if displayformat is present
+      const cleanValue = displayformat ? removeDisplayFormat(newValue, displayformat) : newValue;
 
       // Enforce maxchars constraint BEFORE setting state
-      if (maxchars && digitsOnly.length > maxchars) {
+      if (maxchars && cleanValue.length > maxchars) {
         // Prevent input that exceeds maxchars
         return;
       }
 
-      // Enforce displayformat digit limit
+      // Enforce displayformat character limit using the generic format parser
       if (displayformat) {
-        const formatDigits = displayformat.replace(/[^9]/g, "");
-        const maxDigits = formatDigits.length;
+        const maxFormatLength = getFormatMaxLength(displayformat);
 
-        if (digitsOnly.length > maxDigits) {
-          // Prevent input that exceeds format digit limit
+        if (cleanValue.length > maxFormatLength) {
+          // Prevent input that exceeds format character limit
           return;
         }
       }
 
       // Enforce min/max value constraints for number type
       if (props.type === "number") {
-        const numValue = toNumber(digitsOnly);
+        const numValue = toNumber(cleanValue);
 
         if (props.maxvalue !== undefined && numValue > props.maxvalue) {
           // Prevent input that exceeds maxvalue
@@ -265,12 +274,12 @@ const WmText = memo(
         if (
           props.minvalue !== undefined &&
           numValue < props.minvalue &&
-          digitsOnly.length >= String(props.minvalue).length
+          cleanValue.length >= String(props.minvalue).length
         ) {
           // Only prevent if the number length is complete and still below minvalue
           // This allows typing "1" when minvalue is 10
           const minLength = String(props.minvalue).length;
-          if (digitsOnly.length >= minLength) {
+          if (cleanValue.length >= minLength) {
             return;
           }
         }
@@ -278,18 +287,34 @@ const WmText = memo(
 
       setRawValue(newValue);
 
+      // Restore cursor position after capitalization
+      if (capitalizeResult.wasCapitalized) {
+        setTimeout(() => {
+          if (ref.current && cursorPositionRef.current !== null) {
+            ref.current.setSelectionRange(cursorPositionRef.current, cursorPositionRef.current);
+          }
+        }, 0);
+      }
+
       // Handle cursor position for formatted input
       if (displayformat && showdisplayformaton === "keypress") {
         setTimeout(() => {
           if (ref.current) {
             const formatted = formatInput(newValue, displayformat);
-            const digitsBefore = newValue
-              .substring(0, cursorPositionRef.current)
-              .replace(/\D/g, "").length;
+            // Count meaningful characters (not separators) before cursor
+            const charsBefore = removeDisplayFormat(
+              newValue.substring(0, cursorPositionRef.current),
+              displayformat
+            ).length;
+
+            // Find position in formatted string where we have the same number of meaningful chars
             const newPos = formatted.split("").reduce((pos, char, index) => {
               if (pos !== -1) return pos;
-              const digitsSoFar = formatted.substring(0, index).replace(/\D/g, "").length;
-              return digitsSoFar >= digitsBefore ? index : -1;
+              const charsSoFar = removeDisplayFormat(
+                formatted.substring(0, index + 1),
+                displayformat
+              ).length;
+              return charsSoFar >= charsBefore ? index + 1 : -1;
             }, -1);
 
             if (newPos !== -1) {
@@ -381,6 +406,7 @@ const WmText = memo(
     return (
       <TextField
         {...events}
+        hidden={props.hidden}
         title={hint || "Text Input"}
         name={name}
         id={id || name}
@@ -404,6 +430,7 @@ const WmText = memo(
           htmlInput: {
             tabIndex: tabindex,
             readOnly: readonly,
+            autoCapitalize: autocapitalize,
             className: clsx(
               DEFAULT_CLASS,
               className,
@@ -448,6 +475,7 @@ const WmText = memo(
       "arialabel",
       "error",
       "className",
+      "hidden",
     ];
 
     return keys.every(key => prev[key] === current[key]);

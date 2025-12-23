@@ -75,6 +75,7 @@ export const createDataColumn = (
       textAlign: wmColumn.textalignment,
       backgroundColor: wmColumn.backgroundcolor,
       className: wmColumn.colClass,
+      colClass: wmColumn.colClass, // Store colClass separately for expression evaluation
       ...wmColumn.styles,
       // Include widget types for filter rendering
       widgetType: wmColumn.widgetType,
@@ -83,6 +84,8 @@ export const createDataColumn = (
       // Include column type for filtering
       type: wmColumn.type || wmColumn.columntype || "string",
       searchable: wmColumn.searchable !== false,
+      // Custom cell renderer for optimized rendering in MemoizedRowCells
+      renderCellContent: wmColumn?.renderCellContent,
     },
   };
 };

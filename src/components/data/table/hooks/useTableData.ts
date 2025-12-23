@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef, useMemo, useEffect } from "react";
-import { findIndex, filter, slice } from "lodash-es";
+import { findIndex, filter, slice, isEqual } from "lodash-es";
 import { UseTableDataProps, UseTableDataReturn } from "../props";
 import { addUniqueRowIds, TABLE_MESSAGES } from "../utils";
 import { cleanRowData } from "../utils";
@@ -28,7 +28,9 @@ export const useTableData = ({
 
   // Update internalDataset when dataset prop changes
   useEffect(() => {
-    setInternalDataset(processedDataset);
+    if (!isEqual(internalDataset, processedDataset)) {
+      setInternalDataset(processedDataset);
+    }
   }, [processedDataset]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const pendingDeleteRef = useRef<{

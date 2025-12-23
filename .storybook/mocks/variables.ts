@@ -20,8 +20,57 @@ export const wmGetDependency = (key: string) => {
   return undefined;
 };
 
+/**
+ * Mock implementation of ServiceVariable base class
+ * This provides a minimal implementation for Storybook environment
+ */
+export class ServiceVariable {
+  name: string;
+  dataSet: any;
+  dataBinding: any;
+  firstRecord: any;
+  lastRecord: any;
+  isList: boolean;
+  service: string;
+  serviceType: string;
+  maxResults: number;
+  operation: string;
+  operationId: string;
+  operationType: string;
+  controller: string;
+  serviceInfo: any;
+  pagination: any;
+
+  constructor(config: any) {
+    this.name = config.name;
+    this.dataSet = config.dataSet;
+    this.dataBinding = config.dataBinding || {};
+    this.firstRecord = config.firstRecord || {};
+    this.lastRecord = config.lastRecord || {};
+    this.isList = config.isList;
+    this.service = config.service;
+    this.serviceType = config.serviceType;
+    this.maxResults = config.maxResults;
+    this.operation = config.operation;
+    this.operationId = config.operationId;
+    this.operationType = config.operationType;
+    this.controller = config.controller;
+    this.serviceInfo = config.serviceInfo;
+    this.pagination = { page: 0 };
+  }
+
+  invoke(_options?: any, onSuccess?: Function, _onError?: Function) {
+    // Mock invoke - just call success callback with empty data
+    if (onSuccess) {
+      setTimeout(() => onSuccess({}), 0);
+    }
+    return this;
+  }
+}
+
 // Export other potential functions that might be needed
 export default {
   wmSetDependency,
   wmGetDependency,
+  ServiceVariable,
 };

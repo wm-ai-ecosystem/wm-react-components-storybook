@@ -6,6 +6,10 @@ export interface ContainerProps extends BaseProps {
   alignment?: string;
   gap?: string | number;
   columngap?: string | number;
+  clipcontent?: string | boolean;
+  position?: string;
+  overflow?: string;
+  zindex?: string | number;
   styles?: any;
   className?: string;
   children?: React.ReactNode;

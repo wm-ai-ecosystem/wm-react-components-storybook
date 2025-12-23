@@ -22,6 +22,22 @@ import WmSwitch from "../../../input/default/switch";
 import WmCheckboxset from "../../../input/default/checkboxset";
 import WmRadioset from "../../../input/default/radioset";
 import { UseFormWidgetProps, UseFormWidgetReturn } from "../props";
+import get from "lodash-es/get";
+
+function getDisabledValue(disabled: boolean | undefined | string, rowData: any) {
+  if (typeof disabled === "string") {
+    if (disabled.includes("rowData")) {
+      try {
+        return new Function("rowData", `return ${disabled}`)(rowData);
+      } catch (error) {
+        console.warn("Failed to evaluate disabled expression:", disabled, error);
+        return false;
+      }
+    }
+    return get(rowData, disabled);
+  }
+  return disabled;
+}
 
 export const useFormWidget = ({ listener }: UseFormWidgetProps): UseFormWidgetReturn => {
   // Function to render the appropriate form widget based on editWidgetType
@@ -48,12 +64,14 @@ export const useFormWidget = ({ listener }: UseFormWidgetProps): UseFormWidgetRe
       const sessionSuffix = widgetProps?.sessionKey ? `_${widgetProps.sessionKey}` : "";
       const uniqueName = `edit_${fieldName}${sessionSuffix}`;
 
+      const disabled = getDisabledValue(widgetProps?.disabled, widgetProps?.rowData);
+
       const commonProps: any = {
         key: uniqueName, // Add key to force component recreation
         name: uniqueName,
         datavalue: effectiveValue,
         required: widgetProps?.required || false,
-        disabled: widgetProps?.disabled || false,
+        disabled: disabled,
         placeholder: widgetProps?.placeholder || `Enter ${fieldName}`,
         onChange: (event: any, widget: any, newVal: any) => {
           if (fieldChangeCallback) {
@@ -67,6 +85,7 @@ export const useFormWidget = ({ listener }: UseFormWidgetProps): UseFormWidgetRe
         listener,
         rowData: widgetProps?.rowData,
         column: widgetProps?.column,
+        updateon: "blur",
       };
 
       // Helper function to wrap event handlers with the correct parameters
@@ -113,13 +132,13 @@ export const useFormWidget = ({ listener }: UseFormWidgetProps): UseFormWidgetRe
         case "WmText":
           // Check if column has editinputtype property
           const editInputType = column?.editinputtype || "text";
-          return <WmText {...commonProps} type={editInputType} updateon="keypress" />;
+          return <WmText {...commonProps} type={editInputType} />;
 
         case "WmPassword":
-          return <WmText {...commonProps} type="password" updateon="keypress" />;
+          return <WmText {...commonProps} type="password" />;
 
         case "WmTextarea":
-          return <WmTextarea {...commonProps} updateon="keypress" />;
+          return <WmTextarea {...commonProps} />;
 
         case "WmCheckbox":
           const checkboxDataset = getBooleanDataset();

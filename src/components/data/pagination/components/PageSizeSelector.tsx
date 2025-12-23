@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, memo } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -7,7 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import { PageSizeSelectorProps } from "./props";
 import { APP_LOCALE } from "../../list/utils/constants";
 
-export const PageSizeSelector: React.FC<PageSizeSelectorProps> = ({
+const PageSizeSelectorComponent: React.FC<PageSizeSelectorProps> = ({
   pagesizeoptions = "5,10,20,50,100",
   maxResults = 10,
   currentPage = 1,
@@ -179,3 +179,17 @@ export const PageSizeSelector: React.FC<PageSizeSelectorProps> = ({
     </Box>
   );
 };
+
+PageSizeSelectorComponent.displayName = "PageSizeSelector";
+
+export const PageSizeSelector = memo(PageSizeSelectorComponent, (prevProps, nextProps) => {
+  // Custom comparison to prevent unnecessary re-renders
+  return (
+    prevProps.pagesizeoptions === nextProps.pagesizeoptions &&
+    prevProps.maxResults === nextProps.maxResults &&
+    prevProps.currentPage === nextProps.currentPage &&
+    prevProps.dataSize === nextProps.dataSize &&
+    prevProps.paginationMeta === nextProps.paginationMeta &&
+    prevProps.onPageSizeChange === nextProps.onPageSizeChange
+  );
+});

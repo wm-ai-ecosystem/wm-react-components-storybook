@@ -6,7 +6,7 @@ export const usePanelStructure = ({
   title,
   subheading,
   iconclass,
-  exportOptions = [],
+  exportformat = [],
   headerActions,
   footerActions,
   shownavigation,
@@ -17,8 +17,8 @@ export const usePanelStructure = ({
   datasource,
 }: UsePanelStructureProps): UsePanelStructureReturn => {
   const showPanelHeading = useMemo(
-    () => shouldShowPanelHeading(title, subheading, iconclass, exportOptions, headerActions),
-    [title, subheading, iconclass, exportOptions, headerActions]
+    () => shouldShowPanelHeading(title, subheading, iconclass, exportformat, headerActions),
+    [title, subheading, iconclass, exportformat, headerActions]
   );
 
   const showPagination = useMemo(

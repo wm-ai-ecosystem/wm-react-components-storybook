@@ -17,6 +17,10 @@ import {
   isObject,
   isNil,
   transform,
+  sum,
+  round,
+  mean,
+  min,
 } from "lodash-es";
 import React from "react";
 import {
@@ -109,19 +113,21 @@ export const addUniqueRowIds = (
     if (typeof item !== "object" || item === null || isArray(item)) {
       return item;
     }
+    const getProperty = (propName: string) => get(item, propName);
 
     // Skip if the item already has a unique row ID
     if (item[idProperty]) {
-      return item;
+      return item.getProperty ? item : { ...item, getProperty };
     }
 
     // Generate a unique ID based on existing id field or create a deterministic hash
     const rowId = item.id || item.ID || item.Id || generateDeterministicHash(item, index);
 
-    // Use spread operator for objects to add the ID property
+    // Use spread operator for objects to add the ID property and getProperty helper
     return {
       ...item,
       [idProperty]: rowId,
+      getProperty,
     };
   });
 };
@@ -208,14 +214,69 @@ export const isColumnVisibleForViewport = (
   return true;
 };
 
+function transformExpression(exp: string) {
+  if (typeof exp === "string") {
+    // First replacing generic getProperty calls with rowData
+    // Matches patterns like: fragment.row?.getProperty?.("key") -> rowData['key']
+    let transformedExp = exp.replace(
+      /(?:[\w$]+(?:\?\.|\.))*getProperty(?:\?\.)?\(\s*(['"])(.*?)\1\s*\)/g,
+      (_, quote, key) => `rowData['${key}']`
+    );
+
+    // Regex to split by string literals (double or single quoted)
+    const parts = transformedExp.split(/(".*?"|'.*?')/);
+
+    return parts
+      .map(part => {
+        // If part is a string literal, return as is
+        if (part.startsWith('"') || part.startsWith("'")) {
+          return part;
+        }
+
+        // Replace identifiers that are not keywords
+        // Identifiers start with letter, _, or $
+        return part.replace(/\b([a-zA-Z_$][a-zA-Z0-9_$]*)\b/g, match => {
+          const keywords = [
+            "true",
+            "false",
+            "null",
+            "undefined",
+            "NaN",
+            "Infinity",
+            "in",
+            "instanceof",
+            "typeof",
+            "void",
+            "new",
+            "delete",
+            "rowData", // Don't replace rowData if it's already there
+          ];
+          if (keywords.includes(match)) {
+            return match;
+          }
+          return `rowData['${match}']`;
+        });
+      })
+      .join("");
+  }
+  return exp;
+}
+
 // Children parsing utilities
-export const parseTableColumns = (children: React.ReactNode): WmTableColumnProps[] => {
+export const parseTableColumns = (
+  children: React.ReactNode,
+  dataset: any
+): WmTableColumnProps[] => {
   const columns: WmTableColumnProps[] = [];
 
   React.Children.forEach(children, (child: any) => {
     if (child && child.props && child.props.name && child.props.name.includes("wm_table_column")) {
       const props = get(child, "props", {});
+
+      const binding = get(props, "binding");
+      const aggregate = getAggregateFunctions(dataset, binding);
       columns.push({
+        ...props,
         field: get(props, "binding"),
         caption: get(props, "caption"),
         displayName: get(props, "caption"),
@@ -229,15 +290,45 @@ export const parseTableColumns = (children: React.ReactNode): WmTableColumnProps
         widgetType: get(props, "widgetType", "label"),
         required: get(props, "required") === true || get(props, "required") === "true",
         defaultvalue: get(props, "defaultvalue"),
-        disabled: get(props, "disabled") === true || get(props, "disabled") === "true",
+        disabled: transformExpression(get(props, "disabled")),
+        readonly: get(props, "readonly") || get(props, "readonly") === "true",
         placeholder: get(props, "placeholder"),
         sortby: get(props, "sortby"),
-        ...props,
+        aggregate: aggregate,
+        colClass: get(props, "colClass"),
       });
     }
   });
 
   return columns;
+};
+
+export const getAggregateFunctions = (dataset: any[], binding: string) => {
+  function _getColumnData() {
+    return map(dataset, binding);
+  }
+  const aggregate: Record<string, Function> = {
+    sum: () => {
+      return sum(_getColumnData());
+    },
+    average: (precision: number = 2) => {
+      return round(mean(_getColumnData()), precision);
+    },
+    count: () => {
+      return _getColumnData().length;
+    },
+    minimum: () => {
+      return min(_getColumnData());
+    },
+    maximum: () => {
+      return max(_getColumnData());
+    },
+    percent: (value: any, precision: number = 2) => {
+      return round((sum(_getColumnData()) / value) * 100, precision);
+    },
+  };
+
+  return aggregate;
 };
 
 export const parseTableRowActions = (children: React.ReactNode): WmTableRowActionProps[] => {
@@ -365,7 +456,7 @@ export const validateEditingFields = (
 
     forEach(inputs, input => {
       // Check HTML5 validation
-      if (input && !input.validity.valid) {
+      if (input && !input.validity.valid && input.hasAttribute("required")) {
         invalidElements.push(input);
         isInvalid = true;
       }
@@ -493,14 +584,14 @@ export const shouldShowPanelHeading = (
   title?: string,
   subheading?: string,
   iconclass?: string,
-  exportOptions: any[] = [],
+  exportformat: any[] = [],
   headerActions: any[] = []
 ): boolean => {
   return (
     !isEmpty(title) ||
     !isEmpty(subheading) ||
     !isEmpty(iconclass) ||
-    size(exportOptions) > 0 ||
+    size(exportformat) > 0 ||
     size(headerActions) > 0
   );
 };
@@ -551,6 +642,7 @@ export const handleNewRowNavigation = (
  */
 export const INTERNAL_PROPERTIES = [
   "_wmTableRowId", // Internal row identifier
+  "getProperty", // Helper function to get property values
 ];
 
 /**
@@ -593,6 +685,63 @@ export const parseWidth = (width: string | number, fallbackSize = 150): number =
     }
   }
   return columnSize;
+};
+
+export const getColClass = (colClass: string, rowData: any, columnName: string): string => {
+  // Return empty string if colClass is not provided or not a string
+  if (!colClass || typeof colClass !== "string") {
+    return "";
+  }
+
+  // Trim whitespace
+  const trimmedClass = trim(colClass);
+  if (!trimmedClass) {
+    return "";
+  }
+
+  const hasExpressionOperators =
+    /[?&|<>!=]/.test(trimmedClass) ||
+    trimmedClass.includes("(") ||
+    trimmedClass.includes("&&") ||
+    trimmedClass.includes("||") ||
+    trimmedClass.includes("===") ||
+    trimmedClass.includes("!==");
+
+  const hasRowDataReference = trimmedClass.includes("rowData");
+  const hasColumnNameReference = trimmedClass.includes("columnName");
+
+  const isExpression = hasExpressionOperators || hasRowDataReference || hasColumnNameReference;
+
+  // If it's not an expression, return as-is
+  if (!isExpression) {
+    return trimmedClass;
+  }
+
+  // Evaluate the expression using Function constructor
+  try {
+    let expressionToEvaluate = trimmedClass;
+
+    const evaluated = new Function("rowData", "columnName", `return ${expressionToEvaluate}`)(
+      rowData,
+      columnName
+    );
+
+    // Convert result to string (handles boolean, number, null, undefined)
+    if (evaluated === null || evaluated === undefined) {
+      return "";
+    }
+
+    // If it's a boolean, return empty string (falsy) or convert to string
+    if (typeof evaluated === "boolean") {
+      return evaluated ? String(evaluated) : "";
+    }
+
+    return String(evaluated);
+  } catch (error) {
+    console.warn("Failed to evaluate colClass expression:", trimmedClass, error);
+    // Return empty string on error to prevent breaking the UI
+    return "";
+  }
 };
 
 // Export utilities

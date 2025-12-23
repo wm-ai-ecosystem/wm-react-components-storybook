@@ -8,11 +8,16 @@ import Typography from "@mui/material/Typography";
 import { find, isArray, isEqual, isString, toString, get } from "lodash-es";
 import { withBaseWrapper } from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
 import { defaultItems } from "@wavemaker/react-runtime/components/constants";
-import { transformDataset } from "@wavemaker/react-runtime/utils/transformedDataset-utils";
+import {
+  transformDataset,
+  transformDataWithKeys,
+} from "@wavemaker/react-runtime/utils/transformedDataset-utils";
 import { DatasetItem, GroupedDataset, WmCheckboxsetProps } from "./props";
 import { Input } from "@base-ui-components/react/input";
+import { getCheckboxsetDisplayValues } from "./utils";
 import withFormController from "@wavemaker/react-runtime/components/data/form/form-controller/withFormController";
 import { getItemsPerRowClass } from "@wavemaker/react-runtime/components/data/list/utils/list-helpers";
+import { ALL_FIELDS } from "@wavemaker/react-runtime/components/constants";
 
 const DEFAULT_CLASS = "app-checkboxset list-group inline";
 
@@ -40,7 +45,7 @@ export const WmCheckboxset = memo(
       label = "",
       datafield = "",
       displayfield = "",
-      displayExpression,
+      getDisplayExpression,
       dataset = "Option 1, Option 2, Option 3",
       datavalue = [],
       usekeys = false,
@@ -89,19 +94,33 @@ export const WmCheckboxset = memo(
 
     const transformedDataset = useMemo(() => {
       if (!dataset) return [];
+      if (usekeys) {
+        return transformDataWithKeys(dataset as any);
+      }
       const data = transformDataset(
         dataset,
         datafield,
         displayfield,
         undefined,
-        displayExpression,
+        getDisplayExpression,
         orderby,
         groupby,
         dataPath,
-        ""
+        "",
+        match
       );
       return data;
-    }, [dataset, datafield, displayfield, displayExpression, orderby, groupby]);
+    }, [
+      dataset,
+      datafield,
+      displayfield,
+      getDisplayExpression,
+      orderby,
+      groupby,
+      match,
+      usekeys,
+      dataPath,
+    ]);
 
     useEffect(() => {
       setIsLoading(true);
@@ -205,11 +224,21 @@ export const WmCheckboxset = memo(
     }, []);
 
     const handleCheckboxChange = useCallback(
-      (event: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>, key: string) => {
+      (
+        event: React.ChangeEvent<HTMLInputElement> | React.MouseEvent<HTMLElement>,
+        key: string,
+        dataObject: any
+      ) => {
         if (disabled || readonly) return;
 
         const currentSelectedKeys = Array.isArray(localSelectedKeys) ? localSelectedKeys : [];
         const isCurrentlySelected = currentSelectedKeys.some(k => {
+          if (datafield == ALL_FIELDS) {
+            if (usekeys) {
+              return toString(k) === toString(key);
+            }
+            return isEqual(k, dataObject);
+          }
           if (typeof k === "object" && datafield) {
             return k[datafield] === key;
           }
@@ -220,10 +249,12 @@ export const WmCheckboxset = memo(
         let newKeys;
 
         if (isChecked) {
-          const selectedItem = find(
-            localDatasetItems,
-            item => toString(item.key) === toString(key)
-          );
+          const selectedItem = find(localDatasetItems, item => {
+            if (datafield == ALL_FIELDS) {
+              return isEqual(item.value, dataObject);
+            }
+            return toString(item.key) === toString(key);
+          });
 
           if (usekeys) {
             newKeys = [...currentSelectedKeys, key];
@@ -235,10 +266,16 @@ export const WmCheckboxset = memo(
               value = selectedItem?.value;
             }
 
-            newKeys = [...currentSelectedKeys, value || key];
+            newKeys = [...currentSelectedKeys, selectedItem?.value || key];
           }
         } else {
           newKeys = currentSelectedKeys.filter(k => {
+            if (datafield == ALL_FIELDS) {
+              if (usekeys) {
+                return toString(k) !== toString(key);
+              }
+              return !isEqual(k, dataObject);
+            }
             if (typeof k === "object" && datafield) {
               return k[datafield] !== key;
             }
@@ -247,12 +284,8 @@ export const WmCheckboxset = memo(
         }
 
         setLocalSelectedKeys(newKeys);
-
         if (onchange) {
           onchange(newKeys);
-        }
-        if (listener?.Widgets[name]) {
-          listener.Widgets[name].displayValue = newKeys;
         }
         if (onChange && name) {
           onChange(event, listener.Widgets[name], newKeys, currentSelectedKeys);
@@ -261,8 +294,15 @@ export const WmCheckboxset = memo(
           onClick(event, listener.Widgets[name]);
         }
         if (listener?.onChange) {
-          listener.onChange(name, {
+          const displayValues = getCheckboxsetDisplayValues(
+            localDatasetItems,
+            newKeys,
+            datafield,
+            usekeys
+          );
+          listener.onChange(props.fieldName || name, {
             datavalue: newKeys,
+            displayValue: displayValues,
           });
         }
       },
@@ -283,15 +323,14 @@ export const WmCheckboxset = memo(
     const isItemChecked = useCallback(
       (item: DatasetItem) => {
         const currentSelectedKeys = Array.isArray(localSelectedKeys) ? localSelectedKeys : [];
-
         return currentSelectedKeys.some(k => {
-          if (typeof k === "object" && datafield && item.key) {
-            return k[datafield] === item.key;
+          if (datafield == ALL_FIELDS) {
+            return usekeys ? toString(k) === toString(item.key) : isEqual(k, item.value);
           }
           return toString(k) === toString(item.key);
         });
       },
-      [localSelectedKeys, datafield]
+      [localSelectedKeys, datafield, usekeys]
     );
 
     const renderCheckboxItem = useCallback(
@@ -308,7 +347,7 @@ export const WmCheckboxset = memo(
             onClick={e => {
               const tag = (e.target as HTMLElement).tagName;
               if (tag !== "INPUT" && tag !== "LABEL" && tag !== "SPAN") {
-                handleCheckboxChange(e, toString(item.key));
+                handleCheckboxChange(e, toString(item.key), item?.dataObject);
               }
             }}
             component="li"
@@ -328,14 +367,13 @@ export const WmCheckboxset = memo(
                 checked={isChecked}
                 role="checkbox"
                 aria-checked={isChecked}
-                onChange={e => handleCheckboxChange(e, toString(item.key))}
+                onChange={e => handleCheckboxChange(e, toString(item.key), item?.dataObject)}
                 style={disabled || readonly ? { background: "transparent" } : undefined}
               />
               <Typography
                 component="span"
                 className="caption"
                 id={`checkbox-list-label-${item.key + "_" + index}`}
-                disabled={disabled || readonly}
               >
                 {item.label}
               </Typography>
@@ -419,6 +457,7 @@ export const WmCheckboxset = memo(
     };
     return (
       <List
+        hidden={props.hidden}
         style={styles}
         className={clsx(DEFAULT_CLASS, className, itemclass, listclass)}
         onMouseEnter={event => handleMouseEnter(event)}
@@ -474,13 +513,14 @@ export const WmCheckboxset = memo(
       "onChange",
       "onMouseEnter",
       "onMouseLeave",
-      "displayExpression",
+      "getDisplayExpression",
       "datafield",
       "displayfield",
       "dataset",
       "datavalue",
       "usekeys",
       "groupby",
+      "hidden",
     ];
     return keys.every(key => {
       if (key === "datasetItems") {

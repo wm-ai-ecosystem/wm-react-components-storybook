@@ -23,6 +23,8 @@ import {
   extendNextFn,
   extendPrevFn,
   getPrevValidStep,
+  appendDatasetSteps,
+  trimStepsToLength,
 } from "./utils";
 import WizardContext from "./WizardContext";
 import WmWizardstep from "./wizard-step";
@@ -77,8 +79,9 @@ const WmWizard = memo(
 
     // Create dynamic steps callback
     const createDynamicSteps = useCallback(
-      (datasetItems: any[]) => {
+      (datasetItems: any[], startIndex?: number) => {
         return datasetItems.map((item, index) => {
+          index = startIndex || index;
           const stepData = render ? render(item, index, datasetItems) : item;
           const stepProps = stepData.props || {};
           return {
@@ -99,6 +102,7 @@ const WmWizard = memo(
             isdynamic: true,
             dynamicStepIndex: index,
             render: stepProps.render,
+            haveForm: stepProps.haveForm || false,
           };
         });
       },
@@ -522,6 +526,7 @@ const WmWizard = memo(
       currentStepIndex,
       isFirstStep,
       isLastStep,
+      visibleSteps,
     ]);
     useEffect(() => {
       updateListener();
@@ -566,7 +571,7 @@ const WmWizard = memo(
 
     // Handle dataset changes for dynamic wizard
     useEffect(() => {
-      if (type === "dynamic" && dataset.length > 0) {
+      if (type === "dynamic" && dataset.length > 0 && steps.length === 0) {
         const dynamicSteps = createDynamicSteps(dataset);
         if (defaultstepindex >= 0 && defaultstepindex < dynamicSteps.length) {
           const defaultStep = dynamicSteps[defaultstepindex];
@@ -588,8 +593,26 @@ const WmWizard = memo(
         } else {
           setSteps(dynamicSteps);
         }
+        return;
       }
-    }, [type, dataset, createDynamicSteps, defaultstepindex]);
+
+      if (type === "dynamic" && dataset.length > 0) {
+        // Append new steps if dataset grew
+        if (steps.length > 0 && dataset.length > steps.length) {
+          const newItems = dataset.slice(steps.length);
+          const newSteps = createDynamicSteps(newItems, steps.length);
+          if (newSteps.length) {
+            setSteps(prev => appendDatasetSteps(prev, newSteps));
+          }
+          return;
+        }
+        // Remove steps if dataset shrank
+        if (steps.length > 0 && dataset.length < steps.length) {
+          setSteps(prev => trimStepsToLength(prev, dataset.length));
+          return;
+        }
+      }
+    }, [type, dataset, createDynamicSteps, defaultstepindex, dataset.length]);
 
     // Context value
     const contextValue: WizardContextType = useMemo(
@@ -665,6 +688,7 @@ const WmWizard = memo(
             iconstepper: className?.includes("iconstepper"),
           })}
           style={{ ...styles, width, height }}
+          hidden={props.hidden}
           {...({ name } as HtmlHTMLAttributes<HTMLDivElement>)}
         >
           <Box className="app-wizard-heading">
@@ -717,7 +741,7 @@ const WmWizard = memo(
                   </Typography>
                 </Box>
               )}
-              {(type === "dynamic" ? steps.filter(s => s.active) : steps).map((step, index) => (
+              {steps.map((step, index) => (
                 <div
                   key={step.name}
                   ref={el => {
@@ -729,15 +753,12 @@ const WmWizard = memo(
                           setFormReady(true);
                         }
                       }
-                      if (step.haveForm === undefined) {
-                        const hasFormNow = !!formElement;
-                        updateStep(step.name, { haveForm: hasFormNow });
-                      }
                     }
                   }}
                   className={clsx("app-wizard-step-container", {
                     current: step.active,
                   })}
+                  hidden={!step.active}
                 >
                   {step.haveForm ? (
                     <div
@@ -745,7 +766,9 @@ const WmWizard = memo(
                         current: step.active,
                       })}
                     >
-                      {step.render ? step.render(step, index) : step.children}
+                      {currentStep?.name && step.active && currentStep.render
+                        ? currentStep.render(step, index)
+                        : step.children}
                     </div>
                   ) : (
                     <WmForm
@@ -756,7 +779,9 @@ const WmWizard = memo(
                       listener={listener}
                       isInsideWizard={true}
                     >
-                      {step.render ? step.render(step, index) : step.children}
+                      {currentStep?.name && step.active && currentStep.render
+                        ? currentStep.render(step, index)
+                        : step.children}
                     </WmForm>
                   )}
                 </div>
@@ -798,6 +823,7 @@ const WmWizard = memo(
       "donebtnlabel",
       "cancelbtnlabel",
       "children",
+      "hidden",
     ];
     return keys.every(key => {
       // Never deep-compare children; treat as referential

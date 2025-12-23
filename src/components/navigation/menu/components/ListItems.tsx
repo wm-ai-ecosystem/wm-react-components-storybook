@@ -1,4 +1,4 @@
-import { memo } from "react";
+import React, { memo } from "react";
 import { List } from "@mui/material";
 import { AnimationType, PositionType } from "../props";
 import clsx from "clsx";
@@ -48,18 +48,23 @@ export const MenuList = memo(
     onMouseEnter?: () => void;
     onMouseLeave?: (e: React.MouseEvent<HTMLElement>) => void;
     onClick?: (event: React.MouseEvent<HTMLElement>) => void;
-  }) => (
-    <List
-      className={className}
-      role={role}
-      style={style}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onClick={onClick}
-    >
-      {children}
-    </List>
-  )
+  }) => {
+    if (React.Children.count(children) === 0) {
+      return null;
+    }
+    return (
+      <List
+        className={className}
+        role={role}
+        style={style}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        {children}
+      </List>
+    );
+  }
 );
 
 MenuList.displayName = "MenuList";

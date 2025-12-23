@@ -2,6 +2,10 @@ import { TBubbleChartShape } from "../../props";
 import { ScatterCustomizedShape } from "recharts/types/cartesian/Scatter";
 
 export interface BubbleChartProps {
+  offsettop?: number;
+  offsetbottom?: number;
+  offsetleft?: number;
+  offsetright?: number;
   data: any[];
   dataKeys: string[];
   selectedRegions: string[];

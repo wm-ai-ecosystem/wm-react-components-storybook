@@ -285,6 +285,7 @@ const WmTextarea = memo(
     return (
       <>
         <TextField
+          hidden={props.hidden}
           multiline
           variant="standard"
           name={name}
@@ -300,6 +301,7 @@ const WmTextarea = memo(
             isTouched ? "ng-touched" : "ng-untouched",
             isDirty && "ng-invalid"
           )}
+          style={styles}
           aria-readonly={readonly}
           slotProps={{
             htmlInput: {
@@ -324,7 +326,6 @@ const WmTextarea = memo(
                 height: "none",
                 resize: "both",
                 overflow: "auto",
-                ...styles,
               },
             },
           }}
@@ -354,6 +355,7 @@ const WmTextarea = memo(
       "autofocus",
       "arialabel",
       "limitdisplaytext",
+      "hidden",
     ];
 
     return keys.every(key => prev[key] === current[key]);

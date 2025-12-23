@@ -24,6 +24,7 @@ import {
   uniqWith,
   values as lodashValues,
   isDate,
+  filter,
 } from "lodash-es";
 
 import * as momentLib from "moment";
@@ -102,7 +103,8 @@ const _internalTransformDataset = (
   orderby: any,
   groupby: any,
   dataPath: any,
-  itemchildren?: any
+  itemchildren?: any,
+  match?: string
 ) => {
   return datasetItems(
     dataset,
@@ -113,7 +115,8 @@ const _internalTransformDataset = (
     orderby,
     groupby,
     dataPath,
-    itemchildren
+    itemchildren,
+    match
   );
 };
 
@@ -381,21 +384,27 @@ export const transformFormData = (
   return data;
 };
 
-const getUniqObjsByDataField = (
+export const getUniqObjsByDataField = (
   data: Array<DataSetItem>,
   dataField: string,
   displayField: string,
   allowEmptyFields?: boolean
-): Array<DataSetItem> => {
-  if (!allowEmptyFields) {
-    data = lodashFilter(data, item => isDefined(item.key) && item.key !== "");
+) => {
+  let uniqData;
+  const isAllFields = dataField === ALLFIELDS;
+
+  uniqData = isAllFields ? uniqWith(data, isEqual) : uniqBy(data, "key");
+
+  if (!displayField || allowEmptyFields) {
+    return uniqData;
   }
-  return uniqWith(data, (obj1, obj2) => {
-    const val1 = get(obj1.dataObject, dataField);
-    const val2 = get(obj2.dataObject, dataField);
-    const dVal1 = get(obj1.dataObject, displayField);
-    const dVal2 = get(obj2.dataObject, displayField);
-    return isEqual(val1, val2) && isEqual(dVal1, dVal2);
+
+  // return objects having non empty datafield and display field values.
+  return filter(uniqData, obj => {
+    if (isAllFields) {
+      return trim(obj.label);
+    }
+    return trim(obj.key) && trim(obj.label);
   });
 };
 
@@ -431,7 +440,8 @@ export const datasetItems = (
   orderby: string,
   groupby?: string,
   dataPath?: string,
-  itemchildren?: any
+  itemchildren?: any,
+  match?: string
 ) => {
   if (!dataset) return [];
   let items = transformFormData(
@@ -446,6 +456,12 @@ export const datasetItems = (
     null,
     dataPath
   );
+  items = getUniqObjsByDataField(
+    items as any,
+    datafield,
+    displayfield || displaylabel,
+    false
+  ) as any;
   if (orderby) {
     const orderFields = orderby.split(",");
     items.sort((a, b) => {
@@ -453,7 +469,10 @@ export const datasetItems = (
         const [field, order] = orderField.split(":");
         const aVal = String(a.dataObject[field] || a.label || "");
         const bVal = String(b.dataObject[field] || b.label || "");
-        const comparison = order === "desc" ? bVal.localeCompare(aVal) : aVal.localeCompare(bVal);
+        const comparison =
+          order === "desc"
+            ? bVal.localeCompare(aVal, "en", { numeric: true })
+            : aVal.localeCompare(bVal, "en", { numeric: true });
         if (comparison !== 0) return comparison;
       }
       return 0;
@@ -473,7 +492,8 @@ export const datasetItems = (
           displaylabel,
           displayexpression,
           orderby,
-          groupby
+          groupby,
+          match
         );
         if (itemchildren(item?.dataObject)) {
           item.dataObject.children = sortedChildren;
@@ -491,7 +511,8 @@ export const datasetItems = (
           displaylabel,
           displayexpression,
           orderby,
-          groupby
+          groupby,
+          match
         );
         if (item?.dataObject?.[itemchildren]) {
           item.dataObject.children = sortedChildren;
@@ -502,7 +523,7 @@ export const datasetItems = (
     }
   }
   if (groupby) {
-    items = groupData(null, items, groupby, "word", "", "");
+    items = groupData(null, items, groupby, match || "word", "", "");
   }
   return items;
 };

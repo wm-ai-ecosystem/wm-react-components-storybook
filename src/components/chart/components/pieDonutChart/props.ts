@@ -6,6 +6,10 @@ import {
 } from "../../props";
 
 export interface PieDonutChartProps {
+  offsettop?: number;
+  offsetbottom?: number;
+  offsetleft?: number;
+  offsetright?: number;
   type: "Pie" | "Donut";
   data: any[];
   dataKeys: string[];

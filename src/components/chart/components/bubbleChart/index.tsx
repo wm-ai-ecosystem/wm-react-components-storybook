@@ -19,23 +19,24 @@ import { BubbleChartProps } from "./props";
 const VALID_SHAPES = ["circle", "diamond", "square", "triangle"] as const;
 type ValidShape = (typeof VALID_SHAPES)[number];
 
-export const BubbleChart: React.FC<BubbleChartProps> = ({
-  data,
-  dataKeys,
-  selectedRegions,
-  chartColors,
-  margin,
-  showLegend,
-  legendPosition,
-  xAxisConfig,
-  yAxisConfig,
-  numberFormat,
-  xDataKeyArr,
-  onLegendClick,
-  onChartClick,
-  tooltips = true,
-  shape = "circle",
-}) => {
+export const BubbleChart: React.FC<BubbleChartProps> = props => {
+  const {
+    data,
+    dataKeys,
+    selectedRegions,
+    chartColors,
+    margin,
+    showLegend,
+    legendPosition,
+    xAxisConfig,
+    yAxisConfig,
+    numberFormat,
+    xDataKeyArr,
+    onLegendClick,
+    onChartClick,
+    tooltips = true,
+    shape = "circle",
+  } = props;
   const calculateDomain = () => {
     const allValues = data.flatMap(item =>
       dataKeys.map(key => item[`${key}_size`] || item[key] || 0)
@@ -65,12 +66,22 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
   }, [data.length, shape]);
 
   // Modified xAxis config to handle string values
+  // For bubble charts, x values are numeric indices (0, 1, 2...) with labels stored in xDataKeyArr
   const modifiedXAxisConfig = {
     ...xAxisConfig,
+    // Explicitly set ticks to only appear at valid data indices
+    ticks: xDataKeyArr && xDataKeyArr.length > 0 ? xDataKeyArr.map((_, i) => i) : undefined,
     tickFormatter: (value: any, index: number) => {
-      // If we have stored string values, use them
-      if (xDataKeyArr && xDataKeyArr[index] !== undefined) {
-        const label = xDataKeyArr[index];
+      // Use the value (x coordinate = data index) to look up the label, not the tick index
+      const dataIndex = Math.round(value);
+      if (
+        xDataKeyArr &&
+        Number.isInteger(dataIndex) &&
+        dataIndex >= 0 &&
+        dataIndex < xDataKeyArr.length &&
+        xDataKeyArr[dataIndex] !== undefined
+      ) {
+        const label = xDataKeyArr[dataIndex];
         // Truncate long labels
         return typeof label === "string" && label.length > 20
           ? label.substring(0, 17) + "..."
@@ -153,7 +164,12 @@ export const BubbleChart: React.FC<BubbleChartProps> = ({
 
   return (
     <ResponsiveContainer width="100%" height="100%">
-      <ScatterChart margin={margin}>
+      <ScatterChart
+        margin={margin}
+        style={{
+          transform: `translate(calc(${props.offsetleft ?? 0}px - ${props.offsetright ?? 0}px), calc(${props.offsettop ?? 0}px - ${props.offsetbottom ?? 0}px))`,
+        }}
+      >
         {commonChartElements}
         {dataKeys.map((dataKey, index) => {
           const color = chartColors?.[index % (chartColors?.length || 1)] || "#8884d8";

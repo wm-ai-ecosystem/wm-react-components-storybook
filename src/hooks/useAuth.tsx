@@ -9,8 +9,10 @@ import {
   LoginOptions,
   USER_ROLE,
   navigateToLandingPage,
+  setPageLoading,
 } from "@wavemaker/react-runtime/store/slices/authSlice";
 import includes from "lodash-es/includes";
+import { getServiceDefinitions } from "@/store/slices/appConfigSlice";
 
 export const useAuth = () => {
   const dispatch = useAppDispatch();
@@ -69,6 +71,9 @@ export const useAuth = () => {
 
   const getLoggedInUserDetails = async (baseURL: string) => {
     if (!baseURL) {
+      dispatch(setPageLoading(true));
+      await dispatch(getServiceDefinitions(baseURL)).unwrap();
+      dispatch(setPageLoading(false));
       return Promise.resolve({});
     }
 

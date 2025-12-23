@@ -133,6 +133,7 @@ export const WmListItem = <T extends ListItemData = ListItemData>({
         data-item-active={isActive}
         aria-selected={isActive}
         role="option"
+        {...({ listitemindex: index } as any)}
       >
         <ListItemContext.Provider value={contextValue}>{children}</ListItemContext.Provider>
       </li>

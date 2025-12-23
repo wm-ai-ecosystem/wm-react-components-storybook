@@ -97,7 +97,12 @@ export const CustomStepLabel = memo(
           </Typography>
         </Box>
         {step.subtitle && (
-          <Typography component="span" className="subtitle-wrapper" variant="caption">
+          <Typography
+            component="span"
+            className="subtitle-wrapper"
+            variant="caption"
+            title={step.subtitle}
+          >
             <Box component="span" className="step-title">
               {step.subtitle}
             </Box>

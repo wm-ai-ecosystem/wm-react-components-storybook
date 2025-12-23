@@ -117,6 +117,7 @@ const WmProgressCircle = (props: WmProgressCircleProps) => {
       role="progressbar"
       title={hint}
       style={finalStyles}
+      hidden={props.hidden}
     >
       <svg
         height="100%"

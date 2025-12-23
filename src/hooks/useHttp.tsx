@@ -1,11 +1,10 @@
-import axios from "axios";
-import type {
+import axios, {
   AxiosInstance,
   AxiosResponse,
   AxiosError,
   InternalAxiosRequestConfig,
   AxiosHeaders,
-  Method
+  Method,
 } from "axios";
 import { createContext, useContext, useRef, useMemo, ReactNode } from "react";
 // @ts-ignore
@@ -26,9 +25,9 @@ interface HttpProviderProps {
 // Create the HTTP service class implementing HttpClientService
 class ModernHttpService implements HttpClientService {
   private axiosInstance: AxiosInstance;
+  localeObject: any = store.getState().i18n.appLocale;
 
   constructor(baseURL: string = "") {
-    debugger
     this.axiosInstance = axios.create({ baseURL });
     this.setupInterceptors();
   }
@@ -88,7 +87,14 @@ class ModernHttpService implements HttpClientService {
       let isProxyCall = serviceInfo?.proxySettings?.web;
       url = isProxyCall ? options.url : serviceInfo?.directPath;
     }
-    if (
+
+    if (variable.category === "wm.CrudVariable") {
+      if (url.startsWith("http://") || url.startsWith("https://")) {
+        url = url;
+      } else {
+        url = variable.config.baseUrl + options.url.replace(".//", "/").replace("./", "/");
+      }
+    } else if (
       variable.category === "wm.LiveVariable" &&
       !(url.startsWith("http://") || url.startsWith("https://"))
     ) {
@@ -161,8 +167,12 @@ class ModernHttpService implements HttpClientService {
     }
   }
 
-  getLocale(): any {
-    return "appLocale";
+  setLocale(locale: string) {
+    this.localeObject = locale;
+  }
+
+  getLocale() {
+    return this.localeObject;
   }
 
   cancel(variable: any): void {

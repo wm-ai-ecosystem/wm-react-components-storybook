@@ -1,3 +1,4 @@
+import isString from "lodash-es/isString";
 import { FormFieldMetadata, APIFieldResponse, WidgetType } from "./props";
 
 // Widget type mapping from API types to component types
@@ -245,3 +246,37 @@ export const filterFieldsByWidget = (
 ): FormFieldMetadata[] => {
   return fields.filter(field => widgetTypes.includes(field.widget));
 };
+
+function evalExpression(str, context = {}) {
+  try {
+    const argNames = Object.keys(context);
+    const argValues = Object.values(context);
+
+    // eslint-disable-next-line no-new-func
+    const fn = new Function(...argNames, `return (${str});`);
+    return fn(...argValues);
+  } catch (error) {
+    console.error("Expression failed:", error);
+    return null; // or fallback
+  }
+}
+
+function convertStringExpToJsx(expression: string, listener: any) {
+  if (!expression) return null;
+  if (typeof expression !== "string") return expression;
+
+  return evalExpression(expression.replace("bind:", "listener."), {
+    listener: listener, // whatever your listener object is
+  });
+}
+
+export function updateMetadata(metadata: FormFieldMetadata[], listener: any): FormFieldMetadata[] {
+  return metadata.map(field => {
+    Object.keys(field).forEach(key => {
+      if (isString(field[key]) && field[key].startsWith("bind:")) {
+        field[key] = convertStringExpToJsx(field[key], listener);
+      }
+    });
+    return field;
+  });
+}

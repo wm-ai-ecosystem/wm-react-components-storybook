@@ -131,6 +131,9 @@ export const useListEffects = (props: UseListEffectsProps) => {
   const [lastPageSize, setLastPageSize] = useState(paginationState.currentPageSize);
   const rafRef1 = useRef<number | null>(null);
   const rafRef2 = useRef<number | null>(null);
+  const isStateUpdated = useRef<boolean>(false);
+  const hasInitialWidgetUpdateRun = useRef(false);
+
   // Effect 1: Accumulate data for On-Demand navigation
   useEffect(() => {
     if (navigation === LIST_NAVIGATION_TYPES.ON_DEMAND && datasource && safeDataset.length > 0) {
@@ -196,15 +199,19 @@ export const useListEffects = (props: UseListEffectsProps) => {
 
   // Effect 3: Expose methods through widget instance
   useEffect(() => {
-    if (listener?.onChange) {
+    if (
+      listener?.onChange &&
+      props.navigation !== LIST_NAVIGATION_TYPES.NONE &&
+      !isStateUpdated.current
+    ) {
       listener.onChange(name, {
         selecteditem: listState.selectedItems[0],
       });
+      isStateUpdated.current = true;
     }
   }, [listState.selectedItems]);
 
   // Effect 3b: Update selected item widgets for state restoration (not selectfirstitem)
-  const hasInitialWidgetUpdateRun = useRef(false);
 
   useEffect(() => {
     // Only run once on initial load when there are selected items from state restoration

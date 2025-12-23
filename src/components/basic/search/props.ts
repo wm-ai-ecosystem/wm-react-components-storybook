@@ -56,6 +56,7 @@ export interface WmSearchProps extends DatasetAwareFormComponentProps {
   onQuerySearch?: (params: any, success: (val: any) => void, error: (err: any) => void) => void;
   autofocus?: boolean;
   dataPath?: string;
+  getDisplayExpression?: (data: any) => string;
 }
 
 // Interface definitions remain the same...

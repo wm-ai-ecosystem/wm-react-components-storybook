@@ -55,6 +55,7 @@ export const WizardStep = ({
               : `step ${index + 1} ${step.title}`
           }
           aria-disabled={step.disabled}
+          title={step.title}
         >
           <StepLabel
             {...labelProps}

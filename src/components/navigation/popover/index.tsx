@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useMemo } from "react";
+import React, { useRef, useState, useEffect, useMemo, Suspense } from "react";
 import clsx from "clsx";
 import debounce from "lodash/debounce";
 import Popover, { PopoverOrigin } from "@mui/material/Popover";
@@ -18,17 +18,19 @@ const WmPopover = (Props: WmPopoverProps) => {
 
   const isOpen = Boolean(anchorEl);
 
-  function handleLoad() {
+  function handleLoad(widget: any) {
     if (props.onLoad && !loadedRef.current) {
       loadedRef.current = true;
-      const widgetInstance = { isOpen, ...props };
-      props.onLoad(widgetInstance);
+      props.onLoad(widget);
     }
   }
 
   useEffect(() => {
-    handleLoad();
-  }, [!loadedRef.current]);
+    if (!isOpen || props.content) {
+      return;
+    }
+    handleLoad({ isOpen, ...props });
+  }, [isOpen]);
 
   const calculatePlacement = () => {
     if (!anchorRef.current) return;
@@ -59,16 +61,22 @@ const WmPopover = (Props: WmPopoverProps) => {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     event.stopPropagation();
+    const widget = { isOpen, ...props };
+    (widget as any).viewParent = props.listener;
+    delete (widget as any).listener;
+    if (!isOpen) {
+      loadedRef.current = false;
+    }
     if (anchorEl) {
       if (isDialogOpen) {
         setIsDialogOpen(false);
         setAnchorEl(null);
-        props?.onHide?.(event.nativeEvent, props);
+        props?.onHide?.(event.nativeEvent, widget);
         return;
       }
       debounce(() => {
         setAnchorEl(null);
-        props?.onHide?.(event.nativeEvent, props);
+        props?.onHide?.(event.nativeEvent, widget);
       }, 500);
     } else {
       if (open) {
@@ -77,7 +85,7 @@ const WmPopover = (Props: WmPopoverProps) => {
       }
       calculatePlacement();
       setAnchorEl(event.currentTarget);
-      props?.onShow?.(event.nativeEvent, props);
+      props?.onShow?.(event.nativeEvent, widget);
       setIsDialogOpen(true);
     }
   };
@@ -126,11 +134,6 @@ const WmPopover = (Props: WmPopoverProps) => {
       ...(placement === "bottom" && {
         left: "calc(50% - 10px)",
       }),
-      ...((placement === "left" || placement === "right") && {
-        top: anchorRef.current
-          ? `${anchorRef.current.getBoundingClientRect().top + anchorRef.current.getBoundingClientRect().height / 2 - 10}px`
-          : "calc(50% - 10px)",
-      }),
     };
   }, [placement, props.popoverplacement, calculatePlacement]);
 
@@ -150,6 +153,7 @@ const WmPopover = (Props: WmPopoverProps) => {
         })}
         style={props.styles}
         name={props.name}
+        hidden={props.hidden}
       >
         <WmAnchor
           hint={props.hint || props.name}
@@ -161,7 +165,7 @@ const WmPopover = (Props: WmPopoverProps) => {
           styles={props.styles}
           onClick={handleClick}
           onMouseEnter={event => {
-            if (props.interaction === "hover") {
+            if (props.interaction === "hover" || props.interaction === "default") {
               handleClick(event);
             }
           }}
@@ -179,10 +183,12 @@ const WmPopover = (Props: WmPopoverProps) => {
           badgevalue={props.badgevalue}
           encodeurl={props.encodeurl}
           shortcutkey={props.shortcutkey}
+          name={props.name}
         />
       </div>
 
       <Popover
+        hidden={props.hidden}
         open={isOpen}
         anchorEl={anchorEl}
         onClose={handleClose}
@@ -209,6 +215,7 @@ const WmPopover = (Props: WmPopoverProps) => {
           },
         }}
         style={{
+          position: "fixed",
           pointerEvents: props.autoclose === "disabled" ? "none" : "auto",
           height: popoverHeight,
           width: popoverWidth,
@@ -221,7 +228,11 @@ const WmPopover = (Props: WmPopoverProps) => {
 
         {props.title && <div className="popover-title popover-header">{props.title}</div>}
         <div className="popover-content popover-body">
-          {props.render && props.content ? props.render(props, handleLoad) : props.children}
+          {props.render && props.content ? (
+            <Suspense fallback={null}>{props.render(props, handleLoad)}</Suspense>
+          ) : (
+            props.children
+          )}
         </div>
       </Popover>
     </>

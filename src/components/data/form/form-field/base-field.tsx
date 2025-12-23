@@ -1,13 +1,7 @@
 import { useState, useMemo, useRef } from "react";
-import clsx from "clsx";
-
-import { WmComposite } from "@wavemaker/react-runtime/components/input/composite";
 import { LIVE_CONSTANTS } from "@/components/data/utils/filter-field-util";
 import FormFieldProps, { FieldDataSetProps } from "./props";
 import { useFormContext } from "@wavemaker/react-runtime/components/data/form/form-context";
-
-const DEFAULT_CLASS = "ng-pristine ng-invalid ng-touched";
-const DEFAULT_COMPOSITE_CLASS = "app-composite-widget caption-left clearfix form-group live-field";
 
 const BaseField = (WrappedComponent: any) => {
   const FormField = (props: FormFieldProps) => {
@@ -30,6 +24,7 @@ const BaseField = (WrappedComponent: any) => {
       setRelatedData({
         dataset: dataset.data,
         displayfield: displayField || props.displayfield,
+        datafield: "All Fields",
       });
 
       // After updating the dataset, we need to ensure the form field value is synced
@@ -86,6 +81,7 @@ const BaseField = (WrappedComponent: any) => {
         updateFormWidgetDataset,
         setFieldDataSet,
         required: isRequired,
+        captionposition,
         ...(relatedData.dataset && relatedData.dataset?.length > 0
           ? {
               datafield: relatedData.datafield,
@@ -97,33 +93,14 @@ const BaseField = (WrappedComponent: any) => {
     }, [props, validators, asyncValidators, observe, observeOn, relatedData, isRequired]);
 
     return (
-      <div
-        className={clsx(props.className, DEFAULT_CLASS)}
-        id={props.id}
-        style={{ ...props.conditionalstyle }}
-        data-displayname={props.displayname}
-        data-name={props.name}
-        data-placeholder={props.placeholder}
-        name={props.name}
-        displayname={props.displayname}
-        placeholder={props.placeholder}
-      >
-        <WmComposite
-          captionposition={captionposition || "left"}
-          listener={{}}
-          name=""
-          className={DEFAULT_COMPOSITE_CLASS}
-        >
-          <WrappedComponent
-            {...modifiedProps}
-            validators={validators}
-            asyncValidators={asyncValidators}
-            setValidators={setValidators}
-            datavalue={props.datavalue || props.defaultvalue}
-            key={`${props.formKey}-${relatedData.displayfield || "initial"}`}
-          />
-        </WmComposite>
-      </div>
+      <WrappedComponent
+        {...modifiedProps}
+        validators={validators}
+        asyncValidators={asyncValidators}
+        setValidators={setValidators}
+        datavalue={props.datavalue || props.defaultvalue}
+        key={`${props.formKey}-${relatedData.displayfield || "initial"}`}
+      />
     );
   };
   return FormField;

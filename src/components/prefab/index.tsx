@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { BaseProps } from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
+import { removeInvalidAttributes } from "@wavemaker/react-runtime/utils/attr";
 
 const WmPrefab = (props: BaseProps) => {
   const {
@@ -36,16 +37,13 @@ const WmPrefab = (props: BaseProps) => {
     };
   }, [onLoad, onDestroy]);
 
-  if (!show && !loadedRef.current) {
-    return null;
-  }
   return (
     <div
-      {...rest}
+      {...removeInvalidAttributes(rest, ["hidden"])}
       style={{
         ...styles,
-        ...(width !== undefined && { width: parseFloat(width) }),
-        ...(height !== undefined && { height: parseFloat(height) }),
+        ...(width !== undefined && { width: parseFloat(width as string) }),
+        ...(height !== undefined && { height: parseFloat(height as string) }),
       }}
       ref={ref}
     >

@@ -103,6 +103,7 @@ export const useTableColumns = ({
   editmode,
   renderEditableCell,
   isRowEditing,
+  editingRowId,
   startEditing,
   cancelEditing,
   saveEditing,
@@ -115,19 +116,22 @@ export const useTableColumns = ({
   // Memoize the cell render function to prevent re-renders
   const renderCell = useCallback(
     (wmColumn: WmTableColumnProps, row: any) => {
-      const rowId = row.original._wmTableRowId || row.id;
+      const rowId = row?.original?._wmTableRowId || row?.id;
+      const isEditingThisRow = isRowEditing(rowId);
+      const shouldRenderEditableCell =
+        (editmode === "inline" || editmode === "quickedit") &&
+        isEditingThisRow &&
+        !wmColumn.readonly;
 
       return (
         <Box data-col-identifier={wmColumn.field}>
-          {(editmode === "inline" || editmode === "quickedit") &&
-          isRowEditing(rowId) &&
-          !wmColumn.readonly
+          {shouldRenderEditableCell
             ? renderEditableCell(wmColumn, row.original, rowId)
             : renderDisplayCell(wmColumn, row.original, listener, cellState)}
         </Box>
       );
     },
-    [editmode, isRowEditing, renderEditableCell, cellState, listener]
+    [editmode, editingRowId, isRowEditing, renderEditableCell, cellState, listener]
   );
 
   // Filter row actions once
@@ -141,7 +145,7 @@ export const useTableColumns = ({
   // Create action column cell renderer
   const renderActionCell = useCallback(
     ({ row }: any) => {
-      const rowId = row.original._wmTableRowId || row.id;
+      const rowId = row?.original?._wmTableRowId ?? row?.id;
       const isEditing = isRowEditing(rowId);
 
       return (

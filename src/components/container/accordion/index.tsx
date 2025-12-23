@@ -217,6 +217,9 @@ const WmAccordion = memo(
         id={props?.id || props?.name}
         data-type="accordion"
         data-statehandler={props.statehandler}
+        name={props.name}
+        hidden={props.hidden || false}
+        show={props.show || true}
       >
         {renderPanes()}
       </div>
@@ -228,6 +231,8 @@ const WmAccordion = memo(
       "defaultpaneindex",
       "closeothers",
       "children",
+      "hidden",
+      "show",
     ];
     return keys.every(key => prevProps[key] === nextProps[key]);
   }

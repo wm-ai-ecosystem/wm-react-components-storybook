@@ -15,6 +15,8 @@ export const validateField = (
   const fieldKey = `${rowId}_${fieldName}`;
   const { fieldRefs, fieldValidationErrors, cellUpdateCallbacks } = validationState;
 
+  if (!column?.required) return true;
+
   // Check required validation
   if (column?.required && (value === undefined || value === null || value === "")) {
     fieldValidationErrors.current[fieldKey] = true;

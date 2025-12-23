@@ -1,14 +1,30 @@
+import type { Ref } from "react";
 import withBaseWrapper from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
 import { WmMessage } from "@wavemaker/react-runtime/components/basic/message";
 import BaseForm from "./base-form";
 import FormProps from "./props";
 import WmFormHeader from "./form-header";
+import { removeInvalidAttributes } from "@wavemaker/react-runtime/utils/attr";
 
 const WmForm = (props: FormProps) => {
   const shouldHideHeader = props.isLayoutDialog || props.isInsideWizard;
 
   return (
-    <>
+    <form
+      {...removeInvalidAttributes(props)}
+      hidden={props.hidden || false}
+      name={props.name}
+      defaultmode={props.defaultmode}
+      captionposition={props.captionposition}
+      captionalign={props.captionalign}
+      numberoffields={props.numberoffields}
+      ref={props.ref as Ref<HTMLFormElement>}
+      className={props.className}
+      id={props.id}
+      onSubmit={props.submit}
+      style={{ ...props.styles, ...props.conditionalstyle }}
+      onReset={props.formreset}
+    >
       {!shouldHideHeader &&
         (props?.title ||
           props?.subheading ||
@@ -40,7 +56,7 @@ const WmForm = (props: FormProps) => {
         />
       )}
       {props.children}
-    </>
+    </form>
   );
 };
 

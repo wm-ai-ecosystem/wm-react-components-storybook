@@ -27,4 +27,12 @@ export interface WmSliderProps extends BaseProps {
   height?: string;
   listener: Record<string, any>;
   displayValue?: string;
+  showmarkers?: boolean;
+  markerlabeltext?: any;
+}
+
+export interface MarkerItem {
+  label: string;
+  position: string;
+  left: number;
 }

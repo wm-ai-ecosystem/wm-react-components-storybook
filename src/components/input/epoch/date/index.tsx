@@ -78,7 +78,7 @@ const WmDate = forwardRef<HTMLInputElement, WmDateProps>((props, ref) => {
     onBeforeload,
     placeholder = "Select Date",
     tabindex = 0,
-    datepattern = useAppSelector((state: any) => state.i18n.dateFormat || "MMM d, y"),
+    datepattern: datepatternProp,
     outputformat = "yyyy-MM-dd",
     required = false,
     excludedays = "",
@@ -104,6 +104,13 @@ const WmDate = forwardRef<HTMLInputElement, WmDateProps>((props, ref) => {
     styles,
     ...restProps
   } = { ...props };
+
+  const defaultDateFormat = useAppSelector((state: any) => state.i18n.dateFormat) || "MMM d, y";
+
+  const datepattern = useMemo(
+    () => datepatternProp ?? defaultDateFormat,
+    [datepatternProp, defaultDateFormat]
+  );
 
   const currentLocale = useAppSelector((state: any) => state.i18n.selectedLocale);
   // State
@@ -176,9 +183,8 @@ const WmDate = forwardRef<HTMLInputElement, WmDateProps>((props, ref) => {
       const momentDateValue = moment(dateValue);
       setSelectedDate(momentDateValue);
       setCalendarDate(momentDateValue);
-      if (listener?.onChange) {
+      if (listener?.onChange && !props.fieldName) {
         listener.onChange(name, {
-          ...props,
           displayValue: displayValue,
           datavalue: formatDate(momentDateValue.toDate(), outputformat),
           timestamp: formatDate(momentDateValue.toDate(), "timestamp"),
@@ -212,7 +218,7 @@ const WmDate = forwardRef<HTMLInputElement, WmDateProps>((props, ref) => {
         listener.Widgets[name].displayValue = newDisplayValue;
       }
     }
-  }, [currentLocale, getDisplayValue, dateValue, name, listener]);
+  }, [currentLocale, getDisplayValue, dateValue, name]);
 
   // Call onBeforeload callback on component mount
   useEffect(() => {
@@ -320,7 +326,7 @@ const WmDate = forwardRef<HTMLInputElement, WmDateProps>((props, ref) => {
         listener.Widgets[name].displayValue = displayValue;
       }
       if (listener?.onChange) {
-        listener.onChange(name, {
+        listener.onChange(props.fieldName || name, {
           ...props,
           datavalue: outputValue,
           timestamp: formatDate(date.toDate(), "timestamp"),
@@ -548,10 +554,13 @@ const WmDate = forwardRef<HTMLInputElement, WmDateProps>((props, ref) => {
   // Render
   return (
     <Box
-      className="ng-pristine ng-valid app-date input-group ng-touched"
+      className={`ng-pristine ng-valid app-date input-group ng-touched ${className}`}
       ref={datepickerRef}
-      style={getWidthStyle(width)}
+      style={{ ...getWidthStyle(width), ...styles }}
       title={hint}
+      hidden={props.hidden}
+      {...(readonly && { readOnly: true })}
+      {...(disabled && { disabled: true })}
     >
       <TextField
         inputRef={inputRef}
@@ -577,11 +586,10 @@ const WmDate = forwardRef<HTMLInputElement, WmDateProps>((props, ref) => {
             required: required,
             autoFocus: autofocus,
             name: name,
-            className: `form-control app-textbox app-dateinput display-input ${className}`,
+            className: `form-control app-textbox app-dateinput display-input`,
             style: {
               cursor: dataentrymode === "picker" ? "pointer" : "text",
               ...getWidthStyle(width),
-              ...styles,
             },
             onMouseEnter: event =>
               onMouseEnter && name && onMouseEnter(event, listener?.Widgets[name]),
@@ -601,7 +609,7 @@ const WmDate = forwardRef<HTMLInputElement, WmDateProps>((props, ref) => {
       <Box component="span" className="input-group-btn">
         <Button
           type="button"
-          className={`btn btn-default btn-time ${className}`}
+          className={`btn btn-default btn-time`}
           tabIndex={tabindex}
           disabled={disabled || readonly}
           aria-label={inputValue ? `Change Date ${inputValue}` : "Choose date by pressing enter"}

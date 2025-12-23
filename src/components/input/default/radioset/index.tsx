@@ -8,7 +8,10 @@ import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import { Input } from "@base-ui-components/react/input";
 import { find, isEqual, toString } from "lodash-es";
-import { transformDataset } from "@wavemaker/react-runtime/utils/transformedDataset-utils";
+import {
+  transformDataWithKeys,
+  transformDataset,
+} from "@wavemaker/react-runtime/utils/transformedDataset-utils";
 import { WmRadiosetProps, GroupedDataset, DatasetItem, StyledListProps } from "./props";
 import { defaultItems } from "@wavemaker/react-runtime/components/constants";
 import withBaseWrapper from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
@@ -100,6 +103,11 @@ const WmRadioset = memo(
 
     const transformedDataset = useMemo(() => {
       if (!dataset) return [];
+
+      if (usekeys) {
+        return transformDataWithKeys(dataset);
+      }
+
       return transformDataset(
         dataset,
         datafield,
@@ -110,7 +118,16 @@ const WmRadioset = memo(
         groupby,
         dataPath
       );
-    }, [dataset, datafield, displayfield, getDisplayExpression, orderby, groupby]);
+    }, [
+      dataset,
+      datafield,
+      displayfield,
+      getDisplayExpression,
+      orderby,
+      groupby,
+      usekeys,
+      dataPath,
+    ]);
 
     useEffect(() => {
       setIsLoading(true);
@@ -180,6 +197,8 @@ const WmRadioset = memo(
     const handleRadioChange = useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => {
         const newSelectedKey = event.target.value;
+        // check if the selected key is readonly or disabled
+        if (disabled || readonly) return;
         setSelectedKey(newSelectedKey);
 
         const selectedItem = find(
@@ -188,44 +207,18 @@ const WmRadioset = memo(
         );
 
         if (selectedItem) {
-          if (onChange) {
-            onChange(event, props, selectedItem.value, selectedKey);
-          }
           if (listener?.onChange) {
-            listener.onChange(props.name, {
+            listener.onChange(props.fieldName || props.name, {
               datavalue: selectedItem.key,
               displayValue: selectedItem.label,
             });
           }
+          if (onChange) {
+            onChange(event, props, selectedItem.value, selectedKey);
+          }
         }
       },
       [localDatasetItems, onChange, props]
-    );
-
-    const handleItemClick = useCallback(
-      (item: DatasetItem, event: React.MouseEvent<HTMLElement>) => {
-        if (disabled || readonly) return;
-
-        const newKey = toString(item.key);
-        setSelectedKey(newKey);
-
-        if (item) {
-          if (onClick) {
-            onClick(event, props, item.value, selectedKey);
-          }
-          if (onChange) {
-            onChange(event, props, item.value, selectedKey);
-          }
-          if (listener?.onChange) {
-            listener.onChange(name, {
-              ...props,
-              datavalue: newKey,
-              displayValue: item.label,
-            });
-          }
-        }
-      },
-      [disabled, readonly, onClick, onChange, props, name]
     );
 
     const renderRadio = useCallback(
@@ -235,7 +228,6 @@ const WmRadioset = memo(
           <ListItem
             key={toString(item.key) + index}
             className={clsx("radio app-radio", { active: isChecked })}
-            onClick={e => handleItemClick(item, e)}
             component="li"
           >
             <Box
@@ -251,18 +243,23 @@ const WmRadioset = memo(
                 tabIndex={tabindex}
                 aria-label={item.label}
                 value={item.key}
+                id={`radioset_${name || "unnamed"}_${item.key}`}
                 onChange={handleRadioChange}
                 role="radio"
                 aria-checked={isChecked}
               />
-              <Box component="span" className="caption customTemplate">
+              <Box
+                component="span"
+                className="caption customTemplate"
+                htmlFor={`radioset_${name || "unnamed"}_${item.key}`}
+              >
                 {item.label}
               </Box>
             </Box>
           </ListItem>
         );
       },
-      [selectedKey, handleRadioChange, handleItemClick, disabled, readonly, name]
+      [selectedKey, handleRadioChange, disabled, readonly, name]
     );
 
     const renderGroupHeader = useCallback(
@@ -313,7 +310,10 @@ const WmRadioset = memo(
     }
     if (!localDatasetItems || localDatasetItems.length === 0) {
       return (
-        <Box className={clsx(className, DEFAULT_CLASS, itemsPerRowClass, listclass, itemclass)}>
+        <Box
+          className={clsx(className, DEFAULT_CLASS, itemsPerRowClass, listclass, itemclass)}
+          hidden={props.hidden}
+        >
           <Box className="empty-state">No items to display</Box>
         </Box>
       );
@@ -326,6 +326,7 @@ const WmRadioset = memo(
     return (
       <Box
         {...events}
+        hidden={props.hidden}
         className={clsx(className, DEFAULT_CLASS, itemsPerRowClass, listclass, itemclass)}
         sx={{ ...styles, height: height, width: width }}
       >
@@ -387,6 +388,7 @@ const WmRadioset = memo(
       "groupby",
       "collapsible",
       "datasetItems",
+      "hidden",
     ];
     return keys.every(key => {
       if (key === "datasetItems") {

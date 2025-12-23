@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { HtmlHTMLAttributes, useEffect } from "react";
 import clsx from "clsx";
 import { Tabs } from "@base-ui-components/react/tabs";
 
@@ -8,7 +8,7 @@ import WmTabPaneProps from "./props";
 import { useTabsContext } from "..";
 
 export const WmTabpane = (props: WmTabPaneProps) => {
-  const { className, disabled, renderPartial, name, index } = props;
+  const { className, disabled, renderPartial, name, index, listener } = props;
   const { selectedIndex, setSelectedIndex } = useTabsContext();
 
   const wasActiveRef = React.useRef<boolean>(false);
@@ -35,9 +35,11 @@ export const WmTabpane = (props: WmTabPaneProps) => {
   }, [selectedIndex, name]);
 
   useEffect(() => {
-    if (props.listener && props.listener.onChange) {
-      props.listener.onChange(name, {
+    if (listener && listener.onChange) {
+      listener.onChange(name, {
         select: () => setSelectedIndex(index as number),
+        isActive: selectedIndex === index,
+        deselect: () => setSelectedIndex(-1),
       });
     }
   }, []);
@@ -53,6 +55,7 @@ export const WmTabpane = (props: WmTabPaneProps) => {
       role="tabpanel"
       style={{ width: "100%", ...props?.styles }}
       data-pane-name={name}
+      {...({ name } as HtmlHTMLAttributes<HTMLDivElement>)}
     >
       <div className="tab-body" data-widget-id={props["data-widget-id"]}>
         {renderPartial ? renderPartial(props, props.onLoad) : props.children}

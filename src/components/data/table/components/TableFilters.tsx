@@ -11,6 +11,8 @@ interface GlobalSearchFilterProps {
   onColumnChange: (columnId: string) => void;
   columns: any[];
   searchLabel?: string;
+  name?: string;
+  listener?: any;
 }
 
 export const GlobalSearchFilter = memo(
@@ -21,6 +23,8 @@ export const GlobalSearchFilter = memo(
     onColumnChange,
     columns,
     searchLabel = "Search",
+    name,
+    listener,
   }: GlobalSearchFilterProps) => {
     // Local state for input value
     const [inputValue, setInputValue] = useState(value);
@@ -36,6 +40,19 @@ export const GlobalSearchFilter = memo(
     useEffect(() => {
       setLocalSelectedColumn(selectedColumn);
     }, [selectedColumn]);
+
+    const clearLocalSearchControls = React.useCallback(() => {
+      setInputValue("");
+      setLocalSelectedColumn("");
+    }, []);
+
+    useEffect(() => {
+      if (listener && listener.onChange && name) {
+        listener.onChange(name, {
+          clearFilter: clearLocalSearchControls,
+        });
+      }
+    }, []);
 
     // Filter out non-data columns for the dropdown using lodash
     const actionColumnIds = [
@@ -166,22 +183,24 @@ const ColumnFilterCell = memo(
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [selectedMatchMode, setSelectedMatchMode] = useState("anywhereignorecase");
     const filterButtonRef = useRef<HTMLElement>(null);
+    const clearFilterButtonRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
       setLocalValue(value);
     }, [value]);
 
-    const handleApplyFilter = () => {
+    const handleApplyFilter = (e: React.KeyboardEvent) => {
+      const inputValue = (e.target as HTMLInputElement).value ?? localValue;
       // Only trigger onChange if the value has actually changed
-      if (localValue !== value) {
-        onChange(columnId, localValue, selectedMatchMode);
+      if (inputValue !== value) {
+        onChange(columnId, inputValue, selectedMatchMode);
       }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
       if (e.key === "Enter") {
         e.preventDefault();
-        handleApplyFilter();
+        handleApplyFilter(e);
       }
       e.stopPropagation(); // Prevent table keyboard shortcuts
     };
@@ -258,8 +277,13 @@ const ColumnFilterCell = memo(
       }
     };
 
+    const handleClearFilterIconClick = () => {
+      onChange(columnId, "", selectedMatchMode);
+      setLocalValue("");
+    };
+
     return (
-      <Box component="div" data-col-identifier={columnAccessorKey} className={getInputGroupClass()}>
+      <div data-col-identifier={columnAccessorKey} className={getInputGroupClass()}>
         <Box
           onBlur={handleApplyFilter}
           onKeyDown={handleKeyDown}
@@ -277,6 +301,21 @@ const ColumnFilterCell = memo(
             }
           )}
         </Box>
+
+        <span className="input-group-addon filter-clear-icon">
+          <Box
+            hidden={!localValue || localValue === ""}
+            ref={clearFilterButtonRef}
+            component="button"
+            type="button"
+            className="btn-transparent btn app-button"
+            aria-haspopup="true"
+            aria-expanded={Boolean(anchorEl)}
+            onClick={handleClearFilterIconClick}
+          >
+            <i className="app-icon wi wi-clear" />
+          </Box>
+        </span>
         <Box component="span" className="input-group-addon">
           <Box
             ref={filterButtonRef}
@@ -295,7 +334,7 @@ const ColumnFilterCell = memo(
                 className="dropdown open show"
                 style={{ position: "absolute", top: "100%", right: 0, zIndex: 1000 }}
               >
-                <Box component="ul" className="matchmode-dropdown dropdown-menu">
+                <ul className="matchmode-dropdown dropdown-menu">
                   {map(matchModes, (mode: string) => (
                     <Box
                       key={mode}
@@ -311,12 +350,12 @@ const ColumnFilterCell = memo(
                       </Box>
                     </Box>
                   ))}
-                </Box>
+                </ul>
               </Box>
             </ClickAwayListener>
           )}
         </Box>
-      </Box>
+      </div>
     );
   }
 );

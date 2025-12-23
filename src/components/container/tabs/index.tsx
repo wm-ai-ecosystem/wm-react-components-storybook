@@ -19,6 +19,7 @@ import WmTabPane from "@wavemaker/react-runtime/components/container/tabs/tab-pa
 import WmTabsProps, { DEFAULT_PROPS } from "./props";
 import { getWidgetState, setWidgetState } from "@wavemaker/react-runtime/utils/state-persistance";
 import isArray from "lodash-es/isArray";
+import { filterVisibleChildren, handleRemovePane } from "./utils";
 
 const DEFAULT_CLASS = "nav nav-tabs";
 
@@ -67,6 +68,7 @@ const WmTabs = memo(
     const prevSelectedIndex = useRef<number | null>(null);
     const currentSelectedIndex = useRef<number>(defaultpaneindex || 0);
     const [selectedIndex, setSelectedIndex] = useState<number>(defaultpaneindex || 0);
+    const [hiddenTabNames, setHiddenTabNames] = useState<Set<string>>(new Set());
 
     // Keep currentSelectedIndex ref in sync with state
     useEffect(() => {
@@ -138,11 +140,11 @@ const WmTabs = memo(
         return dataset[currentIndex]?.name || null;
       }
 
-      // For static tabs, get the child at the current index
-      const childrenArray = React.Children.toArray(children);
-      const activeChild = childrenArray[currentIndex] as any;
+      // For static tabs, compute from visible children
+      const visibleChildren = filterVisibleChildren(children, hiddenTabNames);
+      const activeChild = visibleChildren[currentIndex] as any;
       return activeChild?.props?.name || null;
-    }, [type, dataset, children]);
+    }, [type, dataset, children, hiddenTabNames]);
 
     // get the active tab widget from listener
     const getActiveTab = React.useCallback(() => {
@@ -159,6 +161,24 @@ const WmTabs = memo(
           panes: { length: panesCount.current },
           goToTab: (tabNumber: number) => {
             goToTab(tabNumber);
+          },
+          getActiveTabIndex: () => {
+            return currentSelectedIndex.current;
+          },
+          removePane: (TabName: string) => {
+            handleRemovePane({
+              type,
+              dataset,
+              children,
+              hiddenTabNames,
+              TabName,
+              selectedIndex,
+              currentSelectedIndex,
+              panesCountRef: panesCount,
+              setHiddenTabNames,
+              setSelectedIndex,
+              saveStateToStorage,
+            });
           },
         });
       }
@@ -204,6 +224,18 @@ const WmTabs = memo(
     // Rendering Helpers
     // ============================================================================
 
+    const handleTabHeaderClick = React.useCallback(
+      (e: React.SyntheticEvent, item: any, index: number) => {
+        if (item?.disabled) {
+          return;
+        }
+        if (item?.onHeaderclick) {
+          item.onHeaderclick(e, listener?.Widgets[name], index);
+        }
+      },
+      []
+    );
+
     const renderTabHeader = React.useCallback(
       (item: any, index: number) => (
         <Tabs.Tab
@@ -237,6 +269,7 @@ const WmTabs = memo(
                 aria-disabled={item.disabled}
                 aria-hidden={item.show === false}
                 aria-controls={`tabpanel-${index}`}
+                onClick={e => handleTabHeaderClick(e, item, index)}
               >
                 {item.paneicon && <i className={`app-icon ${item.paneicon}`} />}
                 <Typography variant="body2" component="span">
@@ -292,13 +325,14 @@ const WmTabs = memo(
     }, [dataset, render, renderTabHeader]);
 
     const renderStaticTabs = React.useCallback(() => {
-      panesCount.current = React.Children.count(children);
-
-      return React.Children.map(children, (child: any, index) => {
+      // Consider only panes with show !== false and not hidden via internal state
+      const visibleChildren = filterVisibleChildren(children, hiddenTabNames) as any[];
+      panesCount.current = visibleChildren.length;
+      return visibleChildren.map((child: any, index: number) => {
         if (!child) return null;
         return <React.Fragment key={index}>{renderTabHeader(child.props, index)}</React.Fragment>;
       });
-    }, [children, renderTabHeader]);
+    }, [children, renderTabHeader, hiddenTabNames]);
 
     const renderTabs = React.useMemo(() => {
       return type === "dynamic" && dataset?.length > 0 ? renderDynamicTabs() : renderStaticTabs();
@@ -346,7 +380,9 @@ const WmTabs = memo(
         ));
       }
 
-      return children;
+      // For static tabs, render only visible panes
+      const visibleChildren = filterVisibleChildren(children, hiddenTabNames);
+      return visibleChildren as any;
     };
 
     if (type === "dynamic" && dataset?.length <= 0) {
@@ -422,7 +458,13 @@ const WmTabs = memo(
       "selectedindex",
       "children",
     ];
-    return keys.every(key => isEqual(prev[key], next[key]));
+    return keys.every(key => {
+      // Never deep-compare children; treat as referential bcz the children will have listener props attached cause infinite comparion.
+      if (key === "children") {
+        return prev[key] === next[key];
+      }
+      return isEqual(prev[key], next[key]);
+    });
   }
 );
 

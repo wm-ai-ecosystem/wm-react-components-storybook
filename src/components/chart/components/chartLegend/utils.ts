@@ -11,7 +11,7 @@ export const mapLegendItems = (
   payload: LegendPayload[] | undefined,
   chartColors: string[] | undefined
 ): LegendItem[] => {
-  if (!availableRegions?.length) {
+  if (!availableRegions?.length || (payload?.length ?? 0) > (availableRegions?.length ?? 0)) {
     return (payload || []).map(item => ({
       value: item.value || "",
       color: item.color || "#000",

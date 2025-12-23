@@ -55,10 +55,13 @@ export const WidgetProvider = ({
 
           if (!currentWidget || !proxyMap.has(currentWidget)) {
             // Create new proxy if widget doesn't exist or isn't proxied
+            // Get registry from pageContext if available
+            const registry = (value as any)?.overriddenPropsRegistry;
             const widgetProxy = createWidgetProxy(
               { ...incomingWidget },
               widgetName,
-              setPageContext
+              setPageContext,
+              registry
             );
             newContext.Widgets[widgetName] = widgetProxy;
             newContext.App.Widgets[widgetName] = widgetProxy;
@@ -93,7 +96,7 @@ export const WidgetProvider = ({
     return (widgetName: string, props: Record<string, any>) => {
       if (!widgetName || !pageContext.Widgets) return;
       const widget = pageContext.Widgets[widgetName];
-      if (!isEqual(widget, props)) {
+      if (widget != props) {
         pageContext.Widgets[widgetName] = props;
         pageContextRef.current.Widgets[widgetName] = props;
       }

@@ -81,7 +81,9 @@ export interface WmTableProps extends BaseProps {
   filtermode?: TableFilterMode;
   searchlabel?: string;
   // Export options
-  exportOptions?: any[];
+  exportformat?: any[];
+  exportdatasize?: number;
+  onBeforeexport?: (data: any) => boolean | void;
 
   // Messages
   confirmdelete?: string;
@@ -263,7 +265,7 @@ export interface WmTableRowProps extends BaseProps {
 // ========================================
 
 // Table Body Component Props
-export interface TableBodyProps {
+export interface TableBodyProps extends BaseProps {
   table: Table<any>;
   columns: ColumnDef<any>[];
   rowClass?: string;
@@ -282,6 +284,8 @@ export interface TableBodyProps {
   rowsVersion?: number;
   ColClassSignature?: string;
   tableData?: any[];
+  activeRowIds?: string[];
+  editingRowId?: string | null;
 }
 
 // Table Header Component Props
@@ -386,12 +390,18 @@ export interface TablePanelHeadingProps {
   title?: string;
   subheading?: string;
   iconclass?: string;
-  exportOptions?: any[];
+  exportformat?: any[];
   headerActions: any[];
   spacing?: TablePanelSpacing;
   isGridEditMode?: boolean;
   isLoading?: boolean;
   listener?: any;
+  datasource?: any;
+  columns?: WmTableColumnProps[];
+  sortInfo?: { field: string; direction: string };
+  filterInfo?: any[];
+  exportdatasize?: number;
+  onBeforeExport?: (data: any) => boolean | void;
 }
 
 // ========================================
@@ -587,7 +597,7 @@ export interface UsePanelStructureProps {
   title?: string;
   subheading?: string;
   iconclass?: string;
-  exportOptions?: any[];
+  exportformat?: any[];
   headerActions: any[];
   footerActions: any[];
   shownavigation: boolean;
@@ -651,7 +661,7 @@ export interface UseTableStateReturn {
 export interface SuccessHandlerOptions {
   showToast?: (message: string, type: ToastType) => void;
   onSuccess?: (operation: string, data: any) => void;
-  onRowCallback?: (event: any, data: any) => void;
+  onRowCallback?: (event: any, data: any, row: any) => void;
   message?: string;
 }
 
@@ -813,17 +823,23 @@ export interface UseRowHandlersReturn {
 
 // ==================== PAGINATION STATE INTERFACES ====================
 
+export interface PaginationState {
+  pageIndex: number;
+  pageSize: number;
+}
+
 export interface UsePaginationStateProps {
-  table: Table<any>;
+  initialPage: number;
+  initialPageSize: number;
   editmode: string;
   internalDataset: any[];
-  isAddingNewRow: boolean;
-  cancelEditing: () => void;
   datasource?: LiveVariableConfig;
   isServerSidePagination: boolean;
 }
 
 export interface UsePaginationStateReturn {
+  paginationState: PaginationState;
+  setPaginationState: React.Dispatch<React.SetStateAction<PaginationState>>;
   handlePaginationChange: (event: any, widget: any, index: number) => void;
   handlePageSizeChange: (newPageSize: number) => void;
 }
@@ -856,4 +872,67 @@ export interface ValidationResult {
   invalidElements: HTMLElement[];
   invalidFieldKeys?: string[];
   firstInvalidElement?: HTMLElement;
+}
+
+// ==================== SUMMARY ROW INTERFACES ====================
+
+/**
+ * Interface for summary row value with optional styling
+ */
+export interface SummaryRowValue {
+  value?: string | number | React.ReactNode;
+  class?: string;
+}
+
+/**
+ * Type for summary row data - can be a simple value, styled object, or Promise
+ */
+export type SummaryRowDataType = string | number | SummaryRowValue | Promise<any>;
+
+/**
+ * Interface for summary row definition (stores values by column key)
+ */
+export interface SummaryRowDef {
+  [columnKey: string]: string | number | React.ReactNode;
+}
+
+/**
+ * Interface for summary row definition with styling (stores objects by column key)
+ */
+export interface SummaryRowDefObject {
+  [columnKey: string]: SummaryRowValue | string | number;
+}
+
+/**
+ * Props for SummaryRowFooter component
+ */
+export interface SummaryRowFooterProps {
+  summaryRowDefs: SummaryRowDef[];
+  summaryRowDefObjects: SummaryRowDefObject[];
+  columns: WmTableColumnProps[];
+  tableName?: string;
+  summaryRowColumnShow?: Record<number, Record<string, boolean>>;
+}
+
+/**
+ * Props for SummaryRow component
+ */
+export interface SummaryRowProps {
+  rowDef: SummaryRowDef;
+  rowDefObject: SummaryRowDefObject;
+  rowIndex: number;
+  columns: WmTableColumnProps[];
+  summaryRowColumnShow?: Record<number, Record<string, boolean>>;
+}
+
+/**
+ * Props for SummaryCell component
+ */
+export interface SummaryCellProps {
+  columnKey: string;
+  column: WmTableColumnProps;
+  rowDef: SummaryRowDef;
+  rowDefObject: SummaryRowDefObject;
+  colIndex: number;
+  show: boolean;
 }

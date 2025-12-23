@@ -297,6 +297,16 @@ export const WmColorPicker = memo<ColorPickerProps>(
       }
     }, [isOpen, isInteractingWithPicker]);
 
+    // Register widget methods (open/close) with listener
+    useEffect(() => {
+      if (listener?.onChange) {
+        listener.onChange(name, {
+          open: openPicker,
+          close: closePicker,
+        });
+      }
+    }, [openPicker, closePicker]);
+
     const validateAndSetColor = useCallback(
       (value: string) => {
         if (!value.trim()) {
@@ -449,8 +459,12 @@ export const WmColorPicker = memo<ColorPickerProps>(
             datavalue: newValue,
           });
         }
+        const customEvent = {
+          ...event,
+          type: "change",
+        };
         if (onChange) {
-          onChange(event, listener.Widgets[name], newValue, inputValue);
+          onChange(customEvent, listener.Widgets[name], newValue, inputValue);
         }
 
         if (autoclose === AUTOCLOSE_TYPE.ALWAYS && !isInteractingWithPicker) {
@@ -684,6 +698,8 @@ export const WmColorPicker = memo<ColorPickerProps>(
       "tabindex",
       "autoclose",
       "arialabel",
+      "hidden",
+      "show",
     ];
 
     return keysToCompare.every(key => prevProps[key] === nextProps[key]);

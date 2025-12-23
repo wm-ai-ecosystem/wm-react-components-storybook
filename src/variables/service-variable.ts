@@ -5,6 +5,7 @@ import { ServiceVariable as _ServiceVariable } from "@wavemaker/variables";
 import { httpService } from "@wavemaker/react-runtime/hooks/useHttp";
 import { findValueOf } from "../utils/format-util";
 import EventNotifier from "@wavemaker/react-runtime/core/event-notifier";
+import Formatters from "@wavemaker/react-runtime/core/formatters";
 
 export interface ServiceVariableConfig extends VariableConfig {
   baseUrl: string;
@@ -30,6 +31,9 @@ export class ServiceVariable extends _ServiceVariable {
   private initialized: boolean = false;
   params: any = undefined;
   private lastInvokedParams: any = undefined;
+  private dateFormatter: any;
+  private lastParams: any = undefined;
+  private lastParamProviderValues: any = undefined;
 
   constructor(public config: ServiceVariableConfig) {
     // Initialize with minimal configuration first
@@ -90,6 +94,8 @@ export class ServiceVariable extends _ServiceVariable {
 
     // Set up event handlers
     this.setupEventHandlers(config);
+
+    this.dateFormatter = Formatters.get("toDate");
   }
   // Method to update firstRecord and lastRecord from the current dataset
   private updateFirstAndLastRecord(data: any) {
@@ -111,29 +117,45 @@ export class ServiceVariable extends _ServiceVariable {
     }
   }
 
-  private async initialize() {
-    // Wait for next tick to ensure all properties are set
-    await this.completeInitialization();
-  }
-
   private setupEventHandlers(config: ServiceVariableConfig) {
     // Implementation for setting up event handlers
   }
 
-  private async completeInitialization() {
-    // Complete the initialization with actual data
-    this.dataSet = this.config.paramProvider();
-    this.serviceInfo = this.config.getServiceInfo();
-    this.init();
-  }
-
   async invokeOnParamChange() {
-    let latest = merge({}, this.config.paramProvider(), this.params || {}, this.dataBinding);
+    // Get current values from all sources
+    const currentParams = this.params || {};
+    const currentParamProvider = this.config.paramProvider() || {};
+    const currentDataBinding = this.dataBinding || {};
+
+    // Detect what CHANGED since last invocation
+    const paramsChanged = !isEqual(this.lastParams, currentParams);
+    const paramProviderChanged = !isEqual(this.lastParamProviderValues, currentParamProvider);
+
+    // Smart merge based on what actually changed:
+    let latest;
+
+    if (paramsChanged && !paramProviderChanged) {
+      // Only script/params changed → params should win
+      latest = merge({}, currentParamProvider, currentDataBinding, currentParams);
+    } else if (paramProviderChanged && !paramsChanged) {
+      // Only UI/paramProvider changed → paramProvider should win
+      latest = merge({}, currentParams, currentDataBinding, currentParamProvider);
+    } else if (paramsChanged && paramProviderChanged) {
+      // Both changed → params wins (script is more intentional than UI)
+      latest = merge({}, currentParamProvider, currentDataBinding, currentParams);
+    } else {
+      // Neither changed (first call) → params wins by default
+      latest = merge({}, currentParamProvider, currentDataBinding, currentParams);
+    }
+
     let last = this.lastInvokedParams || {};
 
     if (!isEqual(last, latest) && latest !== undefined && !isEmpty(latest)) {
-      // Update lastInvokedParams to reflect the merged values
+      // Update all tracking values
       this.lastInvokedParams = deepCopy({} as any, latest);
+      this.lastParams = deepCopy({} as any, currentParams);
+      this.lastParamProviderValues = deepCopy({} as any, currentParamProvider);
+
       try {
         // Create a new Promise that wraps the invoke call
         await new Promise((resolve, reject) => {
@@ -146,6 +168,10 @@ export class ServiceVariable extends _ServiceVariable {
       } catch (error) {
         console.error("Error in invokeOnParamChange:", error);
       }
+    } else {
+      // Even if not invoking, update tracking to detect future changes
+      this.lastParams = deepCopy({} as any, currentParams);
+      this.lastParamProviderValues = deepCopy({} as any, currentParamProvider);
     }
 
     return this;
@@ -185,7 +211,18 @@ export class ServiceVariable extends _ServiceVariable {
     }
     options = options || {};
     options.inputFields = this.params;
+    this.lastInvokedParams = this.params;
 
+    // Normalize orderBy option
+    if (!(options as any).orderBy) {
+      const cfg: any = this.config as any;
+      const defaultOrder =
+        cfg?.orderBy || cfg?.orderby || (this as any).orderBy || (this as any).orderby;
+      if (defaultOrder) {
+        const norm = String(defaultOrder);
+        (options as any).orderBy = norm.includes(":") ? norm.replace(/:/g, " ") : norm;
+      }
+    }
     // Get the latest service definition
     this.serviceInfo = this.config.getServiceInfo();
     if (!this.serviceInfo) {

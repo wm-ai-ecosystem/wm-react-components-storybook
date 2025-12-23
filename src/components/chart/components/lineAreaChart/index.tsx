@@ -16,32 +16,38 @@ import { ChartLegend } from "../chartLegend";
 import { getLegendPopupStyle } from "../../utils";
 import { LineAreaChartProps } from "./props";
 
-export const LineAreaChart: React.FC<LineAreaChartProps> = ({
-  type,
-  data,
-  dataKeys,
-  selectedRegions,
-  chartColors,
-  margin,
-  showLegend,
-  legendPosition,
-  xAxisConfig,
-  yAxisConfig,
-  numberFormat,
-  xDataKeyArr,
-  interpolation,
-  strokeWidth,
-  pointSize,
-  areaViewType = "none",
-  onChartClick,
-  onLegendClick,
-  tooltips = true,
-  legendtype,
-  availableRegions,
-}) => {
+export const LineAreaChart: React.FC<LineAreaChartProps> = props => {
+  const {
+    type,
+    data,
+    dataKeys,
+    selectedRegions,
+    chartColors,
+    margin,
+    showLegend,
+    legendPosition,
+    xAxisConfig,
+    yAxisConfig,
+    numberFormat,
+    xDataKeyArr,
+    interpolation,
+    strokeWidth,
+    pointSize,
+    areaViewType = "none",
+    onChartClick,
+    onLegendClick,
+    tooltips = true,
+    legendtype,
+    availableRegions,
+    onAreaSelect,
+  } = props;
+
   const commonProps = {
     data,
     margin,
+    style: {
+      transform: `translate(calc(${props.offsetleft ?? 0}px - ${props.offsetright ?? 0}px), calc(${props.offsettop ?? 0}px - ${props.offsetbottom ?? 0}px))`,
+    },
   };
 
   const commonChartElements = (
@@ -55,7 +61,7 @@ export const LineAreaChart: React.FC<LineAreaChartProps> = ({
             return (
               <ChartTooltip
                 active={active}
-                payload={payload}
+                payload={payload as any}
                 label={label}
                 xDataKeyArr={xDataKeyArr}
                 numberFormat={numberFormat}
@@ -128,7 +134,11 @@ export const LineAreaChart: React.FC<LineAreaChartProps> = ({
           ))}
         </LineChart>
       ) : (
-        <AreaChart {...commonProps} stackOffset={areaViewType}>
+        <AreaChart
+          {...commonProps}
+          stackOffset={areaViewType}
+          className="area-chart-clickable-dots"
+        >
           {commonChartElements}
           {dataKeys.map((dataKey, index) => (
             <Area
@@ -140,6 +150,18 @@ export const LineAreaChart: React.FC<LineAreaChartProps> = ({
               fill={chartColors?.[index % chartColors?.length]}
               fillOpacity={0.6}
               dot={{
+                r: pointSize,
+                strokeWidth: 1,
+                fill: chartColors?.[index % chartColors?.length],
+                onClick: onAreaSelect,
+              }}
+              activeDot={{
+                r: pointSize,
+                strokeWidth: 1,
+                fill: chartColors?.[index % chartColors?.length],
+                onClick: onAreaSelect,
+              }}
+              activeDot={{
                 r: pointSize,
                 strokeWidth: 1,
                 fill: chartColors?.[index % chartColors?.length],

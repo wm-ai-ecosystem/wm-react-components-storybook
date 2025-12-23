@@ -84,7 +84,12 @@ export const TableHeaderComponent: React.FC<TableHeaderProps> = memo(
     return (
       <TableHead className="table-header thead-sticky">
         {table.getHeaderGroups().map(headerGroup => (
-          <TableRow key={headerGroup.id} className={`${TABLE_CSS_CLASSES.tableRow} ${rowClass}`}>
+          <TableRow
+            key={headerGroup.id}
+            className={`${TABLE_CSS_CLASSES.tableRow} ${rowClass}`}
+            tabIndex={0}
+            role="row"
+          >
             {headerGroup.headers.map((header, headerIndex) => {
               const cells = [];
 
@@ -99,6 +104,10 @@ export const TableHeaderComponent: React.FC<TableHeaderProps> = memo(
                       padding: "8px",
                       userSelect: "none",
                     }}
+                    role="columnheader"
+                    data-col-id={headerIndex}
+                    tabIndex={0}
+                    data-col-field={header.column.id}
                   >
                     {/* Empty header for expansion column */}
                   </TableCell>
@@ -127,6 +136,10 @@ export const TableHeaderComponent: React.FC<TableHeaderProps> = memo(
                       ? header.column.getToggleSortingHandler()
                       : undefined
                   }
+                  role="columnheader"
+                  data-col-id={headerIndex}
+                  tabIndex={0}
+                  data-col-field={header.column.id}
                 >
                   <Box component={"span"}>
                     {header.isPlaceholder

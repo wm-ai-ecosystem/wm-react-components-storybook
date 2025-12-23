@@ -5,6 +5,7 @@ export interface DatasetItem {
   value: any;
   label: string;
   selected?: boolean;
+  dataObject?: any;
 }
 
 export interface GroupedDataset {

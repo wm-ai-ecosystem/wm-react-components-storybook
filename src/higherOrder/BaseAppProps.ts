@@ -24,8 +24,8 @@ export interface BaseAppProps {
   executeStartAppOperations: () => void;
   importModule?: (moduleName: string) => any;
   Widgets?: Record<string, ProxyTarget>;
-  subscribe: (variableName: string, callback: Function) => void;
-  autoUpdateVariables: String[];
+  subscribe: (eventName: string, callback: Function) => () => void;
+  autoUpdateVariables: string[];
 }
 
 export default BaseAppProps;

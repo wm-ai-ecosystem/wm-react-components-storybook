@@ -7,27 +7,17 @@ import React, {
   useMemo,
   HtmlHTMLAttributes,
 } from "react";
-import {
-  find,
-  findIndex,
-  forEach,
-  isArray,
-  isNull,
-  isUndefined,
-  trim,
-  isEqual,
-  isObject,
-  toString,
-} from "lodash-es";
+import { find, findIndex, forEach, toString } from "lodash-es";
 import { withBaseWrapper, BaseProps } from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
 import Box from "@mui/material/Box";
 import { InputBase } from "@mui/material";
 import { transformDataset } from "@wavemaker/react-runtime/utils/transformedDataset-utils";
 import { DataSetItem, WmSwitchProps } from "./prop";
 import withFormController from "@wavemaker/react-runtime/components/data/form/form-controller/withFormController";
+
 const DEFAULT_CLS = "app-switch";
 
-const defaultProps: Partial<WmSwitchProps> = {
+const defaultProps: Partial<WmSwitchProps & BaseProps> = {
   show: true,
   tabindex: 0,
   checkediconclass: "",
@@ -411,6 +401,7 @@ const WmSwitch: React.FC<WmSwitchProps> = memo(
     listener,
     styles,
     dataPath,
+    hidden,
     ...rest
   }) => {
     const {
@@ -463,6 +454,7 @@ const WmSwitch: React.FC<WmSwitchProps> = memo(
 
     return (
       <Box
+        hidden={hidden}
         className={DEFAULT_CLS}
         {...({ name } as HtmlHTMLAttributes<HTMLDivElement>)}
         aria-label={arialabel}

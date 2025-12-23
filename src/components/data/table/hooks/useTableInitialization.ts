@@ -75,7 +75,7 @@ export const useTableInitialization = ({
     // Check if there are no active rows
     const hasNoActiveRows = !activeRowIds || activeRowIds.length === 0;
 
-    if (hasNoActiveRows && internalDataset.length > 0) {
+    if (hasNoActiveRows) {
       // Handle the case when there are no active rows
       // You can customize this logic based on your requirements
       if (listener && editmode === "form" && formName) {

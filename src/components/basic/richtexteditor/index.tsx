@@ -422,6 +422,7 @@ const WmRichTextEditor = forwardRef<any, RichTextEditorProps>((props, ref) => {
           title={hint}
           style={{ width: width }}
           height={styles?.height}
+          hidden={props.hidden}
         >
           <JoditEditor
             ref={editorRef}

@@ -163,6 +163,7 @@ const WmHtml = (props: WmHtmlProps) => {
       aria-label={arialabel}
       {...domEvents}
       style={getStyles(props)}
+      hidden={props.hidden}
     >
       {props.children}
     </Box>

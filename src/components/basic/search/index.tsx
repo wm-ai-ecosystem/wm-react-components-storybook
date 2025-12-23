@@ -84,9 +84,11 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
     casesensitive = false, // Default to case-insensitive
     isUpdateRequired,
     onQuerySearch,
+    getDisplayExpression,
     ...restProps
   } = props;
 
+  const debouncedSearchRef = useRef<ReturnType<typeof debounce> | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -105,9 +107,7 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
 
   useEffect(() => {
     // do not remove this code specifically handled for chips component for clearing the query.
-    if (datavalue == "") {
-      setQuery("");
-    }
+    setQuery(datavalue);
   }, [datavalue]);
 
   // Combine width with other styles
@@ -308,9 +308,15 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
     ]
   );
 
-  // First, modify getDataSourceAsObservable to handle the state updates properly
-  const getDataSourceDebounced = useMemo(() => {
-    return debounce(async (query: string) => {
+  // Initialize or update the debounced function when dependencies change
+  useEffect(() => {
+    // Cancel previous debounced function if it exists
+    if (debouncedSearchRef.current) {
+      debouncedSearchRef.current.cancel();
+    }
+
+    // Create new debounced function
+    debouncedSearchRef.current = debounce(async (query: string) => {
       // Don't do anything if query is empty and we don't want to show all
       if (!query) {
         setFormattedDataset([]);
@@ -345,6 +351,13 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
         }
       }
     }, debouncetime);
+
+    // Cleanup: cancel debounced function on unmount or dependency change
+    return () => {
+      if (debouncedSearchRef.current) {
+        debouncedSearchRef.current.cancel();
+      }
+    };
   }, [getDataSource, minchars, debouncetime]);
 
   // listen to query change and trigger debounced search
@@ -353,12 +366,16 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
       query &&
       ((type === "autocomplete" && listenQuery) || (type === "search" && searchon === "typing"))
     ) {
-      getDataSourceDebounced(query);
+      // Call the persisted debounced function
+      debouncedSearchRef.current?.(query);
     }
-  }, [query]);
+  }, [query, type, listenQuery, searchon]);
 
   // Simplify handleInputChange to only update query
   const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    if (readonly || disabled) {
+      return;
+    }
     const queryValue = event?.target?.value || "";
     setQuery(queryValue);
 
@@ -461,7 +478,8 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
           displaylabel,
           displayexpression,
           props.orderby,
-          props.groupby
+          props.groupby,
+          props.dataPath
         );
         setFormattedDataset(normalizedData);
         setIsOpen(true);
@@ -494,6 +512,8 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
   };
 
   const handleSearchClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
     // Reset hasMoreData state before new search
     setHasMoreData(true);
 
@@ -532,6 +552,9 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
   };
 
   const handleMatchSelect = (match: HTMLElement) => {
+    if (readonly || disabled) {
+      return;
+    }
     const itemData = match.getAttribute("data-item");
     if (!itemData) return;
 
@@ -673,7 +696,10 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
       "value",
     ];
     const keyValue = findFieldValue(keyFields, index);
-    const displayImage = displayimagesrc && item[displayimagesrc] ? item[displayimagesrc] : null;
+    const displayImage =
+      displayimagesrc && item.dataObject?.[displayimagesrc]
+        ? item.dataObject?.[displayimagesrc]
+        : null;
 
     return {
       key: keyValue,
@@ -737,12 +763,21 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
               alt=""
               width={parseInt(imagewidth) || 16}
               height={parseInt(imagewidth) || 16}
-              style={{ marginRight: "8px" }}
+              style={{ marginRight: "8px", borderRadius: "100%" }}
             />
           )}
           {/* MUI anchor tag */}
           <Box component="span" className="" title={displayText}>
-            {highlightMatch(displayText, query)}
+            {getDisplayExpression
+              ? highlightMatch(
+                  getDisplayExpression(
+                    item?.dataObject?.dataObject
+                      ? item.dataObject.dataObject
+                      : (item?.dataObject ?? item)
+                  ),
+                  query
+                )
+              : highlightMatch(displayText, query)}
           </Box>
         </Box>
       </MenuItem>
@@ -953,6 +988,7 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
         className={clsx(DEFAULT_CLASS, className)}
         data-search-type={type}
         type={type}
+        readonly={readonly}
       >
         {renderBackButton()}
         <Box component="span" className="sr-only">
@@ -965,7 +1001,7 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
           type="text"
           focus-target="true"
           value={query}
-          onChange={handleInputChange}
+          onChange={!readonly ? handleInputChange : undefined}
           disabled={disabled}
           tabIndex={tabindex}
           ref={inputRef}

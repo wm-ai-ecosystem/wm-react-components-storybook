@@ -7,7 +7,8 @@ import BaseFormProps, { defaultProps } from "./props";
 import { getFieldLayoutConfig } from "./utils";
 import { FormProvider } from "../form-context";
 import { debounce } from "lodash-es";
-import { DataSource } from "@/components/data/types";
+import { findOperationType } from "../../utils";
+import { getItemsPerRowClass } from "../../list/utils/list-helpers";
 
 const DEFAULT_CLASS = "panel app-panel app-form";
 
@@ -53,15 +54,23 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
 
     // update the form data when the formdata prop changes
     useEffect(() => {
-      if (
-        props.formdata &&
-        typeof props.formdata === "object" &&
-        !Array.isArray(props.formdata) &&
-        Object.keys(props.formdata).length > 0
-      ) {
-        reset(props.formdata);
-        if (props["form-type"] === "live-filter") {
-          debouncedFilter();
+      if (props.formdata && typeof props.formdata === "object" && !Array.isArray(props.formdata)) {
+        // when adding new row if the formdata is empty it should be reset here this code is added to not avoid the empty formdata case
+        // Reset to empty if formdata is empty object (for new records)
+        if (Object.keys(props.formdata).length === 0) {
+          // Get all currently registered field names and create explicit empty values
+          const currentValues = getValues();
+          const emptyValues: Record<string, any> = {};
+          Object.keys(currentValues).forEach(key => {
+            emptyValues[key] = ""; // Explicitly set each field to empty string
+          });
+          reset(emptyValues);
+        } else {
+          // Reset with actual data (for editing)
+          reset(props.formdata);
+          if (props["form-type"] === "live-filter") {
+            debouncedFilter();
+          }
         }
       }
     }, [props.formdata, reset]);
@@ -83,6 +92,7 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
             prev[key].datavalue = prev[key].defaultvalue;
             prev[key].value = prev[key].defaultvalue;
           });
+          trigger(Object.keys(prev));
           return prev;
         });
       }, 100);
@@ -188,8 +198,18 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
         }
 
         // get the operation type
+        const primaryKeys = props?.datasource?.execute("getPrimaryKey");
+        let firstParam = FormData;
+        if (props?.datasource?.name?.toLowerCase?.() === "crudvariable") {
+          const operation = findOperationType(FormData, primaryKeys);
+          firstParam = {
+            inputFields: FormData,
+            operation: operation === "insert" ? "create" : operation,
+          };
+        }
+
         props.formSubmit(
-          FormData,
+          firstParam,
           (data: any) => {
             if (props.widgettype === "live-form" && data.operationType === "insert") {
               reset(data);
@@ -288,6 +308,10 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       [props.captionwidth, props.captionposition]
     );
 
+    const itemsPerRow = useMemo(() => {
+      return getItemsPerRowClass(props.itemsperrow);
+    }, [props.itemsperrow]);
+
     function expandCollapsePanel() {
       if (props.collapsible) {
         // flip the active flag
@@ -314,36 +338,7 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       showViewMode,
       formdata: props.formdata,
       getFieldValue,
-    };
-
-    const formProps = {
-      ...props,
-      submit,
-      formreset,
-      formfields,
-      formWidgets: formfields,
-      headerActions,
-      ref,
-      toggleMessage,
-      clearMessage,
-      expandCollapsePanel,
-      expanded,
-      showmessage,
-      statusMessage,
-      showViewMode,
-      filter,
-      clearFilter,
-      validateFieldsOnSubmit,
-      valid: isValid,
-      errors,
-      delete: deleteEntry,
-      cancel,
-      new: create,
-      edit,
-      setShowViewMode,
-      dataoutput: getValues(),
-      save: submit,
-      reset,
+      itemsPerRow,
     };
 
     const conditionalProps = {
@@ -381,9 +376,31 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
 
     function edit(data: any) {
       if (data) {
-        reset(data);
+        // Convert null values to empty strings to avoid React Hook Form using old defaultValues
+        const cleanedData: Record<string, any> = {};
+        Object.keys(data).forEach(key => {
+          cleanedData[key] = data[key] === null ? "" : data[key];
+        });
+        reset(cleanedData);
       }
       setShowViewMode(false);
+    }
+
+    function setFormData(data: any) {
+      if (!data || typeof data !== "object" || Array.isArray(data)) {
+        return;
+      }
+      const cleanedData: Record<string, any> = {};
+      Object.keys(data).forEach(key => {
+        cleanedData[key] = data[key] === null ? "" : data[key];
+      });
+      reset(cleanedData);
+      if (props.listener?.Widgets && props.name) {
+        props.listener.Widgets[props.name].formdata = cleanedData;
+      }
+      if ((props as any)["form-type"] === "live-filter") {
+        debouncedFilter();
+      }
     }
 
     function cancel() {
@@ -438,29 +455,49 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       };
     }, [watch, isValid]);
 
+    const formProps = {
+      ...props,
+      ...conditionalProps,
+      submit,
+      formreset,
+      formfields,
+      formWidgets: formfields,
+      headerActions,
+      ref,
+      toggleMessage,
+      clearMessage,
+      expandCollapsePanel,
+      expanded,
+      showmessage,
+      statusMessage,
+      showViewMode,
+      filter,
+      clearFilter,
+      validateFieldsOnSubmit,
+      valid: isValid,
+      errors,
+      delete: deleteEntry,
+      cancel,
+      new: create,
+      edit,
+      setShowViewMode,
+      dataoutput: getValues(),
+      save: submit,
+      setFormData,
+      reset,
+      numberoffields: Object.keys(formfields).length,
+      className: formClassName,
+    };
+
     return (
-      <form
-        name={props.name}
-        defaultmode={props.defaultmode}
-        captionposition={props.captionposition}
-        captionalign={props.captionalign}
-        numberoffields={Object.keys(formfields).length}
-        ref={formRef}
-        className={formClassName}
-        id={props.id}
-        onSubmit={submit}
-        {...conditionalProps}
-        style={{ ...props.styles, ...props.conditionalstyle }}
-      >
-        <FormProvider value={ref} isViewMode={showViewMode}>
-          <WrappedComponent
-            {...formProps}
-            valid={isValid}
-            formWidgets={formfields}
-            formfields={formfields}
-          />
-        </FormProvider>
-      </form>
+      <FormProvider value={ref} isViewMode={showViewMode}>
+        <WrappedComponent
+          {...formProps}
+          valid={isValid}
+          formWidgets={formfields}
+          formfields={formfields}
+        />
+      </FormProvider>
     );
   };
   return ControlledForm;

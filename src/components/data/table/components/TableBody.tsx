@@ -1,9 +1,11 @@
-import React, { memo, Fragment, useMemo, useCallback } from "react";
+import React, { memo, useMemo, useCallback } from "react";
 import { TableBody, TableRow, TableCell, Box } from "@mui/material";
-import { flexRender, Table, ColumnDef } from "@tanstack/react-table";
+import { ColumnDef } from "@tanstack/react-table";
 import { TABLE_CSS_CLASSES, TABLE_MESSAGES } from "../utils";
 import { WmTableRowProps, TableBodyProps } from "../props";
 import { RowExpansionButton } from "./RowExpansionButton";
+import isEqual from "lodash-es/isEqual";
+import { TableDataRow } from "./TableDataRow";
 
 // Constants
 const SYSTEM_COLUMN_IDS = ["multiSelect", "radioSelect", "row-index", "actions"];
@@ -22,10 +24,13 @@ const parsePosition = (position: string | number | undefined): number => {
 
 const EmptyRow: React.FC<{ colSpan: number; message: string; rowClass?: string }> = memo(
   ({ colSpan, message, rowClass = "" }) => (
-    <TableRow className={rowClass}>
+    <TableRow className={rowClass} role="row" tabIndex={0} data-row-id="empty">
       <TableCell
         colSpan={colSpan}
         className={`${TABLE_CSS_CLASSES.tableCell} text-center`}
+        role="cell"
+        data-col-id="empty-cell"
+        tabIndex={0}
         style={{ padding: DEFAULT_CELL_PADDING }}
       >
         {message}
@@ -44,6 +49,9 @@ const ExpansionCell: React.FC<{
 }> = memo(({ rowId, rowData, isExpanded, onToggle, config }) => (
   <TableCell
     className="app-datagrid-cell row-expansion-cell"
+    role="cell"
+    data-col-id="row-expansion"
+    tabIndex={0}
     style={{
       textAlign: "center",
       position: "relative",
@@ -99,10 +107,15 @@ const ExpandedContent: React.FC<{
     <TableRow
       className="expanded-row-content"
       data-row-id={rowId}
+      role="row"
+      tabIndex={0}
       style={{ backgroundColor: EXPANDED_ROW_BG_COLOR }}
     >
       <TableCell
         colSpan={colSpan}
+        role="cell"
+        data-col-id="expanded-content"
+        tabIndex={0}
         style={{
           padding: "16px",
           borderBottom: "1px solid #e0e0e0",
@@ -174,6 +187,11 @@ const TableBodyComponentBase: React.FC<TableBodyProps> = ({
   expandedRows = new Set(),
   toggleRowExpansion,
   isRowExpanded,
+  ColClassSignature,
+  rowsVersion,
+  tableData,
+  editingRowId = null,
+  hidden = false,
 }) => {
   const hasExpansion = !!(rowExpansionConfig?.show && toggleRowExpansion && isRowExpanded);
 
@@ -202,72 +220,6 @@ const TableBodyComponentBase: React.FC<TableBodyProps> = ({
     [hasExpansion, rowExpansionConfig, isRowExpanded, toggleRowExpansion]
   );
 
-  const renderDataRow = useCallback(
-    (row: any) => {
-      const rowId = row.id;
-      const isSelected = isRowSelected(rowId);
-      const isActive = isRowActive(rowId, isSelected);
-      const rowIsExpanded = isRowExpanded?.(rowId) || false;
-
-      return (
-        <Fragment key={rowId}>
-          <TableRow
-            className={`${TABLE_CSS_CLASSES.tableRow} ${isActive ? "active" : ""} ${rowClass}`}
-            onClick={event => onRowClick(event, row.original, rowId)}
-            style={{ cursor: "pointer" }}
-          >
-            {row.getVisibleCells().map((cell: any, cellIndex: number) => (
-              <Fragment key={`cell-${cellIndex}`}>
-                {hasExpansion &&
-                  cellIndex === expansionInsertIndex &&
-                  renderExpansionCell(rowId, row.original)}
-
-                <TableCell
-                  key={cell.id}
-                  title={row.getValue(cell.column.id) ? String(row.getValue(cell.column.id)) : ""}
-                  className={`${TABLE_CSS_CLASSES.tableCell} ${cell.column.columnDef.meta?.className || ""}`.trim()}
-                  style={{
-                    width: cell.column.getSize(),
-                    textAlign: cell.column.columnDef.meta?.textAlign,
-                    backgroundColor: cell.column.columnDef.meta?.backgroundColor,
-                    ...(() => {
-                      const { className, textAlign, backgroundColor, ...otherMeta } =
-                        cell.column.columnDef.meta || {};
-                      return otherMeta;
-                    })(),
-                  }}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-              </Fragment>
-            ))}
-          </TableRow>
-
-          {hasExpansion && rowIsExpanded && rowExpansionConfig && (
-            <ExpandedContent
-              rowId={rowId}
-              rowData={row.original}
-              config={rowExpansionConfig}
-              colSpan={totalColumns}
-            />
-          )}
-        </Fragment>
-      );
-    },
-    [
-      isRowSelected,
-      isRowActive,
-      rowClass,
-      onRowClick,
-      hasExpansion,
-      expansionInsertIndex,
-      renderExpansionCell,
-      isRowExpanded,
-      rowExpansionConfig,
-      totalColumns,
-    ]
-  );
-
   // Render logic
   const renderTableContent = () => {
     const rows = table.getRowModel().rows;
@@ -275,11 +227,41 @@ const TableBodyComponentBase: React.FC<TableBodyProps> = ({
       return <EmptyRow colSpan={totalColumns} message={nodatamessage} rowClass={rowClass} />;
     }
 
-    return rows.map(renderDataRow);
+    return rows.map(row => {
+      const rowId = row.id;
+      const isSelected = isRowSelected(rowId);
+      const isActive = isRowActive(rowId, isSelected);
+      const rowIsExpanded = isRowExpanded?.(rowId) || false;
+      const isEditingRow = editingRowId === rowId;
+
+      return (
+        <TableDataRow
+          key={rowId}
+          row={row}
+          rowId={rowId}
+          index={row.index}
+          isSelected={isSelected}
+          isActive={isActive}
+          rowIsExpanded={rowIsExpanded}
+          isEditingRow={isEditingRow}
+          hasExpansion={hasExpansion}
+          expansionInsertIndex={expansionInsertIndex}
+          renderExpansionCell={renderExpansionCell}
+          rowClass={rowClass}
+          onRowClick={onRowClick}
+          ColClassSignature={ColClassSignature || ""}
+          rowsVersion={rowsVersion || 0}
+          tableData={tableData || []}
+          ExpandedContent={ExpandedContent}
+          rowExpansionConfig={rowExpansionConfig}
+          totalColumns={totalColumns}
+        />
+      );
+    });
   };
 
   return (
-    <TableBody className={`app-grid-content ${TABLE_CSS_CLASSES.gridBody}`}>
+    <TableBody hidden={hidden} className={`app-grid-content ${TABLE_CSS_CLASSES.gridBody}`}>
       {formposition === "top" && renderAddNewRow()}
       {renderTableContent()}
       {formposition === "bottom" && renderAddNewRow()}
@@ -290,6 +272,7 @@ const TableBodyComponentBase: React.FC<TableBodyProps> = ({
 export const TableBodyComponent = memo(TableBodyComponentBase, (prev, current) => {
   const keys: (keyof TableBodyProps)[] = [
     "isLoading",
+    "name",
     "rowClass",
     "formposition",
     "nodatamessage",
@@ -297,7 +280,17 @@ export const TableBodyComponent = memo(TableBodyComponentBase, (prev, current) =
     "rowsVersion",
     "tableData",
     "ColClassSignature",
+    "activeRowIds",
+    "editingRowId",
+    "table",
+    "hidden",
+    "renderAddNewRow",
   ];
-  return keys.every(key => prev[key] === current[key]);
+  return keys.every(key => {
+    if (key === "activeRowIds") {
+      return isEqual(prev.activeRowIds, current.activeRowIds);
+    }
+    return prev[key] === current[key];
+  });
 });
 TableBodyComponent.displayName = "TableBodyComponent";

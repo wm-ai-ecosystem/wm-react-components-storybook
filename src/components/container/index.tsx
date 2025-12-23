@@ -3,7 +3,12 @@ import { clsx } from "clsx";
 
 import { withBaseWrapper, BaseProps } from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
 import { ContainerProps } from "./props";
-import { calculateAlignmentStyles, calculateSpacingStyles } from "./alignment-utils";
+import {
+  calculateAlignmentStyles,
+  calculateSpacingStyles,
+  calculateClipBehaviour,
+  calculatePositionStyles,
+} from "./alignment-utils";
 
 const DEFAULT_CLASS = "app-container";
 
@@ -36,6 +41,9 @@ export const WmContainer = (props: ContainerProps) => {
     alignment,
     gap,
     columngap,
+    clipcontent,
+    position,
+    zindex,
   } = props;
   const isLoaded = useRef(false);
 
@@ -100,8 +108,9 @@ export const WmContainer = (props: ContainerProps) => {
       return {
         ...styles,
         ...customStyles,
-        display: display || props.direction ? "flex" : "",
-        ["flex-flow"]: direction || "row",
+        display: display ? display : props.direction ? "flex" : "",
+        flexDirection: direction || "row",
+        flexWrap: wrap ? "wrap" : "nowrap",
       };
     }
     const alignmentStyles = calculateAlignmentStyles(alignmentMatrix, alignment, direction, wrap);
@@ -113,16 +122,43 @@ export const WmContainer = (props: ContainerProps) => {
       direction,
       wrap
     );
+    const clipStyles = calculateClipBehaviour(props.styles?.overflow || "", clipcontent);
+    const positionStyles = calculatePositionStyles(position, zindex);
+
+    // Apply flex-shrink: 0 when width/height are fixed values (not '100%' or 'fit-content')
+    const flexShrinkStyles: Record<string, any> = {};
+    if (props.styles.width && props.styles.width !== "fit-content") {
+      flexShrinkStyles.flexShrink = 0;
+    }
+    if (props.styles.height && props.styles.height !== "fit-content") {
+      flexShrinkStyles.flexShrink = 0;
+    }
 
     return {
       ...styles,
       ...customStyles,
       ...alignmentStyles,
       ...spacingStyles,
+      ...clipStyles,
+      ...positionStyles,
+      ...flexShrinkStyles,
       display: display || "flex",
-      ["flex-flow"]: direction || "row",
+      flexDirection: direction || "row",
+      flexWrap: wrap ? "wrap" : "nowrap",
     };
-  }, [styles, customStyles, alignment, direction, wrap, gap, columngap, display]);
+  }, [
+    styles,
+    customStyles,
+    alignment,
+    direction,
+    wrap,
+    gap,
+    columngap,
+    clipcontent,
+    position,
+    zindex,
+    display,
+  ]);
 
   useEffect(() => {
     if (props?.onLoad && !isLoaded.current) {
@@ -141,6 +177,7 @@ export const WmContainer = (props: ContainerProps) => {
       data-widget-id={props["data-widget-id"]}
       id={id}
       hidden={props.hidden}
+      show={props.show}
       {...domEvents}
       {...({ name: props.name } as HtmlHTMLAttributes<HTMLDivElement>)}
     >

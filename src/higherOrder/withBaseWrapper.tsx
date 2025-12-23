@@ -5,11 +5,7 @@ import { useDeviceVisibility } from "@wavemaker/react-runtime/hooks/useDeviceVis
 import { usePageContext } from "@wavemaker/react-runtime/context/WidgetProvider";
 import { sanitizeStyleObject } from "@wavemaker/react-runtime/utils/style-utils";
 import { Props } from "@wavemaker/react-runtime/higherOrder/props";
-import {
-  isPropOverridden,
-  isWidgetOverridden,
-  getWidgetOverrides,
-} from "@wavemaker/react-runtime/core/script-registry";
+import { OverriddenPropsRegistry } from "@wavemaker/react-runtime/core/script-registry";
 
 export interface BaseProps extends Props {}
 
@@ -17,7 +13,7 @@ export const withBaseWrapper = <P extends BaseProps>(
   WrappedComponent: ComponentType<P>
 ): ComponentType<P> => {
   const WithBaseComponent = (props: BaseProps) => {
-    const { show = true, name, deferload = true, ...rest } = props;
+    const { show = true, name, deferload, ...rest } = props;
 
     // All hooks must be called before any early returns
     const { isHidden } = useDeviceVisibility(props.showindevice || ["all"]);
@@ -59,20 +55,37 @@ export const withBaseWrapper = <P extends BaseProps>(
         !componentWidgetId || !contextWidgetId || componentWidgetId === contextWidgetId;
 
       let mergedState: Record<string, any> = { ...props };
-      const datavalue = props.datavalue ?? widget.datavalue;
-      if (shouldMergeFromContext && isWidgetOverridden(name, componentWidgetId)) {
-        // Apply widget-id specific overridden properties from the registry
-        const widgetOverrides = getWidgetOverrides(name, componentWidgetId);
-        Object.keys(widgetOverrides).forEach(key => {
-          mergedState[key] = widgetOverrides[key];
-        });
+      const registry: OverriddenPropsRegistry | undefined = (pageContext as any)
+        ?.overriddenPropsRegistry;
 
-        // Then handle other widget properties that are not overridden
-        Object.keys(widget).forEach(key => {
-          if (!isPropOverridden(name, key, componentWidgetId)) {
-            mergedState[key] = props[key];
-          }
-        });
+      const datavalue = props.datavalue ?? widget.datavalue;
+      if (shouldMergeFromContext && registry?.isWidgetOverridden(name, componentWidgetId)) {
+        // Apply widget-id specific overridden properties from the registry
+        const widgetOverrides = registry?.getWidgetOverrides(name, componentWidgetId || "");
+        if (widgetOverrides) {
+          Object.keys(widgetOverrides).forEach(key => {
+            mergedState[key] = widgetOverrides[key];
+            if (props.prefab && key !== "inbound" && key !== "outbound" && key !== "show") {
+              const updatedInbound = {
+                ...props.inbound,
+                [key]: widgetOverrides[key],
+              };
+              mergedState.inbound = updatedInbound;
+            }
+          });
+
+          // Then handle other widget properties that are not overridden
+          Object.keys(widget).forEach(key => {
+            const isPropOverriddenCheck = registry?.isPropOverridden(
+              name,
+              key,
+              componentWidgetId || ""
+            );
+            if (!isPropOverriddenCheck) {
+              mergedState[key] = props[key];
+            }
+          });
+        }
       } else if (shouldMergeFromContext) {
         // For regular widgets (no widget-id or matching widget-id), merge with component props taking precedence
         mergedState = {

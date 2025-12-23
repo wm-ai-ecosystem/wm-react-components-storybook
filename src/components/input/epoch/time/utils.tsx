@@ -200,7 +200,7 @@ export function updateListener(
 ): void {
   // Update listener widget display value
 
-  if (listener?.onChange) {
+  if (listener?.onChange && !props.fieldName) {
     listener.onChange(name || "", {
       ...props,
       displayValue: displayValue,
@@ -208,4 +208,21 @@ export function updateListener(
       datavalue: datavalue,
     });
   }
+}
+
+export function createWidgetEvent(args: {
+  type: string;
+  name?: string;
+  value?: any;
+  anchor?: HTMLElement | null;
+  originalEvent?: React.SyntheticEvent | Event | undefined;
+}): React.SyntheticEvent {
+  const { type, name, value, anchor, originalEvent } = args;
+  const evt: any = originalEvent || {};
+  evt.type = evt.type || type;
+  evt.target = evt.target || anchor;
+  evt.currentTarget = evt.currentTarget || anchor;
+  if (name !== undefined) evt.name = name;
+  if (value !== undefined) evt.value = value;
+  return evt as React.SyntheticEvent;
 }

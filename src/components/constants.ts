@@ -7,6 +7,8 @@ interface DatasetItem {
   selected?: boolean;
 }
 
+export const ALL_FIELDS = "All Fields";
+
 export const defaultItems: DatasetItem[] = [
   { key: "Option 1", value: "Option 1", label: "Option 1", selected: false },
   { key: "Option 2", value: "Option 2", label: "Option 2", selected: false },

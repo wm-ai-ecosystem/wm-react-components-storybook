@@ -15,7 +15,7 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 import { Box, Table } from "@mui/material";
-import { uniqueId, find } from "lodash-es";
+import { uniqueId, find, isEqual, cloneDeep } from "lodash-es";
 import withBaseWrapper from "../../../higherOrder/withBaseWrapper";
 import WmPagination from "../pagination";
 
@@ -60,8 +60,15 @@ import {
   TableBodyComponent,
   TableHeaderComponent,
   GlobalSearchFilter,
+  SummaryRowFooter,
 } from "./components";
-import { ToastType, WmTableProps } from "./props";
+import {
+  ToastType,
+  WmTableColumnProps,
+  WmTableProps,
+  SummaryRowDef,
+  SummaryRowDefObject,
+} from "./props";
 import { buildSelectionColumns } from "./utils/buildSelectionColumns";
 import LoadingComponent from "../pagination/components/LoadingComponent";
 import { createColumnsProxy } from "./utils/columnProxy";
@@ -69,6 +76,7 @@ import { StorageType } from "../../../utils/state-persistance";
 import { useDataSourceSubscription } from "../../../hooks/useDataSourceSubscription";
 import { refreshDataSource } from "./utils/crud-handlers";
 import { DataSource } from "../types";
+import { EditedRowsProvider } from "./hooks/use-edited-rows";
 
 export const WmTableComponent: React.FC<WmTableProps> = memo(
   ({
@@ -90,7 +98,9 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
     title,
     subheading,
     iconclass,
-    exportOptions = [],
+    exportformat = [],
+    exportdatasize,
+    onBeforeexport,
     shownavigation = true,
     onDemandLoad = false,
     showrowindex = false,
@@ -133,6 +143,10 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
     ...props
   }) => {
     const [loading, setLoading] = useState(datasource?.loading || false);
+    const prevDatasetRef = useRef(dataset);
+    const prevSelectedRow = useRef<string | null>(null);
+    const tableApisRegistered = useRef<boolean>(false);
+
     useEffect(() => {
       // Sync local loading state with datasource loading
       if (datasource?.loading !== undefined) {
@@ -176,6 +190,10 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
     // Determine if we're using server-side pagination
     // Check if datasource is API-aware (server-side) rather than checking runtime pagination data
     const isServerSidePagination = useMemo(() => {
+      if (navigation === "None") {
+        return false;
+      }
+
       return !!(
         datasource &&
         datasource.execute &&
@@ -308,6 +326,21 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
     // Track previous page index to detect actual page changes
     const prevPageIndexRef = useRef(-1);
 
+    // Use pagination state hook - manages controlled pagination state
+    const {
+      paginationState,
+      setPaginationState,
+      handlePaginationChange,
+      handlePageSizeChange: handlePageSizeChangeBase,
+    } = usePaginationState({
+      initialPage,
+      initialPageSize,
+      editmode,
+      internalDataset,
+      datasource,
+      isServerSidePagination,
+    });
+
     // Use row selection hook
     const {
       selectedRowId,
@@ -374,7 +407,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
         });
 
         // Get static columns from children
-        const staticColumns = parseTableColumns(children);
+        const staticColumns = parseTableColumns(children, internalDataset);
 
         // Use dynamic columns if no static columns are provided
         // For dynamic tables, prefer dynamic columns even if they're empty initially (data loading)
@@ -456,6 +489,15 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       onRowclick,
     });
 
+    // Effect to cancel editing when page changes
+    useEffect(() => {
+      const currentPage = paginationState.pageIndex;
+      if (currentPage !== prevPageIndexRef.current && isAddingNewRow) {
+        cancelEditing();
+      }
+      // Don't update the ref here - it's updated in the data render effect
+    }, [paginationState.pageIndex, isAddingNewRow, cancelEditing]);
+
     // Track sorting and column sizing states
     const [sorting, setSorting] = useState<SortingState>(() => {
       // Convert initialSortState to TanStack Table sorting format
@@ -477,9 +519,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       (updaterOrValue: React.SetStateAction<SortingState>) => {
         setSorting(updaterOrValue);
         // Reset to first page when sorting changes
-        if (tableRef.current) {
-          tableRef.current.setPageIndex(0);
-        }
+        setPaginationState(prev => ({ ...prev, pageIndex: 0 }));
       },
       []
     );
@@ -558,9 +598,45 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       }));
     }, []);
 
+    const [summaryRowDefs, setSummaryRowDefs] = useState<SummaryRowDef[]>([]);
+    const [summaryRowEnabled, setSummaryRowEnabled] = useState(false);
+    const [summaryRowDefObjects, setSummaryRowDefObjects] = useState<Record<string, any>[]>([]);
+    // Store column show property for summary rows: [rowIndex][columnKey] => show boolean
+    const [summaryRowColumnShow, setSummaryRowColumnShow] = useState<
+      Record<number, Record<string, boolean>>
+    >({});
+
+    const setSummaryRowDef = useCallback(
+      (columnKey: string, data: any, rowIndex: number, refresh: boolean, show?: boolean) => {
+        setSummaryRowDefs(prev => {
+          const newDefs = [...prev];
+          newDefs[rowIndex] = { ...newDefs[rowIndex], [columnKey]: data };
+          return newDefs;
+        });
+        setSummaryRowDefObjects(prev => {
+          const newObjs = [...prev];
+          newObjs[rowIndex] = { ...newObjs[rowIndex], [columnKey]: data };
+          return newObjs;
+        });
+        // Store column's show property
+        if (show !== undefined) {
+          setSummaryRowColumnShow(prev => {
+            const newShow = { ...prev };
+            if (!newShow[rowIndex]) {
+              newShow[rowIndex] = {};
+            }
+            newShow[rowIndex] = { ...newShow[rowIndex], [columnKey]: show };
+            return newShow;
+          });
+        }
+        setSummaryRowEnabled(true);
+      },
+      []
+    );
+
     const columnsProxy = useMemo(
-      () => createColumnsProxy(wmTableColumns, applyOverride, setColumnsVersion),
-      [wmTableColumns, applyOverride, setColumnsVersion]
+      () => createColumnsProxy(wmTableColumns, applyOverride, setColumnsVersion, setSummaryRowDef),
+      [wmTableColumns, applyOverride, setColumnsVersion, setSummaryRowDef]
     );
 
     columnsStateRef.current = columns;
@@ -607,9 +683,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       (value: string) => {
         setGlobalFilterOriginal(value);
         // Reset to first page when filter changes
-        if (tableRef.current) {
-          tableRef.current.setPageIndex(0);
-        }
+        setPaginationState(prev => ({ ...prev, pageIndex: 0 }));
       },
       [setGlobalFilterOriginal]
     );
@@ -618,9 +692,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       (columnId: string, value: string | number | boolean | null, matchMode?: string) => {
         setColumnFilterOriginal(columnId, value, matchMode);
         // Reset to first page when filter changes
-        if (tableRef.current) {
-          tableRef.current.setPageIndex(0);
-        }
+        setPaginationState(prev => ({ ...prev, pageIndex: 0 }));
       },
       [setColumnFilterOriginal]
     );
@@ -675,7 +747,15 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       return filtermode ? filteredData : internalDataset;
     }, [navigation, scrollAccumulatedData, filteredData, internalDataset, filtermode]);
 
-    // Create the table with columns
+    // Memoize pagination options to prevent unnecessary re-renders
+    const memoizedPagination = useMemo(
+      () => ({
+        pageSize: navigation === "None" ? tableData?.length || 0 : paginationState.pageSize,
+        pageIndex: paginationState.pageIndex,
+      }),
+      [navigation, tableData?.length, paginationState.pageSize, paginationState.pageIndex]
+    );
+
     const table = useReactTable({
       data: tableData,
       columns: columnsForTable,
@@ -683,14 +763,17 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
         sorting,
         columnSizing,
         rowSelection, // Add row selection state
+        pagination: memoizedPagination,
       },
       onSortingChange: handleSortingChange,
       onColumnSizingChange: handleColumnSizingChange,
+      onPaginationChange: setPaginationState,
       getCoreRowModel: getCoreRowModel(),
       // Only use pagination model for client-side pagination
       getPaginationRowModel: isServerSidePagination ? undefined : getPaginationRowModel(),
       // Use sorted row model only for client-side sorting
       getSortedRowModel: isServerSideSorting ? undefined : getSortedRowModel(),
+
       enableSorting: enablesort,
       enableSortingRemoval: false,
       autoResetPageIndex: false,
@@ -704,12 +787,6 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
         isServerSidePagination && datasource?.pagination?.totalPages
           ? datasource.pagination.totalPages
           : undefined,
-      initialState: {
-        pagination: {
-          pageSize: initialPageSize,
-          pageIndex: initialPage - 1, // Convert to 0-based index
-        },
-      },
       getRowId: row => row._wmTableRowId || String(row.id) || uniqueId("row_"),
     });
 
@@ -766,7 +843,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       title,
       subheading,
       iconclass,
-      exportOptions,
+      exportformat,
       headerActions,
       footerActions,
       shownavigation,
@@ -776,6 +853,17 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       allowpagesizechange,
       datasource,
     });
+
+    // Memoize sortInfo for export to prevent unnecessary re-renders
+    const sortInfoForExport = useMemo(() => {
+      if (sorting.length > 0) {
+        return {
+          field: sorting[0].id,
+          direction: sorting[0].desc ? "desc" : "asc",
+        };
+      }
+      return undefined;
+    }, [sorting]);
 
     // Update grid edit mode (includes inline editing and add new row)
     const isGridEditModeComplete = isAddingNewRow || editingRowId !== null;
@@ -877,22 +965,13 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       initialFilterState: initialSearchState,
     });
 
-    // Use pagination state hook
-    const { handlePaginationChange, handlePageSizeChange: handlePageSizeChangeBase } =
-      usePaginationState({
-        table,
-        editmode,
-        internalDataset,
-        isAddingNewRow,
-        cancelEditing,
-        datasource,
-        isServerSidePagination,
-      });
-
     // Enhanced page size change handler with state persistence
     const handlePageSizeChange = useCallback(
       (newPageSize: number) => {
-        // Call base handler
+        // Get old page size before updating for state persistence
+        const oldPageSize = paginationState.pageSize;
+
+        // Call base handler from hook
         handlePageSizeChangeBase(newPageSize);
 
         // Skip state persistence for Scroll navigation
@@ -904,7 +983,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
           const newState = stateManager.getStateForPageSizeChange(
             newPageSize,
             currentPersistedState?.selectedItem,
-            table.getState().pagination.pageSize // Pass the old page size
+            oldPageSize // Pass the old page size
           );
 
           // Clear the existing state first to avoid merge issues with setWidgetState
@@ -926,11 +1005,11 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       },
       [
         handlePageSizeChangeBase,
+        paginationState.pageSize,
         name,
         effectiveStateHandler,
         stateManager,
         pagesize,
-        table,
         navigation,
       ]
     );
@@ -946,34 +1025,31 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       if (shouldCallCallbacks) {
         const currentPageIndex = table.getState().pagination.pageIndex;
 
-        // Only call callbacks if it's initial render or page actually changed
-        const isInitialRender = prevPageIndexRef.current === -1;
-        const hasPageChanged = prevPageIndexRef.current !== currentPageIndex;
+        // Update the tracked page index
+        prevPageIndexRef.current = currentPageIndex;
 
-        if (isInitialRender || hasPageChanged) {
-          // Update the tracked page index
-          prevPageIndexRef.current = currentPageIndex;
-
+        if (!isEqual(prevDatasetRef.current, internalDataset)) {
+          prevDatasetRef.current = internalDataset;
           // Call onBeforedatarender callback
           if (onBeforedatarender) {
             onBeforedatarender(
               listener?.Widgets[name], // widget reference
               internalDataset, // data
-              wmTableColumns // columns (including dynamic ones)
+              columnsProxy // columns (including dynamic ones)
             );
           }
-
-          // Schedule onDatarender callback after rendering is complete
-          // Use requestAnimationFrame to ensure DOM is fully painted
-          requestAnimationFrame(() => {
-            if (onDatarender) {
-              onDatarender(
-                listener?.Widgets[name], // widget reference to match Angular format
-                { $data: internalDataset, data: internalDataset } // match Angular's format with both $data and data
-              );
-            }
-          });
         }
+
+        // Schedule onDatarender callback after rendering is complete
+        // Use requestAnimationFrame to ensure DOM is fully painted
+        requestAnimationFrame(() => {
+          if (onDatarender) {
+            onDatarender(
+              listener?.Widgets[name], // widget reference to match Angular format
+              { $data: internalDataset, data: internalDataset } // match Angular's format with both $data and data
+            );
+          }
+        });
       }
     }, [
       internalDataset,
@@ -984,7 +1060,6 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       isDynamicTable,
       table.getState().pagination.pageIndex,
     ]);
-
     // Use table initialization hook
     useTableInitialization({
       internalDataset,
@@ -1207,22 +1282,88 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       [datasource, isServerSidePagination, setInternalDataset, showToast, onError]
     ); // Removed 'table' from dependencies to prevent recreation
 
+    const tableApis = {
+      columns: columnsProxy,
+      addNewRow: handleAddNewRowClick,
+      editRow,
+      deleteRow,
+      refresh,
+      datasource,
+    };
+
     // Expose table API through listener
     useEffect(() => {
-      if (listener && listener.onChange) {
-        listener.onChange(name, {
-          columns: columnsProxy,
-          addNewRow: handleAddNewRowClick,
-          editRow,
-          deleteRow,
-          refresh,
-          datasource,
-        });
+      if (listener && listener.onChange && !gridfirstrowselect && !tableApisRegistered.current) {
+        listener.onChange(name, tableApis);
+        tableApisRegistered.current = true;
       }
     }, []);
 
+    const updateSelectedItem = () => {
+      if (listener && listener.onChange) {
+        let selecteditem: any = null;
+
+        // Priority 1: Check if radioselect or multiselect is enabled
+        if (useRadioSelect && selectedRowId) {
+          // Single selection mode - find the selected row
+          selecteditem = internalDataset.find(
+            (row: any) => row._wmTableRowId === selectedRowId || String(row.id) === selectedRowId
+          );
+        } else if (useMultiSelect && selectedRowIds.length > 0) {
+          // Multi-selection mode - find first selected row
+          selecteditem =
+            internalDataset.find((row: any) =>
+              selectedRowIds.includes(row._wmTableRowId || String(row.id))
+            ) || null;
+        } else if (activeRowIds.length > 0) {
+          // Priority 2: No explicit selection mode - use active row (clicked/highlighted row)
+          const activeIds = activeRowIds as string[];
+          // Get the first active row
+          selecteditem =
+            internalDataset.find((row: any) => {
+              const rowId = row._wmTableRowId || String(row.id);
+              return activeIds.includes(rowId);
+            }) || null;
+        }
+
+        // Update widget state with selected row data
+        if (!isEqual(prevSelectedRow.current, selecteditem)) {
+          prevSelectedRow.current = selecteditem;
+          if (!tableApisRegistered.current) {
+            listener.onChange(name, {
+              ...tableApis,
+              selecteditem: cloneDeep(selecteditem),
+            });
+            tableApisRegistered.current = true;
+            return;
+          }
+          listener.onChange(name, {
+            selecteditem: cloneDeep(selecteditem),
+          });
+        }
+      }
+    };
+
+    // Expose active/selected row data through listener
+    // This updates whenever the active/selected row changes (when user clicks on a row)
+    useEffect(() => {
+      updateSelectedItem();
+    }, [
+      activeRowIds,
+      selectedRowId,
+      selectedRowIds,
+      useRadioSelect,
+      useMultiSelect,
+      internalDataset,
+      name,
+    ]);
+
     return (
-      <Box className={"app-livegrid"} {...({ name: name } as HTMLAttributes<HTMLDivElement>)}>
+      <Box
+        hidden={props.hidden}
+        className={"app-livegrid"}
+        {...({ name: name } as HTMLAttributes<HTMLDivElement>)}
+      >
         <Box
           className={`app-grid app-panel panel app-datagrid ${className}`.trim()}
           {...({ name: name } as HTMLAttributes<HTMLDivElement>)}
@@ -1242,12 +1383,18 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
               title={title}
               subheading={subheading}
               iconclass={iconclass}
-              exportOptions={exportOptions}
+              exportformat={exportformat}
               headerActions={headerActions}
               spacing={spacing}
               isGridEditMode={isGridEditModeComplete}
               isLoading={datasource?.loading}
               listener={listener}
+              datasource={datasource}
+              columns={wmTableColumns}
+              sortInfo={sortInfoForExport}
+              filterInfo={filterDataForState}
+              exportdatasize={exportdatasize}
+              onBeforeExport={onBeforeexport}
             />
           )}
 
@@ -1262,6 +1409,8 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
                 onColumnChange={setGlobalSearchColumn}
                 columns={columnsForTable}
                 searchLabel={searchlabel}
+                name={name}
+                listener={listener}
               />
             )}
             <Box className="table-container table-responsive">
@@ -1314,7 +1463,22 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
                       rowsVersion={tableData.length}
                       ColClassSignature={ColClassSignature}
                       tableData={tableData}
+                      editingRowId={editingRowId}
+                      activeRowIds={activeRowIds}
+                      name={name}
+                      listener={listener}
                     />
+                    {/* Summary Row Footer */}
+
+                    {summaryRowEnabled && summaryRowDefs.length > 0 && (
+                      <SummaryRowFooter
+                        summaryRowDefs={summaryRowDefs}
+                        summaryRowDefObjects={summaryRowDefObjects}
+                        columns={wmTableColumns}
+                        tableName={name}
+                        summaryRowColumnShow={summaryRowColumnShow}
+                      />
+                    )}
                   </Table>
                 </Box>
               </Box>
@@ -1424,6 +1588,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       "filtermode",
       "children",
       "listener",
+      "hidden",
     ];
 
     // First check the simple props
@@ -1442,7 +1607,17 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
 
 WmTableComponent.displayName = "WmTableComponent";
 
-const WmTable = withBaseWrapper(WmTableComponent);
+// Wrapper component that provides EditedRowsContext to WmTableComponent
+const WmTableWithProvider: React.FC<WmTableProps> = props => {
+  return (
+    <EditedRowsProvider>
+      <WmTableComponent {...props} />
+    </EditedRowsProvider>
+  );
+};
+
+// @ts-ignore
+const WmTable = withBaseWrapper(WmTableWithProvider);
 // Override the displayName set by withBaseWrapper
 WmTable.displayName = "WmTable";
 

@@ -59,7 +59,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
   return (
     <Box
       ref={cellRefCallback}
-      onKeyDown={editMode === "quickedit" ? handleKeyDown : undefined}
+      onKeyDown={editMode === "quickedit" || editMode === "inline" ? handleKeyDown : undefined}
       data-field-name={fieldName}
       data-row-id={rowId}
     >

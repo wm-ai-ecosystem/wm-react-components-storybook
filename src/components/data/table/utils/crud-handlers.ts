@@ -50,7 +50,7 @@ const handleOperationResult = (
     showToast(message, "Success");
   }
   onSuccess?.(operation, response);
-  onRowCallback?.(null, response);
+  onRowCallback?.(null, response, response);
   return true;
 };
 
@@ -304,7 +304,8 @@ export const handleServerOperation = async (options: ServerOperationOptions): Pr
                 await refreshDataSource(datasource, { page: currentPageNum, pagesize: size });
               }
             }
-          } else if (isServerSidePagination) {
+          } else {
+            // Always refresh data source after successful operation, regardless of pagination type
             await refreshDataSource(datasource, {
               page: currentPageNum,
               pagesize: datasource.pagination?.size || 10,

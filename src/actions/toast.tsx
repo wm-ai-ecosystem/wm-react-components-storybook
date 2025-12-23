@@ -86,7 +86,6 @@ const CustomToast = ({ toast, onClose }: CustomToastProps) => {
       disableWindowBlurListener={true}
       message={
         <div className="toast-title">
-          {type.toUpperCase()}
           <div className="toast-message">{text}</div>
         </div>
       }

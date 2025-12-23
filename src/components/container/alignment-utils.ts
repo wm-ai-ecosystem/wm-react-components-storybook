@@ -18,6 +18,13 @@ export interface FlexStyles {
   gap?: string;
   rowGap?: string;
   columnGap?: string;
+  position?: string;
+  top?: string;
+  left?: string;
+  zIndex?: string | number;
+  overflow?: string;
+  overflowX?: string;
+  overflowY?: string;
 }
 
 /**
@@ -227,4 +234,69 @@ export const calculateSpacingStyles = (
     justifyContent,
     alignItems
   );
+};
+
+/**
+ * Calculates overflow and clip content styles based on overflow type and clipContent setting
+ */
+export const calculateClipBehaviour = (
+  overflow?: string,
+  clipContent?: string | boolean
+): FlexStyles => {
+  const overflowLower = overflow?.toLowerCase();
+  const styles: FlexStyles = {};
+
+  switch (overflowLower) {
+    case "vertical":
+      styles.overflowX = "hidden";
+      styles.overflowY = "scroll";
+      break;
+    case "horizontal":
+      styles.overflowX = "scroll";
+      styles.overflowY = "hidden";
+      break;
+    case "both directions":
+      styles.overflow = "scroll";
+      break;
+    case "no scrolling":
+      if (clipContent) {
+        styles.overflow = "hidden";
+      } else {
+        styles.overflow = "";
+      }
+      break;
+    default:
+      break;
+  }
+
+  return styles;
+};
+
+/**
+ * Calculates position and z-index styles
+ */
+export const calculatePositionStyles = (
+  position?: string,
+  zIndex?: string | number
+): FlexStyles => {
+  const styles: FlexStyles = {};
+
+  if (position === "sticky") {
+    // Apply sticky styles
+    styles.position = "sticky";
+    styles.top = "0"; // Sticks to top when scrolling vertically
+    styles.left = "0"; // Sticks to left when scrolling horizontally
+    if (zIndex !== undefined) {
+      styles.zIndex = zIndex;
+    }
+  } else if (position) {
+    // Set position if explicitly provided
+    styles.position = position;
+    // Only apply z-index if position is not static/relative
+    if (zIndex !== undefined && position !== "static" && position !== "relative") {
+      styles.zIndex = zIndex;
+    }
+  }
+
+  return styles;
 };

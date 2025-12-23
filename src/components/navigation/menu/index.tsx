@@ -23,6 +23,7 @@ import Link from "next/link";
 import { buildMenuListClasses, CollapsibleMenu, MenuList } from "./components/ListItems";
 import { triggerItemAction } from "@wavemaker/react-runtime/core/util/utils";
 import { usePathname } from "next/navigation";
+import { executeActionTaskFromItem } from "@wavemaker/react-runtime/components/navigation/menu/utils/action-task";
 
 const isPathMatchingLink = (path: string, link: string): boolean => {
   return new RegExp(link.replace("#", "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i").test(path);
@@ -424,6 +425,7 @@ const WmMenu = memo((props: WmMenuExtendedProps) => {
       if (index !== -1) {
         setFocusedIndex(index);
       }
+      executeActionTaskFromItem(item, listener);
 
       if (item.children && item.children.length > 0) {
         item.expanded = !item.expanded;
@@ -467,7 +469,7 @@ const WmMenu = memo((props: WmMenuExtendedProps) => {
         setOpen(false);
         setFocusedIndex(-1);
       }
-      onActionsclick?.(event, item);
+      onActionsclick?.(item);
     },
     [
       flattenedNodes,
@@ -798,7 +800,7 @@ const WmMenu = memo((props: WmMenuExtendedProps) => {
                     style={getMenuLayoutStyles()}
                     onMouseEnter={() => handleNodeMouseEnter(node)}
                     onMouseLeave={e => handleNodeMouseLeave(node, e)}
-                    onClick={(event: React.MouseEvent<HTMLElement>) => onActionsclick(event, node)}
+                    onClick={(event: React.MouseEvent<HTMLElement>) => onActionsclick?.(node)}
                   >
                     {renderMenuItems(children)}
                   </MenuList>
@@ -1031,6 +1033,7 @@ const WmMenu = memo((props: WmMenuExtendedProps) => {
       aria-label={arialabel || "Menu"}
       aria-expanded={open}
       type={type}
+      name={name}
     >
       <Tooltip title={hint || ""} enterDelay={TOOLTIP_ENTER_DELAY} disableHoverListener={!hint}>
         {type === "anchor" ? (
@@ -1064,7 +1067,12 @@ const WmMenu = memo((props: WmMenuExtendedProps) => {
             {iconclass && <i className={clsx("app-icon", iconclass)} aria-hidden="true" />}
             <span className="sr-only">{`${caption} ${listener?.appLocale?.LABEL_ICON}`}</span>
             <span className="anchor-caption">{caption || ""}</span>
-            <span className={`pull-right caret fa ${CARET_CLS.DOWN}`}></span>
+            <span
+              className={clsx(
+                "pull-right caret fa",
+                menuposition?.startsWith("up") ? CARET_CLS.UP : CARET_CLS.DOWN
+              )}
+            />
           </a>
         ) : (
           <Button
@@ -1098,7 +1106,7 @@ const WmMenu = memo((props: WmMenuExtendedProps) => {
             <span
               className={clsx(
                 "pull-right caret fa",
-                menuposition?.startsWith("up") !== open ? CARET_CLS.UP : CARET_CLS.DOWN
+                menuposition?.startsWith("up") ? CARET_CLS.UP : CARET_CLS.DOWN
               )}
             />
           </Button>

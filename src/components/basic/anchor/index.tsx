@@ -1,5 +1,5 @@
 "use client";
-import { memo, useMemo, useEffect, useState } from "react";
+import { memo, useMemo, useEffect, useState, useRef } from "react";
 import clsx from "clsx";
 import Image from "next/image";
 import Box from "@mui/material/Box";
@@ -44,6 +44,7 @@ export const WmAnchor = (props: WmAnchorProps) => {
 
   const path = getCurrentPath();
   const [isActive, setIsActive] = useState(false);
+  const linkRef = useRef<HTMLAnchorElement>(null);
 
   // Extract navigation info from onClick
   const navigationInfo = useMemo(() => {
@@ -108,6 +109,18 @@ export const WmAnchor = (props: WmAnchorProps) => {
 
     setIsActive(activeByHyperlink || activeByNavigationExpr);
   }, [caption, path, doesHyperlinkMatchCurrentPath, navigationInfo.isCurrentPage, itemLink]);
+
+  useEffect(() => {
+    if (!linkRef.current) return;
+
+    if (!hyperlink) {
+      // Same as Angular: if no hyperlink, set javascript:void(0)
+      linkRef.current.setAttribute("href", "javascript:void(0)");
+    } else {
+      // If there is a hyperlink, set the processed link
+      linkRef.current.setAttribute("href", processedHyperlink);
+    }
+  }, [hyperlink, processedHyperlink]);
 
   // Calculate icon position styles
   const iconPositionStyles = useMemo(() => {
@@ -174,6 +187,7 @@ export const WmAnchor = (props: WmAnchorProps) => {
   };
   return (
     <Link
+      ref={linkRef}
       {...domEvents}
       style={{
         ...iconPositionStyles,
@@ -187,7 +201,6 @@ export const WmAnchor = (props: WmAnchorProps) => {
         [className || ""]: Boolean(className),
         ["active"]: isActive,
       })}
-      href={processedHyperlink}
       onContextMenu={handleContextMenu}
       accessKey={shortcutkey}
       aria-label={
@@ -198,6 +211,7 @@ export const WmAnchor = (props: WmAnchorProps) => {
       title={props.hint}
       data-identifier="anchor"
       {...(restProps as any)}
+      name={props.name}
     >
       {iconurl && (
         <Image

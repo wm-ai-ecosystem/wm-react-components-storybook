@@ -129,7 +129,7 @@ export const loadLocaleBundle = createAsyncThunk(
 
     try {
       const url = store.getState().info.appConfig.url;
-      const path = `${url + APP_LOCALE_ROOT_PATH}/${locale}.json`;
+      const path = `${(url ?? "") + APP_LOCALE_ROOT_PATH}/${locale}.json`;
       const response = await axios.get(path);
 
       // update session language

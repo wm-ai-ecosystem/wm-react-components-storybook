@@ -17,6 +17,8 @@ export interface VariableConfig {
   serviceType: string;
   spinnerMessage?: string;
   spinnerContext?: string;
+  _id: string | number;
+  _context?: any;
 }
 
 export enum VariableEvents {

@@ -104,7 +104,10 @@ export function formatDate(date: Date | null, pattern: string, timezone?: string
     return date.toISOString();
   }
   try {
-    const momentPattern = mapToMomentPattern(pattern);
+    const momentPattern = mapToMomentPattern(pattern)
+      .replaceAll("y", "Y")
+      .replaceAll("d", "D")
+      .replaceAll("a", "A");
     const tz = timezone || getTimezone();
     return moment(date).tz(tz).format(momentPattern);
   } catch (error) {
@@ -254,7 +257,7 @@ export function updateListener(
     );
   }
   // Update listener onChange
-  if (listener?.onChange) {
+  if (listener?.onChange && !props.fieldName) {
     listener.onChange(name || "", {
       ...props,
       datavalue: outputValue,

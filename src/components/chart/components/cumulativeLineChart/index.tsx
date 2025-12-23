@@ -15,32 +15,37 @@ import { getLegendPopupStyle } from "../../utils";
 import { CumulativeLineChartProps } from "./props";
 import { calculateCumulativeData } from "./utils";
 
-export const CumulativeLineChart: React.FC<CumulativeLineChartProps> = ({
-  data,
-  dataKeys,
-  selectedRegions,
-  chartColors,
-  margin,
-  xAxisConfig,
-  yAxisConfig,
-  numberFormat,
-  xDataKeyArr,
-  onLegendClick,
-  tooltips = true,
-  interpolation,
-  strokeWidth,
-  pointSize,
-  onChartClick,
-  showLegend,
-  legendPosition,
-  legendtype,
-  availableRegions,
-}) => {
+export const CumulativeLineChart: React.FC<CumulativeLineChartProps> = props => {
+  const {
+    data,
+    dataKeys,
+    selectedRegions,
+    chartColors,
+    margin,
+    xAxisConfig,
+    yAxisConfig,
+    numberFormat,
+    xDataKeyArr,
+    onLegendClick,
+    tooltips = true,
+    interpolation,
+    strokeWidth,
+    pointSize,
+    onChartClick,
+    showLegend,
+    legendPosition,
+    legendtype,
+    availableRegions,
+  } = props;
+
   const cumulativeData = useMemo(() => calculateCumulativeData(data, dataKeys), [data, dataKeys]);
 
   const commonProps = {
     data: cumulativeData,
     margin,
+    style: {
+      transform: `translate(calc(${props.offsetleft ?? 0}px - ${props.offsetright ?? 0}px), calc(${props.offsettop ?? 0}px - ${props.offsetbottom ?? 0}px))`,
+    },
   };
 
   const commonChartElements = (

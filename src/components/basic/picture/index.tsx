@@ -23,6 +23,8 @@ export const WmPicture = memo(
       onDoubleClick,
       onMouseEnter,
       onMouseLeave,
+      children,
+      ref,
       ...restProps
     } = props;
 
@@ -82,25 +84,29 @@ export const WmPicture = memo(
     };
 
     return (
-      <StyledImage
-        {...restProps}
-        data-identifier="img"
-        title={props.hint || props.name}
-        onClick={onClickHandler}
-        onDoubleClick={onDoubleClickHandler}
-        onMouseEnter={onMouseEnterHandler}
-        onMouseLeave={onMouseLeaveHandler}
-        src={imgSource || pictureplaceholder}
-        alt={props.alttext || "image alt text not provided"}
-        className={clsx(DEFAULT_CLASS, { [`img-${props.shape}`]: props.shape }, props.className)}
-        sx={styleConfig}
-        style={props.styles}
-        height={imageHeight}
-        width={imageWidth}
-        aria-label={props.arialabel || "Picture content"}
-        tabIndex={tabindex}
-        {...({ name: props.name } as HtmlHTMLAttributes<HTMLImageElement>)}
-      />
+      <>
+        <StyledImage
+          {...restProps}
+          ref={ref as React.Ref<HTMLImageElement>}
+          data-identifier="img"
+          title={props.hint || props.name}
+          onClick={onClickHandler}
+          onDoubleClick={onDoubleClickHandler}
+          onMouseEnter={onMouseEnterHandler}
+          onMouseLeave={onMouseLeaveHandler}
+          src={imgSource || pictureplaceholder}
+          alt={props.alttext || "image alt text not provided"}
+          className={clsx(DEFAULT_CLASS, { [`img-${props.shape}`]: props.shape }, props.className)}
+          sx={styleConfig}
+          style={props.styles}
+          height={imageHeight}
+          width={imageWidth}
+          aria-label={props.arialabel || "Picture content"}
+          tabIndex={tabindex}
+          {...({ name: props.name } as HtmlHTMLAttributes<HTMLImageElement>)}
+        />
+        {children}
+      </>
     );
   },
   (prev, current) => {

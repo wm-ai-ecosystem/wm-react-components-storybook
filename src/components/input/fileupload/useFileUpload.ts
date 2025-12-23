@@ -246,6 +246,11 @@ export const useFileUpload = (props: WmFileUploadProps) => {
         files: files.validFiles,
       });
 
+      if (onBeforeselect) {
+        const event = { ...$event, _reactName: "onBeforeselect" };
+        onBeforeselect(event, listener?.Widgets?.[name], files.validFiles);
+      }
+      // Proceed only if neither callback returns false
       if (beforeSelectVal !== false) {
         const filesWithIds = files.validFiles.map(file => {
           const fileWithId = file as File & FileUploadState;
@@ -353,7 +358,8 @@ export const useFileUpload = (props: WmFileUploadProps) => {
               deleteFileProgress(file);
               const fileName = file._response?.[0]?.fileName || file.name;
               deletedatasource.setInput("file", fileName);
-              onDelete?.(e, fileInputRef.current?.files?.[0], fileName);
+              const event = { ...e, _reactName: "onDelete" };
+              onDelete?.(event, listener?.Widgets?.[name]);
               listener && listener?.App?.notifyApp("File deleted successfully", "Success");
             }
           } catch (error) {

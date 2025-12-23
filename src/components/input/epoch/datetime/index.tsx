@@ -35,9 +35,7 @@ export const WmDateTime: React.FC<WmDateTimeProps> = props => {
     tabindex = 0,
     shortcutkey,
     datavalue,
-    datepattern = useAppSelector(
-      (state: any) => `${state.i18n.dateFormat} ${state.i18n.timeFormat}` || "MMM d, y h:mm:ss a"
-    ),
+    datepattern: datepatternProp,
     hourstep = 1,
     minutestep = 15,
     outputformat = "timestamp",
@@ -73,7 +71,17 @@ export const WmDateTime: React.FC<WmDateTimeProps> = props => {
     listener,
     floatinglabel,
     styles,
+    showampmbuttons = false,
   } = props;
+
+  const defaultDateTimeFormat =
+    useAppSelector((state: any) => `${state.i18n.dateFormat} ${state.i18n.timeFormat}`) ||
+    "MMM d, y h:mm:ss a";
+
+  const datepattern = useMemo(
+    () => datepatternProp ?? defaultDateTimeFormat,
+    [datepatternProp, defaultDateTimeFormat]
+  );
 
   // State management
   const [isDateOpen, setIsDateOpen] = useState<boolean>(false);
@@ -476,19 +484,31 @@ export const WmDateTime: React.FC<WmDateTimeProps> = props => {
     } else {
       setIsCurrentDate(false);
       const parsedDate = parseDateValue(datavalue, datepattern);
-      setLocalDateValue(parsedDate);
-      const formattedValue = parsedDate ? formatDateWithPattern(parsedDate) : "";
-      setDisplayValue(formattedValue);
-      updateListener(
-        name,
-        listener,
-        formattedValue,
-        formatDateWithPattern(parsedDate, outputformat),
-        props,
-        undefined,
-        "",
-        formatDateWithPattern(parsedDate, "timestamp")
-      );
+      if (!parsedDate && datavalue) {
+        if (typeof datavalue === "string" || typeof datavalue === "number") {
+          setDisplayValue(String(datavalue));
+        }
+        setLocalDateValue(null);
+      } else {
+        if (datavalue == undefined) {
+          setLocalDateValue(null);
+          setDisplayValue("");
+          return;
+        }
+        setLocalDateValue(parsedDate);
+        const formattedValue = formatDateWithPattern(parsedDate);
+        setDisplayValue(formattedValue);
+        updateListener(
+          name,
+          listener,
+          formattedValue,
+          formatDateWithPattern(parsedDate, outputformat),
+          props,
+          undefined,
+          "",
+          formatDateWithPattern(parsedDate, "timestamp")
+        );
+      }
     }
   }, [datavalue, datepattern, formatDateWithPattern]);
 
@@ -518,6 +538,7 @@ export const WmDateTime: React.FC<WmDateTimeProps> = props => {
       ref={anchorRef}
       className={clsx(DEFAULT_CLS, className?.replace("form-control", ""))}
       title={hint}
+      hidden={props.hidden}
     >
       <TextField
         disabled={disabled || readonly}
@@ -691,9 +712,7 @@ export const WmDateTime: React.FC<WmDateTimeProps> = props => {
           onChange={newValue => {
             newValue && handleTimeSelection(newValue.toDate());
           }}
-          ampm={datepattern.includes("a") || datepattern.includes("A")}
-          minTime={minDateObj ? moment(minDateObj) : undefined}
-          maxTime={maxDateObj ? moment(maxDateObj) : undefined}
+          ampm={showampmbuttons && (datepattern.includes("a") || datepattern.includes("A"))}
           slotProps={{
             textField: {
               style: { display: "none" },
@@ -704,7 +723,7 @@ export const WmDateTime: React.FC<WmDateTimeProps> = props => {
               sx: timePickerSx(),
             },
             actionBar: {
-              actions: ["accept", "cancel"] as ("accept" | "cancel")[],
+              actions: ["accept"],
             },
           }}
           minutesStep={minutestep}

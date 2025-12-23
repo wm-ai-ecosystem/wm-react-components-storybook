@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { Box, Typography, CircularProgress } from "@mui/material";
-import { YAxisProps } from "recharts";
+import { DotProps, YAxisProps } from "recharts";
 import { withBaseWrapper } from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
 import DOMPurify from "dompurify";
 import {
@@ -89,7 +89,7 @@ const WmChart: React.FC<WmChartProps> = props => {
     reducexticks = true,
     showlabels = "outside",
     labeltype = "percent",
-    barspacing = "medium",
+    barspacing = "0.5",
     donutratio = "small",
     bubblesize,
     showxdistance = false,
@@ -100,10 +100,10 @@ const WmChart: React.FC<WmChartProps> = props => {
     customcolors,
     theme = "Azure",
     offset,
-    offsettop = 25,
-    offsetbottom = 55,
-    offsetright = 25,
-    offsetleft = 75,
+    offsettop,
+    offsetbottom,
+    offsetright,
+    offsetleft,
     showxaxis = true,
     showyaxis = true,
     linethickness,
@@ -111,7 +111,7 @@ const WmChart: React.FC<WmChartProps> = props => {
     formattype,
     dataset,
     datasource,
-    width,
+    width = "100%",
     height = "400px",
     shape = "circle",
     onSelect,
@@ -144,7 +144,6 @@ const WmChart: React.FC<WmChartProps> = props => {
   const [chartData, setChartData] = useState<any[]>([]);
   const [processedData, setProcessedData] = useState<any[]>([]);
   const [xDataKeyArr, setXDataKeyArr] = useState<any[]>([]);
-  const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isVisuallyGrouped, setIsVisuallyGrouped] = useState<boolean>(false);
   const [xAxisDataType, setXAxisDataType] = useState<string>("");
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
@@ -342,7 +341,13 @@ const WmChart: React.FC<WmChartProps> = props => {
       let values: any = [];
       const xAxisKey = xaxisdatakey;
       const yAxisKeys = yaxisdatakey ? yaxisdatakey.split(",").map(k => k.trim()) : [];
-      const dataSet = processedDataset;
+
+      // Apply orderby if specified and not visually grouped
+      let dataSet = processedDataset;
+      if (orderby && !isVisuallyGrouped) {
+        const orderByDetails = getLodashOrderByFormat(orderby);
+        dataSet = orderBy(processedDataset, orderByDetails.columns, orderByDetails.orders as any[]);
+      }
 
       if (isArray(dataSet)) {
         if (isPieType(type)) {
@@ -382,7 +387,17 @@ const WmChart: React.FC<WmChartProps> = props => {
       }
       return datum;
     },
-    [binddataset, type, xaxisdatakey, yaxisdatakey, shape, valueFinder, getValidData]
+    [
+      binddataset,
+      type,
+      xaxisdatakey,
+      yaxisdatakey,
+      shape,
+      valueFinder,
+      getValidData,
+      orderby,
+      isVisuallyGrouped,
+    ]
   );
 
   // COMPLETE getVisuallyGroupedData function from Angular - FIXED to avoid state updates
@@ -731,16 +746,70 @@ const WmChart: React.FC<WmChartProps> = props => {
 
   // BUG FIX 10: Fixed onSelect event handler
   const handleChartClick = useCallback(
-    (data: any, event?: any) => {
+    (data: any, seriesIndex?: number, event?: any) => {
       if (!data || !onSelect) return;
 
       let selectedChartItem = data;
-      let dataObj = data?._dataObj || data;
+      let dataObj = data?._dataObj || data?.payload || data;
 
-      setSelectedItem(dataObj);
-      onSelect?.(event, props, dataObj, selectedChartItem);
+      // Get point index from clicked data
+      const pointIndex = data?.payload?.x ?? data?.x ?? 0;
+
+      // Get series name/dataKey
+      const seriesName = data?.payload?.seriesName || data?.payload?.dataKey || data?.dataKey;
+
+      // Build series data array in Angular nvd3 format: [[x, y], [x, y], ...]
+      const seriesData: any[] = [];
+      if (processedData && seriesName) {
+        processedData.forEach((item: any, idx: number) => {
+          const xVal = item.x ?? idx;
+          const yVal = item[seriesName] ?? 0;
+          seriesData.push([xVal, yVal]);
+        });
+        // Add index property to match Angular format (point index in original data)
+        (seriesData as any).index = pointIndex;
+      }
+
+      // Enrich dataObj with Angular-compatible properties
+      dataObj = {
+        ...dataObj,
+        data: seriesData,
+        point: pointIndex,
+        series: seriesIndex ?? 0,
+      };
+
+      onSelect?.(event, props, dataObj, {
+        ...selectedChartItem,
+        data: seriesData,
+        point: pointIndex,
+        series: seriesIndex ?? 0,
+      });
     },
-    [onSelect, props]
+    [onSelect, props, processedData]
+  );
+
+  // onSelect wrapper for area chart since the props are different can't use the same handleChartClick
+  const handleAreaChartClick = useCallback(
+    (dotProp: DotProps, dotPropsExtendedWithItem: any) => {
+      if (!dotProp || !onSelect) return;
+      const value = dotPropsExtendedWithItem?.value;
+      if (!Array.isArray(value) && value.length > 1) return; // type guard
+      const selectedChartItem = [
+        {
+          x: dotPropsExtendedWithItem?.index,
+          y: value[1],
+          series: dotPropsExtendedWithItem?.payload,
+          seriesIndex: dotPropsExtendedWithItem?.index,
+          index: dotPropsExtendedWithItem?.index,
+          display: {
+            y: value[1],
+          },
+        },
+        dotPropsExtendedWithItem?.index,
+      ];
+      onSelect?.(dotPropsExtendedWithItem, props, dotProp, selectedChartItem);
+    },
+    [onSelect, props, processedData]
   );
 
   // For Bar charts the categorical axis is Y; reduce label crowding and add ellipsis + tooltip
@@ -768,24 +837,33 @@ const WmChart: React.FC<WmChartProps> = props => {
     xnumberformat,
     showxaxis: xAxisShow,
     xaxislabeldistance,
+    showxdistance,
   });
 
   const getYAxisConfig: YAxisProps = useMemo(() => {
+    // For Bar charts, YAxis should be category type (handled in BarColumnChart)
+    // For other charts, YAxis should be number type
+    const axisType = type === "Bar" ? undefined : "number";
+
     return {
+      ...(barYAxisExtras as any),
+      ...(axisType ? { type: axisType } : {}),
       hide: !yAxisShow,
       label: {
+        value: getDefaultYAxisLabel(),
         angle: -90,
         position: "insideLeft",
-        offset: yaxislabeldistance,
+        offset: -yaxislabeldistance,
         fill: "#000",
         style: { textAnchor: "middle" },
       },
+      tickLine: showydistance,
+      domain: ["dataMin", "dataMax + 100"],
       tick: {
         fontSize: 12,
         fontFamily: "inherit",
         fill: "currentColor",
       },
-      ...(barYAxisExtras as any),
       tickFormatter: (value: any, index?: number) => {
         if (typeof value === "number") {
           return formatNumber(value, ynumberformat);
@@ -793,7 +871,15 @@ const WmChart: React.FC<WmChartProps> = props => {
         return value;
       },
     };
-  }, [yAxisShow, getDefaultYAxisLabel, ynumberformat, yaxislabeldistance, processedData]);
+  }, [
+    type,
+    yAxisShow,
+    getDefaultYAxisLabel,
+    ynumberformat,
+    yaxislabeldistance,
+    processedData,
+    barYAxisExtras,
+  ]);
 
   const handleRegionChange = useCallback(
     (region: string, isDoubleClick: boolean = false) => {
@@ -876,6 +962,10 @@ const WmChart: React.FC<WmChartProps> = props => {
     const pointSize = highlightpoints ? 5 : 0;
 
     const commonProps = {
+      offsettop,
+      offsetbottom,
+      offsetleft,
+      offsetright,
       data: processedData,
       dataKeys,
       selectedRegions,
@@ -905,14 +995,7 @@ const WmChart: React.FC<WmChartProps> = props => {
         return <BarColumnChart {...commonProps} type="Column" viewtype={viewtype} />;
 
       case "Bar":
-        return (
-          <BarColumnChart
-            {...commonProps}
-            type="Bar"
-            viewtype={viewtype}
-            shouldShowLegend={shouldShowLegend}
-          />
-        );
+        return <BarColumnChart {...commonProps} type="Bar" viewtype={viewtype} />;
 
       case "Line":
         return (
@@ -936,6 +1019,7 @@ const WmChart: React.FC<WmChartProps> = props => {
             interpolation={interpolation}
             strokeWidth={strokeWidth}
             pointSize={pointSize}
+            onAreaSelect={handleAreaChartClick}
           />
         );
 
@@ -994,10 +1078,13 @@ const WmChart: React.FC<WmChartProps> = props => {
       component="div"
       className={`app-chart ${className || ""} ${title ? "panel" : ""}`}
       style={{
-        ...styles,
         ...fontStyles,
-        width: (styles as any)?.width ?? width ?? height,
+        backgroundPosition: "center",
+        width: (styles as any)?.width ?? width,
         height: (styles as any)?.height ?? height,
+        minWidth: (styles as any)?.minWidth ?? "300px",
+        overflow: "hidden",
+        ...styles,
       }}
       ref={chartContainerRef}
       id={`wmChart-${type}`}

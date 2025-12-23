@@ -24,7 +24,7 @@ export interface WmTextProps extends BaseProps {
   shortcutkey?: string;
   datavalue?: string;
   updatedelay?: string;
-  autocapitalize?: "none" | "sentence" | "words";
+  autocapitalize?: "none" | "sentences" | "words" | "characters";
   onChange?: (
     event: React.ChangeEvent<HTMLInputElement>,
     widget: Record<string, any>,

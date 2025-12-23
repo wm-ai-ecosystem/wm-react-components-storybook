@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import clsx from "clsx";
 import Box from "@mui/material/Box";
 import { withBaseWrapper, BaseProps } from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
@@ -9,10 +9,21 @@ const WmNavbar = memo(
   (props: BaseProps) => {
     const { className, children, styles, id, ...restProps } = props;
 
+    // Process backgroundImage to ensure it has url() wrapper
+    const processedStyles = useMemo(() => {
+      if (!styles) return styles;
+
+      if (styles?.backgroundImage) {
+        styles.backgroundImage = `${styles.backgroundImage.includes("url(") ? styles.backgroundImage : "url(" + styles.backgroundImage + ")"}`;
+      }
+
+      return { ...styles };
+    }, [styles]);
+
     return (
       <Box
         component="nav"
-        sx={styles}
+        style={processedStyles}
         className={clsx(DEFAULT_CLASS, className)}
         id={id}
         {...restProps}

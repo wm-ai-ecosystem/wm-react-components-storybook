@@ -1,7 +1,12 @@
+import { DotProps } from "recharts";
 import { TChartInterpolation, TChartLegendPosition, TChartLegendType } from "../../props";
 import { StackOffsetType } from "recharts/types/util/types";
 
 export interface LineAreaChartProps {
+  offsettop?: number;
+  offsetbottom?: number;
+  offsetleft?: number;
+  offsetright?: number;
   type: "Line" | "Area";
   data: any[];
   dataKeys: string[];
@@ -23,9 +28,10 @@ export interface LineAreaChartProps {
   strokeWidth: number;
   pointSize: number;
   areaViewType?: StackOffsetType;
-  onChartClick: (data: any, event: any) => void;
-  onLegendClick: (region: string, e: React.MouseEvent) => void;
   tooltips?: boolean;
   legendtype?: TChartLegendType;
   availableRegions?: string[];
+  onChartClick: (data: any, event: any) => void;
+  onLegendClick: (region: string, e: React.MouseEvent) => void;
+  onAreaSelect?: (dotProp: DotProps, series: any) => void;
 }

@@ -17,12 +17,36 @@ const WmTableRowActionComponent: React.FC<WmTableRowActionProps> = ({
   show = true,
   ...props
 }) => {
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  // Track if mousedown already triggered the action to prevent double-firing
+  const actionTriggeredRef = React.useRef(false);
+
+  // Use onMouseDown to trigger action BEFORE blur event fires
+  // This prevents the click from being lost when input has focus
+  const handleMouseDown = (event: React.MouseEvent<HTMLElement>) => {
     event.preventDefault();
     event.stopPropagation();
 
-    if (onClick) {
-      // Pass rowData as part of widget parameter
+    if (onClick && !actionTriggeredRef.current) {
+      actionTriggeredRef.current = true;
+      onClick(event, {}, row);
+      // Reset the flag after a short delay to allow subsequent clicks
+      setTimeout(() => {
+        actionTriggeredRef.current = false;
+      }, 100);
+    }
+  };
+
+  const handleClick = (
+    event?: React.MouseEvent<HTMLElement>,
+    widget?: Record<string, any>,
+    newVal?: string | number | null,
+    oldVal?: string | number | null
+  ) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    // Only trigger if mousedown didn't already trigger (fallback for edge cases)
+    if (onClick && !actionTriggeredRef.current) {
       onClick(event, {}, row);
     }
   };
@@ -39,6 +63,7 @@ const WmTableRowActionComponent: React.FC<WmTableRowActionProps> = ({
         name={props.name || displayName}
         listener={listener}
         onClick={handleClick}
+        onMouseDown={handleMouseDown}
         iconclass={iconclass}
         show={show.toString()}
         className={`wm-table-row-action ${props.className || ""}`}
@@ -52,6 +77,7 @@ const WmTableRowActionComponent: React.FC<WmTableRowActionProps> = ({
       size="small"
       className={`wm-table-row-action ${props.className || ""}`}
       onClick={handleClick}
+      onMouseDown={handleMouseDown}
       title={title}
       startIcon={iconclass ? <i className={iconclass} /> : undefined}
       sx={{

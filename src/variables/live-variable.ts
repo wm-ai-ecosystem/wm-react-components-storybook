@@ -33,6 +33,14 @@ export interface LiveVariableConfig extends VariableConfig {
   _id: string;
   execute: (operation: string, options?: any) => Promise<any>;
   invoke: (options?: any) => Promise<any>;
+  inputFields: any;
+  filterFields: any;
+  update: (options?: any) => Promise<any>;
+  listRecords: (options?: any, onSuccess?: Function, onError?: Function) => Promise<any>;
+  updateRecord: (options?: any, success?: any, error?: any) => Promise<any>;
+  insertRecord: (options?: any, success?: any, error?: any) => Promise<any>;
+  deleteRecord: (options?: any, success?: any, error?: any) => Promise<any>;
+  notify: (event: VariableEvents, args: any) => void;
 }
 
 enum _LiveVariableEvents {
@@ -41,8 +49,10 @@ enum _LiveVariableEvents {
 export type LiveVariableEvents = _LiveVariableEvents | VariableEvents;
 
 class LiveVariable extends _LiveVariable {
-  params: any = {};
-  filters: any = {};
+  private params: any = {};
+  private filters: any = {};
+  private filterValues: any = {};
+  private lastFilters: any = {};
 
   constructor(public config: LiveVariableConfig) {
     const variableConfig: any = {
@@ -66,6 +76,7 @@ class LiveVariable extends _LiveVariable {
       tableType: config.tableType,
       relatedTables: config.relatedTables,
       httpClientService: httpService,
+      httpService: httpService,
       inFlightBehavior: config.inFlightBehavior,
       _id: config._id,
       onSuccess: (context: any, args: any) => {
@@ -110,16 +121,37 @@ class LiveVariable extends _LiveVariable {
     });
   }
 
+  setFilter(key: any, val?: any) {
+    // Call parent to update filterExpressions.rules array
+    const filterExpressions = super.setFilter(key, val);
+
+    // Convert rules array to key-value object for API
+    const filterObj: any = {};
+    filterExpressions.rules.forEach((rule: any) => {
+      if (rule.target && rule.value !== undefined && rule.value !== "") {
+        filterObj[rule.target] = rule.value;
+      }
+    });
+
+    this.filterValues = filterObj;
+    return this;
+  }
+
   invokeOnParamChange() {
     const last = this.params;
     const latest = this.config.paramProvider();
     if (this.config.operation === "read") {
-      const lastFilter = this.filters;
-      const latestFilter = this.config.filterProvider && this.config.filterProvider();
+      const lastFilter = this.lastFilters;
+      const latestFilter = deepCopy(
+        {} as any,
+        (this.config.filterProvider && this.config.filterProvider()) || {},
+        this.filterValues || {}
+      );
       if (!isEqual(lastFilter, latestFilter)) {
         this.setFilterExpValue(latestFilter);
         if (this.autoUpdate && !isEmpty(latestFilter) && isFunction(this.update)) {
           this.filters = latestFilter;
+          this.lastFilters = latestFilter;
           this.invoke();
         }
       }
@@ -149,7 +181,11 @@ class LiveVariable extends _LiveVariable {
 
   listRecords(options?: any, onSuccess?: Function, onError?: Function) {
     this.notify(VariableEvents.BEFORE_INVOKE, [this]);
-    this.filters = this.config.filterProvider && this.config.filterProvider();
+    const providerFilters = this.config.filterProvider && this.config.filterProvider();
+
+    this.filters = deepCopy({} as any, providerFilters || {}, this.filterValues || {});
+
+    // Merge with options if provided
     if (options) {
       this.filters = deepCopy(
         {} as any,
@@ -160,6 +196,7 @@ class LiveVariable extends _LiveVariable {
     options = options || {};
     options.filterFields = this.filters;
     this.setFilterExpValue(this.filters);
+    this.lastFilters = this.filters;
     return super.listRecords(options, onSuccess, onError);
   }
 
