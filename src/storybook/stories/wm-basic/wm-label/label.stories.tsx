@@ -4,6 +4,13 @@ import { Box } from "@mui/material";
 
 import LabelDefaultExport, { WmLabel as RawWmLabel } from "../../../../components/basic/label/index";
 
+import { ComponentDocumentation } from "../../../components/DocumentRenderer";
+import overview from "./docs/overview.md?raw";
+import props from "./docs/props.md?raw";
+import events from "./docs/events.md?raw";
+import methods from "./docs/methods.md?raw";
+import styling from "./docs/styling.md?raw";
+
 const mockListener = {
   appLocale: {
     LABEL_ICON: "Icon",
@@ -48,6 +55,21 @@ const Template = (args: any) => (
     <LabelDefaultExport {...args} listener={mockListener} />
   </Box>
 );
+
+export const Docs: Story = {
+  render: () => (
+    <ComponentDocumentation
+      overview={overview}
+      properties={props}
+      events={events}
+      methods={methods}
+      styling={styling}
+    />
+  ),
+  parameters: {
+    layout: 'fullscreen',
+  },
+};
 
 export const Basic: Story = {
   render: Template,

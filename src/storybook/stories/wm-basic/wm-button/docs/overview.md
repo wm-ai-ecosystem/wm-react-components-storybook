@@ -1,15 +1,14 @@
 # Overview
 
-The **WmButton** component provides a versatile, styled button for mobile applications. It supports customizable captions, icons, and various visual styles, enabling developers to create interactive touch targets that fit the app’s design language.
+The Button component provides a styled, touchable UI element that triggers specific actions when pressed. It can display text captions, icons, and badges to create intuitive interactive elements in your mobile application.
+
+Buttons can trigger various actions including page navigation, database queries, dialog operations, JavaScript function execution, and API calls.
 
 ## Features
 
-- **Customizable Caption**: Set the button text via the `caption` property.
-- **Icon Support**: Add an icon using `iconClass` or `iconUrl` with adjustable size and position.
-- **Size Variants**: Apply predefined size classes such as `btn-primary`, `btn-xs`, etc.
-- **Conditional Styling**: Use `conditionalClass` to apply CSS classes based on runtime conditions.
-- **Show/Hide**: Control visibility with the `show` property, supporting lazy loading via `loadOnDemand`.
-- **Disabled State**: Prevent interaction by setting `disabled`.
-- **Animation**: Apply CSS animations from libraries like Animate.css for dynamic feedback.
-
-These features are optimized for mobile platforms, ensuring responsive touch interactions and appropriate visual feedback.
+- **Caption and Icons**: Display text, icons, or both with customizable positioning
+- **Badge Support**: Display numeric or text badges
+- **Shortcut Keys**: Assign keyboard shortcuts for quick access
+- **State Management**: Enable/disable buttons based on application state
+- **Custom Styling**: Apply different button styles and sizes
+- **Icon Options**: Use icon classes or image URLs with configurable dimensions

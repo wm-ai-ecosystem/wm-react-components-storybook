@@ -5,8 +5,9 @@ import ButtonDefaultExport from "../../../../components/form/button/index";
 
 import { ComponentDocumentation } from "../../../components/DocumentRenderer";
 import overview from "./docs/overview.md?raw";
-import studioPropsAndEvents from "./docs/studio-props-and-events.md?raw";
-import scriptPropsMethods from "./docs/script-props-methods.md?raw";
+import props from "./docs/props.md?raw";
+import events from "./docs/events.md?raw";
+import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
 const mockListener = {
@@ -37,12 +38,14 @@ const meta = {
     shortcutkey: { control: "text" },
     arialabel: { control: "text" },
   },
-  //tags: ["autodocs"],
+  parameters: {
+    layout: "centered",
+  },
 } satisfies Meta<typeof ButtonDefaultExport>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
 
+type Story = StoryObj<typeof meta>;
 const Template = (args: any) => (
   <Box style={{ padding: 16 }}>
     <ButtonDefaultExport {...args} listener={mockListener} />
@@ -53,8 +56,9 @@ export const Docs: Story = {
   render: () => (
     <ComponentDocumentation
       overview={overview}
-      studioPropsAndEvents={studioPropsAndEvents}
-      scriptPropsMethods={scriptPropsMethods}
+      properties={props}
+      events={events}
+      methods={methods}
       styling={styling}
     />
   ),

@@ -1,33 +1,48 @@
 # Styling
 
-The button component provides a comprehensive set of CSS classes for visual customization and styling variations.
+Buttons support various styling options to customize their appearance in your mobile application.
 
-## Available CSS Classes
+## Style Classes
 
-### Base Classes
+The Button component can use the following style classes:
 
-- **`app-button`** - Default style class that provides the foundational button styling
-- **`app-button-disabled`** - Applied to buttons in a disabled state, typically reducing opacity and preventing interactions
+| Class | Description |
+|-------|-------------|
+| btn-primary | Primary action button with brand color |
+| btn-secondary | Secondary action button |
+| btn-success | Button indicating a successful action |
+| btn-danger | Button indicating a destructive action |
+| btn-warning | Button indicating a cautionary action |
+| btn-info | Button providing informational actions |
+| btn-light | Button with light background |
+| btn-dark | Button with dark background |
+| btn-link | Button appearing as a link |
 
-### Color Variants
+## Size Classes
 
-- **`btn-default`** - Standard button appearance with default color scheme
-- **`btn-primary`** - Primary action button with prominent styling, usually in the brand's main color
-- **`btn-secondary`** - Secondary action button with subdued styling for less important actions
-- **`btn-info`** - Information button, typically styled in blue tones to convey informational actions
-- **`btn-success`** - Success button with green styling to indicate positive or confirmation actions
-- **`btn-warning`** - Warning button with orange/yellow styling to indicate caution or important notices
-- **`btn-danger`** - Danger button with red styling for destructive or critical actions
-- **`btn-dark`** - Dark-themed button with dark background and light text
-- **`btn-light`** - Light-themed button with light background and dark text
+Size classes can be combined with style classes to adjust button dimensions:
 
-### Special Variants
+| Class | Description |
+|-------|-------------|
+| btn-xs | Extra small button |
+| btn-sm | Small button |
+| btn-md | Medium button (default) |
+| btn-lg | Large button |
 
-- **`btn-link`** - Link-style button that appears as a text link without traditional button borders
-- **`btn-only-label`** - Text-only button styling, minimal appearance focusing on the label content
-- **`fab-btn`** - Floating action button styling, typically circular with prominent elevation
-- **`mini-fab-btn`** - Smaller version of the floating action button for compact layouts
+## Custom Styling
 
-## Usage
+Additional styling can be applied to buttons using custom styles:
 
-Apply these classes directly to button elements to achieve the desired visual appearance. Classes can be combined for custom styling effects, though color variant classes should typically be used individually to avoid conflicts.
+```javascript
+// Apply custom style classes
+Page.Widgets.myButton.class = "btn-primary btn-lg my-custom-class";
+
+// Apply conditional styling
+if (isHighPriority) {
+  Page.Widgets.actionButton.class = "btn-danger btn-lg";
+} else {
+  Page.Widgets.actionButton.class = "btn-warning btn-lg";
+}
+```
+
+> Note: For mobile apps, all styling should be compatible with React Native styling conventions.

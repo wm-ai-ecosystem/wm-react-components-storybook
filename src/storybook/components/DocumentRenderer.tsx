@@ -3,16 +3,18 @@ import ReactMarkdown from "react-markdown";
 
 interface DocumentationProps {
   overview?: string;
-  studioPropsAndEvents?: string;
-  scriptPropsMethods?: string;
+  properties?:string;
+  events?:string;
+  methods?:string;
   styling?: string;
 }
 
 export const ComponentDocumentation: React.FC<DocumentationProps> = ({
   overview,
-  studioPropsAndEvents,
-  scriptPropsMethods,
-  styling,
+  properties,
+  events,
+  methods,
+  styling,  
 }) => {
   const [activeTab, setActiveTab] = useState("overview");
   const activeColor = "#296df6"; // Blue theme
@@ -197,9 +199,10 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
         }}
       >
         {overview && renderTab("overview", "Overview")}
-        {studioPropsAndEvents && renderTab("studioPropsAndEvents", "Studio Props & Callback Events")}
+        {properties && renderTab("properties", "Properties")}
+        {events && renderTab("events", "Events")}
+        {methods && renderTab("methods", "Methods")}
         {styling && renderTab("styling", "Styling")}
-        {scriptPropsMethods && renderTab("scriptPropsMethods", "Script Props & Methods")}
       </div>
 
       <div style={{ padding: "10px 0" }}>
@@ -208,9 +211,19 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
             <ReactMarkdown>{overview}</ReactMarkdown>
           </div>
         )}
-        {activeTab === "studioPropsAndEvents" && studioPropsAndEvents && (
+        {activeTab === "properties" && properties && (
           <div>
-            <ReactMarkdown>{studioPropsAndEvents}</ReactMarkdown>
+            <ReactMarkdown>{properties}</ReactMarkdown>
+          </div>
+        )}
+         {activeTab === "events" && events && (
+          <div>
+            <ReactMarkdown>{events}</ReactMarkdown>
+          </div>
+        )}
+         {activeTab === "methods" && methods && (
+          <div>
+            <ReactMarkdown>{methods}</ReactMarkdown>
           </div>
         )}
         {activeTab === "styling" && styling && (
@@ -218,11 +231,7 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
             <ReactMarkdown>{styling}</ReactMarkdown>
           </div>
         )}
-        {activeTab === "scriptPropsMethods" && scriptPropsMethods && (
-          <div>
-            <ReactMarkdown>{scriptPropsMethods}</ReactMarkdown>
-          </div>
-        )}
+       
       </div>
     </div>
   );
