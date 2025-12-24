@@ -6,7 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import IconDefaultExport from "../../../../components/basic/icon/index";
 import {
   fontAwesomeIcons,
-} from "../../constants/iconConstants";
+} from "../../constants/fontAwesomeIconConstants";
 
 const meta: Meta<typeof IconDefaultExport> = {
   title: "Basic/Icon",
@@ -96,7 +96,7 @@ export const FontAwesomeLibrary: Story = {
 
     return (
       <IconLibrary
-        title="Font Awesome Library (v4.7.0)"
+        title="Font Awesome Library"
         icons={icons}
         iconClassPrefix="fa fa-"
       />
