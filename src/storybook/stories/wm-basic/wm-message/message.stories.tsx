@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography } from "@mui/material";
 
 import MessageDefaultExport from "../../../../components/basic/message/index";
+import { animationNames } from "../../constants/animationsConstants";
 
 const meta: Meta<typeof MessageDefaultExport> = {
   title: "Basic/Message",
@@ -14,7 +15,7 @@ const meta: Meta<typeof MessageDefaultExport> = {
       options: ["success", "error", "warning", "info", "loading"],
     },
     hideclose: { control: "boolean" },
-    animation: { control: "text" },
+    animation: { control: "select", options: animationNames },
   },
 };
 

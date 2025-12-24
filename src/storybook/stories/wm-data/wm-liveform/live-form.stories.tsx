@@ -54,7 +54,13 @@ const meta = {
   argTypes: {
     title: { control: "text" },
     subheading: { control: "text" },
-    iconclass: { control: "text" },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
+    },
     defaultmode: {
       control: "select",
       options: ["Edit", "View"]
@@ -85,7 +91,7 @@ export const Basic: Story = {
     name: "basicLiveForm",
     title: "User Management",
     subheading: "Create or edit user records",
-    iconclass: "wi wi-user",
+    iconclass: "fa fa-user",
     datasource: createMockDataSource(),
     defaultmode: "Edit",
     listener: mockListener,

@@ -13,7 +13,13 @@ const meta: Meta<typeof IconDefaultExport> = {
   component: IconDefaultExport,
   argTypes: {
     caption: { control: "text" },
-    iconclass: { control: "text" },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:[ "fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
+    },
     iconurl: { control: "text" },
     iconposition: {
       control: { type: "select" },
@@ -48,7 +54,7 @@ export const Basic: Story = {
   args: {
     name: "basicIcon",
     listener: mockListener,
-    iconclass: "wm-sl-l sl-star",
+    iconclass: "fa fa-adjust",
     iconsize: "24px",
   },
 };
@@ -59,7 +65,7 @@ export const WithCaption: Story = {
     name: "iconWithCaption",
     listener: mockListener,
     caption: "User Profile",
-    iconclass: "wm-sl-l sl-user",
+    iconclass: "fa fa-user",
     iconsize: "24px",
     iconposition: "left",
   },

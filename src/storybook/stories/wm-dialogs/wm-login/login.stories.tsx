@@ -18,7 +18,7 @@ const meta = {
   component: LoginDialogDefaultExport,
   argTypes: {
     title: { control: "text" },
-    iconclass: { control: "text" },
+    iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
     logintext: { control: "text" },
     canceltext: { control: "text" },
     errormessage: { control: "text" },
@@ -171,7 +171,7 @@ export const Basic: Story = {
   args: {
     name: "basicLogin",
     title: "Login",
-    iconclass: "wi wi-user",
+    iconclass: "fa fa-user",
     logintext: "Login",
     canceltext: "Cancel",
     eventsource: createMockEventSource(true, 1000),

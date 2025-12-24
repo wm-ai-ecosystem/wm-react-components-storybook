@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography, Button } from "@mui/material";
 
 import SpinnerDefaultExport from "../../../../components/basic/spinner/index";
+import { animationNames } from "../../constants/animationsConstants";
 
 const meta: Meta<typeof SpinnerDefaultExport> = {
   title: "Basic/Spinner",
@@ -18,16 +19,16 @@ const meta: Meta<typeof SpinnerDefaultExport> = {
       control:{
         type:"select"
       },
-      options:[ "fa fa-circle-o-notch fa-spin", "fa fa-spinner fa-spin", "fa fa-cog fa-spin", "fa fa-refresh fa-spin",],
+      options:["fa fa-spinner fa-spin", "fa fa-cog fa-spin", "fa fa-refresh fa-spin",],
     },
     iconsize: { control: "text" },
     image: { control: "text" },
     imagewidth: { control: "text" },
     imageheight: { control: "text" },
-    // animation: {
-    //   control: { type: "select" },
-    //   options: ["spin", "pulse", "bounce", "flash"],
-    // },
+    animation: {
+      control: { type: "select" },
+      options: animationNames,
+    },
     // hint: { control: "text" },
     // arialabel: { control: "text" },
   },

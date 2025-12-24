@@ -33,7 +33,7 @@ export const Basic: Story = {
     name: "basicPanel",
     title: "Basic Panel",
     subheading: "Click to expand or collapse",
-    iconclass: "wi wi-chevron-down",
+    iconclass: "fa fa-chevron-down",
     collapsible: true,
     expanded: true,
     listener: mockListener,
@@ -53,7 +53,7 @@ export const WithBadge: Story = {
   args: {
     name: "badgePanel",
     title: "Notifications",
-    iconclass: "wi wi-bell",
+    iconclass: "fa fa-bell",
     badgevalue: "5",
     badgetype: "danger",
     listener: mockListener,
@@ -70,7 +70,7 @@ export const WithFooter: Story = {
     name: "footerPanel",
     title: "Create Post",
     subheading: "Share your thoughts",
-    iconclass: "wi wi-edit",
+    iconclass: "fa fa-edit",
     listener: mockListener,
     children: (
       <>

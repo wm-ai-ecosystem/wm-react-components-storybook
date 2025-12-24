@@ -47,7 +47,7 @@ export const Basic: Story = {
         <WmAccordionPane
           name="pane1"
           title="Section 1"
-          iconclass="wi wi-file"
+          iconclass="fa fa-file"
           listener={mockListener}
           {...mockPaneProps}
         >
@@ -60,7 +60,7 @@ export const Basic: Story = {
         <WmAccordionPane
           name="pane2"
           title="Section 2"
-          iconclass="wi wi-folder"
+          iconclass="fa fa-folder"
           listener={mockListener}
           {...mockPaneProps}
         >
@@ -73,7 +73,7 @@ export const Basic: Story = {
         <WmAccordionPane
           name="pane3"
           title="Section 3"
-          iconclass="wi wi-cog"
+          iconclass="fa fa-cog"
           listener={mockListener}
           {...mockPaneProps}
         >
@@ -100,7 +100,7 @@ export const WithBadges: Story = {
         <WmAccordionPane
           name="pane1"
           title="Inbox"
-          iconclass="wi wi-envelope"
+          iconclass="fa fa-envelope"
           badgevalue="12"
           badgetype="primary"
           listener={mockListener}
@@ -113,7 +113,7 @@ export const WithBadges: Story = {
         <WmAccordionPane
           name="pane2"
           title="Tasks"
-          iconclass="wi wi-check-square"
+          iconclass="fa fa-check-square"
           badgevalue="5"
           badgetype="warning"
           listener={mockListener}
@@ -126,7 +126,7 @@ export const WithBadges: Story = {
         <WmAccordionPane
           name="pane3"
           title="Alerts"
-          iconclass="wi wi-bell"
+          iconclass="fa fa-bell"
           badgevalue="3"
           badgetype="danger"
           listener={mockListener}
@@ -154,7 +154,7 @@ export const WithSubheadings: Story = {
           name="pane1"
           title="Personal Information"
           subheading="Basic details about yourself"
-          iconclass="wi wi-user"
+          iconclass="fa fa-user"
           listener={mockListener}
           {...mockPaneProps}
         >
@@ -172,7 +172,7 @@ export const WithSubheadings: Story = {
           name="pane2"
           title="Address"
           subheading="Your current residence"
-          iconclass="wi wi-map-marker"
+          iconclass="fa fa-map-marker"
           listener={mockListener}
           {...mockPaneProps}
         >
@@ -190,7 +190,7 @@ export const WithSubheadings: Story = {
           name="pane3"
           title="Preferences"
           subheading="Customize your experience"
-          iconclass="wi wi-sliders"
+          iconclass="fa fa-sliders"
           listener={mockListener}
           {...mockPaneProps}
         >

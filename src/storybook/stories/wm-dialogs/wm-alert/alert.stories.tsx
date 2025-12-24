@@ -20,7 +20,7 @@ const meta = {
       control: { type: "select" },
       options: ["error", "warning", "info", "success"],
     },
-    iconclass: { control: "select", options: ["wi wi-error", "wi wi-warning", "wi wi-info", "wi wi-check-circle"] },
+    iconclass: { control: "select", options: ["fa fa-warning", "fa fa-check-circle"] },
   },
 } satisfies Meta<typeof AlertDialogDefaultExport>;
 
@@ -67,8 +67,8 @@ export const Basic: Story = {
     title: "Alert",
     text: "I am Alert Box!",
     oktext: "OK",
-    alerttype: "error",
-    iconclass: "wi wi-error",
+    alerttype: "warning",
+    iconclass: "fa fa-warning",
     listener: mockListener,
   },
 };

@@ -17,7 +17,7 @@ const meta = {
     message: { control: "text" },
     oktext: { control: "text" },
     canceltext: { control: "text" },
-    iconclass: { control: "select", options: ["wm-sl-l sl-check", "wi wi-trash", "wi wi-save", "wi wi-sign-out", "wi wi-paper-plane", "wi wi-question-circle", "wi wi-document"] },
+    iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save"] },
   },
 } satisfies Meta<typeof ConfirmDialogDefaultExport>;
 
@@ -25,7 +25,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const Template = (args: any) => {
-  const [isOpen, setIsOpen] = useState(false);
+const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Box style={{ padding: 16 }}>
@@ -67,7 +67,7 @@ export const Basic: Story = {
     message: "I am confirm box!",
     oktext: "OK",
     canceltext: "CANCEL",
-    iconclass: "wm-sl-l sl-check",
+    iconclass: "fa fa-circle-check",
     listener: mockListener,
   },
 };
@@ -80,7 +80,7 @@ export const DeleteConfirmation: Story = {
     message: "Are you sure you want to delete this item? This action cannot be undone.",
     oktext: "Delete",
     canceltext: "Cancel",
-    iconclass: "wi wi-trash",
+    iconclass: "fa fa-trash",
     listener: mockListener,
   },
 };
@@ -93,7 +93,7 @@ export const SaveChanges: Story = {
     message: "You have unsaved changes. Do you want to save them before leaving?",
     oktext: "Save",
     canceltext: "Discard",
-    iconclass: "wi wi-save",
+    iconclass: "fa fa-save",
     listener: mockListener,
   },
 };

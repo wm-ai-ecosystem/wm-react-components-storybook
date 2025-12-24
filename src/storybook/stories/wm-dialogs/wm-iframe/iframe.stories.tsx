@@ -15,7 +15,7 @@ const meta = {
   argTypes: {
     title: { control: "text" },
     url: { control: "text" },
-    iconclass: { control: "text" },
+    iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
     oktext: { control: "text" },
     showheader: { control: "boolean" },
     showactions: { control: "boolean" },

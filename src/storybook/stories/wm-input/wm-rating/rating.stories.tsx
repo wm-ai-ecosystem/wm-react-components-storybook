@@ -14,7 +14,7 @@ const meta: Meta<typeof RatingDefaultExport> = {
     showcaptions: { control: "boolean" },
     iconcolor: { control: "color" },
     iconsize: { control: "text" },
-    activeiconclass: { control: "text" },
+    activeiconclass: { control: "select", options:["fa fa-star", "fa fa-heart"] },
     inactiveiconclass: { control: "text" },
     datavalue: { control: "number" },
     dataset: { control: "object" },

@@ -12,7 +12,7 @@ const meta: Meta<typeof TreeDefaultExport> = {
     datavalue: { control: "text" },
     treeicons: {
       control: { type: "select" },
-      options: ["plus-minus", "arrows", "folder"],
+      options: ["fa fa-minus", "fa fa-arrow-right", "fa fa-folder-tree"],
     },
     levels: { control: "number" },
     nodelabel: { control: "text" },
@@ -50,6 +50,7 @@ const simpleTreeData = [
   {
     label: "Node 1",
     id: "node1",
+    icon:"",
     children: [
       { label: "Node 1.1", id: "node1_1" },
       { label: "Node 1.2", id: "node1_2" },
@@ -58,6 +59,7 @@ const simpleTreeData = [
   {
     label: "Node 2",
     id: "node2",
+    icon:"",
     children: [
       { label: "Node 2.1", id: "node2_1" },
       { label: "Node 2.2", id: "node2_2" },
@@ -66,6 +68,7 @@ const simpleTreeData = [
   {
     label: "Node 3",
     id: "node3",
+    icon:""
   },
 ];
 
@@ -174,7 +177,7 @@ export const Basic: Story = {
     name: "basicTree",
     listener: mockListener,
     dataset: simpleTreeData,
-    treeicons: "plus-minus",
+    treeicons: "",
     nodeclick: "none",
     horizontalalign: "left",
     show: true,
@@ -187,7 +190,7 @@ export const FileSystemTree: Story = {
     name: "fileSystemTree",
     listener: mockListener,
     dataset: fileSystemData,
-    treeicons: "folder",
+    treeicons: "fa fa-folder-tree",
     levels: 1,
     horizontalalign: "left",
     show: true,
@@ -200,7 +203,7 @@ export const OrganizationChart: Story = {
     name: "orgChart",
     listener: mockListener,
     dataset: organizationData,
-    treeicons: "arrows",
+    treeicons: "fa fa-arrow-right",
     levels: 2,
     horizontalalign: "left",
     show: true,
@@ -213,7 +216,7 @@ export const ExpandAllLevels: Story = {
     name: "allLevelsTree",
     listener: mockListener,
     dataset: deepNestedData,
-    treeicons: "plus-minus",
+    treeicons: "fa fa-minus",
     levels: 10,
     horizontalalign: "left",
     show: true,

@@ -44,7 +44,13 @@ const meta = {
   argTypes: {
     title: { control: "text" },
     subheading: { control: "text" },
-    iconclass: { control: "text" },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
+    },
     navigation: {
       control: "select",
       options: ["None", "Basic", "Pager", "Classic", "Advanced", "Inline", "On-Demand", "Scroll"]
@@ -101,7 +107,7 @@ export const WithPagination: Story = {
     name: "paginatedList",
     title: "Users",
     subheading: "Paginated user list",
-    iconclass: "wi wi-list",
+    iconclass: "",
     dataset: usersData,
     navigation: "Basic",
     pagesize: 3,
@@ -129,7 +135,7 @@ export const ReorderableList: Story = {
     name: "reorderableList",
     title: "Task Priority",
     subheading: "Drag to reorder",
-    iconclass: "wi wi-sort",
+    iconclass: "",
     dataset: tasksData.slice(0, 4),
     enablereorder: true,
     listener: mockListener,

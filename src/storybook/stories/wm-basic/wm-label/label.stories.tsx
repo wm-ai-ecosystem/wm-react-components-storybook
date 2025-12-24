@@ -38,12 +38,12 @@ const meta = {
       },
       options: ["text-primary", "text-secondary", "text-success", "text-danger", "text-warning", "text-info","text-muted","h1", "h2", "h3", "h4", "h5", "h6"],
     },
-    // textalign:{
-    //   control:{
-    //     type:'select',
-    //   },
-    //   options:['left','center','right']
-    // }
+    textalign:{
+      control:{
+        type:'select',
+      },
+      options:['left','center','right']
+    }
   },
 } satisfies Meta<typeof LabelDefaultExport>;
 

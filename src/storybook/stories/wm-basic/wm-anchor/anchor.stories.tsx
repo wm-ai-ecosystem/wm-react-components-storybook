@@ -31,7 +31,7 @@ const meta = {
       control:{
         type:"select"
       },
-      options:[ "fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
         "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart",],
     },
     iconposition: {

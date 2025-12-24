@@ -14,7 +14,7 @@ const meta = {
   component: PageDialogDefaultExport,
   argTypes: {
     title: { control: "text" },
-    iconclass: { control: "text" },
+    iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
     oktext: { control: "text" },
     showactions: { control: "boolean" },
     closable: { control: "boolean" },
@@ -63,7 +63,7 @@ export const Basic: Story = {
   args: {
     name: "basicPageDialog",
     title: "Page Content",
-    iconclass: "wi wi-file",
+    iconclass: "fa fa-file",
     oktext: "OK",
     showactions: true,
     closable: true,

@@ -24,7 +24,13 @@ const meta = {
   argTypes: {
     title: { control: "text" },
     subheading: { control: "text" },
-    iconclass: { control: "text" },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
+    },
     collapsible: { control: "boolean" },
     expanded: { control: "boolean" },
     captionposition: {
@@ -49,7 +55,7 @@ export const Basic: Story = {
     name: "basicForm",
     title: "Contact Form",
     subheading: "Please fill in your details",
-    iconclass: "wi wi-envelope",
+    iconclass: "",
     listener: mockListener,
     children: (
       <Box sx={{ padding: 3 }}>
@@ -98,7 +104,7 @@ export const Showcase: Story = {
     name: "showcaseForm",
     title: "Shipping Information",
     subheading: "Enter your delivery address",
-    iconclass: "wi wi-truck",
+    iconclass: "",
     listener: mockListener,
     children: (
       <Box sx={{ padding: 3 }}>

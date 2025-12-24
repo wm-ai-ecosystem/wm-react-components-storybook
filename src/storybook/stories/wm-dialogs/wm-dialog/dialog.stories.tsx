@@ -15,7 +15,7 @@ const meta = {
   component: DialogDefaultExport,
   argTypes: {
     title: { control: "text" },
-    iconclass: { control: "text" },
+    iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
     dialogtype: {
       control: { type: "select" },
       options: ["design-dialog", "custom"],

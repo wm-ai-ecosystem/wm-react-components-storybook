@@ -26,7 +26,7 @@ const meta: Meta<typeof SwitchDefaultExport> = {
     // required: { control: "boolean" },
     // hint: { control: "text" },
     // iconclass: { control: "text" },
-    checkediconclass: { control: "text" },
+    checkediconclass: { control: "select", options:["fa fa-check", "fa fa-circle-check"] },
     // tabindex: { control: "number" },
     // arialabel: { control: "text" },
     // className: { control: "text" },
