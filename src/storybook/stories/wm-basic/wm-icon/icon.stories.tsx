@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, TextField, InputAdornment } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 import IconDefaultExport from "../../../../components/basic/icon/index";
+import {
+  fontAwesomeIcons,
+} from "../../constants/iconConstants";
 
 const meta: Meta<typeof IconDefaultExport> = {
   title: "Basic/Icon",
@@ -75,6 +79,28 @@ export const WithImageUrl: Story = {
       alignItems: "center",
       gap: "8px",
     },
+  },
+};
+
+// Font Awesome Library Story
+export const FontAwesomeLibrary: Story = {
+  parameters: {
+    layout: "fullscreen",
+  },
+  render: () => {
+    const icons = fontAwesomeIcons.map((icon) => ({
+      name: `fa-${icon}`,
+      iconclass: `fa fa-${icon}`,
+      iconsize: "24px",
+    }));
+
+    return (
+      <IconLibrary
+        title="Font Awesome Library (v4.7.0)"
+        icons={icons}
+        iconClassPrefix="fa fa-"
+      />
+    );
   },
 };
 
@@ -273,5 +299,210 @@ export const WithImageUrl: Story = {
 //   args: {
 //     name: "differentSizes",
 //     listener: mockListener,
+//   },
+// };
+
+// Icon Library Component for displaying icon collections
+interface IconLibraryProps {
+  title: string;
+  icons: Array<{ name: string; iconclass: string; iconsize: string }>;
+  iconClassPrefix: string;
+}
+
+const IconLibrary: React.FC<IconLibraryProps> = ({ title, icons, iconClassPrefix }) => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [copiedIcon, setCopiedIcon] = useState<string | null>(null);
+
+  const filteredIcons = icons.filter((icon) =>
+    icon.iconclass
+      .replace(iconClassPrefix, "")
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+  );
+
+  const handleIconClick = async (iconClass: string) => {
+    try {
+      await navigator.clipboard.writeText(iconClass);
+      setCopiedIcon(iconClass);
+      setTimeout(() => setCopiedIcon(null), 2000);
+    } catch (err) {
+      console.error("Failed to copy to clipboard", err);
+    }
+  };
+
+  return (
+    <Box sx={{ width: "100%", bgcolor: "#fff", minHeight: "100vh" }}>
+      <Box
+        sx={{
+          p: 2,
+          borderBottom: "1px solid #eee",
+          position: "sticky",
+          top: 0,
+          bgcolor: "#fff",
+          zIndex: 10,
+        }}
+      >
+        <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold", color: "#333" }}>
+          {title}
+        </Typography>
+        <TextField
+          fullWidth
+          placeholder="Search icons..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon sx={{ color: "#666" }} />
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              bgcolor: "#f5f5f5",
+              borderRadius: 2,
+            },
+          }}
+        />
+      </Box>
+
+      <Box sx={{ p: 2 }}>
+        {filteredIcons.length > 0 ? (
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
+              gap: 2,
+            }}
+          >
+            {filteredIcons.map((icon, index) => (
+              <Box
+                key={index}
+                onClick={() => handleIconClick(icon.iconclass)}
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  p: 1,
+                  borderRadius: 1,
+                  cursor: "pointer",
+                  transition: "background-color 0.2s",
+                  bgcolor: copiedIcon === icon.iconclass ? "#e3f2fd" : "transparent",
+                  "&:hover": {
+                    bgcolor: "#f0f0f0",
+                  },
+                }}
+              >
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    mb: 0.5,
+                  }}
+                >
+                  <IconDefaultExport {...icon} listener={mockListener} />
+                </Box>
+                <Typography
+                  variant="caption"
+                  sx={{
+                    fontSize: "10px",
+                    textAlign: "center",
+                    color: "#666",
+                    wordBreak: "break-word",
+                  }}
+                >
+                  {icon.iconclass.replace(iconClassPrefix, "")}
+                </Typography>
+                {copiedIcon === icon.iconclass && (
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      fontSize: "9px",
+                      color: "#1976d2",
+                      mt: 0.5,
+                    }}
+                  >
+                    Copied!
+                  </Typography>
+                )}
+              </Box>
+            ))}
+          </Box>
+        ) : (
+          <Typography sx={{ p: 2, textAlign: "center", color: "#666" }}>
+            No icons found matching "{searchQuery}"
+          </Typography>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+// // Wavicon Library Story
+// export const WaviconLibrary: Story = {
+//   parameters: {
+//     layout: "fullscreen",
+//   },
+//   render: () => {
+//     const icons = Object.keys(waviconGlyphMap).map((icon) => ({
+//       name: `wavicon-${icon}`,
+//       iconclass: `wi wi-${icon}`,
+//       iconsize: "24px",
+//     }));
+
+//     return (
+//       <IconLibrary
+//         title="Wavicon Library"
+//         icons={icons}
+//         iconClassPrefix="wi wi-"
+//       />
+//     );
+//   },
+// };
+
+// // Streamline Light Library Story
+// export const StreamlineLightLibrary: Story = {
+//   parameters: {
+//     layout: "fullscreen",
+//   },
+//   render: () => {
+//     const icons = Object.keys(streamlineLightGlyphMap).map((icon) => ({
+//       name: `streamline-light-${icon}`,
+//       iconclass: `wm-sl-l sl-${icon}`,
+//       iconsize: "24px",
+//     }));
+
+//     return (
+//       <IconLibrary
+//         title="Streamline Light Library"
+//         icons={icons}
+//         iconClassPrefix="wm-sl-l sl-"
+//       />
+//     );
+//   },
+// };
+
+// // Streamline Regular Library Story
+// export const StreamlineRegularLibrary: Story = {
+//   parameters: {
+//     layout: "fullscreen",
+//   },
+//   render: () => {
+//     const icons = Object.keys(streamlineRegularGlyphMap).map((icon) => ({
+//       name: `streamline-regular-${icon}`,
+//       iconclass: `wm-sl-r sl-${icon}`,
+//       iconsize: "24px",
+//     }));
+
+//     return (
+//       <IconLibrary
+//         title="Streamline Regular Library"
+//         icons={icons}
+//         iconClassPrefix="wm-sl-r sl-"
+//       />
+//     );
 //   },
 // };
