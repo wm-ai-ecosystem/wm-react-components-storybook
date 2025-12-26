@@ -4,6 +4,13 @@ import { Box, Stack, Typography, Button } from "@mui/material";
 
 import ColorPickerDefaultExport from "../../../../components/input/color-picker/index";
 
+import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
+import overview from "./docs/overview.md?raw";
+import props from "./docs/props.md?raw";
+import events from "./docs/events.md?raw";
+import methods from "./docs/methods.md?raw";
+import styling from "./docs/styling.md?raw";
+
 const meta: Meta<typeof ColorPickerDefaultExport> = {
   title: "Input/ColorPicker",
   component: ColorPickerDefaultExport,
@@ -42,6 +49,21 @@ const Template = (args: any) => (
     <ColorPickerDefaultExport {...args} listener={mockListener} />
   </Box>
 );
+
+export const Docs: Story = {
+  render: () => (
+    <ComponentDocumentation
+      overview={overview}
+      properties={props}
+      events={events}
+      methods={methods}
+      styling={styling}
+    />
+  ),
+  parameters: {
+    layout: 'fullscreen',
+  },
+};
 
 export const Basic: Story = {
   render: Template,
