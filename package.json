@@ -54,6 +54,7 @@
     "@mui/x-date-pickers": "^8.5.3",
     "@reduxjs/toolkit": "2.9.1",
     "@tanstack/react-table": "^8.21.3",
+    "@wavemaker/app-runtime-wm-build": "^11.14.1-10.6348",
     "axios": "^1.7.9",
     "dompurify": "^3.2.3",
     "execa": "^9.6.0",

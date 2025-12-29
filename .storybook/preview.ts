@@ -3,6 +3,7 @@ import React from "react";
 import { Provider } from "react-redux";
 import { WidgetProvider } from "../src/context/WidgetProvider";
 import { store } from "../src/store";
+import "@wavemaker/app-runtime-wm-build/wmapp/styles/foundation/foundation.css";
 
 // Mock page context for Storybook
 const createMockPageContext = () => ({
