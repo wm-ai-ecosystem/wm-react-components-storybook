@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import WmMenu from "../../../../components/navigation/menu";
 
+import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
+import overview from "./docs/overview.md?raw";
+import props from "./docs/props.md?raw";
+import events from "./docs/events.md?raw";
+import methods from "./docs/methods.md?raw";
+import styling from "./docs/styling.md?raw";
+
 
 const meta = {
   title: "Navigation/Menu",
@@ -50,6 +57,21 @@ const menuItems = [
   { label: "Settings", icon: "wi wi-settings" },
   { label: "Logout", icon: "wi wi-power-settings-new" },
 ];
+
+export const Docs: Story = {
+  render: () => (
+    <ComponentDocumentation
+      overview={overview}
+      properties={props}
+      events={events}
+      methods={methods}
+      styling={styling}
+    />
+  ),
+  parameters: {
+    layout: 'fullscreen',
+  },
+};
 
 export const Basic: Story = {
   args: {
