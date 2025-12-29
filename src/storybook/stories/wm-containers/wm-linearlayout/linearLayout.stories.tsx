@@ -3,6 +3,13 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box } from "@mui/material";
 import WmLinearLayout from "../../../../components/container/linear-layout";
 
+import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
+import overview from "./docs/overview.md?raw";
+import props from "./docs/props.md?raw";
+import events from "./docs/events.md?raw";
+import methods from "./docs/methods.md?raw";
+import styling from "./docs/styling.md?raw";
+
 const mockListener = {
   appLocale: {},
   Widgets: {},
@@ -48,6 +55,21 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Docs: Story = {
+  render: () => (
+    <ComponentDocumentation
+      overview={overview}
+      properties={props}
+      events={events}
+      methods={methods}
+      styling={styling}
+    />
+  ),
+  parameters: {
+    layout: 'fullscreen',
+  },
+};
 
 export const Basic: Story = {
   args: {
