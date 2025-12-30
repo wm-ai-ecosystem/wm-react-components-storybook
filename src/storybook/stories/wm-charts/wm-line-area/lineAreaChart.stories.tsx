@@ -3,6 +3,13 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography } from "@mui/material";
 import { LineAreaChart } from "../../../../components/chart/components/lineAreaChart";
 
+import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
+import overview from "./docs/overview.md?raw";
+import props from "./docs/props.md?raw";
+import events from "./docs/events.md?raw";
+import methods from "./docs/methods.md?raw";
+import styling from "./docs/styling.md?raw";
+
 const mockData = [
   { x: "Jan", Sales: 4000, Revenue: 2400, Profit: 2400 },
   { x: "Feb", Sales: 3000, Revenue: 1398, Profit: 2210 },
@@ -59,6 +66,21 @@ const Template = (args: any) => {
       />
     </Box>
   );
+};
+
+export const Docs: Story = {
+  render: () => (
+    <ComponentDocumentation
+      overview={overview}
+      properties={props}
+      events={events}
+      methods={methods}
+      styling={styling}
+    />
+  ),
+  parameters: {
+    layout: 'fullscreen',
+  },
 };
 
 export const Basic: Story = {

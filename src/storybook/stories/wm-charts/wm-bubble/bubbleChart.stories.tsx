@@ -3,6 +3,13 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography } from "@mui/material";
 import { BubbleChart } from "../../../../components/chart/components/bubbleChart";
 
+import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
+import overview from "./docs/overview.md?raw";
+import props from "./docs/props.md?raw";
+import events from "./docs/events.md?raw";
+import methods from "./docs/methods.md?raw";
+import styling from "./docs/styling.md?raw";
+
 const mockData = [
   { x: 0, Product_A: 100, Product_A_size: 400, Product_B: 200, Product_B_size: 600 },
   { x: 1, Product_A: 120, Product_A_size: 500, Product_B: 180, Product_B_size: 400 },
@@ -48,6 +55,21 @@ const Template = (args: any) => {
       />
     </Box>
   );
+};
+
+export const Docs: Story = {
+  render: () => (
+    <ComponentDocumentation
+      overview={overview}
+      properties={props}
+      events={events}
+      methods={methods}
+      styling={styling}
+    />
+  ),
+  parameters: {
+    layout: 'fullscreen',
+  },
 };
 
 export const Basic: Story = {

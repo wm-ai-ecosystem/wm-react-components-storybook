@@ -3,6 +3,13 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography } from "@mui/material";
 import { PieDonutChart } from "../../../../components/chart/components/pieDonutChart";
 
+import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
+import overview from "./docs/overview.md?raw";
+import props from "./docs/props.md?raw";
+import events from "./docs/events.md?raw";
+import methods from "./docs/methods.md?raw";
+import styling from "./docs/styling.md?raw";
+
 const mockData = [
   { name: "Product A", value: 400 },
   { name: "Product B", value: 300 },
@@ -60,6 +67,21 @@ const Template = (args: any) => {
       />
     </Box>
   );
+};
+
+export const Docs: Story = {
+  render: () => (
+    <ComponentDocumentation
+      overview={overview}
+      properties={props}
+      events={events}
+      methods={methods}
+      styling={styling}
+    />
+  ),
+  parameters: {
+    layout: 'fullscreen',
+  },
 };
 
 export const Basic: Story = {
