@@ -94,31 +94,31 @@ export const Basic: Story = {
   },
 };
 
-export const DeleteConfirmation: Story = {
-  render: Template,
-  args: {
-    name: "deleteConfirm",
-    title: "Delete Confirmation",
-    message: "Are you sure you want to delete this item? This action cannot be undone.",
-    oktext: "Delete",
-    canceltext: "Cancel",
-    iconclass: "fa fa-trash",
-    listener: mockListener,
-  },
-};
+// export const DeleteConfirmation: Story = {
+//   render: Template,
+//   args: {
+//     name: "deleteConfirm",
+//     title: "Delete Confirmation",
+//     message: "Are you sure you want to delete this item? This action cannot be undone.",
+//     oktext: "Delete",
+//     canceltext: "Cancel",
+//     iconclass: "fa fa-trash",
+//     listener: mockListener,
+//   },
+// };
 
-export const SaveChanges: Story = {
-  render: Template,
-  args: {
-    name: "saveConfirm",
-    title: "Save Changes",
-    message: "You have unsaved changes. Do you want to save them before leaving?",
-    oktext: "Save",
-    canceltext: "Discard",
-    iconclass: "fa fa-save",
-    listener: mockListener,
-  },
-};
+// export const SaveChanges: Story = {
+//   render: Template,
+//   args: {
+//     name: "saveConfirm",
+//     title: "Save Changes",
+//     message: "You have unsaved changes. Do you want to save them before leaving?",
+//     oktext: "Save",
+//     canceltext: "Discard",
+//     iconclass: "fa fa-save",
+//     listener: mockListener,
+//   },
+// };
 
 // export const LogoutConfirmation: Story = {
 //   render: Template,
