@@ -9,7 +9,7 @@
 | `onMouseenter(event, widget, item, currentItemWidgets)` | Triggered when the mouse pointer enters the card. Similar to onMouseover but doesn't trigger when moving between child elements. |
 | `onMouseleave(event, widget, item, currentItemWidgets)` | Triggered when the mouse pointer leaves the card. Similar to onMouseout but doesn't trigger when moving between child elements. |
 
-### Event Parameters
+## Event Parameters
 
 | Parameter | Description |
 |-----------|-------------|
@@ -18,7 +18,7 @@
 | `item` | The data item associated with the card, if any |
 | `currentItemWidgets` | Collection of widgets associated with the current item |
 
-### Example Usage
+## Example Usage
 
 ```javascript
 Page.Widgets.myCard.onClick = function(event, widget, item, currentItemWidgets) {

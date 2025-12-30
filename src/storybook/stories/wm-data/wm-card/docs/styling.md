@@ -130,7 +130,7 @@ The Card component typically has the following structure that can be targeted fo
 }
 ```
 
-## Responsive Considerations
+### Responsive Considerations
 
 ```css
 /* Responsive adjustments */

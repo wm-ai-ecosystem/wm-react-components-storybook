@@ -49,7 +49,7 @@
 | itemchildren | any | null | Sub-items for nested action menus |
 | userrole | string | "" | Role-based visibility control for menu items |
 
-### Configure Panel Behavior
+## Configure Panel Behavior
 
 ```javascript
 // Set collapsible behavior
@@ -65,7 +65,7 @@ Page.Widgets.myPanel.enablefullscreen = true;
 Page.Widgets.myPanel.helptext = "This panel contains important user information";
 ```
 
-### Configure Actions Menu
+## Configure Actions Menu
 
 ```javascript
 // Set panel actions programmatically

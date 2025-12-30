@@ -5,7 +5,7 @@
 | onClose | Triggered when the dialog is closed by any means (button click, ESC key, or programmatic close) |
 | onOpen | Triggered when the dialog is opened |
 
-### Event Usage Examples
+## Event Usage Examples
 
 ```javascript
 // Handle dialog open event

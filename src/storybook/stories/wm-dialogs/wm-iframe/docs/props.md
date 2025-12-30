@@ -32,7 +32,7 @@
 |------|------|---------|-------------|
 | `oktext` | string | `"OK"` | Text displayed on the primary action button. |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Basic implementation with required URL

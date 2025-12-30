@@ -16,7 +16,7 @@ The Dialog component can be styled using CSS classes to customize its appearance
 ## Animation Classes
 - `.animation-{type}` - Where {type} is the animation style specified in the animation property
 
-### Custom Dialog Styling Example
+## Custom Dialog Styling Example
 
 ```css
 /* Customize dialog appearance */

@@ -62,7 +62,7 @@
 | `currentItemWidgets` | any | `undefined` | Reference to widgets associated with the current card item |
 | `listener` | any | `undefined` | Listener object for advanced event handling |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Basic card with title and content

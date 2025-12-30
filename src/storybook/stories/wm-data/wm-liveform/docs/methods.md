@@ -13,7 +13,7 @@ According to the provided data, there are no specific methods documented for the
 | `getData()` | None | Object | Returns the current form data as an object. |
 | `setData(data)` | data: Object | void | Sets form field values from the provided data object. |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 ```javascript
 // Submit the form programmatically

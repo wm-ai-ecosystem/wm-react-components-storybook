@@ -63,7 +63,7 @@
 | `listener` | any | | Event listener configuration |
 | `dataset` | string | | Custom data attributes |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Basic Form Configuration
 ```javascript

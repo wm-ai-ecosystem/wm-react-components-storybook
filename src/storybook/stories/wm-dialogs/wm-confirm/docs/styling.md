@@ -2,7 +2,7 @@
 
 The confirm-dialog component uses standard dialog styling conventions but can be customized to match your application's design requirements.
 
-### Custom Styling
+## Custom Styling
 
 You can target the confirm-dialog component and its internal elements with CSS:
 
@@ -32,7 +32,7 @@ You can target the confirm-dialog component and its internal elements with CSS:
 }
 ```
 
-### Icon Styling
+## Icon Styling
 
 When using the `iconclass` property, you can apply any Font Awesome or custom icon classes to enhance the visual appearance of your dialog:
 

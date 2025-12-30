@@ -7,7 +7,7 @@
 | `prefab` | `boolean` | `false` | Determines whether the dialog should use a predefined prefab template. When set to `true`, the dialog will use the template specified by `prefabName`. |
 | `prefabName` | `string` | `""` | The name of the prefab to use when `prefab` is set to `true`. This prefab should be defined in your project. |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Basic usage with custom content

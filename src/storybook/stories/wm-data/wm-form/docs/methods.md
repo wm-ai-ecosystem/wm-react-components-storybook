@@ -19,7 +19,7 @@ Forms can be accessed and manipulated programmatically through the Page.Widgets 
 | `hideField(fieldName)` | fieldName: string | void | Hides a specific form field |
 | `showField(fieldName)` | fieldName: string | void | Shows a previously hidden form field |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 ```javascript
 // Reset the form to initial values

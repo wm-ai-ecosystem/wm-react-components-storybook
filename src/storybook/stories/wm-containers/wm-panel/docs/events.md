@@ -22,7 +22,7 @@
 | onMouseover | Triggered when the mouse pointer moves over the panel |
 | onMouseout | Triggered when the mouse pointer moves out of the panel |
 
-### Event Handler Example
+## Event Handler Example
 
 ```javascript
 // Handle panel collapse event

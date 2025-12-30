@@ -45,7 +45,7 @@
 |------|------|---------|-------------|
 | `errormessage` | string | "" | Custom error message to display when form validation fails. |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Basic Form Configuration
 ```javascript
