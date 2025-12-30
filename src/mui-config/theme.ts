@@ -65,7 +65,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           "& .MuiDialog-container": {
-            width: "inherit",
+            width: "100vw",
           },
           "& .MuiDialog-paper": {
             backgroundColor: "transparent",

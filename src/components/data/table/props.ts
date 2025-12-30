@@ -9,7 +9,7 @@ import {
 } from "react";
 import { BaseProps } from "../../../higherOrder/withBaseWrapper";
 import { ButtonProps } from "@mui/material";
-import { ColumnDef, Table, SortingState } from "@tanstack/react-table";
+import { ColumnDef, Table } from "@tanstack/react-table";
 import { IAlignment, INavigation } from "../list/props";
 import { EditWidgetType } from "./utils";
 import { StorageType } from "../../../utils/state-persistance";
@@ -39,6 +39,7 @@ export interface WmTableProps extends BaseProps {
   showrowindex?: boolean;
   showheader?: boolean;
   enablesort?: boolean;
+  enablecolumnselection?: boolean; // When true, clicking column header selects/deselects the column instead of sorting
   shownavigation?: boolean;
   showrecordcount?: boolean;
 
@@ -50,6 +51,7 @@ export interface WmTableProps extends BaseProps {
   multiselecttitle?: string;
   multiselectarialabel?: string;
   gridfirstrowselect?: boolean;
+  isrowselectable?: boolean; // When true (default), clicking anywhere on row selects it. When false, only radio/checkbox column click selects.
 
   // Row expansion
   isrowexpansionenabled?: boolean;
@@ -80,6 +82,7 @@ export interface WmTableProps extends BaseProps {
 
   filtermode?: TableFilterMode;
   searchlabel?: string;
+  filteronkeypress?: boolean;
   // Export options
   exportformat?: any[];
   exportdatasize?: number;
@@ -95,6 +98,11 @@ export interface WmTableProps extends BaseProps {
   insertmessage?: string;
   updatemessage?: string;
   deletemessage?: string;
+  ondemandmessage?: string;
+  viewlessmessage?: string;
+
+  // On-Demand navigation options
+  showviewlessbutton?: boolean;
 
   // Event handlers
   onRowDelete?: (deletedRowData: any, deletedRowIndex: number, updatedDataset: any[]) => void;
@@ -102,6 +110,14 @@ export interface WmTableProps extends BaseProps {
   onRowclick?: (event: any, widget: any, row: any) => void;
   onBeforedatarender?: (widget: any, data: any, columns: any) => void;
   onDatarender?: (widget: any, data: any) => void;
+  onColumnselect?: (
+    event: React.MouseEvent,
+    data: { field: string; colDef: any; data: any[] }
+  ) => void;
+  onColumndeselect?: (
+    event: React.MouseEvent,
+    data: { field: string; colDef: any; data: any[] }
+  ) => void;
 
   // Required props
   children: ReactNode;
@@ -265,7 +281,7 @@ export interface WmTableRowProps extends BaseProps {
 // ========================================
 
 // Table Body Component Props
-export interface TableBodyProps extends BaseProps {
+export interface TableBodyProps {
   table: Table<any>;
   columns: ColumnDef<any>[];
   rowClass?: string;
@@ -286,16 +302,15 @@ export interface TableBodyProps extends BaseProps {
   tableData?: any[];
   activeRowIds?: string[];
   editingRowId?: string | null;
+  selectedRowIds?: string[];
 }
 
 // Table Header Component Props
 export interface TableHeaderProps {
   table: Table<any>;
   enablesort: boolean;
+  enablecolumnselection?: boolean;
   rowClass?: string;
-  sorting?: SortingState;
-  columnSizing?: Record<string, number>;
-  rowSelection?: Record<string, boolean>;
   rowExpansionConfig?: WmTableRowProps | null;
   columnsVersion?: number;
   filterMode?: TableFilterMode;
@@ -310,6 +325,23 @@ export interface TableHeaderProps {
     additionalProps?: any
   ) => React.ReactNode;
   ColClassSignature?: string;
+  tableStructure?: any[]; // Array of TableStructureItem
+  sorting?: Array<{ id: string; desc: boolean }>;
+  columnSizing?: Record<string, number>;
+  rowSelection?: Record<string, boolean>;
+  // Column selection callbacks
+  onColumnSelect?: (
+    event: React.MouseEvent,
+    columnId: string,
+    colDef: any,
+    columnData: any[]
+  ) => void;
+  onColumnDeselect?: (
+    event: React.MouseEvent,
+    columnId: string,
+    colDef: any,
+    columnData: any[]
+  ) => void;
 }
 
 // Row Expansion Button Props
@@ -443,7 +475,6 @@ export interface ActionButtonConfig {
 export interface BuildSelectionColumnsProps {
   useRadioSelect: boolean;
   useMultiSelect: boolean;
-  selectedRowId: string | null;
   selectedRowIds: string[];
   handleRadioSelection: (rowId: string, rowData?: any) => void;
   handleMultiSelection: (rowId: string, rowData: any, isSelected: boolean) => void;
@@ -627,7 +658,6 @@ export interface UseRowSelectionProps {
 }
 
 export interface UseRowSelectionReturn {
-  selectedRowId: string | null;
   selectedRowIds: string[];
   useMultiSelect: boolean;
   useRadioSelect: boolean;
@@ -721,7 +751,6 @@ export interface DeleteOperationOptions {
 export interface TableState {
   cells?: Record<string, Record<string, any>>;
   selection?: {
-    selectedRowId?: string | null;
     selectedRowIds?: string[];
   };
   [key: string]: any; // Allow custom fields
@@ -794,7 +823,6 @@ export interface UseTableInitializationProps {
   useRadioSelect: boolean;
   useMultiSelect: boolean;
   setActiveRow: (rowIds: string | string[] | null) => void;
-  selectedRowId: string | null;
   selectedRowIds: string[];
   formName?: string;
   activeRowIds: string[];
@@ -815,6 +843,10 @@ export interface UseRowHandlersProps {
     isEditingOrAdding: boolean
   ) => void;
   onRowclick?: (event: any, widget: any, row: any) => void;
+  // Selection behavior props
+  useRadioSelect?: boolean;
+  useMultiSelect?: boolean;
+  isrowselectable?: boolean; // When true (default), clicking anywhere on row selects it. When false, only radio/checkbox column click selects.
 }
 
 export interface UseRowHandlersReturn {
@@ -935,4 +967,32 @@ export interface SummaryCellProps {
   rowDefObject: SummaryRowDefObject;
   colIndex: number;
   show: boolean;
+}
+export interface WmTableGroupProps {
+  name: string;
+  caption: string;
+  textalignment?: "left" | "center" | "right";
+  backgroundcolor?: string;
+  class?: string;
+  "col-class"?: string;
+  styles?: React.CSSProperties;
+  children: React.ReactNode;
+  [key: string]: any; // Allow other props like data-widget-id
+}
+
+/**
+ * Header cell data for rendering
+ */
+export interface HeaderCellData {
+  isGroup?: boolean;
+  field: string;
+  displayName: string;
+  colspan?: number;
+  rowspan?: number;
+  textAlignment?: string;
+  backgroundColor?: string;
+  class?: string;
+  colClass?: string;
+  styles?: React.CSSProperties;
+  column?: WmTableColumnProps;
 }

@@ -4,6 +4,7 @@ import { ToastType } from "../props";
 import { refreshDataSource } from "../utils/crud-handlers";
 import { addUniqueRowIds } from "../utils";
 import { LiveVariableConfig } from "@wavemaker/react-runtime/variables/live-variable";
+import { useDebounceCallback } from "@wavemaker/react-runtime/hooks/useDebounce";
 
 export interface UseServerSideSortingProps {
   datasource?: LiveVariableConfig;
@@ -42,7 +43,6 @@ export const useServerSideSorting = ({
   const prevPageRef = useRef<number>(pageIndex);
   const prevFilterRef = useRef<string>("");
   const isMountedRef = useRef(false);
-  const isFetchingRef = useRef(false);
 
   // Determine if we should use server-side sorting
   const isServerSideSorting = !!(datasource && isServerSidePagination);
@@ -58,14 +58,12 @@ export const useServerSideSorting = ({
   }, []);
 
   // Fetch data with sorting
-  const fetchSortedData = useCallback(
+  const fetchSortedDataImpl = useCallback(
     async (forcePage?: number) => {
-      if (!datasource || !isServerSideSorting || isFetchingRef.current) {
+      if (!datasource || !isServerSideSorting) {
         return;
       }
 
-      // Prevent duplicate fetches
-      isFetchingRef.current = true;
       setLoading(true);
 
       try {
@@ -80,18 +78,18 @@ export const useServerSideSorting = ({
           condition: logicalOp || "",
         });
 
-        if (response) {
-          let responseData = [];
+        // Handle response data - always update dataset even if empty
+        let responseData: unknown[] = [];
 
-          // Handle different response formats
-          if (response.data) {
-            responseData = response.data;
-          }
-          // Add unique row IDs to the server response data
-          const dataWithIds = addUniqueRowIds(responseData);
-          setInternalDataset(dataWithIds);
+        // Handle different response formats
+        if (response && response.data) {
+          responseData = Array.isArray(response.data) ? response.data : [];
         }
-      } catch (error: any) {
+
+        // Add unique row IDs to the server response data
+        const dataWithIds = addUniqueRowIds(responseData);
+        setInternalDataset(dataWithIds);
+      } catch (error: unknown) {
         console.error("Error fetching sorted data:", error);
         if (showToast) {
           showToast("Failed to sort data", "Error");
@@ -100,7 +98,6 @@ export const useServerSideSorting = ({
           onError("sort", error);
         }
       } finally {
-        isFetchingRef.current = false;
         setLoading(false);
       }
     },
@@ -115,8 +112,12 @@ export const useServerSideSorting = ({
       onError,
       filterFields,
       logicalOp,
+      setLoading,
     ]
   );
+
+  // Debounced version to handle rapid successive calls
+  const fetchSortedData = useDebounceCallback(fetchSortedDataImpl, 100);
 
   // Combined effect to handle sorting, pagination, and filter changes
   useEffect(() => {

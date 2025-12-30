@@ -62,6 +62,28 @@ const BaseField = (WrappedComponent: any) => {
     // Use the required prop from validators if present, otherwise use the original required prop
     const isRequired = props.required ?? hasRequiredValidator;
 
+    // Transform formKey to match actual data keys
+    const transformedFormKey = useMemo(() => {
+      // Check if this is a child form (has parentForm or formKey contains child form pattern)
+      const isChildForm = props.parentForm;
+
+      if (isChildForm) {
+        // For child forms, use searchkey directly as it contains the actual field name
+        if (props.searchkey) {
+          return props.searchkey;
+        }
+      }
+
+      // For any field where searchkey exists and differs from formKey, use searchkey
+      // This handles cases where searchkey contains the actual data key
+      if (props.searchkey && props.searchkey !== props.formKey) {
+        return props.searchkey;
+      }
+
+      // For parent forms or when no transformation needed, use original formKey
+      return props.formKey;
+    }, [props.formKey, props.searchkey, props.formName, props.name, props.parentForm]);
+
     const modifiedProps = useMemo(() => {
       return {
         ...props,
@@ -76,6 +98,7 @@ const BaseField = (WrappedComponent: any) => {
         captionCls,
         fieldRef,
         fieldName: props.name,
+        formKey: transformedFormKey, // Use transformed formKey
         setIsDataSetBound,
         isDataSetBound,
         updateFormWidgetDataset,
@@ -90,7 +113,16 @@ const BaseField = (WrappedComponent: any) => {
             }
           : {}),
       };
-    }, [props, validators, asyncValidators, observe, observeOn, relatedData, isRequired]);
+    }, [
+      props,
+      validators,
+      asyncValidators,
+      observe,
+      observeOn,
+      relatedData,
+      isRequired,
+      transformedFormKey,
+    ]);
 
     return (
       <WrappedComponent

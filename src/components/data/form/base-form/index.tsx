@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { useForm } from "react-hook-form";
 import get from "lodash-es/get";
 import set from "lodash-es/set";
+import isEqual from "lodash-es/isEqual";
 import BaseFormProps, { defaultProps } from "./props";
 import { getFieldLayoutConfig } from "./utils";
 import { FormProvider } from "../form-context";
@@ -20,7 +21,6 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
   const ControlledForm = (FormProps: BaseFormProps) => {
     // setting up default props for form
     const props = { ...defaultProps, ...FormProps };
-
     const isInsideWizard = props.isInsideWizard || false;
 
     const formRef = useRef<HTMLFormElement>(null);
@@ -33,9 +33,19 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       caption: "",
       type: "",
     });
+    const parentFormData = props.listener?.Widgets?.[props.parentForm]?.formdata;
+    const [childFormData, setChildFormData] = useState<any>();
 
     const messageRef = useRef<any>(null);
     const [showViewMode, setShowViewMode] = useState(false);
+
+    const lastResetFormDataRef = useRef<any>(null);
+    const widgetFormData =
+      props.name &&
+      props.listener?.Widgets?.[props.name]?.formdata &&
+      Object.keys(props.listener.Widgets[props.name].formdata).length > 0
+        ? props.listener.Widgets[props.name].formdata
+        : props.formdata;
 
     const {
       control,
@@ -47,33 +57,71 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       getValues,
       clearErrors,
     } = useForm({
-      defaultValues: props.formData,
+      defaultValues: props.formdata,
       mode: "onTouched",
       reValidateMode: "onBlur",
     });
 
+    // Track the last formdata that was used to reset the form
+    // This prevents unnecessary resets when formdata prop reference changes but values are the same
+
+    useEffect(() => {
+      if (parentFormData) {
+        let childData;
+
+        if (props?.childdatasetnode) {
+          // Use childdatasetnode if provided
+          childData = get(parentFormData, props.childdatasetnode);
+        } else {
+          // Fallback to form name
+          childData = parentFormData[props?.name];
+        }
+        setChildFormData(childData);
+      }
+    }, [parentFormData, props?.dataKey, props?.childdatasetnode, props?.name]);
+
     // update the form data when the formdata prop changes
     useEffect(() => {
-      if (props.formdata && typeof props.formdata === "object" && !Array.isArray(props.formdata)) {
-        // when adding new row if the formdata is empty it should be reset here this code is added to not avoid the empty formdata case
-        // Reset to empty if formdata is empty object (for new records)
-        if (Object.keys(props.formdata).length === 0) {
-          // Get all currently registered field names and create explicit empty values
-          const currentValues = getValues();
-          const emptyValues: Record<string, any> = {};
-          Object.keys(currentValues).forEach(key => {
-            emptyValues[key] = ""; // Explicitly set each field to empty string
-          });
-          reset(emptyValues);
-        } else {
-          // Reset with actual data (for editing)
-          reset(props.formdata);
-          if (props["form-type"] === "live-filter") {
-            debouncedFilter();
+      // For child forms, prioritize childFormData over widgetFormData
+      const formDataToUse = props.parentForm
+        ? childFormData || widgetFormData || props.formdata
+        : widgetFormData || childFormData || props.formdata;
+
+      if (formDataToUse && typeof formDataToUse === "object" && !Array.isArray(formDataToUse)) {
+        // Get current form values to compare
+        const currentFormValues = getValues();
+
+        // Deep compare with the last formdata that was used to reset
+        // Only reset if formdata has actually changed (not just reference change)
+        const hasFormDataChanged = !isEqual(formDataToUse, lastResetFormDataRef.current);
+
+        // Also check if formDataToUse differs from current form values
+        // This prevents resetting when form is already in the correct state
+        const differsFromCurrentValues = !isEqual(formDataToUse, currentFormValues);
+
+        if (hasFormDataChanged && differsFromCurrentValues) {
+          // when adding new row if the formdata is empty it should be reset here this code is added to not avoid the empty formdata case
+          // Reset to empty if formdata is empty object (for new records)
+          if (Object.keys(formDataToUse).length === 0) {
+            // Get all currently registered field names and create explicit empty values
+            const currentValues = getValues();
+            const emptyValues: Record<string, any> = {};
+            Object.keys(currentValues).forEach(key => {
+              emptyValues[key] = currentValues[key]; // Explicitly set each field to empty string
+            });
+            reset(emptyValues);
+            lastResetFormDataRef.current = emptyValues;
+          } else {
+            // Reset with actual data (for editing)
+            reset(formDataToUse);
+            lastResetFormDataRef.current = formDataToUse;
+            if (props["form-type"] === "live-filter") {
+              debouncedFilter();
+            }
           }
         }
       }
-    }, [props.formdata, reset]);
+    }, [props.formdata, widgetFormData, childFormData, reset, getValues, props.parentForm]);
 
     function debouncedFilter() {
       const debouncedFilter = debounce(filter, 250);
@@ -162,7 +210,7 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       return trigger();
     }, [trigger]);
 
-    const handleFormSubmit = async (data: any, e: any, operation?: string) => {
+    const handleFormSubmit = async (data: any, e: any, operationType?: string) => {
       if (!e) {
         e = new Event("submit");
       }
@@ -184,7 +232,6 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       }
 
       const FormData: Record<string, any> | any = {};
-
       Object.keys(data).forEach(key => {
         set(FormData, key, data[key]);
       });
@@ -211,8 +258,12 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
         props.formSubmit(
           firstParam,
           (data: any) => {
-            if (props.widgettype === "live-form" && data.operationType === "insert") {
+            if (
+              props.widgettype === "live-form" &&
+              (data.operationType === "insert" || data.operationType === "delete")
+            ) {
               reset(data);
+              setShowViewMode(false);
             }
             onResultCb(get(data, "params"), "success");
             const hasCustomOnSuccess = props.onSuccess !== defaultProps.onSuccess;
@@ -231,7 +282,8 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
           (error: any) => {
             toggleMessage(true, props.errormessage || error || error.message, "error");
             onResultCb(error, "");
-          }
+          },
+          operationType
         );
       }
       if (props?.onSubmit) {
@@ -249,6 +301,19 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       formreset();
       livefilterFn(data, true, formfieldsRef.current);
     });
+
+    const highlightInvalidFields = () => {
+      const fieldsName = Object.keys(formfieldsRef.current);
+      trigger(fieldsName);
+    };
+    const saveAndNew = () => {
+      submit();
+      reset(initialValues);
+    };
+    const saveAndView = () => {
+      submit();
+      setShowViewMode(true);
+    };
 
     const onResultCb = async (data: any, status: any, event?: any) => {
       const params = {
@@ -336,9 +401,12 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       widgetCls,
       validationtype: props.validationtype,
       showViewMode,
-      formdata: props.formdata,
+      formdata: widgetFormData || childFormData || props.formdata,
       getFieldValue,
       itemsPerRow,
+      saveAndNew,
+      saveAndView,
+      highlightInvalidFields,
     };
 
     const conditionalProps = {
@@ -382,6 +450,8 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
           cleanedData[key] = data[key] === null ? "" : data[key];
         });
         reset(cleanedData);
+        // Update the ref to track this as the last reset formdata
+        lastResetFormDataRef.current = cleanedData;
       }
       setShowViewMode(false);
     }
@@ -395,6 +465,8 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
         cleanedData[key] = data[key] === null ? "" : data[key];
       });
       reset(cleanedData);
+      // Update the ref to track this as the last reset formdata
+      lastResetFormDataRef.current = cleanedData;
       if (props.listener?.Widgets && props.name) {
         props.listener.Widgets[props.name].formdata = cleanedData;
       }
@@ -407,23 +479,23 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       setShowViewMode(true);
     }
 
-    const fields = get(props.listener?.Widgets[props.name], "formfields", {});
-    const FormFields = useMemo(() => {
+    const fields = useMemo(() => {
       const newFields: any[] = [];
-      Object.keys(fields).forEach(key => {
-        if (!key.includes("formWidget") && fields[key]) {
-          newFields.push(fields[key]);
+      const Widgets = props.listener?.Widgets?.[props.name]?.formfields || {};
+      Object.keys(Widgets).forEach(key => {
+        if (!key.includes("formWidget") && Widgets[key as any]) {
+          newFields.push(Widgets[key as any]);
         }
       });
       return newFields;
-    }, [fields]);
+    }, [props.listener?.Widgets[props.name], props.name]);
 
     // Call onDataSourceChange when formfields change
     useEffect(() => {
-      if (props.onDataSourceChange && FormFields.length > 0) {
-        props.onDataSourceChange(FormFields);
+      if (props.onDataSourceChange && fields.length > 0) {
+        props.onDataSourceChange(fields);
       }
-    }, [FormFields, props.onDataSourceChange]);
+    }, [fields, props.onDataSourceChange]);
 
     // Determine form classes based on wizard context
     const formClassName = useMemo(() => {
@@ -434,8 +506,11 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       return clsx(DEFAULT_CLASS, props.className);
     }, [isInsideWizard, props.className]);
 
-    // Notify parent containers (wizard) about validity changes
+    // Keep track of last emitted values to avoid redundant emissions
+    const lastEmittedValuesSerialized = useRef<string>("");
     useEffect(() => {
+      // Added for wizard validations please do not remove the blow emit code changes.
+      // Notify parent containers (wizard) about validity changes
       const el = formRef.current;
       if (!el) return;
       const emit = () => {
@@ -447,13 +522,57 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
         );
       };
       emit();
-      const unsubscribe = watch(() => emit());
+      const unsubscribe = watch(values => {
+        emit();
+        const serialized = JSON.stringify(values);
+        if (serialized !== lastEmittedValuesSerialized.current) {
+          lastEmittedValuesSerialized.current = serialized;
+          // For child forms, update parent form data at the childdatasetnode path
+          if (
+            props.parentForm &&
+            props.childdatasetnode &&
+            props.listener?.Widgets?.[props.parentForm]
+          ) {
+            const parentFormWidget = props.listener.Widgets[props.parentForm];
+            // Get the current parent form values to include any user-entered data
+            let currentParentData =
+              parentFormWidget.getValues?.() || parentFormWidget.formdata || {};
+
+            // Update the parent form's data at the childdatasetnode path
+            const updatedParentData = { ...currentParentData };
+            set(updatedParentData, props.childdatasetnode, values);
+
+            // Update the parent form's React Hook Form state
+            if (parentFormWidget.ref?.current?.updateFormDataAndRef) {
+              parentFormWidget.ref.current.updateFormDataAndRef(updatedParentData);
+            } else if (parentFormWidget.reset) {
+              parentFormWidget.reset(updatedParentData);
+            }
+
+            // Update parent form references
+            parentFormWidget.formdata = updatedParentData;
+            if (props.listener?.Widgets?.[props.parentForm]) {
+              props.listener.Widgets[props.parentForm].formdata = updatedParentData;
+            }
+
+            // Emit the updated parent form data
+            props.listener?.onChange?.(props.parentForm, { dataoutput: updatedParentData });
+          }
+
+          // Emit current form's dataoutput
+          if (props?.listener?.onChange && props?.name) {
+            props.listener.onChange(props.name, {
+              dataoutput: values,
+            });
+          }
+        }
+      });
       return () => {
         if (typeof unsubscribe === "function") {
           (unsubscribe as any)();
         }
       };
-    }, [watch, isValid]);
+    }, [watch, isValid, props.parentForm, props.childdatasetnode, props.listener, props.name]);
 
     const formProps = {
       ...props,
@@ -464,6 +583,7 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       formWidgets: formfields,
       headerActions,
       ref,
+      formElementRef: formRef,
       toggleMessage,
       clearMessage,
       expandCollapsePanel,
@@ -487,6 +607,10 @@ const BaseForm = (WrappedComponent: React.ComponentType<any>) => {
       reset,
       numberoffields: Object.keys(formfields).length,
       className: formClassName,
+      saveAndNew,
+      saveAndView,
+      highlightInvalidFields,
+      formdata: widgetFormData || childFormData || props.formdata,
     };
 
     return (

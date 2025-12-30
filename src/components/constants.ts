@@ -1216,3 +1216,5 @@ export const getFileIconClass = (fileName: string | undefined) => {
 
   return "fa fa-file-o"; // Default icon
 };
+
+export const DEFAULT_CHIPS_DATASET = ["Option 1", "Option 2", "Option 3"];

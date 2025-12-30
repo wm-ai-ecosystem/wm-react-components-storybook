@@ -15,6 +15,7 @@ export const WmDialogContent = ({ children, sheet, sheetposition, styles }: Base
         ...((sheetposition === "top" || sheetposition === "bottom") && {
           width: "var(--wm-modal-full-screen-width)",
         }),
+        flex: "none",
       }}
     >
       {children}

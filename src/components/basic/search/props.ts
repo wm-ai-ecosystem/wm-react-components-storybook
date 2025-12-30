@@ -57,6 +57,7 @@ export interface WmSearchProps extends DatasetAwareFormComponentProps {
   autofocus?: boolean;
   dataPath?: string;
   getDisplayExpression?: (data: any) => string;
+  clearOnSelect?: boolean;
 }
 
 // Interface definitions remain the same...
@@ -65,7 +66,7 @@ interface DatasetAwareFormComponentProps {
   datafield?: string;
   displayfield?: string;
   displaylabel?: string;
-  displayimagesrc?: string;
+  displayimagesrc?: string | ((data: any) => string);
   displayexpression?: (data: any) => string;
   usekeys?: boolean;
   orderby?: string;

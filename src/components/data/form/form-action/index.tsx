@@ -5,6 +5,7 @@ import { WmButton } from "@wavemaker/react-runtime/components/form/button";
 import { WmAnchor } from "@wavemaker/react-runtime/components/basic/anchor";
 import BaseProps from "@wavemaker/react-runtime/higherOrder/props";
 import { useFormContext } from "@wavemaker/react-runtime/components/data/form/form-context";
+import withBaseWrapper from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
 
 interface WmFormActionsProps extends BaseProps {
   onClick: (event: any) => void;
@@ -76,10 +77,11 @@ const WmFormActions = memo((props: WmFormActionsProps) => {
       animation={props.animation}
       listener={props.listener}
       title={props.title || props.displayName}
+      hidden={props.hidden}
     />
   );
 });
 
 WmFormActions.displayName = "WmFormActions";
 
-export default WmFormActions;
+export default withBaseWrapper(WmFormActions);

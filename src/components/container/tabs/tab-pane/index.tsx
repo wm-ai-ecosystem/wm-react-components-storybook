@@ -47,6 +47,7 @@ export const WmTabpane = (props: WmTabPaneProps) => {
   return (
     <Tabs.Panel
       value={index}
+      keepMounted={true}
       className={clsx("tab-pane", {
         disabled: disabled,
         [className as string]: !!className,
@@ -55,6 +56,7 @@ export const WmTabpane = (props: WmTabPaneProps) => {
       role="tabpanel"
       style={{ width: "100%", ...props?.styles }}
       data-pane-name={name}
+      title={props?.title}
       {...({ name } as HtmlHTMLAttributes<HTMLDivElement>)}
     >
       <div className="tab-body" data-widget-id={props["data-widget-id"]}>

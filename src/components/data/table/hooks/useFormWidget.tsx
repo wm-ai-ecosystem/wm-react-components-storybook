@@ -86,6 +86,7 @@ export const useFormWidget = ({ listener }: UseFormWidgetProps): UseFormWidgetRe
         rowData: widgetProps?.rowData,
         column: widgetProps?.column,
         updateon: "blur",
+        ...widgetProps?.column,
       };
 
       // Helper function to wrap event handlers with the correct parameters
@@ -141,13 +142,12 @@ export const useFormWidget = ({ listener }: UseFormWidgetProps): UseFormWidgetRe
           return <WmTextarea {...commonProps} />;
 
         case "WmCheckbox":
-          const checkboxDataset = getBooleanDataset();
-          return <WmCheckbox {...commonProps} dataset={checkboxDataset} />;
+          return <WmCheckbox {...commonProps} />;
 
         case "WmToggle":
+          return <WmCheckbox {...commonProps} type="toggle" />;
         case "WmSwitch":
-          const switchDataset = getBooleanDataset();
-          return <WmSwitch {...commonProps} dataset={switchDataset} />;
+          return <WmSwitch {...commonProps} />;
 
         case "WmNumber":
           return <WmNumber {...commonProps} />;
@@ -163,13 +163,13 @@ export const useFormWidget = ({ listener }: UseFormWidgetProps): UseFormWidgetRe
           return <WmRichTextEditor {...commonProps} />;
 
         case "WmSelect":
-          return <WmSelect {...commonProps} dataset={[]} />;
+          return <WmSelect {...commonProps} />;
 
         case "WmCheckboxset":
-          return <WmCheckboxset {...commonProps} dataset={[]} />;
+          return <WmCheckboxset {...commonProps} />;
 
         case "WmRadioset":
-          return <WmRadioset {...commonProps} dataset={[]} />;
+          return <WmRadioset {...commonProps} />;
 
         case "WmDate":
           return <WmDate {...commonProps} />;
@@ -186,10 +186,10 @@ export const useFormWidget = ({ listener }: UseFormWidgetProps): UseFormWidgetRe
           return <WmRating {...commonProps} />;
 
         case "WmAutocomplete":
-          return <WmSearch {...commonProps} dataset={[]} />;
+          return <WmSearch {...commonProps} />;
 
         case "WmChips":
-          return <WmChips {...commonProps} dataset={[]} />;
+          return <WmChips {...commonProps} />;
 
         case "WmColorpicker":
         case "WmColorPicker":

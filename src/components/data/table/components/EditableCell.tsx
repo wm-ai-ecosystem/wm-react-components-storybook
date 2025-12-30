@@ -82,7 +82,13 @@ export const EditableCell: React.FC<EditableCellProps> = ({
       {showError && (
         <FieldValidationError
           showError={true}
-          title={column.required ? "This field is required" : "Field validation failed"}
+          title={
+            column.validationmessage
+              ? column.validationmessage
+              : column.required
+                ? "This field is required"
+                : "Field validation failed"
+          }
         />
       )}
     </Box>

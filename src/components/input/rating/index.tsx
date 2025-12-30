@@ -43,6 +43,7 @@ const WmRating = memo((props: WmRatingProps) => {
     height,
     dataset,
     styles,
+    listener,
   } = props;
 
   // State management
@@ -55,6 +56,7 @@ const WmRating = memo((props: WmRatingProps) => {
 
   const ratingsRef = useRef<HTMLDivElement>(null);
   const previousValue = useRef<any>(value);
+  const isInternalChange = useRef<boolean>(false); // Track internal changes to prevent double listener.onChange calls
 
   // Helper functions
   const setDatasetItems = useCallback(
@@ -143,7 +145,16 @@ const WmRating = memo((props: WmRatingProps) => {
       if (readonly) return;
 
       const newRating = rate.index === selectedRatingValue ? 0 : rate.index;
+
+      // Mark this as an internal change to prevent duplicate listener.onChange from onDatavalueChange
+      isInternalChange.current = true;
+
       setSelectedRatingValue(newRating);
+      listener?.onChange?.(name, {
+        prevDatavalue: previousValue.current,
+        _selectedRatingValue: newRating,
+        ratingsWidth: calculateRatingsWidth(),
+      });
 
       if (showcaptions) {
         const selectedItem =
@@ -241,13 +252,32 @@ const WmRating = memo((props: WmRatingProps) => {
         index: maxVal - i,
         label: `${maxVal - i}`,
       }));
+    } else {
+      // Limit transformed items to maxVal when dataset exists
+      // Sort first to ensure we keep items with lowest indices
+      transformedItems.sort((a, b) => a.index - b.index);
+      transformedItems = transformedItems.slice(0, maxVal);
+
+      // Convert 0-based indices to 1-based to match the isStarActive logic
+      // The isStarActive function expects 1-based indices where index <= selectedRatingValue
+      transformedItems = transformedItems.map((item, idx) => ({
+        ...item,
+        index: idx + 1, // Convert to 1-based index
+        key: idx + 1,
+      }));
     }
 
     // Sort items by index in descending order to maintain left-to-right star activation
     transformedItems.sort((a, b) => b.index - a.index);
 
     if (!isEqual(transformedItems, ratingItems)) {
+      listener?.onChange?.(props.fieldName || name, {
+        ratingItems: transformedItems,
+      });
       setRatingItems(transformedItems);
+      listener?.onChange?.(name, {
+        ratingItems: transformedItems,
+      });
       if (!data.length || (processedDataset.length > 0 && data === processedDataset)) {
         const currentDatasetItems = processedDataset.length > 0 ? processedDataset : datasetItems;
         if (!isEqual(transformedItems, currentDatasetItems)) {
@@ -267,8 +297,30 @@ const WmRating = memo((props: WmRatingProps) => {
     displayfield,
   ]);
 
+  const calculateRatingsWidth = useCallback(
+    (selectedDefaultRating?: number) => {
+      const selectedRating = selectedDefaultRating || selectedRatingValue;
+      const starWidth = 0.925;
+      const maxValue = maxvalue || datasetItems.length || DEFAULT_MAX_VALUE;
+
+      if (selectedRating <= maxValue && selectedRating >= 0) {
+        return selectedRating * starWidth + "em";
+      }
+      if (selectedRating > maxValue) {
+        return maxValue * starWidth + "em";
+      }
+    },
+    [selectedRatingValue, maxvalue, datasetItems]
+  );
+
   const onDatavalueChange = useCallback(
     (dataVal: any) => {
+      // Skip ALL updates if this was triggered by an internal click (we already set state in handleRatingClick)
+      if (isInternalChange.current) {
+        isInternalChange.current = false; // Reset the flag
+        return; // Early return - skip all processing for internal changes
+      }
+
       const effectiveDataset = processedDataset.length > 0 ? processedDataset : datasetItems;
 
       if (!isEmpty(effectiveDataset)) {
@@ -292,10 +344,19 @@ const WmRating = memo((props: WmRatingProps) => {
 
         if (!selectedItem) {
           setSelectedRatingValue(0);
+          listener?.onChange?.(props.fieldName || name, {
+            _selectedRatingValue: 0,
+            datavalue: 0,
+          });
           setCurrentCaption(caption || "");
           updateCaptionElement(caption || "");
         } else {
           setSelectedRatingValue(selectedItem.index);
+          listener?.onChange?.(props.fieldName || name, {
+            _selectedRatingValue: selectedItem.index,
+            ratingsWidth: calculateRatingsWidth(selectedItem.index),
+            datavalue: selectedItem.index,
+          });
           setCurrentCaption(selectedItem.label);
           updateCaptionElement(selectedItem.label);
         }
@@ -306,7 +367,11 @@ const WmRating = memo((props: WmRatingProps) => {
             maxvalue || DEFAULT_MAX_VALUE
           );
           setSelectedRatingValue(rating);
-
+          listener?.onChange?.(props.fieldName || name, {
+            _selectedRatingValue: rating,
+            ratingsWidth: calculateRatingsWidth(rating),
+            datavalue: rating,
+          });
           const selectedItem = ratingItems.find(item => item.index === rating);
           if (selectedItem) {
             setCurrentCaption(selectedItem.label);
@@ -317,6 +382,11 @@ const WmRating = memo((props: WmRatingProps) => {
           }
         } else {
           setSelectedRatingValue(0);
+          listener?.onChange?.(props.fieldName || name, {
+            _selectedRatingValue: 0,
+            ratingsWidth: calculateRatingsWidth(),
+            datavalue: 0,
+          });
           setCurrentCaption(caption || "");
           updateCaptionElement(caption || "");
         }
@@ -346,6 +416,10 @@ const WmRating = memo((props: WmRatingProps) => {
     if (datavalue !== undefined) {
       onDatavalueChange(datavalue);
     }
+    listener?.onChange?.(props.fieldName || name, {
+      ratingEl: ratingsRef.current,
+      datavalue: datavalue,
+    });
   }, [datavalue]);
 
   // Render methods

@@ -147,8 +147,8 @@ const WmRichTextEditor = forwardRef<any, RichTextEditorProps>((props, ref) => {
       placeholder: placeholder,
       // minHeight: height ? (typeof height === 'string' && height.endsWith('px') ? parseInt(height, 10) : 100) : 100,
       width: width,
-      readOnly: readonly,
-      disabled: readonly || disabled,
+      readonly: readonly,
+      disabled: disabled,
       statusbar: true,
       toolbarAdaptive: true,
       askBeforePasteHTML: false,
@@ -232,7 +232,7 @@ const WmRichTextEditor = forwardRef<any, RichTextEditorProps>((props, ref) => {
         hiddenInputRef.current.value = sanitizedContent;
       }
       if (listener?.onChange) {
-        listener.onChange(props.name, {
+        listener.onChange(props.fieldName || props.name, {
           datavalue: sanitizedContent,
         });
       }
@@ -408,9 +408,10 @@ const WmRichTextEditor = forwardRef<any, RichTextEditorProps>((props, ref) => {
       events: {
         change: debouncedHandleOnChange,
         beforeInit: handleOnBeforeRender,
+        ready: handleEditorInit,
       },
     }),
-    [editorOptions, tabindex, debouncedHandleOnChange, handleOnBeforeRender]
+    [editorOptions, tabindex, debouncedHandleOnChange, handleOnBeforeRender, handleEditorInit]
   );
 
   // Memoize the component's JSX
@@ -422,6 +423,7 @@ const WmRichTextEditor = forwardRef<any, RichTextEditorProps>((props, ref) => {
           title={hint}
           style={{ width: width }}
           height={styles?.height}
+          aria-readonly={readonly}
           hidden={props.hidden}
         >
           <JoditEditor
@@ -430,7 +432,6 @@ const WmRichTextEditor = forwardRef<any, RichTextEditorProps>((props, ref) => {
             config={editorConfig}
             onBlur={handleEditorBlur}
             onChange={() => {}} // Empty onChange as we handle it in config
-            onReady={handleEditorInit}
           />
           <HiddenInput
             ref={hiddenInputRef}

@@ -38,12 +38,25 @@ export function processDataset(
   return normalizedData.map((item, index) => {
     if (typeof item === "object" && item !== null) {
       const displayKey = displayfield || Object.keys(item)[0];
+      // Align with Angular: for non "All Fields", value should be the item's datafield (e.g., id)
+      let finalValue: any;
+      if (datafield === "All Fields") {
+        finalValue = item;
+      } else {
+        if (Object.prototype.hasOwnProperty.call(item, datafield)) {
+          finalValue = (item as any)[datafield];
+        } else if (Object.prototype.hasOwnProperty.call(item as any, "key")) {
+          finalValue = (item as any).key;
+        } else {
+          finalValue = item;
+        }
+      }
       return {
         key: generateStableKeyFn(item, index),
-        value: item,
-        label: item[displayKey] || "",
-        displayValue: displayexpression ? displayexpression(item) : item[displayKey] || "",
-        displayImage: displayimagesrc ? item[displayimagesrc] : null,
+        value: finalValue,
+        label: (item as any)[displayKey] || "",
+        displayValue: displayexpression ? displayexpression(item) : (item as any)[displayKey] || "",
+        displayImage: displayimagesrc ? (item as any)[displayimagesrc] : null,
         dataObject: item,
       };
     } else {
@@ -291,7 +304,7 @@ export function performAddItem(
   // Create chip item with proper structure
   const chipItem = createChipItemWithStructure(itemToAdd);
   const newChipsList = [...chipsList, chipItem];
-  const newModelByValue = [...modelByValue, itemToAdd.value];
+  const newModelByValue = [...modelByValue, itemToAdd?.dataObject?.value ?? itemToAdd.value];
 
   // Update chips list and trigger events
   updateChipsListAndTriggerEvents(

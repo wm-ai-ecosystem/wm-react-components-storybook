@@ -18,12 +18,12 @@ const WmForm = (props: FormProps) => {
       captionposition={props.captionposition}
       captionalign={props.captionalign}
       numberoffields={props.numberoffields}
-      ref={props.ref as Ref<HTMLFormElement>}
       className={props.className}
       id={props.id}
       onSubmit={props.submit}
       style={{ ...props.styles, ...props.conditionalstyle }}
       onReset={props.formreset}
+      ref={props.formElementRef as Ref<HTMLFormElement>}
     >
       {!shouldHideHeader &&
         (props?.title ||

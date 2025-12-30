@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
 import { TableRow, TableCell, Box } from "@mui/material";
+import clsx from "clsx";
 import { filter } from "lodash-es";
 import { WmTableColumnProps, AddNewRowProps, TableEditMode } from "../props";
 import WmTableRowAction from "../table-row-action";
@@ -194,7 +195,12 @@ export const AddNewRow: React.FC<AddNewRowProps> = ({
     const editValue = editingRowData[fieldName] ?? column.defaultvalue ?? "";
 
     totalCells.push(
-      <TableCell key={`new-row-${fieldName}`}>
+      <TableCell
+        key={`new-row-${fieldName}`}
+        className={clsx("app-datagrid-cell cell-editing form-group", {
+          "required-field": column.required,
+        })}
+      >
         {column.readonly ? (
           <></>
         ) : (

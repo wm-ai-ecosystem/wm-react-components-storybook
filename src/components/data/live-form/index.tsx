@@ -15,9 +15,9 @@ const WmLiveForm = (prop: LiveFormProps) => {
   const isDataSourceUpdatedRef = useRef<boolean>(false);
   const dataSource = props.datasource;
 
-  function formSubmit(formData: any, success: any, error: any) {
+  function formSubmit(formData: any, success: any, error: any, operation?: string) {
     const primaryKeys = dataSource.execute("getPrimaryKey");
-    const operationType = findOperationType(formData, primaryKeys);
+    const operationType = operation ?? findOperationType(formData, primaryKeys);
     if (dynamicFieldsRef.current.length > 0) {
       dynamicFieldsRef.current.forEach((field: any) => {
         const item = field.formKey;
@@ -34,10 +34,12 @@ const WmLiveForm = (prop: LiveFormProps) => {
     };
 
     if (operationType === "delete") {
-      props.formSubmit(formData, operationType, successWithOperationType, error);
-      return;
+      formData = { ...formData, row: formData };
+    } else {
+      formData = { inputFields: formData };
     }
-    props.formSubmit({ inputFields: formData }, operationType, successWithOperationType, error);
+
+    props.formSubmit(formData, operationType, successWithOperationType, error);
   }
 
   function getRelatedTableData(formField: any) {

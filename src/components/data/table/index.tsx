@@ -41,6 +41,8 @@ import {
 } from "./hooks";
 import {
   parseTableColumns,
+  parseTableStructureWithGroups,
+  flattenTableStructure,
   parseTableRowActions,
   parseTableActions,
   parseTableRowExpansion,
@@ -62,13 +64,7 @@ import {
   GlobalSearchFilter,
   SummaryRowFooter,
 } from "./components";
-import {
-  ToastType,
-  WmTableColumnProps,
-  WmTableProps,
-  SummaryRowDef,
-  SummaryRowDefObject,
-} from "./props";
+import { ToastType, WmTableProps, SummaryRowDef } from "./props";
 import { buildSelectionColumns } from "./utils/buildSelectionColumns";
 import LoadingComponent from "../pagination/components/LoadingComponent";
 import { createColumnsProxy } from "./utils/columnProxy";
@@ -79,69 +75,81 @@ import { DataSource } from "../types";
 import { EditedRowsProvider } from "./hooks/use-edited-rows";
 
 export const WmTableComponent: React.FC<WmTableProps> = memo(
-  ({
-    name,
-    dataset = [],
-    navigation = "Pager",
-    children,
-    listener,
-    pagesize = 5,
-    navigationalign = "left",
-    showrecordcount = false,
-    maxsize = 5,
-    boundarylinks = false,
-    allowpagesizechange = false,
-    pagesizeoptions = "5,10,20,50,100",
-    formposition = "bottom",
-    editmode = "none",
-    spacing = "normal",
-    title,
-    subheading,
-    iconclass,
-    exportformat = [],
-    exportdatasize,
-    onBeforeexport,
-    shownavigation = true,
-    onDemandLoad = false,
-    showrowindex = false,
-    showheader = true,
-    enablesort = true,
-    radioselect = false,
-    radioselecttitle = "",
-    radioselectarialabel = TABLE_MESSAGES.radioSelectAriaLabel,
-    multiselect = false,
-    multiselecttitle = "",
-    multiselectarialabel = TABLE_MESSAGES.multiSelectAriaLabel,
-    gridfirstrowselect = false,
-    rowClass = "",
-    deleteoktext = TABLE_MESSAGES.deleteOkText,
-    deletecanceltext = TABLE_MESSAGES.deleteCancelText,
-    confirmdelete = TABLE_MESSAGES.deleteConfirmMessage,
-    errormessage = TABLE_MESSAGES.operationError,
-    nodatamessage = TABLE_MESSAGES.noDataMessage,
-    loadingdatamsg = TABLE_MESSAGES.loadingMessage,
-    insertmessage = TABLE_MESSAGES.insertSuccess,
-    updatemessage = TABLE_MESSAGES.updateSuccess,
-    deletemessage = TABLE_MESSAGES.deleteSuccess,
-    onRowDelete,
-    onRowUpdate,
-    datasource,
-    binddataset,
-    onSuccess,
-    onError,
-    onRowinsert,
-    onRowupdate,
-    onRowdelete,
-    onRowclick,
-    statehandler,
-    formName,
-    filtermode,
-    searchlabel = "Search",
-    onBeforedatarender,
-    onDatarender,
-    className,
-    ...props
-  }) => {
+  (props: WmTableProps) => {
+    const {
+      name,
+      dataset = [],
+      navigation = "Pager",
+      children,
+      listener,
+      pagesize = 5,
+      navigationalign = "left",
+      showrecordcount = false,
+      maxsize = 5,
+      boundarylinks = false,
+      allowpagesizechange = false,
+      pagesizeoptions = "5,10,20,50,100",
+      formposition = "bottom",
+      editmode = "none",
+      spacing = "normal",
+      title,
+      subheading,
+      iconclass,
+      exportOptions = [],
+      shownavigation = true,
+      onDemandLoad = false,
+      showrowindex = false,
+      showheader = true,
+      enablesort = true,
+      enablecolumnselection = false,
+      onColumnselect,
+      onColumndeselect,
+      radioselect = false,
+      radioselecttitle = "",
+      radioselectarialabel = TABLE_MESSAGES.radioSelectAriaLabel,
+      multiselect = false,
+      multiselecttitle = "",
+      multiselectarialabel = TABLE_MESSAGES.multiSelectAriaLabel,
+      gridfirstrowselect = false,
+      isrowselectable = false,
+      rowClass = "",
+      deleteoktext = TABLE_MESSAGES.deleteOkText,
+      deletecanceltext = TABLE_MESSAGES.deleteCancelText,
+      confirmdelete = TABLE_MESSAGES.deleteConfirmMessage,
+      errormessage = TABLE_MESSAGES.operationError,
+      nodatamessage = TABLE_MESSAGES.noDataMessage,
+      loadingdatamsg = TABLE_MESSAGES.loadingMessage,
+      insertmessage = TABLE_MESSAGES.insertSuccess,
+      updatemessage = TABLE_MESSAGES.updateSuccess,
+      deletemessage = TABLE_MESSAGES.deleteSuccess,
+      ondemandmessage = "Load More",
+      viewlessmessage = "View Less",
+      showviewlessbutton = false,
+      onRowDelete,
+      onRowUpdate,
+      datasource,
+      binddataset,
+      onSuccess,
+      onError,
+      onRowinsert,
+      onRowupdate,
+      onRowdelete,
+      onRowclick,
+      statehandler,
+      formName,
+      filtermode,
+      filteronkeypress = false,
+      searchlabel = "Search",
+      onBeforedatarender,
+      onDatarender,
+      className,
+      exportformat,
+      exportdatasize,
+      onBeforeexport,
+      onAfterexport,
+      ...rest
+    } = props;
+
     const [loading, setLoading] = useState(datasource?.loading || false);
     const prevDatasetRef = useRef(dataset);
     const prevSelectedRow = useRef<string | null>(null);
@@ -154,13 +162,13 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       }
     }, [datasource?.loading]);
 
-    // State for accumulated data in Scroll navigation mode
-    const [scrollAccumulatedData, setScrollAccumulatedData] = useState<any[]>([]);
+    // State for accumulated data in Scroll and On-Demand navigation modes
+    const [accumulatedData, setAccumulatedData] = useState<any[]>([]);
 
-    // Callback to receive accumulated data from pagination
-    const handleScrollDataUpdate = useCallback((data: any[]) => {
+    // Callback to receive accumulated data from pagination (for Scroll and On-Demand)
+    const handleAccumulatedDataUpdate = useCallback((data: any[]) => {
       // Only update if data has actually changed to prevent unnecessary re-renders
-      setScrollAccumulatedData(prevData => {
+      setAccumulatedData(prevData => {
         // If lengths are different, it's definitely new data
         if (prevData.length !== data.length) {
           return data;
@@ -170,10 +178,10 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       });
     }, []);
 
-    // Reset accumulated data when navigation changes or dataset changes
+    // Reset accumulated data when navigation changes
     useEffect(() => {
-      if (navigation !== "Scroll") {
-        setScrollAccumulatedData([]);
+      if (navigation !== "Scroll" && navigation !== "On-Demand") {
+        setAccumulatedData([]);
       }
     }, [navigation]);
 
@@ -341,9 +349,11 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       isServerSidePagination,
     });
 
+    // Multiselect is only valid when editmode is "quickedit" or "inline"
+    const effectiveMultiselect = multiselect && (editmode === "quickedit" || editmode === "inline");
+
     // Use row selection hook
     const {
-      selectedRowId,
       selectedRowIds,
       useMultiSelect,
       useRadioSelect,
@@ -354,7 +364,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       isRowSelected,
     } = useRowSelection({
       radioselect,
-      multiselect,
+      multiselect: effectiveMultiselect,
       gridfirstrowselect,
       internalDataset,
       cellState,
@@ -374,7 +384,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
     const { activeRowIds, setActiveRow, handleRowActiveClick, isRowActive } = useTableState({
       editMode: editmode,
       radioselect,
-      multiselect,
+      multiselect: effectiveMultiselect,
     });
 
     // Use dynamic columns hook to generate columns from data when no children are provided
@@ -385,48 +395,65 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
     });
 
     // Parse table structure from children using utilities
-    const { wmTableColumns, rowActions, headerActions, footerActions, rowExpansionConfig } =
-      useMemo(() => {
-        const allTableActions = parseTableActions(children);
+    const {
+      wmTableColumns,
+      tableStructure,
+      rowActions,
+      headerActions,
+      footerActions,
+      rowExpansionConfig,
+    } = useMemo(() => {
+      const allTableActions = parseTableActions(children);
 
-        // Filter out addNewRow action when editmode is 'none' or 'quickedit'
-        const filteredActions =
-          editmode === "none" || editmode === "quickedit"
-            ? allTableActions.filter(action => action.key !== "addNewRow")
-            : allTableActions;
+      // Filter out addNewRow action when editmode is 'none' or 'quickedit'
+      const filteredActions =
+        editmode === "none" || editmode === "quickedit"
+          ? allTableActions.filter(action => action.key !== "addNewRow")
+          : allTableActions;
 
-        // Split actions based on position - handle comma-separated positions
-        const headerActions = filteredActions.filter(action => {
-          const position = action.position || "footer";
-          return position === "header" || position.includes("header");
-        });
+      // Split actions based on position - handle comma-separated positions
+      const headerActions = filteredActions.filter(action => {
+        const position = action.position || "footer";
+        return position === "header" || position.includes("header");
+      });
 
-        const footerActions = filteredActions.filter(action => {
-          const position = action.position || "footer";
-          return position === "footer" || position.includes("footer") || !action.position;
-        });
+      const footerActions = filteredActions.filter(action => {
+        const position = action.position || "footer";
+        return position === "footer" || position.includes("footer") || !action.position;
+      });
 
-        // Get static columns from children
-        const staticColumns = parseTableColumns(children, internalDataset);
+      // Parse table structure with groups support
+      const structure = parseTableStructureWithGroups(children);
+      const flatColumns = flattenTableStructure(structure);
 
-        // Use dynamic columns if no static columns are provided
-        // For dynamic tables, prefer dynamic columns even if they're empty initially (data loading)
-        const finalColumns =
-          staticColumns.length > 0
+      // Get static columns from children
+      const staticColumns = parseTableColumns(children, internalDataset);
+
+      // Check if we have groups in the structure
+      const hasGroups = structure.some(item => "isGroup" in item && item.isGroup);
+
+      // Determine final columns:
+      // - If groups exist, use flatColumns (from structure) to preserve group structure
+      // - Otherwise, prefer static columns, then dynamic columns, then flat columns from structure
+      const finalColumns =
+        hasGroups && flatColumns.length > 0
+          ? flatColumns
+          : staticColumns.length > 0
             ? staticColumns
-            : isDynamicTable
+            : isDynamicTable && dynamicColumns.length > 0
               ? dynamicColumns
-              : staticColumns;
+              : flatColumns;
 
-        return {
-          wmTableColumns: finalColumns,
-          rowActions: parseTableRowActions(children),
-          tableActions: filteredActions,
-          headerActions,
-          footerActions,
-          rowExpansionConfig: parseTableRowExpansion(children),
-        };
-      }, [children, editmode, dynamicColumns]);
+      return {
+        wmTableColumns: finalColumns,
+        tableStructure: structure,
+        rowActions: parseTableRowActions(children),
+        tableActions: filteredActions,
+        headerActions,
+        footerActions,
+        rowExpansionConfig: parseTableRowExpansion(children),
+      };
+    }, [children, editmode, internalDataset, isDynamicTable, dynamicColumns]);
 
     // Use unified table edit functionality
     const {
@@ -457,7 +484,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       },
       showrowindex,
       radioselect,
-      multiselect,
+      multiselect: effectiveMultiselect,
       rowActions,
       formposition,
       insertmessage,
@@ -487,12 +514,21 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       handleTableEditRowClick: handleTableEditRowClick,
       handleRowActiveClick,
       onRowclick,
+      useRadioSelect,
+      useMultiSelect,
+      isrowselectable,
     });
 
     // Effect to cancel editing when page changes
     useEffect(() => {
       const currentPage = paginationState.pageIndex;
-      if (currentPage !== prevPageIndexRef.current && isAddingNewRow) {
+      // Skip on initial render (when prevPageIndexRef is still -1)
+      // The ref is initialized to -1 and only updated after first data render
+      if (
+        prevPageIndexRef.current !== -1 &&
+        currentPage !== prevPageIndexRef.current &&
+        isAddingNewRow
+      ) {
         cancelEditing();
       }
       // Don't update the ref here - it's updated in the data render effect
@@ -513,6 +549,36 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
     });
     const [columnSizing, setColumnSizing] = useState<Record<string, number>>({});
     const [isResizing, setIsResizing] = useState(false);
+
+    // Column selection handlers - just call the external callbacks
+    // The class toggling is handled directly in TableHeaderComponent
+    const handleColumnSelect = useCallback(
+      (
+        event: React.MouseEvent,
+        columnId: string,
+        colDef: Record<string, unknown>,
+        columnData: unknown[]
+      ) => {
+        if (onColumnselect) {
+          onColumnselect(event, { field: columnId, colDef, data: columnData });
+        }
+      },
+      [onColumnselect]
+    );
+
+    const handleColumnDeselect = useCallback(
+      (
+        event: React.MouseEvent,
+        columnId: string,
+        colDef: Record<string, unknown>,
+        columnData: unknown[]
+      ) => {
+        if (onColumndeselect) {
+          onColumndeselect(event, { field: columnId, colDef, data: columnData });
+        }
+      },
+      [onColumndeselect]
+    );
 
     // Custom sorting change handler that resets page to 1 when sorting changes
     const handleSortingChange = useCallback(
@@ -553,7 +619,6 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       const selectionColumn = buildSelectionColumns({
         useRadioSelect,
         useMultiSelect,
-        selectedRowId, // Keep these for interface compatibility but they're not used in column structure
         selectedRowIds,
         handleRadioSelection,
         handleMultiSelection,
@@ -575,6 +640,8 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       baseColumns,
       useRadioSelect,
       useMultiSelect,
+      selectedRowIds,
+      internalDataset,
       handleRadioSelection,
       handleMultiSelection,
       handleSelectAll,
@@ -672,8 +739,8 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       filterMode: filtermode,
       columns: columnsForTable,
       dataset:
-        navigation === "Scroll" && scrollAccumulatedData.length > 0
-          ? scrollAccumulatedData
+        (navigation === "Scroll" || navigation === "On-Demand") && accumulatedData.length > 0
+          ? accumulatedData
           : internalDataset,
       initialSearchState,
     });
@@ -724,28 +791,26 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
     );
 
     // Create custom row selection state for TanStack Table
+    // Uses unified selectedRowIds array - works for both radio select (1 item) and multiselect (multiple items)
     const rowSelection = useMemo(() => {
       const selection: Record<string, boolean> = {};
-      if (useMultiSelect) {
-        selectedRowIds.forEach(id => {
-          selection[id] = true;
-        });
-      } else if (useRadioSelect && selectedRowId) {
-        selection[selectedRowId] = true;
-      }
+      selectedRowIds.forEach(id => {
+        selection[id] = true;
+      });
       return selection;
-    }, [useMultiSelect, useRadioSelect, selectedRowIds, selectedRowId]);
+    }, [selectedRowIds]);
 
     // Determine if we're using server-side sorting (same as server-side pagination)
     const isServerSideSorting = isServerSidePagination;
 
-    // Use accumulated data for Scroll navigation, otherwise use normal dataset
+    // Use accumulated data for Scroll and On-Demand navigation, otherwise use normal dataset
     const tableData = useMemo(() => {
-      if (navigation === "Scroll" && scrollAccumulatedData.length > 0) {
-        return filtermode ? filteredData : scrollAccumulatedData;
+      // For Scroll and On-Demand, use accumulated data from pagination
+      if ((navigation === "Scroll" || navigation === "On-Demand") && accumulatedData.length > 0) {
+        return filtermode ? filteredData : accumulatedData;
       }
       return filtermode ? filteredData : internalDataset;
-    }, [navigation, scrollAccumulatedData, filteredData, internalDataset, filtermode]);
+    }, [navigation, accumulatedData, filteredData, internalDataset, filtermode]);
 
     // Memoize pagination options to prevent unnecessary re-renders
     const memoizedPagination = useMemo(
@@ -950,12 +1015,11 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       storage: effectiveStateHandler as StorageType,
       currentPage: table.getState().pagination.pageIndex + 1,
       currentPageSize: table.getState().pagination.pageSize,
-      selectedRowId,
       selectedRowIds,
       internalDataset,
       initialActualPageSize,
       datasource,
-      multiselect,
+      multiselect: effectiveMultiselect,
       filterData: filterDataForState,
       sortData: sortDataForState,
       navigation,
@@ -1003,15 +1067,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
           }
         }
       },
-      [
-        handlePageSizeChangeBase,
-        paginationState.pageSize,
-        name,
-        effectiveStateHandler,
-        stateManager,
-        pagesize,
-        navigation,
-      ]
+      [handlePageSizeChangeBase, name, effectiveStateHandler, stateManager, pagesize, navigation]
     );
 
     // Call data render callbacks for dynamic tables or when data changes
@@ -1069,7 +1125,6 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
       useRadioSelect,
       useMultiSelect,
       setActiveRow,
-      selectedRowId,
       selectedRowIds,
       formName,
       editmode,
@@ -1085,7 +1140,6 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
         datasource,
         internalDataset,
         statehandler: effectiveStateHandler as StorageType,
-        selectedRowId,
         selectedRowIds,
         currentPage: table.getState().pagination.pageIndex + 1, // Convert to 1-based
         currentPageSize: table.getState().pagination.pageSize,
@@ -1304,13 +1358,10 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
         let selecteditem: any = null;
 
         // Priority 1: Check if radioselect or multiselect is enabled
-        if (useRadioSelect && selectedRowId) {
-          // Single selection mode - find the selected row
-          selecteditem = internalDataset.find(
-            (row: any) => row._wmTableRowId === selectedRowId || String(row.id) === selectedRowId
-          );
-        } else if (useMultiSelect && selectedRowIds.length > 0) {
-          // Multi-selection mode - find first selected row
+        if ((useRadioSelect || useMultiSelect) && selectedRowIds.length > 0) {
+          // Selection mode - find the first selected row
+          // For radio select this is the single selected row
+          // For multiselect this is the first of the selected rows
           selecteditem =
             internalDataset.find((row: any) =>
               selectedRowIds.includes(row._wmTableRowId || String(row.id))
@@ -1348,15 +1399,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
     // This updates whenever the active/selected row changes (when user clicks on a row)
     useEffect(() => {
       updateSelectedItem();
-    }, [
-      activeRowIds,
-      selectedRowId,
-      selectedRowIds,
-      useRadioSelect,
-      useMultiSelect,
-      internalDataset,
-      name,
-    ]);
+    }, [activeRowIds, selectedRowIds, useRadioSelect, useMultiSelect, internalDataset, name]);
 
     return (
       <Box
@@ -1403,6 +1446,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
             {/* Global Search Filter */}
             {filtermode === "search" && (
               <GlobalSearchFilter
+                filteronkeypress={filteronkeypress}
                 value={globalFilter}
                 onChange={setGlobalFilter}
                 selectedColumn={globalSearchColumn}
@@ -1419,7 +1463,9 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
                   className="app-grid-header-inner"
                   style={{ height: "100%", overflow: "auto", position: "relative" }}
                 >
-                  {loading && <LoadingComponent message={loadingdatamsg} />}
+                  {loading && navigation !== "On-Demand" && (
+                    <LoadingComponent message={loadingdatamsg} />
+                  )}
                   <Table
                     key={`table-${isDynamicTable ? "dynamic" : "static"}-${wmTableColumns.length}-page-${table.getState().pagination.pageIndex}`} // Force complete rebuild on pagination
                     className={`${TABLE_CSS_CLASSES.gridDefault} table-striped table-hover ${spacingClasses}`.trim()}
@@ -1430,6 +1476,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
                       <TableHeaderComponent
                         table={table}
                         enablesort={enablesort}
+                        enablecolumnselection={enablecolumnselection}
                         rowClass={rowClass}
                         ColClassSignature={ColClassSignature}
                         sorting={sorting}
@@ -1442,6 +1489,9 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
                         onColumnFilterChange={setColumnFilter}
                         renderFormWidget={renderFormWidget}
                         listener={listener}
+                        tableStructure={tableStructure}
+                        onColumnSelect={handleColumnSelect}
+                        onColumnDeselect={handleColumnDeselect}
                       />
                     )}
                     <TableBodyComponent
@@ -1465,8 +1515,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
                       tableData={tableData}
                       editingRowId={editingRowId}
                       activeRowIds={activeRowIds}
-                      name={name}
-                      listener={listener}
+                      selectedRowIds={selectedRowIds}
                     />
                     {/* Summary Row Footer */}
 
@@ -1487,7 +1536,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
 
           {/* Footer with Pagination and Actions */}
           <Box className="panel-footer clearfix">
-            {/* Pagination */}
+            {/* Pagination - handles Basic, Classic, Pager, Scroll and On-Demand navigation */}
             {showPagination && (
               <Box className="app-datagrid-paginator">
                 <WmPagination
@@ -1506,7 +1555,7 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
                   listener={listener}
                   onPaginationChange={handlePaginationChange}
                   onPageSizeChange={handlePageSizeChange}
-                  onDataUpdate={handleScrollDataUpdate}
+                  onDataUpdate={handleAccumulatedDataUpdate}
                   // Pass pagination metadata from datasource if available
                   paginationMeta={datasource?.pagination}
                   totalItems={datasource?.pagination?.totalElements}
@@ -1527,6 +1576,10 @@ export const WmTableComponent: React.FC<WmTableProps> = memo(
                         }
                       : undefined
                   }
+                  // On-Demand navigation props
+                  ondemandmessage={ondemandmessage}
+                  viewlessmessage={viewlessmessage}
+                  showviewlessbutton={showviewlessbutton}
                 />
               </Box>
             )}

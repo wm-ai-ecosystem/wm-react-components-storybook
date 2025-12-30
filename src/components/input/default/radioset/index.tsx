@@ -339,7 +339,7 @@ const WmRadioset = memo(
           onBlur={handleBlur}
           className={clsx({ "collapsible-radio-group": collapsible })}
         >
-          {groupby && groupedDataset.length > 0 ? (
+          {groupby && groupedDataset.length > 0 && !usekeys ? (
             <Box component="ul" className={clsx(DEFAULT_CLASS)}>
               {groupedDataset.map(group => (
                 <List

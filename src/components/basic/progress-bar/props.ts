@@ -41,6 +41,7 @@ export interface WmProgressBarProps extends BaseProps {
   maxvalue?: number;
   captionplacement?: CaptionPlacement;
   dataset?: any[];
+  hidden?: boolean;
   onStart?: (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     widget: WmProgressBarProps

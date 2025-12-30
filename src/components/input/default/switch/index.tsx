@@ -459,6 +459,7 @@ const WmSwitch: React.FC<WmSwitchProps> = memo(
         {...({ name } as HtmlHTMLAttributes<HTMLDivElement>)}
         aria-label={arialabel}
         {...({ datavalue } as HtmlHTMLAttributes<HTMLDivElement>)}
+        style={{ ...styles, overflow: "auto" }}
       >
         <Box
           ref={switchRef}

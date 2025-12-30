@@ -300,7 +300,7 @@ export const WmColorPicker = memo<ColorPickerProps>(
     // Register widget methods (open/close) with listener
     useEffect(() => {
       if (listener?.onChange) {
-        listener.onChange(name, {
+        listener.onChange(props.fieldName || name, {
           open: openPicker,
           close: closePicker,
         });

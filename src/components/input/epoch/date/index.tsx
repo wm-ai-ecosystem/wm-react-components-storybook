@@ -257,23 +257,39 @@ const WmDate = forwardRef<HTMLInputElement, WmDateProps>((props, ref) => {
     },
     [disabled, readonly, selectedDate, dateValue, viewmode]
   );
-  const clearDateValue = (
-    invokeOnChange?: (value: string) => void,
-    updatePrevDatavalue?: (value: string) => void,
-    updateBoundVariable?: (value: string) => void,
-    setInputValue?: (value: string) => void,
-    setSelectedDate?: (date: moment.Moment | null) => void,
-    setInvalidDateTimeFormat?: (value: boolean) => void,
-    setDateNotInRange?: (value: boolean) => void
-  ) => {
-    invokeOnChange?.("");
-    updatePrevDatavalue?.("");
-    updateBoundVariable?.("");
-    setInputValue?.("");
-    setSelectedDate?.(null);
-    setInvalidDateTimeFormat?.(false);
-    setDateNotInRange?.(false);
-  };
+  const clearDateValue = useCallback(
+    (
+      invokeOnChange?: (value: string) => void,
+      updatePrevDatavalue?: (value: string) => void,
+      updateBoundVariable?: (value: string) => void,
+      setInputValue?: (value: string) => void,
+      setSelectedDate?: (date: moment.Moment | null) => void,
+      setInvalidDateTimeFormat?: (value: boolean) => void,
+      setDateNotInRange?: (value: boolean) => void
+    ) => {
+      const oldValue = inputValue;
+      invokeOnChange?.("");
+      updatePrevDatavalue?.("");
+      updateBoundVariable?.("");
+      setInputValue?.("");
+      setSelectedDate?.(null);
+      setInvalidDateTimeFormat?.(false);
+      setDateNotInRange?.(false);
+
+      if (listener?.onChange) {
+        listener.onChange(props.fieldName || name, {
+          ...props,
+          datavalue: "",
+          timestamp: null,
+        });
+      }
+
+      if (onChange && name && listener?.Widgets[name]) {
+        onChange({} as React.SyntheticEvent, listener?.Widgets[name], "", oldValue);
+      }
+    },
+    [name, listener, onChange, props, inputValue]
+  );
 
   const handleDateSelection = (date: moment.Moment, shouldClose: boolean = false) => {
     setDateNotInRange(false);

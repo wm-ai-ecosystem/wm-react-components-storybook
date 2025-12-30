@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import clsx from "clsx";
 import Image from "next/image";
+import debounce from "lodash/debounce";
+import isPlainObject from "lodash/isPlainObject";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
@@ -12,7 +14,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import DOMPurify from "dompurify";
 import { Box, Button } from "@mui/material";
 import withBaseWrapper from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
-import { debounce } from "lodash";
+
 import { transformDataset } from "@wavemaker/react-runtime/utils/transformedDataset-utils";
 import { WmSearchProps, DataSetItem } from "./props";
 import { DataProvider, DataProviderConfig, LocalDataProvider } from "./providers";
@@ -89,9 +91,15 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
   } = props;
 
   const debouncedSearchRef = useRef<ReturnType<typeof debounce> | null>(null);
+  const debouncedSearchItemRef = useRef<ReturnType<typeof debounce> | null>(null);
+  const getDataSourceRef = useRef<((query: string, nextPage?: boolean) => Promise<any[]>) | null>(
+    null
+  );
   const searchRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchButtonRef = useRef<HTMLButtonElement>(null);
+  const initializedRef = useRef(false);
   const [query, setQuery] = useState<string>(typeof datavalue === "string" ? datavalue : "");
   const [isOpen, setIsOpen] = useState(false);
   const [loadingItems, setLoadingItems] = useState(false);
@@ -105,9 +113,65 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
   const [selectedItem, setSelectedItem] = useState<any>(null); // Track the selected item
   const [updateRequired, setUpdateRequired] = useState<boolean | undefined>(undefined);
 
+  const dataProvider = useMemo(() => new DataProvider(), []);
+
+  // Note: Don't pass groupby to transformDataset - let getGroupedData handle grouping
+  // transformDataset with groupby produces {key: groupKey, data: [...]} structure
+  // which is incompatible with getGroupedData expecting {dataObject: {...}} structure
+  const normalizedData = useMemo(
+    () =>
+      transformDataset(
+        dataset,
+        datafield,
+        displayfield,
+        displaylabel,
+        displayexpression,
+        props.orderby,
+        undefined, // Don't pre-group - getGroupedData will handle it
+        props.dataPath
+      ),
+    [
+      dataset,
+      datafield,
+      displayfield,
+      displaylabel,
+      displayexpression,
+      props.orderby,
+      props.dataPath,
+    ]
+  );
+
   useEffect(() => {
+    if (
+      (isPlainObject(datavalue) || Array.isArray(datavalue)) &&
+      searchkey &&
+      Object.keys(datavalue).length > 0
+    ) {
+      const value = Array.isArray(datavalue) ? datavalue[0] : datavalue;
+      if (value) {
+        const key = searchkey.split(",")[0] || searchkey;
+
+        const item = getDisplayExpression?.(value) || value[key];
+        if (item) {
+          setQuery(item);
+          handleUpdateDatavalue(value);
+        }
+      }
+    } else if (datafield !== "All Fields" && datafield) {
+      let findItem = normalizedData?.find(item => item.value === datavalue) as DataSetItem;
+      if (findItem) {
+        let displayValue = getDisplayExpression?.(getSelectedItem(findItem)) || findItem.label;
+        setQuery(displayValue);
+        handleUpdateDatavalue(findItem);
+      } else if (!initializedRef.current) {
+        initializedRef.current = true;
+        debouncedSearchItemRef.current?.(datavalue);
+      }
+    }
     // do not remove this code specifically handled for chips component for clearing the query.
-    setQuery(datavalue);
+    else if (!isPlainObject(datavalue)) {
+      setQuery(datavalue);
+    }
   }, [datavalue]);
 
   // Combine width with other styles
@@ -118,7 +182,35 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
   };
 
   // Create dataProvider instance
-  const dataProvider = useMemo(() => new DataProvider(), []);
+
+  // Initialize debounced searchItem function
+  useEffect(() => {
+    // Cancel previous debounced function if it exists
+    if (debouncedSearchItemRef.current) {
+      debouncedSearchItemRef.current.cancel();
+    }
+
+    // Create debounced version of searchItem
+    debouncedSearchItemRef.current = debounce(async (value: string) => {
+      const response = await dataProvider?.invokeVariable(props, value);
+      if (response && response.length > 0) {
+        let key = searchkey?.split(",")[0] || searchkey;
+        if (!key) return;
+        const findItem = response.find((item: any) => item[key] == value);
+        if (findItem && Object.keys(findItem).length > 0) {
+          let displayValue = getDisplayExpression?.(getSelectedItem(findItem)) || findItem[key];
+          setQuery(displayValue);
+        }
+      }
+    }, 200);
+
+    // Cleanup: cancel debounced function on unmount or dependency change
+    return () => {
+      if (debouncedSearchItemRef.current) {
+        debouncedSearchItemRef.current.cancel();
+      }
+    };
+  }, [dataProvider, props, searchkey, getDisplayExpression]);
 
   // Focus input on mount
   useEffect(() => {
@@ -161,7 +253,8 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
           if (!props?.groupby) {
             return;
           }
-          const groupKey = item[props?.groupby] || "ungrouped";
+          const groupKey =
+            item[props?.groupby] || item?.dataObject?.[props?.groupby] || "ungrouped";
           if (!result[groupKey]) {
             result[groupKey] = [];
           }
@@ -184,16 +277,6 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
         return [];
       }
 
-      const normalizedData = transformDataset(
-        dataset,
-        datafield,
-        displayfield,
-        displaylabel,
-        displayexpression,
-        props.orderby,
-        props.groupby,
-        props.dataPath
-      );
       const dataConfig: DataProviderConfig = {
         dataset: normalizedData,
         datafield: datafield || "All Fields",
@@ -308,14 +391,20 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
     ]
   );
 
+  // Keep ref updated with latest getDataSource
+  useEffect(() => {
+    getDataSourceRef.current = getDataSource;
+  }, [getDataSource]);
+
   // Initialize or update the debounced function when dependencies change
+  // Note: Using ref for getDataSource to prevent debounced function recreation on every render
   useEffect(() => {
     // Cancel previous debounced function if it exists
     if (debouncedSearchRef.current) {
       debouncedSearchRef.current.cancel();
     }
 
-    // Create new debounced function
+    // Create new debounced function - uses ref to always get latest getDataSource
     debouncedSearchRef.current = debounce(async (query: string) => {
       // Don't do anything if query is empty and we don't want to show all
       if (!query) {
@@ -329,7 +418,8 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
       if (query.length >= minchars) {
         try {
           setLoadingItems(true);
-          const data = await getDataSource(query);
+          // Use ref to get latest getDataSource function
+          const data = (await getDataSourceRef.current?.(query)) || [];
           setLoadingItems(false);
 
           // Update the formatted dataset first
@@ -358,7 +448,7 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
         debouncedSearchRef.current.cancel();
       }
     };
-  }, [getDataSource, minchars, debouncetime]);
+  }, [minchars, debouncetime]); // Removed getDataSource - now using ref
 
   // listen to query change and trigger debounced search
   useEffect(() => {
@@ -384,30 +474,35 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
       onChange(event, listener.Widgets[name], queryValue, queryValue);
     }
 
-    // Clear results and close dropdown if query is empty
+    // Handle empty query - for autocomplete show all options, for search close dropdown
     if (!queryValue) {
-      setFormattedDataset([]);
       setSelectedItem(null);
-      setIsOpen(false);
-      setMenuOpen(false);
       if (onClear && listener?.Widgets && name && name in listener?.Widgets) {
         onClear(event as unknown as React.MouseEvent<HTMLButtonElement>, listener.Widgets[name]);
       }
-      if (listener?.onChange) {
-        listener.onChange(name, {
-          datavalue: {},
-        });
+      // For autocomplete type, show all options when query is cleared
+      if (type === "autocomplete" && normalizedData && normalizedData.length > 0) {
+        setFormattedDataset(normalizedData);
+        if (props?.groupby) {
+          setGroupedData(getGroupedData(normalizedData));
+        }
+        setIsOpen(true);
+        setMenuOpen(true);
+      } else {
+        setFormattedDataset([]);
+        setIsOpen(false);
+        setMenuOpen(false);
       }
       return;
     }
 
     // For autocomplete type, only show dropdown if we meet minimum chars
-    if (type === "autocomplete" && queryValue.length < minchars) {
-      setFormattedDataset([]);
-      setIsOpen(false);
-      setMenuOpen(false);
-      return;
-    }
+    // if (type === "autocomplete" && queryValue.length < minchars) {
+    //   setFormattedDataset([]);
+    //   setIsOpen(false);
+    //   setMenuOpen(false);
+    //   return;
+    // }
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -429,6 +524,9 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
         if (onSubmit && listener?.Widgets && name && name in listener.Widgets) {
           onSubmit(event as unknown as React.MouseEvent<HTMLDivElement>, listener.Widgets[name]);
         }
+        if (props.clearOnSelect) {
+          setQuery("");
+        }
       }
     } else if (event.key === "ArrowDown") {
       event.preventDefault();
@@ -441,13 +539,24 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
 
   const handleClearSearch = (event: React.MouseEvent<HTMLButtonElement>) => {
     setQuery("");
-    setIsOpen(false);
-    setMenuOpen(false);
     setSelectedItem(null);
-    setFormattedDataset([]);
 
     if (onClear && listener?.Widgets && name && name in listener.Widgets) {
       onClear(event, listener.Widgets[name]);
+    }
+
+    // For autocomplete type, show all options after clearing
+    if (type === "autocomplete" && normalizedData && normalizedData.length > 0) {
+      setFormattedDataset(normalizedData);
+      if (props?.groupby) {
+        setGroupedData(getGroupedData(normalizedData));
+      }
+      setIsOpen(true);
+      setMenuOpen(true);
+    } else {
+      setFormattedDataset([]);
+      setIsOpen(false);
+      setMenuOpen(false);
     }
 
     // Focus back on input
@@ -461,30 +570,22 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
   };
 
   const handleFocus = (event: React.FocusEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    // For autocomplete type
+    // For autocomplete type - show all options on focus
     if (type === "autocomplete") {
       // If we already have results, show them
-      if (formattedDataset.length > 0) {
+      if (formattedDataset.length > 0 && !selectedItem) {
         setIsOpen(true);
         setMenuOpen(true);
       }
-      // If we have a query that meets minimum length, search with it
-      else {
-        setLoadingItems(true);
-        const normalizedData = transformDataset(
-          dataset,
-          datafield,
-          displayfield,
-          displaylabel,
-          displayexpression,
-          props.orderby,
-          props.groupby,
-          props.dataPath
-        );
+      // Show all data on focus (use normalizedData which is already computed)
+      else if (normalizedData && normalizedData.length > 0) {
         setFormattedDataset(normalizedData);
+        // Update grouped data if groupby is specified
+        if (props?.groupby) {
+          setGroupedData(getGroupedData(normalizedData));
+        }
         setIsOpen(true);
         setMenuOpen(true);
-        setLoadingItems(false);
       }
     }
 
@@ -497,9 +598,11 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
   const handleBlur = (event: React.FocusEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     // Don't close dropdown immediately to allow click events on menu items
     setTimeout(() => {
+      const activeElement = document.activeElement as Node;
       if (
         document.activeElement !== dropdownRef.current &&
-        !dropdownRef.current?.contains(document.activeElement as Node)
+        !dropdownRef.current?.contains(activeElement) &&
+        !searchButtonRef.current?.contains(activeElement)
       ) {
         setIsOpen(false);
         setMenuOpen(false);
@@ -551,6 +654,20 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
     }
   };
 
+  function handleUpdateDatavalue(item: any) {
+    const updatedItem = getSelectedItem(item);
+    const value = datafield === "All Fields" ? updatedItem : updatedItem?.[datafield];
+    if (listener?.onChange) {
+      listener.onChange(props.fieldName || name, {
+        datavalue: value,
+      });
+    }
+  }
+
+  function getSelectedItem(item: any) {
+    return item?.dataObject?.dataObject || item?.dataObject || item;
+  }
+
   const handleMatchSelect = (match: HTMLElement) => {
     if (readonly || disabled) {
       return;
@@ -561,8 +678,10 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
     try {
       const item = JSON.parse(itemData);
 
+      const selectedItem = getSelectedItem(item);
+
       // Set display value in input
-      const displayVal = item.displayValue || item.label;
+      const displayVal = getDisplayExpression?.(selectedItem) || item.displayValue || item.label;
       setQuery(displayVal);
       setIsOpen(false);
       setMenuOpen(false);
@@ -577,11 +696,7 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
         );
       }
 
-      if (listener?.onChange) {
-        listener.onChange(name, {
-          datavalue: item.dataObject.value,
-        });
-      }
+      handleUpdateDatavalue(item);
 
       // Trigger onSelect callback if provided
       if (onSelect && listener?.Widgets && name && name in listener.Widgets) {
@@ -596,7 +711,7 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
     }
   };
 
-  const handleMenuItemClick = (event: React.MouseEvent<HTMLLIElement>) => {
+  const handleMenuItemClick = (event: React.MouseEvent<HTMLLIElement>, item: any) => {
     handleMatchSelect(event.currentTarget);
   };
 
@@ -696,17 +811,22 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
       "value",
     ];
     const keyValue = findFieldValue(keyFields, index);
-    const displayImage =
-      displayimagesrc && item.dataObject?.[displayimagesrc]
-        ? item.dataObject?.[displayimagesrc]
-        : null;
+    let imageSrc = null;
+    if (typeof displayimagesrc === "function") {
+      imageSrc = displayimagesrc(item?.dataObject?.dataObject ?? item?.dataObject ?? item);
+    } else {
+      imageSrc =
+        displayimagesrc && item.dataObject?.[displayimagesrc]
+          ? item.dataObject?.[displayimagesrc]
+          : null;
+    }
 
     return {
       key: keyValue,
       value: item,
       label: displayValue,
       displayValue,
-      displayImage,
+      displayImage: imageSrc,
       dataObject: item,
     };
   };
@@ -747,10 +867,14 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
         ? DOMPurify.sanitize(dataItem.displayValue)
         : String(dataItem.label);
 
+    function handleClick(event: React.MouseEvent<HTMLLIElement>) {
+      handleMenuItemClick(event, dataItem);
+    }
+
     return (
       <MenuItem
         key={`item-${index}-${dataItem.key}`}
-        onClick={handleMenuItemClick}
+        onClick={handleClick}
         data-item={JSON.stringify(dataItem)}
         dense
         className="search-dropdown-item"
@@ -769,14 +893,7 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
           {/* MUI anchor tag */}
           <Box component="span" className="" title={displayText}>
             {getDisplayExpression
-              ? highlightMatch(
-                  getDisplayExpression(
-                    item?.dataObject?.dataObject
-                      ? item.dataObject.dataObject
-                      : (item?.dataObject ?? item)
-                  ),
-                  query
-                )
+              ? highlightMatch(getDisplayExpression(getSelectedItem(item)), query)
               : highlightMatch(displayText, query)}
           </Box>
         </Box>
@@ -851,9 +968,10 @@ const Search = React.forwardRef((props: WmSearchProps, ref: React.Ref<any>) => {
     if (showsearchicon) {
       return (
         <Button
+          ref={searchButtonRef}
           className="app-search-button btn btn-icon"
           title="search"
-          type="submit"
+          type="button"
           onClick={handleSearchClick}
           disabled={disabled}
           size="small"

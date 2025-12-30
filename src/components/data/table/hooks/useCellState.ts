@@ -11,7 +11,6 @@ export const useCellState = (tableId: string): CellStateReturn => {
   const stateRef = useRef<TableState>({
     cells: {},
     selection: {
-      selectedRowId: null,
       selectedRowIds: [],
     },
   });
@@ -63,7 +62,6 @@ export const useCellState = (tableId: string): CellStateReturn => {
     stateRef.current = {
       cells: {},
       selection: {
-        selectedRowId: null,
         selectedRowIds: [],
       },
     };
@@ -111,14 +109,7 @@ export const setCellValue = (
   state.setValue(["cells", rowId, fieldName], value);
 };
 
-export const getSelectedRowId = (state: CellStateReturn): string | null => {
-  return state.getValue<string | null>("selection.selectedRowId", null) ?? null;
-};
-
-export const setSelectedRowId = (state: CellStateReturn, rowId: string | null) => {
-  state.setValue("selection.selectedRowId", rowId);
-};
-
+// Unified selection helpers - uses single selectedRowIds array for both radio and multiselect
 export const getSelectedRowIds = (state: CellStateReturn): string[] => {
   return state.getValue<string[]>("selection.selectedRowIds", []) ?? [];
 };

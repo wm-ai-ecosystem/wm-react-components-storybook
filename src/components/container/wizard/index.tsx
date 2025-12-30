@@ -759,6 +759,7 @@ const WmWizard = memo(
                     current: step.active,
                   })}
                   hidden={!step.active}
+                  name={step.name}
                 >
                   {step.haveForm ? (
                     <div

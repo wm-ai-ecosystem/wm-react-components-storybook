@@ -191,7 +191,7 @@ export const handleNumericInputChange = (
       // Prevent decimal places beyond the limit
       const [intPart, decPart = ""] = cleanValue.split(".");
       if (decPart && decPart.length > decimalplaces) {
-        return { inputValue, newVal: null };
+        return { inputValue, newVal: Number(cleanValue) };
       }
 
       processedInputValue = cleanValue;

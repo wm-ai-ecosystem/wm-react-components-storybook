@@ -56,6 +56,7 @@ export const WmButton = memo(
       show = "true",
       ...restProps
     } = props;
+    const safeCaption = caption?.toString().replace(/undefined|null/g, "") || "";
 
     const btnRef = useRef<HTMLButtonElement>(null);
 
@@ -154,7 +155,7 @@ export const WmButton = memo(
         ref={btnRef}
         caption={caption}
         disabled={disabled}
-        aria-label={arialabel}
+        aria-label={safeCaption}
         title={props.hint}
         show={show?.toString()}
         {...restProps}
@@ -188,14 +189,14 @@ export const WmButton = memo(
               }}
             />
             <Box component="span" className="sr-only">
-              {caption} {listener?.appLocale?.LABEL_ICON}
+              {safeCaption} {listener?.appLocale?.LABEL_ICON}
             </Box>
           </>
         )}
         <Box
           component="span"
           className="btn-caption"
-          dangerouslySetInnerHTML={{ __html: caption || "" }}
+          dangerouslySetInnerHTML={{ __html: safeCaption || "" }}
           sx={{
             color: "inherit",
             fontSize: "inherit",

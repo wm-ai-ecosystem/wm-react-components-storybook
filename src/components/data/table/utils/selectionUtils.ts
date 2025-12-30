@@ -1,4 +1,4 @@
-import { getSelectedRowId, setSelectedRowId, getSelectedRowIds, setSelectedRowIds } from "../hooks";
+import { getSelectedRowIds, setSelectedRowIds } from "../hooks";
 import { CellStateReturn } from "../props";
 import {
   INTERACTIVE_CLASSES,
@@ -88,27 +88,32 @@ export const rowExistsInDataset = (rowId: string, dataset: any[]): boolean => {
 };
 
 /**
- * Selection state management functions
+ * Unified selection state management functions
+ * Uses a single selectedRowIds array for both radio and multiselect modes:
+ * - Radio select: array contains at most 1 item (replaces on new selection)
+ * - Multiselect: array can contain multiple items (add/remove on selection)
  */
 export const selectionStateHelpers = {
-  // Radio selection
-  setRadioSelection: (cellState: CellStateReturn, rowId: string) => {
-    setSelectedRowId(cellState, rowId);
+  // Get current selection (works for both modes)
+  getSelection: (cellState: CellStateReturn): string[] => {
+    return getSelectedRowIds(cellState);
   },
 
-  getRadioSelection: (cellState: CellStateReturn): string | null => {
-    return getSelectedRowId(cellState);
+  // Set selection - replaces entire selection (for radio select)
+  setSelection: (cellState: CellStateReturn, rowId: string) => {
+    setSelectedRowIds(cellState, [rowId]);
   },
 
-  // Multi selection
-  addToMultiSelection: (cellState: CellStateReturn, rowId: string) => {
+  // Add to selection (for multiselect)
+  addToSelection: (cellState: CellStateReturn, rowId: string) => {
     const current = getSelectedRowIds(cellState);
     if (!current.includes(rowId)) {
       setSelectedRowIds(cellState, [...current, rowId]);
     }
   },
 
-  removeFromMultiSelection: (cellState: CellStateReturn, rowId: string) => {
+  // Remove from selection (for multiselect)
+  removeFromSelection: (cellState: CellStateReturn, rowId: string) => {
     const current = getSelectedRowIds(cellState);
     setSelectedRowIds(
       cellState,
@@ -116,44 +121,32 @@ export const selectionStateHelpers = {
     );
   },
 
-  toggleMultiSelection: (cellState: CellStateReturn, rowId: string): boolean => {
+  // Toggle selection (for multiselect - adds if not present, removes if present)
+  toggleSelection: (cellState: CellStateReturn, rowId: string): boolean => {
     const current = getSelectedRowIds(cellState);
     const isSelected = current.includes(rowId);
 
     if (isSelected) {
-      selectionStateHelpers.removeFromMultiSelection(cellState, rowId);
+      selectionStateHelpers.removeFromSelection(cellState, rowId);
     } else {
-      selectionStateHelpers.addToMultiSelection(cellState, rowId);
+      selectionStateHelpers.addToSelection(cellState, rowId);
     }
 
     return !isSelected;
   },
 
-  setAllMultiSelection: (cellState: CellStateReturn, rowIds: string[]) => {
+  // Set all selections (for select all in multiselect)
+  setAllSelection: (cellState: CellStateReturn, rowIds: string[]) => {
     setSelectedRowIds(cellState, rowIds);
   },
 
-  clearMultiSelection: (cellState: CellStateReturn) => {
+  // Clear all selections
+  clearSelection: (cellState: CellStateReturn) => {
     setSelectedRowIds(cellState, []);
   },
 
-  getMultiSelection: (cellState: CellStateReturn): string[] => {
-    return getSelectedRowIds(cellState);
-  },
-
-  // Check selection
-  isRowSelected: (
-    cellState: CellStateReturn,
-    rowId: string,
-    useMultiSelect: boolean,
-    useRadioSelect: boolean
-  ): boolean => {
-    if (useMultiSelect) {
-      return getSelectedRowIds(cellState).includes(rowId);
-    } else {
-      // For radio select or default mode (when neither is explicitly enabled),
-      // check radio selection
-      return getSelectedRowId(cellState) === rowId;
-    }
+  // Check if a row is selected
+  isRowSelected: (cellState: CellStateReturn, rowId: string): boolean => {
+    return getSelectedRowIds(cellState).includes(rowId);
   },
 };

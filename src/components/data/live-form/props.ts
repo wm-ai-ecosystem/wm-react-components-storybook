@@ -4,7 +4,7 @@ export default interface WmLiveFormProps extends FormProps {}
 
 export const DEFAULT_PROPS: Partial<WmLiveFormProps> = {
   validationtype: "default",
-  defaultmode: "View",
+  defaultmode: "view",
   formlayout: "inline",
   insertmessage: "Record added successfully",
   updatemessage: "Record updated successfully",

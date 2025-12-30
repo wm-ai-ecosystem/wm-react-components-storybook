@@ -44,6 +44,8 @@ const useValidationRules = (
   maxchars?: number,
   regexp?: string | RegExp,
   validationmessage?: string,
+  minvalue?: number | string,
+  maxvalue?: number | string,
   form?: any
 ) => {
   return useMemo(() => {
@@ -64,11 +66,33 @@ const useValidationRules = (
       });
     }
 
-    if (maxchars) {
+    if (maxchars !== undefined) {
       combinedValidators.push({
         type: "maxchars",
         validator: maxchars,
-        errorMessage: `Maximum length is ${maxchars} characters.`,
+        errorMessage: validationmessage || `Maximum length is ${maxchars} characters.`,
+      });
+    }
+
+    const normalizedMin =
+      minvalue !== undefined && minvalue !== null && minvalue !== "" ? Number(minvalue) : undefined;
+    const normalizedMax =
+      maxvalue !== undefined && maxvalue !== null && maxvalue !== "" ? Number(maxvalue) : undefined;
+
+    if (normalizedMin !== undefined && !Number.isNaN(normalizedMin)) {
+      combinedValidators.push({
+        type: "minvalue",
+        validator: normalizedMin,
+        errorMessage:
+          validationmessage || `Value must be greater than or equal to ${normalizedMin}.`,
+      });
+    }
+
+    if (normalizedMax !== undefined && !Number.isNaN(normalizedMax)) {
+      combinedValidators.push({
+        type: "maxvalue",
+        validator: normalizedMax,
+        errorMessage: validationmessage || `Value must be less than or equal to ${normalizedMax}.`,
       });
     }
 
@@ -88,6 +112,8 @@ const useValidationRules = (
     maxchars,
     regexp,
     validationmessage,
+    minvalue,
+    maxvalue,
     form,
     validationType,
   ]);
@@ -175,8 +201,8 @@ const shouldShowErrorMessage = (
 ): boolean => {
   return (
     validationType !== "none" &&
-    ((validationType === "default" && touched && fieldState.error) ||
-      (validationType === "html" && touched && fieldState.error))
+    ((validationType === "default" && fieldState.error) ||
+      (validationType === "html" && fieldState.error))
   );
 };
 
@@ -232,8 +258,45 @@ const withFormController = <P extends object>(WrappedComponent: React.ComponentT
       maxchars,
       regexp,
       validationmessage,
+      props.minvalue,
+      props.maxvalue,
       form
     );
+
+    const extractedValidatorProps = useMemo(() => {
+      const result: {
+        maxchars?: number;
+        regexp?: string | RegExp;
+        minvalue?: number | string;
+        maxvalue?: number | string;
+      } = {
+        maxchars,
+        regexp,
+        minvalue: props.minvalue,
+        maxvalue: props.maxvalue,
+      };
+
+      if (!validators?.length) return result;
+
+      validators.forEach(validator => {
+        if (typeof validator === "function") return;
+
+        if (result.maxchars === undefined && validator.type === "maxchars") {
+          result.maxchars = validator.validator as number;
+        }
+        if (result.regexp === undefined && validator.type === "regexp") {
+          result.regexp = validator.validator as string | RegExp;
+        }
+        if (result.minvalue === undefined && validator.type === "minvalue") {
+          result.minvalue = validator.validator as number;
+        }
+        if (result.maxvalue === undefined && validator.type === "maxvalue") {
+          result.maxvalue = validator.validator as number;
+        }
+      });
+
+      return result;
+    }, [validators, maxchars, regexp, props.minvalue, props.maxvalue]);
 
     const htmlValidationProps = useHTMLValidationProps(validationType, required, maxchars, regexp);
 
@@ -245,7 +308,7 @@ const withFormController = <P extends object>(WrappedComponent: React.ComponentT
     // Event handlers
     const createOnChangeHandler = useCallback(
       (field: any) => {
-        return (e: any, componentProps?: any, newValue?: any) => {
+        return (e: any, componentProps?: any, newValue?: any, oldValue?: any) => {
           let valueToSet;
 
           if (newValue !== undefined) {
@@ -272,7 +335,7 @@ const withFormController = <P extends object>(WrappedComponent: React.ComponentT
           } else {
             field.onChange(valueToSet);
           }
-          props.onChange?.(e, field, newValue, valueToSet);
+          props.onChange?.(e, field, newValue, oldValue);
         };
       },
       [type, props.datafield]
@@ -322,6 +385,7 @@ const withFormController = <P extends object>(WrappedComponent: React.ComponentT
           // Build controlled props
           const controlledProps: P & ControlledFieldProps = {
             ...props,
+            ...extractedValidatorProps,
             ...(validationType === "html" ? htmlValidationProps : {}),
             value: processedValue !== undefined ? processedValue : defaultvalue,
             datavalue: processedValue !== undefined ? processedValue : defaultvalue,
@@ -335,8 +399,6 @@ const withFormController = <P extends object>(WrappedComponent: React.ComponentT
             fieldName: inputFieldName,
             name: name,
             isRequiredLabel: required,
-            maxchars: maxchars,
-            regexp: regexp,
             className: clsx(wrappedComponentProps.className, {
               hidden: contextFormRef?.isViewMode,
             }),

@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useRef } from "react";
+import React, { memo, useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Box, Input, ClickAwayListener } from "@mui/material";
 import { filter, map, includes } from "lodash-es";
 import { TableFilterMode } from "../props";
@@ -13,6 +13,7 @@ interface GlobalSearchFilterProps {
   searchLabel?: string;
   name?: string;
   listener?: any;
+  filteronkeypress?: boolean;
 }
 
 export const GlobalSearchFilter = memo(
@@ -24,6 +25,7 @@ export const GlobalSearchFilter = memo(
     columns,
     searchLabel = "Search",
     name,
+    filteronkeypress = false,
     listener,
   }: GlobalSearchFilterProps) => {
     // Local state for input value
@@ -41,7 +43,7 @@ export const GlobalSearchFilter = memo(
       setLocalSelectedColumn(selectedColumn);
     }, [selectedColumn]);
 
-    const clearLocalSearchControls = React.useCallback(() => {
+    const clearLocalSearchControls = useCallback(() => {
       setInputValue("");
       setLocalSelectedColumn("");
     }, []);
@@ -52,22 +54,35 @@ export const GlobalSearchFilter = memo(
           clearFilter: clearLocalSearchControls,
         });
       }
-    }, []);
+    }, [clearLocalSearchControls]);
 
-    // Filter out non-data columns for the dropdown using lodash
-    const actionColumnIds = [
-      "actions",
-      "row-operations",
-      "multiSelect",
-      "radioSelect",
-      "row-index",
-    ];
-    const searchableColumns = filter(
-      columns || [],
-      col => col?.accessorKey && !includes(actionColumnIds, col?.id)
+    // Filter out non-data columns for the dropdown using lodash - memoize to prevent recalculation
+    const actionColumnIds = useMemo(
+      () => ["actions", "row-operations", "multiSelect", "radioSelect", "row-index"],
+      []
     );
 
-    const handleSearch = () => {
+    const searchableColumns = useMemo(
+      () => filter(columns || [], col => col?.accessorKey && !includes(actionColumnIds, col?.id)),
+      [columns, actionColumnIds]
+    );
+
+    const handleColumnChange = useCallback(
+      (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newColumn = e.target.value;
+        setLocalSelectedColumn(newColumn);
+
+        // If filteronkeypress is true, apply filter immediately when column changes
+        if (filteronkeypress && inputValue) {
+          onColumnChange(newColumn);
+          // Re-apply the filter with the new column
+          onChange(inputValue);
+        }
+      },
+      [filteronkeypress, inputValue, onColumnChange, onChange]
+    );
+
+    const handleSearch = useCallback(() => {
       // Always update the value when search is triggered
       onChange(inputValue);
 
@@ -75,14 +90,38 @@ export const GlobalSearchFilter = memo(
       if (localSelectedColumn !== selectedColumn) {
         onColumnChange(localSelectedColumn);
       }
-    };
+    }, [inputValue, localSelectedColumn, selectedColumn, onChange, onColumnChange]);
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        handleSearch();
-      }
-    };
+    const handleInputChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value;
+        setInputValue(newValue);
+
+        // If filteronkeypress is true, apply filter on every keystroke
+        if (filteronkeypress) {
+          onChange(newValue);
+
+          // Update column selection if it changed
+          if (localSelectedColumn !== selectedColumn) {
+            onColumnChange(localSelectedColumn);
+          }
+        }
+      },
+      [filteronkeypress, localSelectedColumn, selectedColumn, onChange, onColumnChange]
+    );
+
+    const handleKeyDown = useCallback(
+      (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          // Only trigger search manually if filteronkeypress is false
+          if (!filteronkeypress) {
+            handleSearch();
+          }
+        }
+      },
+      [filteronkeypress, handleSearch]
+    );
 
     return (
       <Box component="form" className="form-search form-inline" onSubmit={e => e.preventDefault()}>
@@ -92,9 +131,16 @@ export const GlobalSearchFilter = memo(
             className="form-control app-textbox"
             placeholder={searchLabel}
             value={inputValue}
-            onChange={e => setInputValue(e.target.value)}
+            onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             size="small"
+            sx={{
+              "& input::placeholder": {
+                color: "text.secondary",
+                opacity: 0.7,
+                fontWeight: "normal",
+              },
+            }}
           />
         </Box>
         <Box className="input-append input-group input-group-sm" component="div">
@@ -104,9 +150,7 @@ export const GlobalSearchFilter = memo(
             data-element="dgFilterValue"
             className="form-control app-select input-sm"
             value={localSelectedColumn}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              setLocalSelectedColumn(e.target.value)
-            }
+            onChange={handleColumnChange}
           >
             <option value="" className="placeholder">
               Select Field
@@ -135,6 +179,20 @@ export const GlobalSearchFilter = memo(
           </Box>
         </Box>
       </Box>
+    );
+  },
+  (prevProps, nextProps) => {
+    // Custom comparison to prevent unnecessary re-renders
+    return (
+      prevProps.value === nextProps.value &&
+      prevProps.selectedColumn === nextProps.selectedColumn &&
+      prevProps.columns === nextProps.columns &&
+      prevProps.searchLabel === nextProps.searchLabel &&
+      prevProps.name === nextProps.name &&
+      prevProps.filteronkeypress === nextProps.filteronkeypress &&
+      prevProps.onChange === nextProps.onChange &&
+      prevProps.onColumnChange === nextProps.onColumnChange &&
+      prevProps.listener === nextProps.listener
     );
   }
 );
@@ -189,83 +247,97 @@ const ColumnFilterCell = memo(
       setLocalValue(value);
     }, [value]);
 
-    const handleApplyFilter = (e: React.KeyboardEvent) => {
-      const inputValue = (e.target as HTMLInputElement).value ?? localValue;
-      // Only trigger onChange if the value has actually changed
-      if (inputValue !== value) {
-        onChange(columnId, inputValue, selectedMatchMode);
-      }
-    };
+    const handleApplyFilter = useCallback(
+      (e: React.KeyboardEvent) => {
+        const inputValue = (e.target as HTMLInputElement).value ?? localValue;
+        // Only trigger onChange if the value has actually changed
+        if (inputValue !== value) {
+          onChange(columnId, inputValue, selectedMatchMode);
+        }
+      },
+      [localValue, value, columnId, selectedMatchMode, onChange]
+    );
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        handleApplyFilter(e);
-      }
-      e.stopPropagation(); // Prevent table keyboard shortcuts
-    };
+    const handleKeyDown = useCallback(
+      (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          handleApplyFilter(e);
+        }
+        e.stopPropagation(); // Prevent table keyboard shortcuts
+      },
+      [handleApplyFilter]
+    );
 
-    const handleFilterIconClick = (e: React.MouseEvent<HTMLElement>) => {
+    const handleFilterIconClick = useCallback((e: React.MouseEvent<HTMLElement>) => {
       e.stopPropagation();
       setAnchorEl(filterButtonRef.current);
-    };
+    }, []);
 
-    const handleClosePopover = () => {
+    const handleClosePopover = useCallback(() => {
       setAnchorEl(null);
-    };
+    }, []);
 
-    const handleMatchModeSelect = (matchMode: string) => {
-      setSelectedMatchMode(matchMode);
-      if (onMatchModeChange) {
-        onMatchModeChange(columnId, matchMode);
-      }
-      // Apply the filter with new match mode if there's a value
-      if (localValue) {
-        onChange(columnId, localValue, matchMode);
-      }
-      handleClosePopover();
-    };
+    const handleMatchModeSelect = useCallback(
+      (matchMode: string) => {
+        setSelectedMatchMode(matchMode);
+        if (onMatchModeChange) {
+          onMatchModeChange(columnId, matchMode);
+        }
+        // Apply the filter with new match mode if there's a value
+        if (localValue) {
+          onChange(columnId, localValue, matchMode);
+        }
+        handleClosePopover();
+      },
+      [columnId, localValue, onChange, onMatchModeChange, handleClosePopover]
+    );
 
-    // Get the data type from widget type
-    const getDataTypeFromWidget = (widget: string): string => {
-      const editType = columnMeta.editinputtype;
+    // Get the data type from widget type - memoize to prevent recalculation
+    const getDataTypeFromWidget = useCallback(
+      (widget: string): string => {
+        const editType = columnMeta.editinputtype;
 
-      // Check edit input type first
-      if (editType === "number") return "number";
-      if (editType === "date" || editType === "datetime-local" || editType === "time")
-        return "date";
-
-      // Check widget type
-      switch (widget) {
-        case "number":
-        case "currency":
-        case "integer":
-          return "number";
-        case "date":
-        case "datetime":
-        case "time":
-        case "timestamp":
+        // Check edit input type first
+        if (editType === "number") return "number";
+        if (editType === "date" || editType === "datetime-local" || editType === "time")
           return "date";
-        case "text":
-        case "textarea":
-        case "string":
-        default:
-          return "string";
-      }
-    };
 
-    // Get available match modes for the column type
-    const getMatchModes = () => {
+        // Check widget type
+        switch (widget) {
+          case "number":
+          case "currency":
+          case "integer":
+            return "number";
+          case "date":
+          case "datetime":
+          case "time":
+          case "timestamp":
+            return "date";
+          case "text":
+          case "textarea":
+          case "string":
+          default:
+            return "string";
+        }
+      },
+      [columnMeta.editinputtype]
+    );
+
+    // Get available match modes for the column type - memoize
+    const matchModes = useMemo(() => {
       const dataType = getDataTypeFromWidget(widgetType);
       const matchModeMap = getMatchModeTypesMap() as Record<string, string[]>;
       return matchModeMap[dataType] || matchModeMap["default"] || [];
-    };
+    }, [widgetType, getDataTypeFromWidget]);
 
-    const matchModes = getMatchModes();
-    const matchModeMessages = getMatchModeMsgs(listener?.appLocale);
+    const matchModeMessages = useMemo(
+      () => getMatchModeMsgs(listener?.appLocale),
+      [listener?.appLocale]
+    );
 
-    // Get CSS class based on widget type
-    const getInputGroupClass = () => {
+    // Get CSS class based on widget type - memoize
+    const inputGroupClass = useMemo(() => {
       const dataType = getDataTypeFromWidget(widgetType);
       switch (dataType) {
         case "number":
@@ -275,31 +347,31 @@ const ColumnFilterCell = memo(
         default:
           return "input-group text input-group-sm";
       }
-    };
+    }, [widgetType, getDataTypeFromWidget]);
 
-    const handleClearFilterIconClick = () => {
+    const handleClearFilterIconClick = useCallback(() => {
       onChange(columnId, "", selectedMatchMode);
       setLocalValue("");
-    };
+    }, [columnId, selectedMatchMode, onChange]);
+
+    const handleLocalValueChange = useCallback((value: any) => {
+      setLocalValue(value);
+    }, []);
 
     return (
-      <div data-col-identifier={columnAccessorKey} className={getInputGroupClass()}>
+      <div data-col-identifier={columnAccessorKey} className={inputGroupClass}>
         <Box
-          onBlur={handleApplyFilter}
-          onKeyDown={handleKeyDown}
-          onClick={e => e.stopPropagation()}
+          component="div"
+          tabIndex={0}
+          onBlur={handleApplyFilter as unknown as React.FocusEventHandler<HTMLDivElement>}
+          onKeyDown={handleKeyDown as React.KeyboardEventHandler<HTMLDivElement>}
+          onClick={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
         >
-          {renderFormWidget(
-            columnId,
-            widgetType,
-            localValue,
-            (value: any) => setLocalValue(value),
-            {
-              placeholder: "",
-              sessionKey: `filter_${columnId}`,
-              column: columnMeta,
-            }
-          )}
+          {renderFormWidget(columnId, widgetType, localValue, handleLocalValueChange, {
+            placeholder: "",
+            sessionKey: `filter_${columnId}`,
+            column: columnMeta,
+          })}
         </Box>
 
         <span className="input-group-addon filter-clear-icon">
@@ -356,6 +428,20 @@ const ColumnFilterCell = memo(
           )}
         </Box>
       </div>
+    );
+  },
+  (prevProps, nextProps) => {
+    // Custom comparison to prevent unnecessary re-renders
+    return (
+      prevProps.columnId === nextProps.columnId &&
+      prevProps.value === nextProps.value &&
+      prevProps.widgetType === nextProps.widgetType &&
+      prevProps.columnMeta === nextProps.columnMeta &&
+      prevProps.columnAccessorKey === nextProps.columnAccessorKey &&
+      prevProps.onChange === nextProps.onChange &&
+      prevProps.renderFormWidget === nextProps.renderFormWidget &&
+      prevProps.listener === nextProps.listener &&
+      prevProps.onMatchModeChange === nextProps.onMatchModeChange
     );
   }
 );
@@ -415,6 +501,17 @@ export const TableFilterRow = memo(
           );
         })}
       </tr>
+    );
+  },
+  (prevProps, nextProps) => {
+    // Custom comparison to prevent unnecessary re-renders
+    return (
+      prevProps.columns === nextProps.columns &&
+      prevProps.columnFilters === nextProps.columnFilters &&
+      prevProps.filterMode === nextProps.filterMode &&
+      prevProps.onColumnFilterChange === nextProps.onColumnFilterChange &&
+      prevProps.renderFormWidget === nextProps.renderFormWidget &&
+      prevProps.listener === nextProps.listener
     );
   }
 );

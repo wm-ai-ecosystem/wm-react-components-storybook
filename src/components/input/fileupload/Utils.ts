@@ -38,28 +38,35 @@ export const isValidFile = (filename: string, contenttype: string, extensionName
     return true;
   }
 
+  const ext = extensionName.toLowerCase();
+
+  // Split by comma or space (handles ".doc, .docx" and ".doc .docx" formats)
   const contentTypes = contenttype
     .toLowerCase()
-    .split(" ")
-    .map(type => type.trim());
+    .split(/[\s,]+/)
+    .map(type => type.trim())
+    .filter(Boolean);
 
   // Check for direct extension match (e.g., ".csv", ".pdf")
-  if (contentTypes.some(type => type === `.${extensionName.toLowerCase()}`)) {
+  if (contentTypes.some(type => type === `.${ext}` || type === ext)) {
     return true;
   }
 
   // Check for MIME type patterns
   for (const type of contentTypes) {
-    if (type === "image/*" || type === "image") {
+    // Normalize type for comparison (remove leading dot if present)
+    const normalizedType = type.startsWith(".") ? type.slice(1) : type;
+
+    if (type === "image/*" || normalizedType === "image") {
       if (isImageFile(filename)) return true;
     }
-    if (type === "audio/*" || type === "audio") {
+    if (type === "audio/*" || normalizedType === "audio") {
       if (isAudioFile(filename)) return true;
     }
-    if (type === "video/*" || type === "video") {
+    if (type === "video/*" || normalizedType === "video") {
       if (isVideoFile(filename)) return true;
     }
-    if (type === "document" || type === "pdf" || type === "doc") {
+    if (normalizedType === "document" || normalizedType === "pdf" || normalizedType === "doc") {
       if (isDocumentFile(filename)) return true;
     }
   }

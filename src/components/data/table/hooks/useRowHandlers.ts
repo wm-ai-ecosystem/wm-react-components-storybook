@@ -12,11 +12,29 @@ export const useRowHandlers = ({
   handleTableEditRowClick,
   handleRowActiveClick,
   onRowclick,
+  useRadioSelect = false,
+  useMultiSelect = false,
+  isrowselectable = false,
 }: UseRowHandlersProps): UseRowHandlersReturn => {
   const handleRowClick = useCallback(
     (event: React.MouseEvent, rowData: any, rowId: string) => {
-      // Handle row selection first
-      const isSelectionHandled = handleRowSelectionClick(event, rowId, rowData);
+      // Determine if selection mode is enabled
+      const hasSelectionMode = useRadioSelect || useMultiSelect;
+
+      // Handle row selection based on isrowselectable setting
+      // When isrowselectable is false and selection mode is enabled,
+      // only allow selection through the radio/checkbox column (not row click)
+      let isSelectionHandled = false;
+      if (hasSelectionMode && isrowselectable) {
+        // Current behavior: clicking anywhere on row selects it
+        isSelectionHandled = handleRowSelectionClick(event, rowId, rowData);
+      } else if (!hasSelectionMode) {
+        // No selection mode enabled, just handle as normal (makes row active)
+        isSelectionHandled = handleRowSelectionClick(event, rowId, rowData);
+      }
+      // When hasSelectionMode && !isrowselectable, skip row selection from row click
+      // Selection will only happen through the radio/checkbox column click
+
       if (onRowclick) {
         onRowclick(event, {}, cleanRowData(rowData));
       }
@@ -28,6 +46,13 @@ export const useRowHandlers = ({
       const isEditingOrAdding = editingRowId !== null || isAddingNewRow;
 
       // Handle active row state
+      // When isrowselectable is false and selection mode is enabled,
+      // don't set the active class on row click - only through radio/checkbox column
+      if (hasSelectionMode && !isrowselectable) {
+        // Skip setting active row when isrowselectable is false with selection mode
+        return;
+      }
+
       handleRowActiveClick(rowId, isSelectionHandled, isEditingOrAdding);
     },
     [
@@ -36,6 +61,10 @@ export const useRowHandlers = ({
       handleRowSelectionClick,
       handleTableEditRowClick,
       handleRowActiveClick,
+      onRowclick,
+      useRadioSelect,
+      useMultiSelect,
+      isrowselectable,
     ]
   );
 

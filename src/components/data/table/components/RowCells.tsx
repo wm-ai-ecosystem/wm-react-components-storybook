@@ -70,17 +70,13 @@ export const RowCells = memo<MemoizedRowCellsProps>(
     );
   },
   (prevProps, nextProps) => {
-    const keys: (keyof MemoizedRowCellsProps)[] = [
-      "ColClassSignature",
-      "rowsVersion",
-      "tableData",
-      "isEditingRow",
-      "rowData",
-    ];
-
-    return keys.every(key => {
-      return prevProps[key] === nextProps[key];
-    });
+    // Compare cells first - if column definitions changed (e.g., selection state), cells will be different
+    // Also compare rowData and isEditingRow which are used in rendering
+    return (
+      prevProps.cells === nextProps.cells &&
+      prevProps.rowData === nextProps.rowData &&
+      prevProps.isEditingRow === nextProps.isEditingRow
+    );
   }
 );
 RowCells.displayName = "RowCells";

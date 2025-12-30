@@ -181,17 +181,13 @@ const TableBodyComponentBase: React.FC<TableBodyProps> = ({
   isRowActive,
   isRowSelected,
   nodatamessage = TABLE_MESSAGES.noDataMessage,
-  loadingdatamsg = TABLE_MESSAGES.loadingMessage,
-  isLoading = false,
   rowExpansionConfig,
-  expandedRows = new Set(),
   toggleRowExpansion,
   isRowExpanded,
   ColClassSignature,
   rowsVersion,
   tableData,
   editingRowId = null,
-  hidden = false,
 }) => {
   const hasExpansion = !!(rowExpansionConfig?.show && toggleRowExpansion && isRowExpanded);
 
@@ -261,7 +257,7 @@ const TableBodyComponentBase: React.FC<TableBodyProps> = ({
   };
 
   return (
-    <TableBody hidden={hidden} className={`app-grid-content ${TABLE_CSS_CLASSES.gridBody}`}>
+    <TableBody className={`app-grid-content ${TABLE_CSS_CLASSES.gridBody}`}>
       {formposition === "top" && renderAddNewRow()}
       {renderTableContent()}
       {formposition === "bottom" && renderAddNewRow()}
@@ -271,24 +267,21 @@ const TableBodyComponentBase: React.FC<TableBodyProps> = ({
 
 export const TableBodyComponent = memo(TableBodyComponentBase, (prev, current) => {
   const keys: (keyof TableBodyProps)[] = [
-    "isLoading",
-    "name",
     "rowClass",
     "formposition",
     "nodatamessage",
-    "loadingdatamsg",
     "rowsVersion",
     "tableData",
     "ColClassSignature",
     "activeRowIds",
+    "selectedRowIds",
     "editingRowId",
     "table",
-    "hidden",
     "renderAddNewRow",
   ];
   return keys.every(key => {
-    if (key === "activeRowIds") {
-      return isEqual(prev.activeRowIds, current.activeRowIds);
+    if (key === "activeRowIds" || key === "selectedRowIds") {
+      return isEqual(prev[key], current[key]);
     }
     return prev[key] === current[key];
   });

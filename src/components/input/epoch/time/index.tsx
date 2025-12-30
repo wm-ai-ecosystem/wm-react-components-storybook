@@ -87,9 +87,20 @@ const WmTime = (props: WmTimeProps) => {
   const handleTimeChange = useCallback(
     (newTime: Date | null, event: React.SyntheticEvent, shouldClosePicker = false) => {
       if (!newTime) {
+        const oldValue = displayValue;
         setInternalValue(null);
         setDisplayValue("");
         setValidationResult({ isValid: true });
+
+        invokeOnChange?.("", { $event: event, type: "change" });
+        if (name && listener?.Widgets[name]) {
+          listener.Widgets[name].displayValue = "";
+        }
+        updateListener(name, listener, props, "", null, "");
+        if (onChange && name && listener?.Widgets[name]) {
+          onChange(event, listener?.Widgets[name], "", oldValue);
+        }
+
         if (shouldClosePicker) setShowPicker?.(false);
         return;
       }
@@ -117,7 +128,18 @@ const WmTime = (props: WmTimeProps) => {
       }
       if (shouldClosePicker) setShowPicker?.(false);
     },
-    [minTimeObj, maxTimeObj, timepattern, invokeOnChange, setShowPicker]
+    [
+      minTimeObj,
+      maxTimeObj,
+      timepattern,
+      invokeOnChange,
+      setShowPicker,
+      name,
+      listener,
+      props,
+      onChange,
+      displayValue,
+    ]
   );
   const handlePickerAccept = useCallback(
     (value: moment.Moment | null) => {

@@ -137,3 +137,11 @@ export const DYNAMIC_COLUMNS_CONFIG = {
   maxColumns: 10, // Maximum number of columns to generate from data (matching Angular behavior)
   sampleSize: 3, // Number of rows to sample for column detection
 } as const;
+
+// Navigation types that don't support state persistence
+// These navigation types accumulate data and don't maintain traditional pagination state
+export const UNSUPPORTED_STATE_PERSISTENCE_TYPES: readonly string[] = [
+  "Scroll",
+  "On-Demand",
+  "Inline",
+];

@@ -96,6 +96,17 @@ export const registerFormField = (
   // Register formWidget variants (for form field wrapper components)
   widgetsContext[formName].formfields[`${fieldName}_formWidget`] = widget;
   widgetsContext[formName].formWidgets[`${fieldName}_formWidget`] = widget;
+
+  const parentFormName = widgetsContext[formName]?.parentForm;
+  if (parentFormName && widgetsContext[parentFormName]) {
+    widgetsContext[parentFormName].formfields = widgetsContext[parentFormName].formfields || {};
+    widgetsContext[parentFormName].formWidgets = widgetsContext[parentFormName].formWidgets || {};
+
+    widgetsContext[parentFormName].formfields[formKey] = widget;
+    widgetsContext[parentFormName].formWidgets[fieldName] = widget;
+    widgetsContext[parentFormName].formfields[`${formKey}_formWidget`] = widget;
+    widgetsContext[parentFormName].formWidgets[`${fieldName}_formWidget`] = widget;
+  }
 };
 
 /**
@@ -127,25 +138,40 @@ export const registerFormFieldSafe = (
   widgetsContext[formName].formfields ??= {};
   widgetsContext[formName].formWidgets ??= {};
 
-  // attachig exiting proxy instance instead of fieldProps
-  // fieldProps will not update the proxy from script since
-  const widgetProxy = (widgetsContext as any)[fieldProps.name as string];
+  // ✅ Only add if not already present
+  widgetsContext[formName].formfields[formKey] = {
+    ...fieldProps,
+  };
 
-  if (!widgetsContext[formName].formfields[formKey]) {
-    widgetsContext[formName].formfields[formKey] = widgetProxy ?? { ...fieldProps };
-  }
+  widgetsContext[formName].formWidgets[fieldName] = {
+    ...fieldProps,
+  };
+  widgetsContext[formName].formfields[`${fieldName}_formWidget`] = {
+    ...fieldProps,
+  };
 
-  if (!widgetsContext[formName].formWidgets[fieldName]) {
-    widgetsContext[formName].formWidgets[fieldName] = widgetProxy ?? { ...fieldProps };
-  }
+  widgetsContext[formName].formWidgets[`${fieldName}_formWidget`] = {
+    ...fieldProps,
+  };
 
-  const formWidgetKey = `${fieldName}_formWidget`;
-  if (!widgetsContext[formName].formfields[formWidgetKey]) {
-    widgetsContext[formName].formfields[formWidgetKey] = widgetProxy ?? { ...fieldProps };
-  }
+  const parentFormName = widgetsContext[formName]?.parentForm;
+  if (parentFormName) {
+    widgetsContext[parentFormName] ??= {};
+    widgetsContext[parentFormName].formfields ??= {};
+    widgetsContext[parentFormName].formWidgets ??= {};
 
-  if (!widgetsContext[formName].formWidgets[formWidgetKey]) {
-    widgetsContext[formName].formWidgets[formWidgetKey] = widgetProxy ?? { ...fieldProps };
+    widgetsContext[parentFormName].formfields[formKey] = {
+      ...fieldProps,
+    };
+    widgetsContext[parentFormName].formWidgets[fieldName] = {
+      ...fieldProps,
+    };
+    widgetsContext[parentFormName].formfields[`${fieldName}_formWidget`] = {
+      ...fieldProps,
+    };
+    widgetsContext[parentFormName].formWidgets[`${fieldName}_formWidget`] = {
+      ...fieldProps,
+    };
   }
 };
 

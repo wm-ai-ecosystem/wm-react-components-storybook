@@ -21,6 +21,7 @@ import WmTime from "@/components/input/epoch/time";
 import WmChips from "@/components/input/chips";
 import WmColorPicker from "@/components/input/color-picker";
 import WmFileupload from "@/components/input/fileupload";
+import WmUpload from "@/components/input/upload";
 import WmCalendar from "@/components/input/calendar";
 
 export const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
@@ -41,5 +42,6 @@ export const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
   chips: WmChips,
   colorpicker: WmColorPicker,
   fileupload: WmFileupload,
+  upload: WmUpload,
   calendar: WmCalendar,
 };

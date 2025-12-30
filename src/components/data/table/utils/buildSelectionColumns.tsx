@@ -1,14 +1,12 @@
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Box, Radio, Checkbox, FormControlLabel, Tooltip } from "@mui/material";
-import { UseRowSelectionReturn, BuildSelectionColumnsProps } from "../props";
+import { BuildSelectionColumnsProps } from "../props";
 import { TABLE_MESSAGES } from "./index";
-import { size, pickBy } from "lodash-es";
 
 export const buildSelectionColumns = ({
   useRadioSelect,
   useMultiSelect,
-  selectedRowId,
   selectedRowIds,
   handleRadioSelection,
   handleMultiSelection,
@@ -29,10 +27,10 @@ export const buildSelectionColumns = ({
           {/* Empty header cell for radio column */}
         </Box>
       ),
-      cell: ({ row, table }: any) => {
+      cell: ({ row }) => {
         const rowId = row.id;
-        // Get selection state from table's rowSelection state
-        const isSelected = table.getState().rowSelection?.[rowId] || false;
+        // Use TanStack Table's built-in selection state for reactive cell updates
+        const isSelected = row.getIsSelected();
         return (
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Tooltip title={radioselecttitle} placement="top">
@@ -71,14 +69,11 @@ export const buildSelectionColumns = ({
   if (useMultiSelect) {
     return {
       id: "multiSelect",
-      header: ({ table }: any) => {
-        // Get the current data and selection state from the table instance
-        const currentData = table.options.data || [];
-        const rowSelection = table.getState().rowSelection || {};
-        const selectedCount = size(pickBy(rowSelection));
-        const isAllSelected = selectedCount > 0 && selectedCount === currentData.length;
-        const isIndeterminate = selectedCount > 0 && selectedCount < currentData.length;
-
+      header: () => {
+        // Use selectedRowIds and internalDataset directly for reliable state
+        const selectedCount = selectedRowIds.length;
+        const isAllSelected = selectedCount > 0 && selectedCount === internalDataset.length;
+        const isIndeterminate = selectedCount > 0 && selectedCount < internalDataset.length;
         return (
           <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <Box className="app-checkbox checkbox">
@@ -101,10 +96,10 @@ export const buildSelectionColumns = ({
           </Box>
         );
       },
-      cell: ({ row, table }: any) => {
+      cell: ({ row }) => {
         const rowId = row.id;
-        // Get selection state from table's rowSelection state
-        const isSelected = table.getState().rowSelection?.[rowId] || false;
+        // Use TanStack Table's built-in selection state for reactive cell updates
+        const isSelected = row.getIsSelected();
 
         return (
           <Box sx={{ display: "flex", justifyContent: "center" }}>

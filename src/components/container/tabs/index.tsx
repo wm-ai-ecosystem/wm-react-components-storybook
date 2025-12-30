@@ -330,7 +330,10 @@ const WmTabs = memo(
       panesCount.current = visibleChildren.length;
       return visibleChildren.map((child: any, index: number) => {
         if (!child) return null;
-        return <React.Fragment key={index}>{renderTabHeader(child.props, index)}</React.Fragment>;
+        const paneName = child?.props?.name;
+        const latestWidgetState = paneName ? (listener as any)?.Widgets?.[paneName] || {} : {};
+        const itemProps = { ...child.props, ...latestWidgetState };
+        return <React.Fragment key={index}>{renderTabHeader(itemProps, index)}</React.Fragment>;
       });
     }, [children, renderTabHeader, hiddenTabNames]);
 

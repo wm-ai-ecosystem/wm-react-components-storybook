@@ -10,7 +10,9 @@ import {
   toLower,
   values,
   isEmpty,
+  cloneDeep,
 } from "lodash";
+import { DataSource } from "../../data/types";
 
 export interface DataProviderConfig {
   dataset?: any[];
@@ -49,7 +51,9 @@ export class LocalDataProvider implements IDataProvider {
   ): Promise<{ data: any[]; hasMoreData: boolean; isLastPage: boolean }> {
     const entries = config.dataset || [];
     let queryText = typeof config.query === "string" ? config.query : "";
-    const { searchKey, casesensitive = false } = config;
+    const { searchKey, casesensitive = false, matchMode } = config;
+
+    const isCaseSensitive = matchMode && !includes(matchMode, "ignorecase") ? true : casesensitive;
     let filteredData: any[] = [];
 
     return new Promise(resolve => {
@@ -79,11 +83,13 @@ export class LocalDataProvider implements IDataProvider {
           return keys.some((key: string) => {
             let a = get(item.dataObject || item, key);
             let b = queryText;
-            if (!casesensitive) {
+            if (!isCaseSensitive) {
               a = toLower(String(a));
               b = toLower(String(b));
             }
-            return this.applyFilter(a, b);
+            return matchMode
+              ? this.applyMatchMode(String(a), String(b), matchMode)
+              : this.applyFilter(a, b);
           });
         });
       } else {
@@ -97,42 +103,50 @@ export class LocalDataProvider implements IDataProvider {
             filteredData = filter(entries, (entry: any) => {
               const dataObj = entry.dataObject || entry;
               let a = isString(dataObj) ? dataObj : values(dataObj).join(" ");
-              if (!casesensitive) {
+              if (!isCaseSensitive) {
                 a = toLower(String(a));
                 queryText = toLower(String(queryText));
               }
-              return this.applyFilter(a, queryText);
+              return matchMode
+                ? this.applyMatchMode(String(a), String(queryText), matchMode)
+                : this.applyFilter(a, queryText);
             });
           } else if (isObject(entries[0])) {
             // Handle regular object array
             filteredData = filter(entries, (entry: any) => {
               const dataObj = entry.dataObject || entry;
               let a = isString(dataObj) ? dataObj : values(dataObj).join(" ");
-              if (!casesensitive) {
+              if (!isCaseSensitive) {
                 a = toLower(String(a));
                 queryText = toLower(String(queryText));
               }
-              return this.applyFilter(a, queryText);
+              return matchMode
+                ? this.applyMatchMode(String(a), String(queryText), matchMode)
+                : this.applyFilter(a, queryText);
             });
           } else {
             // Handle primitive values
             filteredData = filter(entries, (entry: any) => {
               let entryValue = entry;
-              if (!casesensitive) {
+              if (!isCaseSensitive) {
                 entryValue = toLower(String(entryValue));
                 queryText = toLower(String(queryText));
               }
-              return this.applyFilter(entryValue, queryText);
+              return matchMode
+                ? this.applyMatchMode(String(entryValue), String(queryText), matchMode)
+                : this.applyFilter(entryValue, queryText);
             });
           }
         } else {
           filteredData = filter(entries, (entry: any) => {
             let entryValue = entry;
-            if (!casesensitive) {
+            if (!isCaseSensitive) {
               entryValue = toLower(String(entryValue));
               queryText = toLower(String(queryText));
             }
-            return this.applyFilter(entryValue, queryText);
+            return matchMode
+              ? this.applyMatchMode(String(entryValue), String(queryText), matchMode)
+              : this.applyFilter(entryValue, queryText);
           });
         }
       }
@@ -234,7 +248,7 @@ export class DataProvider {
     let datasource = component?.datasource;
     if (datasource) {
       return (
-        (datasource?.pagination?.totalPages ?? 0) > 1 ||
+        datasource.execute(DataSource.Operation.IS_PAGEABLE) ||
         (datasource?.serviceInfo?.parameters?.length ?? 0) > 0
       );
     }
@@ -255,15 +269,26 @@ export class DataProvider {
     }
 
     const datasource = component?.datasource;
+    // datasource.filterExpressions.condition = "OR";
     if (datasource) {
       if (datasource.category === "wm.LiveVariable") {
         datasource.setFilter(paramsObj);
       } else {
         datasource.setInput(paramsObj);
       }
+
+      const dataSource = datasource;
+      dataSource.filterExpressions.rules = dataSource.filterExpressions.rules.slice(0, 1);
+
       return new Promise(async (resolve, reject) => {
+        component = {
+          ...component,
+          searchKey: component?.searchkey,
+          matchMode: component?.matchmode,
+          query: query,
+        };
         try {
-          const result = await datasource.invoke();
+          const result = await dataSource.execute(DataSource.Operation.SEARCH_RECORDS, component);
           resolve(result?.data || []);
         } catch (err) {
           resolve([]);

@@ -13,7 +13,6 @@ export const useTableInitialization = ({
   useRadioSelect,
   useMultiSelect,
   setActiveRow,
-  selectedRowId,
   selectedRowIds,
   activeRowIds,
   formName,
@@ -49,26 +48,15 @@ export const useTableInitialization = ({
   }, [gridfirstrowselect, useRadioSelect, useMultiSelect, internalDataset, setActiveRow]);
 
   /**
-   * Sync active rows with selected rows for multiselect mode
-   * When multiselect is enabled, all selected rows should be marked as active
+   * Sync active rows with selected rows
+   * Works for both radio select (single item) and multiselect (multiple items)
    */
   useEffect(() => {
-    if (useMultiSelect) {
-      // Set all selected rows as active
+    if ((useMultiSelect || useRadioSelect) && selectedRowIds.length > 0) {
+      // Set all selected rows as active (for radio select, this will be just one)
       setActiveRow(selectedRowIds);
     }
-  }, [selectedRowIds, useMultiSelect, setActiveRow]);
-
-  /**
-   * Sync active row with selected row for radioselect mode
-   * When radioselect is enabled, the selected row should be marked as active
-   */
-  useEffect(() => {
-    if (useRadioSelect && selectedRowId) {
-      // Set the selected row as active
-      setActiveRow(selectedRowId);
-    }
-  }, [selectedRowId, useRadioSelect, setActiveRow]);
+  }, [selectedRowIds, useMultiSelect, useRadioSelect, setActiveRow]);
 
   // Monitor when there are no active rows
   useEffect(() => {

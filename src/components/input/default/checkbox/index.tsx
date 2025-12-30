@@ -56,13 +56,10 @@ export const WmCheckbox = memo(
       if (datavalue === null || datavalue === undefined) {
         setActualValue(null);
       } else {
-        const newValue = datavalue === checkedvalue ? checkedvalue : uncheckedvalue;
+        const isEqual = datavalue === checkedvalue || String(datavalue) === String(checkedvalue);
+        const newValue = isEqual ? checkedvalue : uncheckedvalue;
         setActualValue(newValue);
         prevRefValue.current = datavalue;
-        const event = {
-          target: { checked: newValue },
-        } as React.ChangeEvent<HTMLInputElement>;
-        handleChange(event);
       }
     }, [datavalue]);
 

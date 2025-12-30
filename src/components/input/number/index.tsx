@@ -10,6 +10,7 @@ import {
   formatOnBlur,
 } from "@wavemaker/react-runtime/utils/format-util";
 import { WmNumberProps } from "./props";
+import { sanitizeInputValue } from "../util";
 
 const DEFAULT_CLASS = "form-control app-textbox app-number-input";
 
@@ -239,6 +240,7 @@ const WmNumber = memo(
       ...(onKeypress ? { onKeyPress: handleKeyPress } : {}),
       ...(updateon === "blur" || onBlur ? { onBlur: handleBlur } : {}),
     };
+    const value = sanitizeInputValue(internalValue);
     return (
       <TextField
         {...events}
@@ -252,7 +254,7 @@ const WmNumber = memo(
         placeholder={placeholder ?? "Enter number"}
         type="text"
         id={id || name}
-        value={internalValue}
+        value={value}
         error={displayError}
         className={clsx(
           "app-input-wrapper",
@@ -323,6 +325,7 @@ const WmNumber = memo(
       "className",
       "hidden",
       "show",
+      "error",
     ];
     return keys.every(key => prev[key] === current[key]);
   }

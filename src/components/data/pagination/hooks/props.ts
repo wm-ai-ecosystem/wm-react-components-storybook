@@ -31,6 +31,10 @@ export interface UsePaginationProps {
     filterFields?: Record<string, any>;
     condition?: string;
   }; // Additional options to pass when invoking datasource
+  // On-Demand navigation props
+  ondemandmessage?: string;
+  viewlessmessage?: string;
+  showviewlessbutton?: boolean;
 }
 
 export interface PaginationState {
@@ -84,4 +88,8 @@ export interface WmPaginationProps extends BaseProps {
   isLoadingMore?: boolean;
   setIsLoadingMore?: (loading: boolean) => void;
   isServerSidePagination?: boolean; // Flag to indicate server-side pagination
+  // On-Demand navigation props
+  ondemandmessage?: string;
+  viewlessmessage?: string;
+  showviewlessbutton?: boolean;
 }

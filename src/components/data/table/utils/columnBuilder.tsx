@@ -11,9 +11,9 @@ import { parseWidth } from ".";
 export const createRowIndexColumn = (): ColumnDef<any> => ({
   id: "rowIndex",
   header: "S. No.",
-  size: 60,
-  minSize: 60,
-  maxSize: 60,
+  size: 70,
+  minSize: 70,
+  maxSize: 70,
   enableResizing: false,
   cell: ({ row, table }) => {
     // Get current page information for continuous numbering across pages
@@ -66,8 +66,9 @@ export const createDataColumn = (
     header: wmColumn.caption,
     size: columnSize,
     minSize: 50, // Minimum column width in pixels
-    maxSize: columnSize, // Set maxSize if we have a specific width to maintain the width
-    enableResizing: !columnSize, // Disable resizing if width is specified
+    // Don't set maxSize for columns with explicit width to allow resizing
+    ...(columnSize ? {} : { maxSize: 500 }), // Only set maxSize for auto-sized columns
+    enableResizing: true, // Enable resizing for all data columns
     cell: ({ row }) => renderCell(wmColumn, row),
     enableSorting: wmColumn.sortable,
     // Pass column styles and properties through meta for TableCell styling and filtering

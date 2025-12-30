@@ -3,6 +3,7 @@ import { SortingState } from "@tanstack/react-table";
 import { StorageType } from "@wavemaker/react-runtime/utils/state-persistance";
 import { saveTableState, clearTableState, getTableState } from "../utils/table-helpers";
 import { UseTableStateManagerReturn } from "./useTableStateManager";
+import { UNSUPPORTED_STATE_PERSISTENCE_TYPES } from "../utils/constants";
 
 interface UseTableEffectsProps {
   // Data props
@@ -12,8 +13,7 @@ interface UseTableEffectsProps {
   internalDataset: any[];
   statehandler: StorageType;
 
-  // Selection state
-  selectedRowId: string | null;
+  // Selection state - unified array for both radio and multiselect
   selectedRowIds: string[];
 
   // Pagination state
@@ -33,17 +33,13 @@ export const useTableEffects = (props: UseTableEffectsProps) => {
   const {
     name,
     navigation,
-    datasource,
     internalDataset,
     statehandler,
-    selectedRowId,
     selectedRowIds,
     currentPage,
     currentPageSize,
-    sorting,
     isGridEditMode,
     stateManager,
-    initialActualPageSize,
   } = props;
 
   // State to track if we've restored state
@@ -55,6 +51,12 @@ export const useTableEffects = (props: UseTableEffectsProps) => {
 
   // Effect 1: Load persisted state when component mounts
   useEffect(() => {
+    // Skip state restoration for navigation types that don't support it
+    if (UNSUPPORTED_STATE_PERSISTENCE_TYPES.includes(navigation)) {
+      setHasRestoredState(true);
+      return;
+    }
+
     if (!hasRestoredState && statehandler && internalDataset.length > 0) {
       const savedState = getTableState(name, statehandler);
 
@@ -80,10 +82,15 @@ export const useTableEffects = (props: UseTableEffectsProps) => {
 
       setHasRestoredState(true);
     }
-  }, [name, statehandler, hasRestoredState, internalDataset.length]);
+  }, [name, statehandler, hasRestoredState, internalDataset.length, navigation]);
 
   // Effect 2: Persist state on changes
   useEffect(() => {
+    // Skip persistence for navigation types that don't support it
+    if (UNSUPPORTED_STATE_PERSISTENCE_TYPES.includes(navigation)) {
+      return;
+    }
+
     // Skip persistence if we haven't loaded initial data yet
     if (internalDataset.length === 0 || !statehandler) {
       return;
@@ -148,7 +155,6 @@ export const useTableEffects = (props: UseTableEffectsProps) => {
       }
     }
   }, [
-    selectedRowId,
     selectedRowIds,
     currentPage,
     currentPageSize,
@@ -158,6 +164,7 @@ export const useTableEffects = (props: UseTableEffectsProps) => {
     isGridEditMode,
     isRestoringSelection,
     stateManager,
+    navigation,
   ]);
 
   return {

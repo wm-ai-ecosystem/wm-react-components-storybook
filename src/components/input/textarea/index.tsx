@@ -7,6 +7,7 @@ import { withBaseWrapper } from "@wavemaker/react-runtime/higherOrder/withBaseWr
 import { WmTextareaProps } from "./props";
 import withFormController from "@wavemaker/react-runtime/components/data/form/form-controller/withFormController";
 import delay from "lodash/delay";
+import { sanitizeInputValue } from "../util";
 
 const DEFAULT_CLASS = "form-control app-textarea";
 
@@ -282,6 +283,7 @@ const WmTextarea = memo(
       ...(props.onClick ? { onClick: props.onClick } : {}),
     };
 
+    const value = sanitizeInputValue(displayValue);
     return (
       <>
         <TextField
@@ -292,7 +294,7 @@ const WmTextarea = memo(
           title={props.hint}
           id={id || name}
           placeholder={placeholder || "Place your text here"}
-          value={displayValue}
+          value={value}
           required={required}
           disabled={disabled}
           error={isDirty && error.show}

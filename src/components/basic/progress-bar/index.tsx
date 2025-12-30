@@ -213,7 +213,10 @@ const WmProgressBar = memo(
       prev.type === current.type &&
       prev.height === current.height &&
       prev.width === current.width &&
-      JSON.stringify(prev.dataset) === JSON.stringify(current.dataset)
+      JSON.stringify(prev.dataset) === JSON.stringify(current.dataset) &&
+      prev.minvalue === current.minvalue &&
+      prev.maxvalue === current.maxvalue &&
+      prev.hidden === current.hidden
     );
   }
 );

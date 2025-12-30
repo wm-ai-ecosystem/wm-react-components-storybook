@@ -8,6 +8,7 @@ import withFormController from "@wavemaker/react-runtime/components/data/form/fo
 import { WmTextProps } from "./props";
 import { formatInput, removeDisplayFormat, applyAutoCapitalize, getFormatMaxLength } from "./util";
 import delay from "lodash/delay";
+import { sanitizeInputValue } from "../util";
 
 const DEFAULT_CLASS = "form-control app-textbox";
 
@@ -416,7 +417,7 @@ const WmText = memo(
         disabled={disabled}
         required={required}
         placeholder={placeholder ?? "Enter text"}
-        value={displayValue}
+        value={sanitizeInputValue(displayValue)}
         type={type}
         inputRef={ref}
         error={displayError}

@@ -15,10 +15,6 @@ const StyledPaginationList = styled("ul")(() => ({
 
 const StyledPaginationItem = styled("li")(() => ({
   margin: "0 2px",
-  "&.disabled": {
-    opacity: 0.38,
-    pointerEvents: "none",
-  },
 }));
 
 export const TotalRecords: React.FC<TotalRecordsProps> = ({

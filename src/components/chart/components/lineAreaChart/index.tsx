@@ -161,12 +161,6 @@ export const LineAreaChart: React.FC<LineAreaChartProps> = props => {
                 fill: chartColors?.[index % chartColors?.length],
                 onClick: onAreaSelect,
               }}
-              activeDot={{
-                r: pointSize,
-                strokeWidth: 1,
-                fill: chartColors?.[index % chartColors?.length],
-                onClick: onChartClick,
-              }}
               isAnimationActive={true}
               hide={!selectedRegions.includes(dataKey)}
             />

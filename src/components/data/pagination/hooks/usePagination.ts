@@ -50,11 +50,12 @@ export const usePagination = ({
     result: [] as any[],
   });
 
-  // Infinite scroll state
-  const [infiniteScrollState, setInfiniteScrollState] = useState({
+  // Accumulated data state - used for both Scroll and On-Demand navigation
+  // Both modes need to accumulate data as user loads more pages
+  const [accumulatingState, setAccumulatingState] = useState({
     accumulatedData: [] as any[],
     lastLoadedPage: 0,
-    isAccumulating: navigation === "Scroll",
+    isAccumulating: navigation === "Scroll" || navigation === "On-Demand",
     isInitialized: false,
   });
 
@@ -69,15 +70,15 @@ export const usePagination = ({
   });
   const isFetchingRef = useRef(false);
 
-  // Refs for infinite scroll
+  // Refs for accumulated data (Scroll and On-Demand)
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLElement | null>(null);
-  const infiniteScrollStateRef = useRef(infiniteScrollState);
+  const accumulatingStateRef = useRef(accumulatingState);
 
   // Keep ref in sync with state
   useEffect(() => {
-    infiniteScrollStateRef.current = infiniteScrollState;
-  }, [infiniteScrollState]);
+    accumulatingStateRef.current = accumulatingState;
+  }, [accumulatingState]);
 
   // Memoized computed values for better performance
   const isFirstPage = useMemo(() => {
@@ -99,15 +100,17 @@ export const usePagination = ({
   }, [paginationState.currentPage, paginationState.pageCount, paginationMeta]);
 
   // Navigation controls
-  const allowedNavControls = ["Basic", "Classic", "Pager", "Scroll"] as const;
-  const getValidNavControl = (nav?: string): "Basic" | "Classic" | "Pager" | "Scroll" => {
-    return allowedNavControls.includes(nav as any)
-      ? (nav as "Basic" | "Classic" | "Pager" | "Scroll")
+  const allowedNavControls = ["Basic", "Classic", "Pager", "Scroll", "On-Demand"] as const;
+  const getValidNavControl = (
+    nav?: string
+  ): "Basic" | "Classic" | "Pager" | "Scroll" | "On-Demand" => {
+    return allowedNavControls.includes(nav as (typeof allowedNavControls)[number])
+      ? (nav as "Basic" | "Classic" | "Pager" | "Scroll" | "On-Demand")
       : "Basic";
   };
-  const [navcontrols, setNavcontrols] = useState<"Basic" | "Classic" | "Pager" | "Scroll">(
-    getValidNavControl(navigation)
-  );
+  const [navcontrols, setNavcontrols] = useState<
+    "Basic" | "Classic" | "Pager" | "Scroll" | "On-Demand"
+  >(getValidNavControl(navigation));
 
   // Function to invoke datasource for API-based pagination
   const datasourceInvoke = useCallback(
@@ -141,17 +144,17 @@ export const usePagination = ({
             .then(response => {
               isFetchingRef.current = false;
 
-              // For scroll mode, we need to accumulate data instead of replacing
+              // For accumulating mode (Scroll/On-Demand), we need to accumulate data instead of replacing
               if (isScrollMode && response && response.data) {
                 // Get the new accumulated data using ref to avoid circular dependency
-                const currentAccumulatedData = infiniteScrollStateRef.current.accumulatedData;
+                const currentAccumulatedData = accumulatingStateRef.current.accumulatedData;
 
                 // Ensure unique row IDs using the existing utility
                 const newDataWithIds = addUniqueRowIds(response.data);
 
                 const newAccumulatedData = [...currentAccumulatedData, ...newDataWithIds];
 
-                setInfiniteScrollState(prev => ({
+                setAccumulatingState(prev => ({
                   ...prev,
                   accumulatedData: newAccumulatedData,
                   lastLoadedPage: page,
@@ -191,13 +194,50 @@ export const usePagination = ({
     [datasource, isServerSidePagination, datasourceInvokeOptions]
   );
 
-  // Function to load more data for infinite scroll
+  // Function to load more data for Scroll and On-Demand navigation
   const loadMoreData = useCallback(() => {
-    if (navigation !== "Scroll" || !isServerSidePagination || isLastPage || isFetchingRef.current) {
+    // Support both Scroll and On-Demand navigation
+    const isAccumulatingMode = navigation === "Scroll" || navigation === "On-Demand";
+    if (!isAccumulatingMode || isLastPage || isFetchingRef.current) {
       return;
     }
 
-    const nextPage = infiniteScrollStateRef.current.lastLoadedPage + 1;
+    // For client-side pagination (non-server), just show more items
+    if (!isServerSidePagination) {
+      const currentVisible = accumulatingStateRef.current.accumulatedData.length;
+      const totalAvailable = dataState.fullData.length;
+      const nextBatchSize = paginationState.currentMaxResults;
+      const newVisibleCount = Math.min(currentVisible + nextBatchSize, totalAvailable);
+
+      // Get next batch of data
+      const nextBatch = dataState.fullData.slice(currentVisible, newVisibleCount);
+      const newAccumulatedData = [...accumulatingStateRef.current.accumulatedData, ...nextBatch];
+
+      setAccumulatingState(prev => ({
+        ...prev,
+        accumulatedData: newAccumulatedData,
+        lastLoadedPage: prev.lastLoadedPage + 1,
+      }));
+
+      // Update the result to show accumulated data
+      setDataState(prev => ({
+        ...prev,
+        result: newAccumulatedData,
+      }));
+
+      // Update current page
+      const nextPage = accumulatingStateRef.current.lastLoadedPage + 1;
+      setPaginationState(prev => ({ ...prev, currentPage: nextPage }));
+
+      if (onPaginationChange) {
+        onPaginationChange(null, widgetInstance, nextPage);
+      }
+
+      return;
+    }
+
+    // Server-side pagination
+    const nextPage = accumulatingStateRef.current.lastLoadedPage + 1;
 
     if (setIsLoadingMore) {
       setIsLoadingMore(true);
@@ -229,6 +269,96 @@ export const usePagination = ({
     paginationState.currentMaxResults,
     onPaginationChange,
     widgetInstance,
+    dataState.fullData,
+  ]);
+
+  // Function to reset accumulated data (for View Less button in On-Demand navigation)
+  const resetAccumulatedData = useCallback(() => {
+    // Reset to initial state
+    setAccumulatingState({
+      accumulatedData: [],
+      lastLoadedPage: 0,
+      isAccumulating: navigation === "On-Demand",
+      isInitialized: false,
+    });
+
+    // Reset current page to 1
+    setPaginationState(prev => ({ ...prev, currentPage: 1 }));
+
+    // For client-side, reset result to first page
+    if (!isServerSidePagination && dataState.fullData.length > 0) {
+      const firstPageData = dataState.fullData.slice(0, paginationState.currentMaxResults);
+      setDataState(prev => ({
+        ...prev,
+        result: firstPageData,
+      }));
+
+      // Re-initialize with first page data
+      setTimeout(() => {
+        setAccumulatingState({
+          accumulatedData: firstPageData,
+          lastLoadedPage: 1,
+          isAccumulating: true,
+          isInitialized: true,
+        });
+      }, 0);
+    }
+
+    // For server-side, refetch first page
+    if (isServerSidePagination && datasource && typeof datasource.invoke === "function") {
+      if (setIsLoadingMore) {
+        setIsLoadingMore(true);
+      }
+
+      const invokeOptions: Record<string, string | number | Record<string, unknown>> = { page: 1 };
+
+      // Include additional options if provided
+      if (datasourceInvokeOptions) {
+        Object.assign(invokeOptions, datasourceInvokeOptions);
+      }
+
+      const result = datasource.invoke(invokeOptions);
+      Promise.resolve(result)
+        .then((response: { data?: unknown[] }) => {
+          if (response && response.data) {
+            const newDataWithIds = addUniqueRowIds(response.data);
+            setAccumulatingState({
+              accumulatedData: newDataWithIds,
+              lastLoadedPage: 1,
+              isAccumulating: true,
+              isInitialized: true,
+            });
+            setDataState(prev => ({
+              ...prev,
+              fullData: newDataWithIds,
+              result: newDataWithIds,
+            }));
+          }
+          if (setIsLoadingMore) {
+            setIsLoadingMore(false);
+          }
+        })
+        .catch(() => {
+          if (setIsLoadingMore) {
+            setIsLoadingMore(false);
+          }
+        });
+    }
+
+    // Trigger pagination change callback
+    if (onPaginationChange) {
+      onPaginationChange(null, widgetInstance, 1);
+    }
+  }, [
+    navigation,
+    isServerSidePagination,
+    datasource,
+    datasourceInvokeOptions,
+    dataState.fullData,
+    paginationState.currentMaxResults,
+    setIsLoadingMore,
+    onPaginationChange,
+    widgetInstance,
   ]);
 
   // Set up intersection observer for infinite scroll
@@ -240,7 +370,7 @@ export const usePagination = ({
         observerRef.current = null;
       }
 
-      if (!sentinel || navigation !== "Scroll" || !infiniteScrollStateRef.current.isInitialized) {
+      if (!sentinel || navigation !== "Scroll" || !accumulatingStateRef.current.isInitialized) {
         return;
       }
 
@@ -251,7 +381,7 @@ export const usePagination = ({
           // Only trigger if initialized, intersecting, not last page, and not already fetching
           if (
             entry.isIntersecting &&
-            infiniteScrollStateRef.current.isInitialized &&
+            accumulatingStateRef.current.isInitialized &&
             !isLastPage &&
             !isFetchingRef.current
           ) {
@@ -332,7 +462,23 @@ export const usePagination = ({
     (newVal: any) => {
       let newDataSize: number, newMaxResults: number, currentPage: number, startIndex: number;
 
-      newDataSize = isArray(newVal) ? newVal.length : isEmpty(newVal) ? 0 : 1;
+      // For server-side pagination, use totalItems or paginationMeta.totalElements as dataSize
+      // This represents the total count of all records, not just the current page
+      if (isServerSidePagination) {
+        const serverTotalCount = totalItems ?? paginationMeta?.totalElements;
+        newDataSize =
+          serverTotalCount !== undefined && serverTotalCount >= 0
+            ? serverTotalCount
+            : isArray(newVal)
+              ? newVal.length
+              : isEmpty(newVal)
+                ? 0
+                : 1;
+      } else {
+        // For client-side pagination, use the array length
+        newDataSize = isArray(newVal) ? newVal.length : isEmpty(newVal) ? 0 : 1;
+      }
+
       newMaxResults = paginationState.currentMaxResults || newDataSize;
       // Don't default to 1 if currentPage exists
       currentPage = paginationState.currentPage;
@@ -351,23 +497,29 @@ export const usePagination = ({
       paginationState.currentMaxResults,
       disableNavigation,
       setDefaultPagingValues,
+      isServerSidePagination,
+      totalItems,
+      paginationMeta,
     ]
   );
 
   // Set pagination values
   const setPagingValues = useCallback(
     (newVal: any) => {
-      // For scroll mode with server-side pagination, special handling
-      if (navigation === "Scroll" && isServerSidePagination) {
+      // Check if we're in accumulating mode (Scroll or On-Demand with server-side pagination)
+      const isAccumulatingMode =
+        (navigation === "Scroll" || navigation === "On-Demand") && isServerSidePagination;
+
+      if (isAccumulatingMode) {
         // Use ref to check accumulated data to avoid circular dependency
-        const currentAccumulatedData = infiniteScrollStateRef.current.accumulatedData;
+        const currentAccumulatedData = accumulatingStateRef.current.accumulatedData;
 
         // Only update on initial load (when accumulated data is empty)
         if (currentAccumulatedData.length === 0 && isArray(newVal)) {
           // Ensure initial data has unique IDs using the existing utility
           const initialDataWithIds = addUniqueRowIds(newVal);
 
-          setInfiniteScrollState(prev => ({
+          setAccumulatingState(prev => ({
             ...prev,
             accumulatedData: initialDataWithIds,
             lastLoadedPage: 1,
@@ -379,34 +531,79 @@ export const usePagination = ({
             result: initialDataWithIds,
           }));
         } else if (currentAccumulatedData.length > 0) {
-          // For subsequent updates in scroll mode, always use accumulated data
+          // For subsequent updates in accumulating mode, always use accumulated data
           setDataState(prev => ({
             ...prev,
             fullData: currentAccumulatedData,
             result: currentAccumulatedData,
           }));
         }
-        // Always return early for scroll mode to prevent normal pagination logic
+        // Always return early for accumulating mode to prevent normal pagination logic
         return;
-      } else {
-        // Store the data in fullData. This is used for client side searching without modifying the actual dataset
+      }
+
+      // For On-Demand with client-side pagination
+      if (navigation === "On-Demand" && !isServerSidePagination) {
+        // Store the full data
         setDataState(prev => ({
           ...prev,
           fullData: isArray(newVal) ? newVal : [],
         }));
 
-        if (newVal && !isArray(newVal)) {
-          setNonPageableData(newVal);
-        } else if (newVal) {
-          setNonPageableData(newVal);
-        } else {
-          setDataState(prev => ({ ...prev, result: newVal }));
-          // Don't reset page navigation when dataset is empty - just update counts
-          setPaginationState(prev => ({ ...prev, pageCount: 0, dataSize: 0 }));
+        const currentAccumulatedData = accumulatingStateRef.current.accumulatedData;
+
+        // Initialize accumulated data with first page if empty
+        if (currentAccumulatedData.length === 0 && isArray(newVal) && newVal.length > 0) {
+          const firstPageData = newVal.slice(0, paginationState.currentMaxResults);
+          setAccumulatingState(prev => ({
+            ...prev,
+            accumulatedData: firstPageData,
+            lastLoadedPage: 1,
+            isInitialized: true,
+          }));
+          setDataState(prev => ({
+            ...prev,
+            result: firstPageData,
+          }));
+        } else if (currentAccumulatedData.length > 0) {
+          // Use accumulated data for result
+          setDataState(prev => ({
+            ...prev,
+            result: currentAccumulatedData,
+          }));
         }
+
+        // Update dataSize for proper pagination calculation
+        if (isArray(newVal)) {
+          setDefaultPagingValues(newVal.length, paginationState.currentMaxResults, 1);
+        }
+        return;
+      }
+
+      // Standard pagination logic
+      // Store the data in fullData. This is used for client side searching without modifying the actual dataset
+      setDataState(prev => ({
+        ...prev,
+        fullData: isArray(newVal) ? newVal : [],
+      }));
+
+      if (newVal && !isArray(newVal)) {
+        setNonPageableData(newVal);
+      } else if (newVal) {
+        setNonPageableData(newVal);
+      } else {
+        setDataState(prev => ({ ...prev, result: newVal }));
+        // Don't reset page navigation when dataset is empty - just update counts
+        setPaginationState(prev => ({ ...prev, pageCount: 0, dataSize: 0 }));
       }
     },
-    [setNonPageableData, navigation, isServerSidePagination]
+    [
+      setNonPageableData,
+      navigation,
+      isServerSidePagination,
+      paginationState.currentMaxResults,
+      setDefaultPagingValues,
+    ]
   );
 
   // Validate current page
@@ -748,9 +945,9 @@ export const usePagination = ({
   useEffect(() => {
     setNavcontrols(getValidNavControl(navigation));
 
-    // Reset infinite scroll state when navigation changes
-    if (navigation === "Scroll") {
-      setInfiniteScrollState({
+    // Reset accumulated data state when navigation changes to Scroll or On-Demand
+    if (navigation === "Scroll" || navigation === "On-Demand") {
+      setAccumulatingState({
         accumulatedData: [],
         lastLoadedPage: 0,
         isAccumulating: true,
@@ -812,10 +1009,10 @@ export const usePagination = ({
 
   // Re-setup observer when initialization state changes
   useEffect(() => {
-    if (infiniteScrollState.isInitialized && sentinelRef.current && navigation === "Scroll") {
+    if (accumulatingState.isInitialized && sentinelRef.current && navigation === "Scroll") {
       setupInfiniteScrollObserver(sentinelRef.current);
     }
-  }, [infiniteScrollState.isInitialized, navigation, setupInfiniteScrollObserver]);
+  }, [accumulatingState.isInitialized, navigation, setupInfiniteScrollObserver]);
 
   // Cleanup observer on unmount
   useEffect(() => {
@@ -864,8 +1061,13 @@ export const usePagination = ({
     sentinelRef,
     isLoadingMore:
       isFetchingRef.current &&
-      navigation === "Scroll" &&
-      infiniteScrollStateRef.current.lastLoadedPage > 1,
-    hasMoreData: !isLastPage && navigation === "Scroll",
+      (navigation === "Scroll" || navigation === "On-Demand") &&
+      accumulatingStateRef.current.lastLoadedPage > 0,
+    hasMoreData: !isLastPage && (navigation === "Scroll" || navigation === "On-Demand"),
+
+    // On-Demand specific
+    loadMoreData,
+    resetAccumulatedData,
+    accumulatedDataCount: accumulatingStateRef.current.accumulatedData.length,
   };
 };

@@ -25,7 +25,7 @@ export const WmDialog = memo(
         {...props}
         open={props.isopen}
         onClose={handleClose}
-        className={clsx("app-dialog modal-dialog", props.className)}
+        className={clsx("app-dialog modal-dialog  dialog-view", props.className)}
       >
         <DialogContent {...props}>
           {props.dialogtype === "design-dialog" && props.showheader !== false && (

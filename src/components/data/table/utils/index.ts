@@ -262,6 +262,21 @@ function transformExpression(exp: string) {
   return exp;
 }
 
+// Table structure types for grouping
+export interface TableGroup {
+  isGroup: true;
+  field: string;
+  displayName: string;
+  columns: (TableGroup | WmTableColumnProps)[];
+  textAlignment?: string;
+  backgroundColor?: string;
+  class?: string;
+  colClass?: string;
+  styles?: React.CSSProperties;
+}
+
+export type TableStructureItem = TableGroup | WmTableColumnProps;
+
 // Children parsing utilities
 export const parseTableColumns = (
   children: React.ReactNode,
@@ -329,6 +344,76 @@ export const getAggregateFunctions = (dataset: any[], binding: string) => {
   };
 
   return aggregate;
+};
+// Parse table structure with groups support
+export const parseTableStructureWithGroups = (children: React.ReactNode): TableStructureItem[] => {
+  const structure: TableStructureItem[] = [];
+
+  React.Children.forEach(children, (child: any) => {
+    if (!child || !child.props) return;
+
+    const childName = get(child, "props.name", "");
+
+    // Handle WmTableGroup
+    if (childName.includes("group")) {
+      const props = get(child, "props", {});
+      const group: TableGroup = {
+        isGroup: true,
+        field: get(props, "name", ""),
+        displayName: get(props, "caption", ""),
+        textAlignment: get(props, "textalignment"),
+        backgroundColor: get(props, "backgroundcolor"),
+        class: get(props, "class"),
+        colClass: get(props, "col-class"),
+        styles: get(props, "styles"),
+        columns: parseTableStructureWithGroups(child.props.children), // Recursive for nested groups
+      };
+      structure.push(group);
+    }
+    // Handle WmTableColumn
+    else if (childName.includes("wm_table_column")) {
+      const props = get(child, "props", {});
+      const column: WmTableColumnProps = {
+        field: get(props, "binding"),
+        caption: get(props, "caption"),
+        displayName: get(props, "caption"),
+        show: get(props, "show", true) !== false,
+        sortable: get(props, "sortable", true) !== false,
+        textalignment: get(props, "textalignment", "left"),
+        backgroundcolor: get(props, "backgroundcolor"),
+        textcolor: get(props, "textcolor"),
+        width: get(props, "width"),
+        editWidgetType: get(props, "editWidgetType", "WmText"),
+        widgetType: get(props, "widgetType", "label"),
+        required: get(props, "required") === true || get(props, "required") === "true",
+        defaultvalue: get(props, "defaultvalue"),
+        disabled: get(props, "disabled") === true || get(props, "disabled") === "true",
+        placeholder: get(props, "placeholder"),
+        sortby: get(props, "sortby"),
+        ...props,
+      };
+      structure.push(column);
+    }
+  });
+
+  return structure;
+};
+
+// Flatten hierarchical structure to get all columns
+export const flattenTableStructure = (structure: TableStructureItem[]): WmTableColumnProps[] => {
+  const columns: WmTableColumnProps[] = [];
+
+  structure.forEach(item => {
+    if ("isGroup" in item && item.isGroup) {
+      // Recursively flatten groups
+      columns.push(...flattenTableStructure(item.columns));
+    } else {
+      // It's a column
+      columns.push(item as WmTableColumnProps);
+    }
+  });
+
+  return columns;
 };
 
 export const parseTableRowActions = (children: React.ReactNode): WmTableRowActionProps[] => {

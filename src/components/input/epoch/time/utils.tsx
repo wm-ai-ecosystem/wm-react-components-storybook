@@ -218,11 +218,27 @@ export function createWidgetEvent(args: {
   originalEvent?: React.SyntheticEvent | Event | undefined;
 }): React.SyntheticEvent {
   const { type, name, value, anchor, originalEvent } = args;
-  const evt: any = originalEvent || {};
-  evt.type = evt.type || type;
-  evt.target = evt.target || anchor;
-  evt.currentTarget = evt.currentTarget || anchor;
+  const base: any =
+    originalEvent && typeof originalEvent === "object" ? { ...(originalEvent as any) } : {};
+  const evt: any = base;
+
+  if (!evt.type) {
+    evt.type = type;
+  }
+
+  if (!evt.target && anchor) {
+    evt.target = anchor;
+  }
+  if (!evt.currentTarget && anchor) {
+    evt.currentTarget = anchor;
+  }
+
   if (name !== undefined) evt.name = name;
   if (value !== undefined) evt.value = value;
+
+  if (originalEvent) {
+    evt.originalEvent = originalEvent;
+  }
+
   return evt as React.SyntheticEvent;
 }

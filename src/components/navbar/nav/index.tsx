@@ -1,13 +1,14 @@
-import { memo, useState, useEffect, useCallback, useRef } from "react";
+import { memo, useState, useCallback, useRef, useMemo } from "react";
 import clsx from "clsx";
 import List from "@mui/material/List";
 import { WmNavItem } from "@wavemaker/react-runtime/components/navbar/nav-item";
 import { WmAnchor } from "@wavemaker/react-runtime/components/basic/anchor";
 import withBaseWrapper from "@wavemaker/react-runtime/higherOrder/withBaseWrapper";
-import WmNavProps from "./props";
+import WmNavProps from "@wavemaker/react-runtime/components/navbar/nav/props";
 import WmMenu from "@wavemaker/react-runtime/components/navigation/menu";
 import { triggerItemAction } from "@wavemaker/react-runtime/core/util/utils";
-import { getCurrentPath, getItemLink } from "@/core/util/utils";
+import { getCurrentPath, getItemLink } from "@wavemaker/react-runtime/core/util/utils";
+import { getOrderedDataset } from "@wavemaker/react-runtime/utils/transformedDataset-utils";
 
 const NavClassTypes: Record<string, string> = {
   pills: "nav-pills",
@@ -19,11 +20,31 @@ const DEFAULT_CLASS = "nav app-nav";
 
 const WmNav = memo(
   (props: WmNavProps) => {
-    const { layout, type = "navbar", className, children, name, styles, id } = props;
+    const {
+      layout,
+      type = "navbar",
+      className,
+      children,
+      name,
+      styles,
+      id,
+      dataset,
+      orderby,
+    } = props;
     const path = getCurrentPath();
     const [activeNavItemIndex, setActiveNavItemIndex] = useState<number | null>(null);
     const [hoveredNavItemIndex, setHoveredNavItemIndex] = useState<number | null>(null);
     const activeNavItemIndexRef = useRef<number | null>(null);
+
+    // Apply orderby to dataset
+    // Format: "field:direction" or "field1:direction1,field2:direction2"
+    // Example: "name:asc" or "priority:desc,name:asc"
+    const orderedDataset = useMemo(() => {
+      if (!dataset || !Array.isArray(dataset)) {
+        return dataset;
+      }
+      return getOrderedDataset(dataset, orderby);
+    }, [dataset, orderby]);
 
     const triggerActionClickForAnchor = (
       e: React.MouseEvent<HTMLElement> | undefined,
@@ -106,8 +127,8 @@ const WmNav = memo(
     );
 
     const renderNavItem = () => {
-      if (props.dataset && props.dataset.length > 0) {
-        return props.dataset.map((item: any, index: number) => {
+      if (orderedDataset && orderedDataset.length > 0) {
+        return orderedDataset.map((item: any, index: number) => {
           const label = getItemLabel(item);
           const isActive = isNavItemActive(item, index);
 
@@ -170,6 +191,9 @@ const WmNav = memo(
       }
       return children;
     };
+
+    const { backgroundImage, backgroundRepeat, backgroundPosition, textAlign } = styles || {};
+
     return (
       <List
         disablePadding
@@ -182,7 +206,12 @@ const WmNav = memo(
           " & .MuiListItem-root": {
             width: "auto",
           },
+        }}
+        style={{
           ...styles,
+          backgroundImage: backgroundImage,
+          backgroundRepeat: backgroundRepeat,
+          backgroundPosition: backgroundPosition,
         }}
         role="navigation"
         className={clsx(DEFAULT_CLASS, className, `nav-${layout} ${NavClassTypes[type]}`)}
@@ -195,7 +224,15 @@ const WmNav = memo(
     );
   },
   (prev, current) => {
-    const keys: (keyof WmNavProps)[] = ["layout", "type", "className", "styles", "children"];
+    const keys: (keyof WmNavProps)[] = [
+      "layout",
+      "type",
+      "className",
+      "styles",
+      "children",
+      "dataset",
+      "orderby",
+    ];
     return keys.every(key => prev[key] === current[key]);
   }
 );

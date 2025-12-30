@@ -212,6 +212,7 @@ class LiveVariable extends _LiveVariable {
 
   deleteRecord(options?: any, success?: any, error?: any) {
     this.notify(VariableEvents.BEFORE_INVOKE, [this]);
+    options.row = options || {};
     return super.deleteRecord(options, success, error);
   }
 }

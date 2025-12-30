@@ -10,13 +10,13 @@ import {
 import { StorageType } from "@wavemaker/react-runtime/utils/state-persistance";
 import { isArray } from "lodash-es";
 import { LiveVariableConfig } from "@wavemaker/react-runtime/variables/live-variable";
+import { UNSUPPORTED_STATE_PERSISTENCE_TYPES } from "../utils/constants";
 
 interface UseTableStateManagerProps {
   name: string;
   storage: StorageType;
   currentPage: number;
   currentPageSize: number;
-  selectedRowId?: string | null;
   selectedRowIds?: string[];
   internalDataset: Array<Record<string, unknown> & { _wmRowId?: string }>;
   initialActualPageSize?: number;
@@ -47,9 +47,6 @@ export interface UseTableStateManagerReturn {
   handleSortStateChange: () => void;
 }
 
-// Unsupported navigation types for state persistence
-const UNSUPPORTED_STATE_PERSISTENCE_TYPES = ["Scroll", "On-Demand", "Inline"];
-
 export const useTableStateManager = (
   props: UseTableStateManagerProps
 ): UseTableStateManagerReturn => {
@@ -58,7 +55,6 @@ export const useTableStateManager = (
     storage,
     currentPage,
     currentPageSize,
-    selectedRowId,
     selectedRowIds,
     internalDataset,
     initialActualPageSize,
@@ -94,8 +90,22 @@ export const useTableStateManager = (
   // Track previous sort data to detect changes
   const prevSortDataRef = useRef<TableSortState | undefined>(undefined);
 
+  // Track if filter state needs to be saved after loading completes
+  const filterStatePendingRef = useRef(false);
+
+  // Track if sort state needs to be saved after loading completes
+  const sortStatePendingRef = useRef(false);
+
+  // Check if state persistence is disabled for this navigation type
+  const isStatePersistenceDisabled = UNSUPPORTED_STATE_PERSISTENCE_TYPES.includes(navigation);
+
   // Build the current state object
   const currentState = useMemo((): Partial<TableStateData> => {
+    // Completely disable state calculation for unsupported navigation types
+    if (isStatePersistenceDisabled) {
+      return {};
+    }
+
     const isLoading = !!datasource?.loading;
 
     // Detect first calculation after loading becomes false
@@ -171,8 +181,9 @@ export const useTableStateManager = (
       state.pagination = currentPage;
     }
 
-    // Get selected items based on multiselect mode
-    const selectedIds = multiselect ? selectedRowIds || [] : selectedRowId ? [selectedRowId] : [];
+    // Get selected items from unified selectedRowIds array
+    // Works for both radio select (1 item) and multiselect (multiple items)
+    const selectedIds = selectedRowIds || [];
 
     if (multiselect) {
       // For multiselect, we need to maintain selections across pages
@@ -249,7 +260,6 @@ export const useTableStateManager = (
   }, [
     currentPage,
     currentPageSize,
-    selectedRowId,
     selectedRowIds,
     internalDataset,
     initialActualPageSize,
@@ -260,6 +270,7 @@ export const useTableStateManager = (
     defaultPageSize,
     initialSortState,
     initialFilterState,
+    isStatePersistenceDisabled,
   ]);
 
   // Get state for page size change
@@ -269,6 +280,11 @@ export const useTableStateManager = (
       existingSelectedItems?: Array<{ page: number; index: number }>,
       oldPageSize?: number
     ): Partial<TableStateData> => {
+      // Completely disable for unsupported navigation types
+      if (isStatePersistenceDisabled) {
+        return {};
+      }
+
       // Check if filtering is currently active and different from initial
       const hasActiveFilter =
         filterData !== undefined &&
@@ -346,14 +362,18 @@ export const useTableStateManager = (
       defaultPageSize,
       initialSortState,
       initialFilterState,
+      isStatePersistenceDisabled,
     ]
   );
 
   // Check if current state is default (no need to persist)
   const isDefaultState = useCallback(() => {
-    const hasSelection =
-      (selectedRowId !== null && selectedRowId !== undefined) ||
-      (selectedRowIds && selectedRowIds.length > 0);
+    // For unsupported navigation types, always return true (treat as default, no persistence)
+    if (isStatePersistenceDisabled) {
+      return true;
+    }
+
+    const hasSelection = selectedRowIds && selectedRowIds.length > 0;
 
     // Check if filter differs from initial
     const hasFilterChange =
@@ -374,11 +394,11 @@ export const useTableStateManager = (
   }, [
     currentPage,
     currentPageSize,
-    selectedRowId,
     selectedRowIds,
     filterData,
     sortData,
     defaultPageSize,
+    isStatePersistenceDisabled,
     initialSortState,
     initialFilterState,
   ]);
@@ -389,6 +409,11 @@ export const useTableStateManager = (
       newState: Partial<TableStateData>,
       existingState: TableStateData | null
     ): Partial<TableStateData> => {
+      // Completely disable for unsupported navigation types
+      if (isStatePersistenceDisabled) {
+        return {};
+      }
+
       if (!existingState) {
         return newState;
       }
@@ -473,22 +498,13 @@ export const useTableStateManager = (
 
       return merged;
     },
-    [multiselect, defaultPageSize]
+    [multiselect, defaultPageSize, isStatePersistenceDisabled]
   );
 
   // Handle filter state changes
   const handleFilterStateChange = useCallback(() => {
-    // Check if state persistence is supported for this navigation type
-    if (
-      !isStateConfigured ||
-      storage === "none" ||
-      UNSUPPORTED_STATE_PERSISTENCE_TYPES.includes(navigation)
-    ) {
-      if (navigation && UNSUPPORTED_STATE_PERSISTENCE_TYPES.includes(navigation)) {
-        console.warn(
-          `Retain State handling on Widget ${name} is not supported for ${navigation} navigation type.`
-        );
-      }
+    // Completely disable for unsupported navigation types
+    if (isStatePersistenceDisabled || !isStateConfigured || storage === "none") {
       return;
     }
 
@@ -540,54 +556,60 @@ export const useTableStateManager = (
       if (multiselect) {
         selectionStateRef.current = [];
       }
-    } else if (!hasFilterData && initialFilterState && initialFilterState.length > 0) {
-      // When filter is cleared but there was an initial filter, we need to update state
+    } else if (!hasFilterData) {
+      // When filter is cleared, we need to update/clear the state
       const currentFullState = getTableState(name, storage);
-      const newState: Partial<TableStateData> = {};
 
-      // Include actualPageSize if available
-      if (currentFullState?.actualpagesize !== undefined) {
-        newState.actualpagesize = currentFullState.actualpagesize;
-      } else if (initialActualPageSize !== undefined) {
-        newState.actualpagesize = initialActualPageSize;
-      }
+      // Check if there was a stored filter that needs to be cleared
+      const hadStoredFilter = currentFullState?.search && currentFullState.search.length > 0;
+      const hadInitialFilter = initialFilterState && initialFilterState.length > 0;
 
-      // Only include pagesize if it differs from default
-      if (
-        currentFullState?.pagesize !== undefined &&
-        defaultPageSize &&
-        currentFullState.pagesize !== defaultPageSize
-      ) {
-        newState.pagesize = currentFullState.pagesize;
-      }
+      // Only proceed if there was a stored filter or initial filter to clear
+      if (hadStoredFilter || hadInitialFilter) {
+        const newState: Partial<TableStateData> = {};
 
-      // Only include sort if it differs from initial
-      if (currentFullState?.sort !== undefined) {
-        const isSortChanged =
-          JSON.stringify(currentFullState.sort) !== JSON.stringify(initialSortState);
-        if (isSortChanged) {
-          newState.sort = currentFullState.sort;
+        // Include actualPageSize if available
+        if (currentFullState?.actualpagesize !== undefined) {
+          newState.actualpagesize = currentFullState.actualpagesize;
+        } else if (initialActualPageSize !== undefined) {
+          newState.actualpagesize = initialActualPageSize;
         }
-      }
 
-      // Clear and save if there's anything to save
-      if (Object.keys(newState).length > 0) {
-        clearTableState(name, storage);
-        saveTableState(name, storage, newState);
-      } else {
-        clearTableState(name, storage);
-      }
+        // Only include pagesize if it differs from default
+        if (
+          currentFullState?.pagesize !== undefined &&
+          defaultPageSize &&
+          currentFullState.pagesize !== defaultPageSize
+        ) {
+          newState.pagesize = currentFullState.pagesize;
+        }
 
-      // Clear the selection state ref for multiselect
-      if (multiselect) {
-        selectionStateRef.current = [];
+        // Only include sort if it differs from initial
+        if (currentFullState?.sort !== undefined) {
+          const isSortChanged =
+            JSON.stringify(currentFullState.sort) !== JSON.stringify(initialSortState);
+          if (isSortChanged) {
+            newState.sort = currentFullState.sort;
+          }
+        }
+
+        // Clear and save if there's anything to save (excluding the search which we want to remove)
+        clearTableState(name, storage);
+        if (Object.keys(newState).length > 0) {
+          saveTableState(name, storage, newState);
+        }
+
+        // Clear the selection state ref for multiselect
+        if (multiselect) {
+          selectionStateRef.current = [];
+        }
       }
     }
   }, [
     filterData,
     isStateConfigured,
     storage,
-    navigation,
+    isStatePersistenceDisabled,
     name,
     multiselect,
     defaultPageSize,
@@ -597,12 +619,8 @@ export const useTableStateManager = (
 
   // Handle sort state changes
   const handleSortStateChange = useCallback(() => {
-    // Check if state persistence is supported for this navigation type
-    if (
-      !isStateConfigured ||
-      storage === "none" ||
-      UNSUPPORTED_STATE_PERSISTENCE_TYPES.includes(navigation)
-    ) {
+    // Completely disable for unsupported navigation types
+    if (isStatePersistenceDisabled || !isStateConfigured || storage === "none") {
       return;
     }
 
@@ -649,9 +667,7 @@ export const useTableStateManager = (
         }
 
         // Only include selectedItem if there are selections
-        const hasSelection =
-          (selectedRowId !== null && selectedRowId !== undefined) ||
-          (selectedRowIds && selectedRowIds.length > 0);
+        const hasSelection = selectedRowIds && selectedRowIds.length > 0;
         if (hasSelection && currentState.selectedItem && currentState.selectedItem.length > 0) {
           newState.selectedItem = currentState.selectedItem;
         }
@@ -667,7 +683,7 @@ export const useTableStateManager = (
     sortData,
     isStateConfigured,
     storage,
-    navigation,
+    isStatePersistenceDisabled,
     name,
     currentState,
     initialSortState,
@@ -677,12 +693,16 @@ export const useTableStateManager = (
     defaultPageSize,
     filterData,
     initialFilterState,
-    selectedRowId,
     selectedRowIds,
   ]);
 
-  // Detect filter data changes and handle state persistence
+  // Detect filter data changes and mark for pending state persistence
   useEffect(() => {
+    // Skip for unsupported navigation types
+    if (isStatePersistenceDisabled) {
+      return;
+    }
+
     // Check if filter data has changed
     const filterDataChanged =
       JSON.stringify(filterData) !== JSON.stringify(prevFilterDataRef.current);
@@ -691,27 +711,68 @@ export const useTableStateManager = (
       // Reset the flag when filter data changes
       filterStatePersistenceTriggeredRef.current = false;
 
-      // Handle the filter state change
-      handleFilterStateChange();
-
       // Update the previous filter data reference
       prevFilterDataRef.current = filterData;
-    }
-  }, [filterData, handleFilterStateChange]);
 
-  // Detect sort data changes and handle state persistence
+      // If datasource is loading, mark as pending to save after loading completes
+      if (datasource?.loading) {
+        filterStatePendingRef.current = true;
+      } else {
+        // Handle the filter state change immediately if not loading
+        handleFilterStateChange();
+      }
+    }
+  }, [filterData, handleFilterStateChange, datasource?.loading, isStatePersistenceDisabled]);
+
+  // Save pending filter state when loading completes
   useEffect(() => {
+    // Skip for unsupported navigation types
+    if (isStatePersistenceDisabled) {
+      return;
+    }
+
+    if (!datasource?.loading && filterStatePendingRef.current) {
+      filterStatePendingRef.current = false;
+      handleFilterStateChange();
+    }
+  }, [datasource?.loading, handleFilterStateChange, isStatePersistenceDisabled]);
+
+  // Detect sort data changes and mark for pending state persistence
+  useEffect(() => {
+    // Skip for unsupported navigation types
+    if (isStatePersistenceDisabled) {
+      return;
+    }
+
     // Check if sort data has changed
     const sortDataChanged = JSON.stringify(sortData) !== JSON.stringify(prevSortDataRef.current);
 
     if (sortDataChanged) {
-      // Handle the sort state change
-      handleSortStateChange();
-
       // Update the previous sort data reference
       prevSortDataRef.current = sortData;
+
+      // If datasource is loading, mark as pending to save after loading completes
+      if (datasource?.loading) {
+        sortStatePendingRef.current = true;
+      } else {
+        // Handle the sort state change immediately if not loading
+        handleSortStateChange();
+      }
     }
-  }, [sortData, handleSortStateChange]);
+  }, [sortData, handleSortStateChange, datasource?.loading, isStatePersistenceDisabled]);
+
+  // Save pending sort state when loading completes
+  useEffect(() => {
+    // Skip for unsupported navigation types
+    if (isStatePersistenceDisabled) {
+      return;
+    }
+
+    if (!datasource?.loading && sortStatePendingRef.current) {
+      sortStatePendingRef.current = false;
+      handleSortStateChange();
+    }
+  }, [datasource?.loading, handleSortStateChange, isStatePersistenceDisabled]);
 
   return {
     currentState,

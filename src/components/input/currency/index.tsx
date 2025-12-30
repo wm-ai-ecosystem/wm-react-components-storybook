@@ -280,7 +280,7 @@ const WmCurrency: React.FC<WmCurrencyProps> = props => {
   };
 
   useEffect(() => {
-    if (initialDataValue !== datavalue) {
+    if (initialDataValue != datavalue) {
       setDatavalue(initialDataValue);
       const cleanValue = initialDataValue !== null ? initialDataValue.toString() : "";
       setInternalValue(cleanValue);
@@ -294,8 +294,8 @@ const WmCurrency: React.FC<WmCurrencyProps> = props => {
     ...(onMouseEnter ? { onMouseEnter: handleMouseEnter } : {}),
     ...(onMouseLeave ? { onMouseLeave: handleMouseLeave } : {}),
     ...(onFocus ? { onFocus: handleFocus } : {}),
-    ...(onBlur ? { onBlur: handleBlur } : {}),
-    ...(onChange ? { onChange: handleInputChange } : {}),
+    ...{ onBlur: handleBlur },
+    ...{ onChange: handleInputChange },
     ...(onKeyDown ? { onKeyDown: handleKeyDown } : {}),
   };
 

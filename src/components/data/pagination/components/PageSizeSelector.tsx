@@ -170,7 +170,7 @@ const PageSizeSelectorComponent: React.FC<PageSizeSelectorProps> = ({
               {rowSummary.startIndex} - {rowSummary.endIndex}
             </Box>
             <Box component="span" sx={{ mx: 0.5 }}>
-              &nbsp;of&nbsp;
+              &nbsp;&nbsp;of&nbsp;&nbsp;
             </Box>
             <Box component="span">{rowSummary.totalRecords}</Box>
           </Typography>

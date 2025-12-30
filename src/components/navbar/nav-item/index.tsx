@@ -20,6 +20,7 @@ export const WmNavItem = memo(
           width: "inherit",
           margin: "inherit",
           padding: "inherit",
+          textAlign: styles?.textAlign ? `${styles.textAlign} !important` : "inherit",
         }}
         className={clsx(DEFAULT_CLASS, className)}
         title={props.hint}

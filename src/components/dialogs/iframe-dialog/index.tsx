@@ -49,6 +49,8 @@ const WmIframeDialog = (props: WmIframeDialogProps) => {
     url = "//www.wavemaker.com",
     encodeurl = false,
     hint,
+    width = "100%",
+    height = "400px", // default height same as ng runtime
     onClose,
     onOk,
   } = props;
@@ -86,48 +88,50 @@ const WmIframeDialog = (props: WmIframeDialogProps) => {
       aria-labelledby={`iframe-dialog-${title}`}
       aria-describedby={`iframe-dialog-${title}-description`}
     >
-      <WmDialogContent name="" listener={{}}>
-        {showheader && (
-          <WmDialogHeader
-            closable={closable}
-            iconclass={iconclass}
-            iconurl={iconurl}
-            iconwidth={iconwidth}
-            iconheight={iconheight}
-            iconmargin={iconmargin}
-            heading={title}
-            headinglevel={headinglevel}
-            title={title}
-            titleid={`iframe-dialog-${props.widgetId}`}
-            onClose={handleClose}
-            name=""
-            listener={{}}
-          />
-        )}
-        <WmDialogBody name="" listener={{}}>
-          <WmIframe
-            name=""
-            listener={{}}
-            iframesrc={url}
-            encodeurl={encodeurl}
-            width={props.width as string}
-            height={props.height as string}
-            hint={hint}
-          />
-        </WmDialogBody>
-        {showactions && (
-          <WmDialogFooter name="" listener={{}}>
-            <WmButton
-              onClick={props.onOkClick || handleOk}
-              caption={oktext}
-              aria-label={oktext}
-              className="btn-primary ok-action"
+      <div className="app-alert-dialog app-dialog modal-dialog">
+        <WmDialogContent name="" listener={{}}>
+          {showheader && (
+            <WmDialogHeader
+              closable={closable}
+              iconclass={iconclass}
+              iconurl={iconurl}
+              iconwidth={iconwidth}
+              iconheight={iconheight}
+              iconmargin={iconmargin}
+              heading={title}
+              headinglevel={headinglevel}
+              title={title}
+              titleid={`iframe-dialog-${props.widgetId}`}
+              onClose={handleClose}
               name=""
               listener={{}}
             />
-          </WmDialogFooter>
-        )}
-      </WmDialogContent>
+          )}
+          <WmDialogBody name="" listener={{}}>
+            <WmIframe
+              name=""
+              listener={{}}
+              iframesrc={url}
+              encodeurl={encodeurl}
+              width={width}
+              height={height}
+              hint={hint}
+            />
+          </WmDialogBody>
+          {showactions && (
+            <WmDialogFooter name="" listener={{}}>
+              <WmButton
+                onClick={props.onOkClick || handleOk}
+                caption={oktext}
+                aria-label={oktext}
+                className="btn-primary ok-action"
+                name=""
+                listener={{}}
+              />
+            </WmDialogFooter>
+          )}
+        </WmDialogContent>
+      </div>
     </WmDialog>
   );
 };

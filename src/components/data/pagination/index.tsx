@@ -39,6 +39,10 @@ const WmPagination = memo((props: WmPaginationProps) => {
     setIsLoadingMore,
     isServerSidePagination,
     onDataUpdate,
+    // On-Demand navigation props
+    ondemandmessage = "Load More",
+    viewlessmessage = "View Less",
+    showviewlessbutton = false,
   } = props;
 
   // Custom hooks for pagination logic and navigation sizing
@@ -61,10 +65,11 @@ const WmPagination = memo((props: WmPaginationProps) => {
     datasourceInvokeOptions: props.datasourceInvokeOptions,
   });
 
-  // Notify parent component when data changes in Scroll mode
+  // Notify parent component when data changes in Scroll or On-Demand mode
   const prevResultLengthRef = React.useRef<number>(0);
   React.useEffect(() => {
-    if (navigation === "Scroll" && onDataUpdate && pagination.result) {
+    const isAccumulatingMode = navigation === "Scroll" || navigation === "On-Demand";
+    if (isAccumulatingMode && onDataUpdate && pagination.result) {
       // Only update if the result length has changed (new data added)
       if (pagination.result.length !== prevResultLengthRef.current) {
         prevResultLengthRef.current = pagination.result.length;
@@ -260,6 +265,95 @@ const WmPagination = memo((props: WmPaginationProps) => {
 
     return renderWithLayout(content, recordCountVariant);
   };
+
+  // Render On-Demand navigation content
+  if (pagination.navcontrols === "On-Demand") {
+    // Check if there's data to show and it's more than one page worth
+    // Don't show navigation if data is empty or already shows all items
+    const hasEnoughData =
+      pagination.dataSize > 0 && pagination.dataSize > pagination.currentMaxResults;
+
+    // Determine if we should show Load More button
+    // Only show when there's more data AND accumulated data is less than total
+    const shouldShowLoadMore =
+      hasEnoughData &&
+      pagination.hasMoreData &&
+      pagination.accumulatedDataCount < pagination.dataSize;
+
+    // Determine if we should show View Less button
+    // Show when all data is loaded, showviewlessbutton is true, and more than first page is loaded
+    const shouldShowViewLess =
+      hasEnoughData &&
+      !pagination.hasMoreData &&
+      showviewlessbutton &&
+      pagination.accumulatedDataCount > pagination.currentMaxResults;
+
+    // Determine which button to show (if any)
+    const showButton = shouldShowLoadMore || shouldShowViewLess;
+
+    // If nothing to show and not loading, return null
+    if (!showButton && !pagination.isLoadingMore) {
+      return null;
+    }
+
+    // Determine button properties based on state
+    const buttonText = shouldShowViewLess ? viewlessmessage : ondemandmessage;
+    const buttonAction = shouldShowViewLess
+      ? pagination.resetAccumulatedData
+      : pagination.loadMoreData;
+
+    return (
+      <Box
+        component="div"
+        className={clsx("on-demand-datagrid", className)}
+        sx={{ ...styles }}
+        id={name}
+      >
+        {/* Loading indicator */}
+        {pagination.isLoadingMore && (
+          <Box
+            component="div"
+            className="loading-data-msg spin-icon-in-center"
+            sx={{ textAlign: "center", padding: "16px" }}
+          >
+            <Box component="span">
+              <Box
+                component="i"
+                className="app-icon panel-icon fa-spin fa fa-circle-o-notch"
+                aria-hidden="true"
+              />
+              <Box component="span" className="sr-only">
+                Loading
+              </Box>
+              <Box component="span" className="loading-text" sx={{ marginLeft: 1 }}>
+                Loading...
+              </Box>
+            </Box>
+          </Box>
+        )}
+
+        {/* On-Demand action button (Load More or View Less) */}
+        {showButton && !pagination.isLoadingMore && (
+          <Box
+            component="a"
+            className="app-button btn btn-block on-demand-load-btn"
+            onClick={buttonAction}
+            sx={{
+              cursor: "pointer",
+              display: "block",
+              textAlign: "center",
+              padding: "10px",
+              "&:hover": {
+                textDecoration: "none",
+              },
+            }}
+          >
+            {buttonText}
+          </Box>
+        )}
+      </Box>
+    );
+  }
 
   // Render infinite scroll content
   if (pagination.navcontrols === "Scroll") {
