@@ -5,7 +5,7 @@ The Footer component does not have any specific configurable properties. It serv
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
 
-### Basic Usage
+## Basic Usage
 
 ```javascript
 // The Footer component is typically used as a container

@@ -2,7 +2,7 @@
 
 The Footer component can be styled using custom CSS classes to match your application's design requirements.
 
-### Basic Styling
+## Basic Styling
 
 You can apply custom styles to the Footer component using the following approaches:
 
@@ -30,7 +30,7 @@ You can apply custom styles to the Footer component using the following approach
 }
 ```
 
-### Responsive Considerations
+## Responsive Considerations
 
 For responsive designs, consider adjusting the footer layout at different breakpoints:
 

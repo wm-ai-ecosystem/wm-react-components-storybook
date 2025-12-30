@@ -4,7 +4,7 @@ The Progress Circle widget visually represents the completion status of a proces
 
 This component is particularly useful for displaying progress in a compact and visually appealing manner, especially in space-constrained mobile interfaces. The progress can represent anything from file uploads to task completion, data loading, or any other process that occurs over time.
 
-### Features
+## Features
 - Display progress in a circular format with customizable appearance
 - Support for determinate progress with configurable minimum and maximum values
 - Various built-in types for different visual styles (default, success, info, warning, danger)

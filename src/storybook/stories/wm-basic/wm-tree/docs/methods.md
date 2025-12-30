@@ -13,7 +13,7 @@ The Tree component can be controlled programmatically using the following method
 | findNode | nodeId: String/Number | Object | Returns the node object with the specified ID |
 | refresh | none | void | Refreshes the tree view with current data |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 ```javascript
 // Expand a specific node by ID

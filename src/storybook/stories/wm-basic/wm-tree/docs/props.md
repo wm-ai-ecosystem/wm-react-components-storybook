@@ -15,7 +15,7 @@ The Tree component accepts the following properties for configuration:
 | labelField | String | "label" | Field name to use as display text for nodes |
 | childrenField | String | "children" | Field name that contains child nodes |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Basic Tree Configuration
 ```javascript

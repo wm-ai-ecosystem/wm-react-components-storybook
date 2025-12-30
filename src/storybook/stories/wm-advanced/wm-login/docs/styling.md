@@ -19,7 +19,7 @@ The Login component provides several CSS classes for styling customization:
 | `.login-captcha` | CAPTCHA container styling |
 | `.login-loading` | Loading state styling |
 
-### Styling Examples
+## Styling Examples
 
 #### Basic Style Customization
 ```css

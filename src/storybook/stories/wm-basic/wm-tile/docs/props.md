@@ -22,7 +22,7 @@
 |------|------|---------|-------------|
 | animation | string | "none" | Controls the animation effect applied to the tile. Works only at runtime |
 
-### Configure Tile Layout Example
+## Configure Tile Layout Example
 
 ```javascript
 // Set tile dimensions

@@ -7,7 +7,7 @@ The Spinner component can be accessed in scripts using the syntax: `Page.Widgets
 | show | None | None | Shows the spinner component |
 | hide | None | None | Hides the spinner component |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 ```javascript
 // Show spinner before a time-consuming operation

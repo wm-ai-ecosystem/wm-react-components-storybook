@@ -11,7 +11,7 @@ The topnav component currently does not have any documented methods. However, ty
 | addNavigationItem | item (object) | void | Programmatically adds a new navigation item |
 | removeNavigationItem | itemId (string) | void | Removes a navigation item by ID |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 ```javascript
 // Toggle the mobile menu

@@ -8,7 +8,7 @@ For interacting with the Search component, you would typically:
 2. Bind to events
 3. Access the current state through bound variables
 
-### Example Script Access
+## Example Script Access
 
 ```javascript
 // Clear the search

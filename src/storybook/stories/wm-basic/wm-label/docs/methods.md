@@ -13,7 +13,7 @@ Page.Widgets.labelName
 | getProperty | property (string) | any | Gets the specified property's value for the label widget. |
 | setProperty | property (string), value (any) | void | Sets the specified property's value for the label widget. |
 
-### Common Method Usage
+## Common Method Usage
 
 ```javascript
 // Get the current caption

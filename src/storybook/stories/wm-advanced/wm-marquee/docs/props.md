@@ -13,7 +13,7 @@ The Marquee component accepts the following properties to customize its behavior
 | `gradientWidth` | Number | `200` | Width of the gradient effect in pixels |
 | `gradientColor` | String | `'#fff'` | Color of the gradient effect |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Basic news ticker implementation

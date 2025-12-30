@@ -11,7 +11,7 @@ The Marquee component can be styled using the following CSS classes:
 | `.marquee-gradient-right` | The right-side gradient overlay when gradient is enabled |
 | `.marquee-paused` | Applied when the marquee is in a paused state |
 
-### Custom Styling Examples
+## Custom Styling Examples
 
 ```css
 /* Customize the base container */

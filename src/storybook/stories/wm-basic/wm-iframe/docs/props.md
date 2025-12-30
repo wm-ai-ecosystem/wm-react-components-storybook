@@ -15,7 +15,7 @@
 | className | string | undefined | Additional CSS class names to apply to the iframe for custom styling. |
 | styles | React.CSSProperties | {} | Inline CSS styles to apply directly to the iframe element. |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Basic iframe embedding a website

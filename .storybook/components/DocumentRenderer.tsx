@@ -228,15 +228,11 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
         }
 
         h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
-          margin: 8px 0 8px !important;
+          margin: 20px 0 8px !important;
           padding: 0 0 12px !important
         }
 
-        p, .label.p{
-          margin: 16px 0 !important
-        }
-
-        ul{
+        ul, ol{
           margin: 16px 0 !important
         }
 
@@ -248,6 +244,10 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
 
         .doc-tab, .doc-tab:hover, .doc-tab:active, .doc-tab:focus{
           background-color: transparent !important;
+        }
+
+        .docblock-source{
+          margin: 20px 0 40px;
         }
 
       `}</style>

@@ -11,7 +11,7 @@ The topnav component can be styled using CSS. Since there are no specific docume
 - `.topnav-dropdown` - Dropdown menu container
 - `.topnav-dropdown-item` - Items within dropdown menus
 
-### Custom Styling Examples
+## Custom Styling Examples
 
 ```css
 /* Change the navigation background color */

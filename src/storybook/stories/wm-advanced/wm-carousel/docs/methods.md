@@ -2,7 +2,7 @@
 
 The Carousel component does not have any documented public methods. However, you can control the carousel's behavior through state management by updating the props.
 
-### Example of State-Based Control
+## Example of State-Based Control
 
 ```javascript
 // In a React component:

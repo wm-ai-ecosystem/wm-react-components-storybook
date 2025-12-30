@@ -1,6 +1,6 @@
 # Callback Events
 
-### Progress Events
+## Progress Events
 
 | Event | Description |
 |-------|-------------|
@@ -8,7 +8,7 @@
 | onComplete | Triggered when the progress reaches completion or its maximum value |
 | onBeforeUpdate | Triggered just before the progress value is updated |
 
-### Interaction Events
+## Interaction Events
 
 | Event | Description |
 |-------|-------------|
@@ -18,7 +18,7 @@
 | onMouseEnter | Triggered when the mouse pointer enters the widget area |
 | onMouseLeave | Triggered when the mouse pointer leaves the widget area |
 
-### Example Usage
+## Example Usage
 
 ```javascript
 // Show notification when progress is complete

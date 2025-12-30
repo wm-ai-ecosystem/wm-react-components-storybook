@@ -17,7 +17,7 @@
 | **General** | | | |
 | prefabName | string | - | Name of the prefab if this component is part of a prefab |
 
-### Configure Audio Playback
+## Configure Audio Playback
 ```javascript
 // Enable autoplay
 Page.Widgets.myAudio.autoplay = true;

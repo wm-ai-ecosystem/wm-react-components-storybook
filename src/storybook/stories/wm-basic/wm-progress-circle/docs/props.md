@@ -1,6 +1,6 @@
 # Props
 
-### Basic Configuration
+## Basic Configuration
 
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
@@ -10,7 +10,7 @@
 | hint | string | undefined | Text shown as a tooltip when hovering over the widget |
 | show | boolean | true | Determines the visibility of the component; can be bound to a variable |
 
-### Progress Configuration
+## Progress Configuration
 
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
@@ -21,14 +21,14 @@
 | captionPlacement | string | 'inside' | Position of the progress value label ('inside' or 'hidden') |
 | type | string | 'default' | Visual style of the progress circle ('default', 'success', 'info', 'warning', 'danger') |
 
-### Layout
+## Layout
 
 | Name | Type | Default | Description |
 |------|------|---------|-------------|
 | width | string | '100%' | Width of the widget, specified in px or % |
 | height | string | '100%' | Height of the widget, specified in px or % |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Set current progress value

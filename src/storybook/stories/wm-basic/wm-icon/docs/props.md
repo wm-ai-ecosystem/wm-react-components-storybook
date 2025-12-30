@@ -13,7 +13,7 @@
 | **Advanced** |
 | prefabName | string | "" | Identifier used when the icon is part of a prefab. |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Setting a Font Awesome icon

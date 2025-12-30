@@ -38,6 +38,20 @@
   body.sb-show-main {
     overflow: auto !important;
   }
+
+  /* form field styles, foundation css is overriding */
+  .wm-app .form-control{
+    height: 40px !important;
+    padding: 4px 8px !important;
+  }
+
+  .MuiInputBase-formControl::before{
+    border-bottom: none !important;
+  }
+
+  .wm-app .app-spinner{
+    background: none !important;
+  }
 </style>
 
 <script>

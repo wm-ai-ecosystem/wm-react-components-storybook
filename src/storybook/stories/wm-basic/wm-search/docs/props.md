@@ -41,7 +41,7 @@
 | dataLoadingMessage | string | | Message displayed while search results are loading |
 | dataCompleteMessage | string | | Message displayed when all results are loaded |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Configure basic search

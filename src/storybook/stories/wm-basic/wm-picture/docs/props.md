@@ -20,7 +20,7 @@
 | hint | string | "" | Text displayed as tooltip when mouse hovers over the widget. |
 | tabindex | number | 0 | Specifies the tab order. Value range: 0 to 32767. Set to -1 to make non-focusable. |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Set a remote image URL

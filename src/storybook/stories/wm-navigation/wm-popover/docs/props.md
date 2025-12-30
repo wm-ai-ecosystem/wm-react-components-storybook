@@ -11,7 +11,7 @@ The Popover component doesn't have predefined props in the provided data. Howeve
 | `closeOnOutsideClick` | Boolean | `true` | Determines if clicking outside the popover closes it |
 | `arrow` | Boolean | `true` | Shows or hides the directional arrow on the popover |
 
-### Basic Popover Usage
+## Basic Popover Usage
 ```javascript
 // Configure a basic popover
 Page.Widgets.myPopover.content = "This is important information";
@@ -21,7 +21,7 @@ Page.Widgets.myPopover.placement = "top";
 Page.Widgets.myPopover.open = true;
 ```
 
-### Custom Positioning
+## Custom Positioning
 ```javascript
 // Position the popover relative to the trigger
 Page.Widgets.myPopover.placement = "right-start";

@@ -15,7 +15,7 @@
 | trackVariable | array | [] | Array of variables to track. Spinner will be shown until all tracked variables complete loading |
 | loadOnDemand | boolean | false | When enabled and show property is bound, the widget initialization is deferred until it becomes visible |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Show spinner during API call

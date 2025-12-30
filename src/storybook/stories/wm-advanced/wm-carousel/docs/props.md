@@ -7,7 +7,7 @@
 | ownerState.width | string \| number | undefined | Defines the width of the carousel. Can be specified in any valid CSS unit (px, %, em, etc.) when passed as a string. |
 | ownerState.isAnimating | boolean | false | Indicates whether the carousel is currently animating between slides. |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Create a responsive carousel with specific dimensions

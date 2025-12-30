@@ -9,7 +9,7 @@ The Anchor component can be accessed in script using `Page.Widgets.widgetName` w
 | `show` | None | None | Makes the anchor visible. |
 | `hide` | None | None | Hides the anchor. |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 ```javascript
 // Programmatically focus the anchor

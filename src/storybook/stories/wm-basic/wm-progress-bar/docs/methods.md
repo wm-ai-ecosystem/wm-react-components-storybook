@@ -9,7 +9,7 @@ The Progress Bar widget can be accessed in scripts using `Page.Widgets.widgetNam
 | getProperty | propertyName (string) | any | Returns the value of the specified property |
 | setProperty | propertyName (string), value (any) | - | Sets the value of the specified property |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 ```javascript
 // Show/hide the progress bar

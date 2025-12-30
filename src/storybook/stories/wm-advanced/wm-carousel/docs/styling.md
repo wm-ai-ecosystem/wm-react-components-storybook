@@ -2,7 +2,7 @@
 
 The Carousel component can be styled using CSS classes. While specific class names are not documented, you can target the component and its children using standard CSS selectors.
 
-### Basic Styling
+## Basic Styling
 
 ```css
 /* Styling the carousel container */
@@ -45,7 +45,7 @@ The Carousel component can be styled using CSS classes. While specific class nam
 }
 ```
 
-### Animation States
+## Animation States
 
 ```css
 /* Styling for animation state */

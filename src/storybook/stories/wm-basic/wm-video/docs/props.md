@@ -43,7 +43,7 @@
 | hint | string | - | Text displayed as a tooltip when hovering over the video |
 | tabindex | number | 0 | Sets the tab order for keyboard navigation |
 
-### Configure Video Playback
+## Configure Video Playback
 ```javascript
 // Enable autoplay
 Page.Widgets.myVideo.enableAutoplay = true;

@@ -19,7 +19,7 @@
 | **Accessibility** |
 | hint | string | "" | Text shown as a tooltip when a user hovers over the label. Enhances accessibility. |
 
-### Rich Text Formatting Examples
+## Rich Text Formatting Examples
 
 ```javascript
 // Bold text
@@ -32,7 +32,7 @@ Page.Widgets.myLabel.caption = "Visit [WaveMaker](https://www.wavemaker.com)";
 Page.Widgets.myLabel.caption = "**Check out our [documentation](https://docs.wavemaker.com)**";
 ```
 
-### Conditional Display
+## Conditional Display
 
 ```javascript
 // Show label only when a condition is met

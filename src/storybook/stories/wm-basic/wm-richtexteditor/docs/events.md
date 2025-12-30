@@ -15,7 +15,7 @@ The Rich Text Editor provides several events that you can hook into to extend it
 | onImageUploadError | Triggered when an image upload fails |
 | onToolbarClick | Triggered when a toolbar button is clicked |
 
-### Example Event Usage
+## Example Event Usage
 
 ```javascript
 // Content change event
