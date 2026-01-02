@@ -36,6 +36,15 @@ const meta: Meta<typeof CompositeDefaultExport> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// Mock listener object for the component
+const mockListener = {
+  appLocale: {
+    LABEL_ICON: "Icon",
+  },
+  Widgets: {},
+  onChange: () => {},
+};
+
 const Template = (args: any) => (
   <Box style={{ padding: 16 }}>
     <CompositeDefaultExport {...args} />
@@ -75,23 +84,74 @@ export const Basic: Story = {
   },
 };
 
-export const CaptionPosition: Story = {
-  render: Template,
+export const Showcase: Story = {
+  render: () => (
+    <Box sx={{ p: 3 }}>
+      {/* Heading with anchor */}
+      <Box mb={3} id="showcase-composite">
+        <Typography variant="h6" fontWeight={600}>
+          Caption Position Types
+        </Typography>
+        {/* <Typography variant="body2" color="text.secondary">
+          Demonstration of left, right, top, and floating label positions
+        </Typography> */}
+      </Box>
+
+      <Stack spacing={4}>
+        {/* Left Caption */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary">
+            Left Position
+          </Typography>
+          <CompositeDefaultExport captionposition="left">
+            <WmLabel>Email</WmLabel>
+            <input className="form-control" placeholder="Enter email" />
+          </CompositeDefaultExport>
+        </Box>
+
+        {/* Right Caption */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary">
+            Right Position
+          </Typography>
+          <CompositeDefaultExport captionposition="right">
+            <WmLabel>Email</WmLabel>
+            <input className="form-control" placeholder="Enter email" />
+          </CompositeDefaultExport>
+        </Box>
+
+        {/* Top Caption */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary">
+            Top Position
+          </Typography>
+          <CompositeDefaultExport captionposition="top">
+            <WmLabel>Email</WmLabel>
+            <input className="form-control" placeholder="Enter email" />
+          </CompositeDefaultExport>
+        </Box>
+
+        {/* Floating Caption */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary">
+            Floating Position
+          </Typography>
+          <CompositeDefaultExport captionposition="floating">
+            <WmLabel>Email</WmLabel>
+            <input className="form-control" placeholder="Enter email" />
+          </CompositeDefaultExport>
+        </Box>
+      </Stack>
+    </Box>
+  ),
   args: {
-    captionposition: "left",
-    children: (
-      <>
-        <WmLabel>Email Address</WmLabel>
-        <input
-          type="email"
-          className="form-control"
-          placeholder="Enter email"
-          style={{ padding: "8px", border: "1px solid #ddd", borderRadius: "4px", width: "100%" }}
-        />
-      </>
-    ),
+    name: "showcaseComposite",
+    listener: mockListener,
   },
 };
+
+
+
 
 // export const Showcase: Story = {
 //   render: () => {

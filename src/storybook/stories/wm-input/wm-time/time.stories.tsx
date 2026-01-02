@@ -93,21 +93,209 @@ export const Basic: Story = {
   },
 };
 
-export const TimeFormat: Story = {
-  render: Template,
+export const Showcase: Story = {
+  render: () => (
+    <Box sx={{ p: 3 }}>
+      <Stack spacing={4}>
+        {/* Title */}
+        <Typography variant="h6" fontWeight={600}>
+          Time Input Types
+        </Typography>
+
+        {/* Time Format */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Time Formats
+          </Typography>
+
+          <Stack spacing={3}>
+            <Box>
+              <Typography variant="caption" color="text.secondary" mb={1}>
+                12-Hour Format (h:mm a)
+              </Typography>
+              <TimeDefaultExport
+                name="format12"
+                timepattern="h:mm a"
+                datavalue="CURRENT_TIME"
+                listener={mockListener}
+                dataentrymode="default"
+              />
+            </Box>
+
+            <Box>
+              <Typography variant="caption" color="text.secondary" mb={1}>
+                24-Hour Format (HH:mm)
+              </Typography>
+              <TimeDefaultExport
+                name="format24"
+                timepattern="HH:mm"
+                datavalue="CURRENT_TIME"
+                listener={mockListener}
+                dataentrymode="default"
+              />
+            </Box>
+
+            <Box>
+              <Typography variant="caption" color="text.secondary" mb={1}>
+                12-Hour with Seconds (h:mm:ss a)
+              </Typography>
+              <TimeDefaultExport
+                name="format12Seconds"
+                timepattern="h:mm:ss a"
+                datavalue="CURRENT_TIME"
+                listener={mockListener}
+                dataentrymode="default"
+              />
+            </Box>
+
+            {/* <Box>
+              <Typography variant="body2" mb={1}>
+                24-Hour with Seconds (HH:mm:ss)
+              </Typography>
+              <TimeDefaultExport
+                name="format24Seconds"
+                timepattern="HH:mm:ss"
+                datavalue="CURRENT_TIME"
+                listener={mockListener}
+              />
+            </Box> */}
+          </Stack>
+        </Box>
+
+        {/* Time Range */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Time Range
+          </Typography>
+
+          <Stack spacing={3}>
+            <Box>
+              <Typography variant="caption" color="text.secondary" mb={1}>
+                Business Hours (9:00 AM – 5:00 PM)
+              </Typography>
+              <TimeDefaultExport
+                name="businessRange"
+                mintime="09:00:00"
+                maxtime="17:00:00"
+                timepattern="h:mm a"
+                listener={mockListener}
+                dataentrymode="default"
+              />
+            </Box>
+
+            {/* <Box>
+              <Typography variant="body2" mb={1}>
+                Morning Shift (6:00 AM – 12:00 PM)
+              </Typography>
+              <TimeDefaultExport
+                name="morningRange"
+                mintime="06:00:00"
+                maxtime="12:00:00"
+                timepattern="h:mm a"
+                listener={mockListener}
+              />
+            </Box> */}
+          </Stack>
+        </Box>
+
+        {/* Hour Step */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Hour Step
+          </Typography>
+
+          <Box>
+            <Typography variant="caption" color="text.secondary" mb={1}>
+              2-Hour Interval
+            </Typography>
+            <TimeDefaultExport
+              name="hourStep"
+              hourstep={2}
+              timepattern="HH:mm"
+              listener={mockListener}
+              dataentrymode="default"
+            />
+          </Box>
+        </Box>
+
+        {/* Minute Step */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Minute Step
+          </Typography>
+
+          <Stack spacing={3}>
+            <Box>
+              <Typography variant="caption" color="text.secondary" mb={1}>
+                5-Minute Interval
+              </Typography>
+              <TimeDefaultExport
+                name="minuteStep5"
+                minutestep={5}
+                timepattern="HH:mm"
+                listener={mockListener}
+                dataentrymode="default"
+              />
+            </Box>
+
+            {/* <Box>
+              <Typography variant="body2" mb={1}>
+                15-Minute Interval
+              </Typography>
+              <TimeDefaultExport
+                name="minuteStep15"
+                minutestep={15}
+                timepattern="HH:mm"
+                listener={mockListener}
+              />
+            </Box> */}
+          </Stack>
+        </Box>
+
+        {/* Second Step */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Second Step
+          </Typography>
+
+          <Box>
+            <Typography variant="caption" color="text.secondary" mb={1}>
+              10-Second Interval
+            </Typography>
+            <TimeDefaultExport
+              name="secondStep"
+              secondsstep={10}
+              timepattern="HH:mm:ss"
+              listener={mockListener}
+              dataentrymode="default"
+            />
+          </Box>
+        </Box>
+      </Stack>
+    </Box>
+  ),
   args: {
-    name: "timeFormat",
-    timepattern: "h:mm:ss a",
-    // datavalue: "14:30:00",
+    name: "timeShowcase",
     listener: mockListener,
-    disabled: false,
-    readonly: false,
-    required: false,
-    dataentrymode: "default",
-    showdropdownon: "default",
-    datavalue: "CURRENT_TIME",
   },
 };
+
+
+// export const TimeFormat: Story = {
+//   render: Template,
+//   args: {
+//     name: "timeFormat",
+//     timepattern: "h:mm:ss a",
+//     // datavalue: "14:30:00",
+//     listener: mockListener,
+//     disabled: false,
+//     readonly: false,
+//     required: false,
+//     dataentrymode: "default",
+//     showdropdownon: "default",
+//     datavalue: "CURRENT_TIME",
+//   },
+// };
 
 // export const WithTimeRange: Story = {
 //   render: Template,

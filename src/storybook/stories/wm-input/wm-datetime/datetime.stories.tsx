@@ -107,42 +107,150 @@ export const Basic: Story = {
   },
 };
 
-export const MinMaxDateTime: Story = {
-  render: Template,
+export const Showcase: Story = {
+  render: () => {
+    const now = new Date();
+    const todayISO = now.toISOString();
+    const nextWeekISO = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
+
+    return (
+      <Box sx={{ p: 3 }}>
+        <Box mb={3} id="datetime-showcase">
+          <Typography variant="h6" mr={2} fontWeight={600}>
+            DateTime Input Types
+          </Typography>
+          {/* <Typography variant="body2" color="text.secondary">
+            Various examples of DateTime input configurations
+          </Typography> */}
+        </Box>
+
+        <Stack spacing={4}>
+          {/* Basic */}
+          <Box id="basic">
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>Basic DateTime</Typography>
+            <DateTimeDefaultExport
+              name="basicDateTime"
+              placeholder="Select Date Time"
+              datavalue="CURRENT_DATE"
+              listener={mockListener}
+              datepattern="dd/MM/yyyy HH:mm"
+              outputformat="dd/MM/yyyy HH:mm"
+            />
+          </Box>
+
+          {/* Min/Max */}
+          <Box id="minMax">
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>Min/Max DateTime</Typography>
+            <DateTimeDefaultExport
+              name="minMaxDateTime"
+              placeholder="Select Date Time"
+              mindate={todayISO}
+              maxdate={nextWeekISO}
+              datavalue={todayISO}
+              listener={mockListener}
+              datepattern="dd/MM/yyyy HH:mm"
+              outputformat="dd/MM/yyyy HH:mm"
+            />
+          </Box>
+
+          {/* 12-hour format */}
+          <Box id="hourFormat">
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>12-Hour Format</Typography>
+            <DateTimeDefaultExport
+              name="hourFormatDateTime"
+              placeholder="MM/dd/yyyy h:mm a"
+              datavalue={todayISO}
+              listener={mockListener}
+              datepattern="MM/dd/yyyy h:mm a"
+              outputformat="MM/dd/yyyy h:mm a"
+            />
+          </Box>
+
+          {/* Picker only */}
+          <Box id="pickerOnly">
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>Picker Only Mode</Typography>
+            <DateTimeDefaultExport
+              name="pickerOnly"
+              placeholder="Picker only"
+              dataentrymode="picker"
+              showcustompicker={true}
+              listener={mockListener}
+              datepattern="dd/MM/yyyy HH:mm"
+              outputformat="dd/MM/yyyy HH:mm"
+            />
+          </Box>
+
+          {/* Exclude Weekends */}
+          <Box id="excludeWeekends">
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>Exclude Weekends</Typography>
+            <DateTimeDefaultExport
+              name="excludeWeekends"
+              placeholder="Weekdays only"
+              excludedays="0,6"
+              listener={mockListener}
+              datepattern="dd/MM/yyyy HH:mm"
+              outputformat="dd/MM/yyyy HH:mm"
+            />
+          </Box>
+
+          {/* Custom Steps */}
+          <Box id="customSteps">
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>Custom Minute Step (15 min)</Typography>
+            <DateTimeDefaultExport
+              name="fifteenMinutes"
+              placeholder="15-minute intervals"
+              minutestep={15}
+              listener={mockListener}
+              datepattern="dd/MM/yyyy HH:mm"
+              outputformat="dd/MM/yyyy HH:mm"
+            />
+          </Box>
+        </Stack>
+      </Box>
+    );
+  },
   args: {
-    name: "minMaxDateTime",
-    placeholder: "Select Date Time",
-    mindate: new Date().toISOString(),
-    maxdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-    datepattern: "dd/MM/yyyy HH:mm",
-    outputformat: "dd/MM/yyyy HH:mm",
-    datavalue: new Date().toISOString(),
-    disabled: false,
-    readonly: false,
-    required: false,
-    selectfromothermonth: true,
-    dataentrymode: "default",
-    showdropdownon: "default",
     listener: mockListener,
+    name: "showcaseDateTime"
   },
 };
 
-export const HourFormat: Story = {
-  render: Template,
-  args: {
-    name: "hourFormatDateTime",
-    datepattern: "MM/dd/yyyy h:mm a",
-    outputformat: "MM/dd/yyyy h:mm a",
-    datavalue: new Date().toISOString(),
-    listener: mockListener,
-    disabled: false,
-    readonly: false,
-    required: false,
-    selectfromothermonth: true,
-    dataentrymode: "default",
-    showdropdownon: "default",
-  },
-};
+// export const MinMaxDateTime: Story = {
+//   render: Template,
+//   args: {
+//     name: "minMaxDateTime",
+//     placeholder: "Select Date Time",
+//     mindate: new Date().toISOString(),
+//     maxdate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+//     datepattern: "dd/MM/yyyy HH:mm",
+//     outputformat: "dd/MM/yyyy HH:mm",
+//     datavalue: new Date().toISOString(),
+//     disabled: false,
+//     readonly: false,
+//     required: false,
+//     selectfromothermonth: true,
+//     dataentrymode: "default",
+//     showdropdownon: "default",
+//     listener: mockListener,
+//   },
+// };
+
+// export const HourFormat: Story = {
+//   render: Template,
+//   args: {
+//     name: "hourFormatDateTime",
+//     datepattern: "MM/dd/yyyy h:mm a",
+//     outputformat: "MM/dd/yyyy h:mm a",
+//     datavalue: new Date().toISOString(),
+//     listener: mockListener,
+//     disabled: false,
+//     readonly: false,
+//     required: false,
+//     selectfromothermonth: true,
+//     dataentrymode: "default",
+//     showdropdownon: "default",
+//   },
+// };
 
 // export const CustomHourStep: Story = {
 //   render: Template,

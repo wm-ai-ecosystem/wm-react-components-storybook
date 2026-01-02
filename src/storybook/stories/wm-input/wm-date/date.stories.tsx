@@ -109,24 +109,134 @@ export const Basic: Story = {
   },
 };
 
-export const MinMaxDates: Story = {
-  render: Template,
+export const Showcase: Story = {
+  render: () => {
+    const today = new Date().toISOString().split("T")[0];
+
+    return (
+      <Box sx={{ p: 3 }}>
+        {/* Heading with anchor */}
+        <Box mb={3} id="date-showcase">
+          <Typography variant="h6" mr={2} fontWeight={600}>
+            Date Input Types
+          </Typography>
+          {/* <Typography variant="body2" color="text.secondary">
+            Various examples of date input configurations
+          </Typography> */}
+        </Box>
+
+        <Stack spacing={4}>
+          {/* Min/Max Dates */}
+          <Box id="minMaxDates">
+            <Typography variant="subtitle2" color="text.secondary">
+              Min/Max Dates
+            </Typography>
+            <DateDefaultExport
+              name="minMaxDates"
+              placeholder="Select Date"
+              mindate="CURRENT_DATE"
+              maxdate={new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+                .toISOString()
+                .split("T")[0]}
+              datepattern="yyyy-MM-dd"
+              listener={mockListener}
+            />
+          </Box>
+
+          {/* Exclude Days (No Mondays) */}
+          <Box id="excludeDays">
+            <Typography variant="subtitle2" color="text.secondary">
+              Exclude Mondays
+            </Typography>
+            <DateDefaultExport
+              name="excludeDays"
+              placeholder="No Mondays"
+              excludedays="1"
+              datepattern="yyyy-MM-dd"
+              listener={mockListener}
+            />
+          </Box>
+
+          {/* Show Week Numbers */}
+          <Box id="showWeekNumbers">
+            <Typography variant="subtitle2" color="text.secondary">
+              Show Week Numbers
+            </Typography>
+            <DateDefaultExport
+              name="showWeeks"
+              placeholder="With week numbers"
+              showweeks={true}
+              datepattern="yyyy-MM-dd"
+              listener={mockListener}
+            />
+          </Box>
+
+          {/* Picker Only Mode */}
+          <Box id="pickerOnly">
+            <Typography variant="subtitle2" color="text.secondary">
+              Picker Only Mode
+            </Typography>
+            <DateDefaultExport
+              name="pickerOnly"
+              placeholder="Picker only (no typing)"
+              dataentrymode="picker"
+              showcustompicker={true}
+              datepattern="yyyy-MM-dd"
+              listener={mockListener}
+            />
+          </Box>
+
+          {/* Date Pattern Examples */}
+          <Box id="datePatternExamples">
+            <Typography variant="subtitle2" color="text.secondary">
+              Date Pattern Examples
+            </Typography>
+            <Stack spacing={2}>
+              <DateDefaultExport
+                name="usDatePattern"
+                placeholder="MM/dd/yyyy"
+                datepattern="MM/dd/yyyy"
+                datavalue={today}
+                listener={mockListener}
+              />
+              <DateDefaultExport
+                name="longDatePattern"
+                placeholder="MMMM d, yyyy"
+                datepattern="MMMM d, yyyy"
+                datavalue={today}
+                listener={mockListener}
+              />
+            </Stack>
+          </Box>
+        </Stack>
+      </Box>
+    );
+  },
   args: {
-    name: "minMaxDates",
-    placeholder: "Select Date",
-    datepattern: "yyyy-MM-dd",
-    maxdate: "2025-12-31",
-    mindate: "2025-01-01",
     listener: mockListener,
-    disabled: false,
-    readonly: false,
-    required: false,
-    outputformat: "yyyy-MM-dd",
-    selectfromothermonth: false,
-    dataentrymode: "default",
-    showdropdownon: "default",
+    name: "showCaseDate"
   },
 };
+
+
+// export const MinMaxDates: Story = {
+//   render: Template,
+//   args: {
+//     name: "minMaxDates",
+//     placeholder: "Select Date",
+//     datepattern: "yyyy-MM-dd",
+//     maxdate: "2025-12-31",
+//     mindate: "2025-01-01",
+//     listener: mockListener,
+//     disabled: false,
+//     readonly: false,
+//     required: false,
+//     outputformat: "yyyy-MM-dd",
+//     selectfromothermonth: false,
+//     dataentrymode: "default",
+//     showdropdownon: "default",
+//   },
+// };
 
 // export const ExcludeDays: Story = {
 //   render: Template,

@@ -107,36 +107,146 @@ export const Basic: Story = {
   },
 };
 
-export const RegExp: Story = {
-  render: Template,
+export const Showcase: Story = {
+  render: () => (
+    <Box sx={{ p: 3 }}>
+      <Stack spacing={4}>
+        {/* Main Heading */}
+        <Typography variant="h6" fontWeight={600}>
+          Text Input Types
+        </Typography>
+
+        {/* Text Type Examples */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Text Type Examples
+          </Typography>
+
+          <Stack spacing={3}>
+            <Box>
+              <Typography variant="caption" color="text.secondary" mb={1}>
+                Email Input
+              </Typography>
+              <TextDefaultExport
+                name="emailText"
+                placeholder="Enter email address"
+                type="email"
+                listener={mockListener}
+              />
+            </Box>
+
+            <Box>
+              <Typography variant="caption" color="text.secondary" mb={1}>
+                Password Input
+              </Typography>
+              <TextDefaultExport
+                name="passwordText"
+                placeholder="Enter password"
+                type="password"
+                listener={mockListener}
+              />
+            </Box>
+          </Stack>
+        </Box>
+
+        {/* RegExp Validation */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Regular Expression Validation
+          </Typography>
+
+          <Box>
+            <Typography variant="caption" mb={1}>
+              Alphanumeric Only
+            </Typography>
+            <TextDefaultExport
+              name="regexpText"
+              placeholder="Only letters and numbers"
+              regexp="^[a-zA-Z0-9]+$"
+              listener={mockListener}
+            />
+          </Box>
+        </Box>
+
+        {/* Display Format */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Display Format
+          </Typography>
+
+          <Box>
+            <Typography variant="caption" mb={1}>
+              SSN Format (XXX-XX-XXXX)
+            </Typography>
+            <TextDefaultExport
+              name="displayFormatText"
+              placeholder="Enter SSN"
+              displayformat="999-99-9999"
+              showdisplayformaton="keypress"
+              maxchars={9}
+              listener={mockListener}
+            />
+          </Box>
+        </Box>
+
+        {/* Max Characters */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Character Limit
+          </Typography>
+
+          <Box>
+            <Typography variant="caption" mb={1}>
+              Max 20 Characters
+            </Typography>
+            <TextDefaultExport
+              name="maxCharsText"
+              placeholder="Maximum 10 characters"
+              maxchars={10}
+              listener={mockListener}
+            />
+          </Box>
+        </Box>
+      </Stack>
+    </Box>
+  ),
   args: {
-    name: "regexpText",
-    placeholder: "Enter alphanumeric only",
-    regexp: "^[a-zA-Z0-9]+$",
+    name: "textShowcase",
     listener: mockListener,
-    autocapitalize: "none",
-    autotrim: true,
-    autofocus: false,
-    required: false,
   },
 };
 
-// Type Variations
-export const TextType: Story = {
-  render: Template,
-  args: {
-    name: "textType",
-    placeholder: "Select type and see behavior",
-    type: "text",
-    listener: mockListener,
-    disabled: false,
-    readonly: false,
-    autocapitalize: "none",
-    autotrim: true,
-    autofocus: false,
-    required: false,
-  },
-};
+
+// export const RegExp: Story = {
+//   render: Template,
+//   args: {
+//     name: "regexpText",
+//     placeholder: "Enter alphanumeric only",
+//     regexp: "^[a-zA-Z0-9]+$",
+//     listener: mockListener,
+//     autocapitalize: "none",
+//     autotrim: true,
+//     autofocus: false,
+//     required: false,
+//   },
+// };
+
+// // Type Variations
+// export const TextType: Story = {
+//   render: Template,
+//   args: {
+//     name: "textType",
+//     placeholder: "Select type and see behavior",
+//     type: "text",
+//     listener: mockListener,
+//     disabled: false,
+//     readonly: false,
+//     autocapitalize: "none",
+//     autotrim: true,
+//     autofocus: false,
+//     required: false,
+//   },
+// };
 
 // // Display Format Examples
 // export const displayFormat: Story = {

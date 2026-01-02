@@ -78,6 +78,99 @@ export const Basic: Story = {
   },
 };
 
+export const Showcase: Story = {
+  render: () => (
+    <Stack spacing={4} padding={2}>
+      {/* Slider Types Heading */}
+      <Box sx={{mb: 3}}>
+      <Typography variant="h6" fontWeight={600} mb={3}>
+        Slider Types
+      </Typography>
+      </Box>
+
+      {/* Range Examples */}
+      <Box>
+        <Typography variant="subtitle2" color="text.secondary" mb={1}>Range Sliders</Typography>
+        <Stack spacing={3}>
+          <Box>
+            <Typography variant="caption" color="text.secondary" mb={1}>Standard Range (0-100)</Typography>
+            <SliderDefaultExport
+              name="standardRange"
+              datavalue={50}
+              minvalue={0}
+              maxvalue={100}
+              step={1}
+              listener={mockListener}
+            />
+          </Box>
+          <Box>
+            <Typography variant="caption" color="text.secondary" mb={1}>Negative Range (-50 to 50)</Typography>
+            <SliderDefaultExport
+              name="negativeRange"
+              datavalue={0}
+              minvalue={-50}
+              maxvalue={50}
+              step={5}
+              listener={mockListener}
+            />
+          </Box>
+          <Box>
+            <Typography variant="caption" color="text.secondary" mb={1}>Decimal Range (0 to 1)</Typography>
+            <SliderDefaultExport
+              name="decimalRange"
+              datavalue={0.5}
+              minvalue={0}
+              maxvalue={1}
+              step={0.1}
+              listener={mockListener}
+            />
+          </Box>
+        </Stack>
+      </Box>
+
+      {/* Step Examples */}
+      <Box>
+        <Typography variant="subtitle2" color="text.secondary" mb={1}>Step Sliders</Typography>
+        <Stack spacing={3}>
+          <Box>
+            <Typography variant="caption" color="text.secondary" mb={1}>Step 1 (Fine Control)</Typography>
+            <SliderDefaultExport
+              name="step1Slider"
+              datavalue={25}
+              minvalue={0}
+              maxvalue={100}
+              step={1}
+              listener={mockListener}
+            />
+          </Box>
+          <Box>
+            <Typography variant="caption" color="text.secondary" mb={1}>Step 10 (Medium Control)</Typography>
+            <SliderDefaultExport
+              name="step10Slider"
+              datavalue={50}
+              minvalue={0}
+              maxvalue={100}
+              step={10}
+              listener={mockListener}
+            />
+          </Box>
+          <Box>
+            <Typography variant="caption" color="text.secondary" mb={1}>Step 25 (Coarse Control)</Typography>
+            <SliderDefaultExport
+              name="step25Slider"
+              datavalue={50}
+              minvalue={0}
+              maxvalue={100}
+              step={25}
+              listener={mockListener}
+            />
+          </Box>
+        </Stack>
+      </Box>
+    </Stack>
+  ),
+};
+
 // export const WithCustomRange: Story = {
 //   render: Template,
 //   args: {

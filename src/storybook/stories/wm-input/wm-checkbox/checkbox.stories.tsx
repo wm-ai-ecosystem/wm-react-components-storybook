@@ -21,15 +21,15 @@ const meta: Meta<typeof CheckboxDefaultExport> = {
     datavalue: { control: "boolean" },
     disabled: { control: "boolean" },
     readonly: { control: "boolean" },
-    // required: { control: "boolean" },
+    required: { control: "boolean" },
     // hint: { control: "text" },
     // arialabel: { control: "text" },
     // tabindex: { control: "number" },
     // shortcutkey: { control: "text" },
-    // type: {
-    //   control: { type: "select" },
-    //   options: ["checkbox", "toggle"],
-    // },
+    type: {
+      control: { type: "select" },
+      options: ["checkbox", "toggle"],
+    },
     // className: { control: "text" },
     // displayValue: { control: "text" },
   }
@@ -77,20 +77,71 @@ export const Basic: Story = {
     datavalue: false,
     disabled: false,
     readonly: false,
+    type: "checkbox"
   },
 };
 
-export const WithCustomCaption: Story = {
-  render: Template,
+export const Showcase: Story = {
+  render: () => {
+    return (
+      <Box sx={{ p: 4, maxWidth: 400 }}>
+        <Stack spacing={4}>
+          <Typography variant="h6" fontWeight={600}>
+            Checkbox Types
+          </Typography>
+
+          {/* Row 1: Standard Checkbox */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">
+              Standard Checkbox
+            </Typography>
+            <Stack spacing={1}>
+              <CheckboxDefaultExport
+                name="standardCheckbox"
+                caption="Accept terms and conditions"
+                datavalue={false}
+                listener={mockListener}
+              />
+            </Stack>
+          </Box>
+
+          {/* Row 2: Toggle Switch */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">
+              Toggle Switch
+            </Typography>
+            <Stack spacing={1}>
+              <CheckboxDefaultExport
+                name="toggleSwitch"
+                caption="Enable notifications"
+                type="toggle"
+                datavalue={true}
+                listener={mockListener}
+              />
+            </Stack>
+          </Box>
+        </Stack>
+      </Box>
+    );
+  },
   args: {
-    name: "customCaption",
-    caption: "I accept the <strong>Privacy Policy</strong>",
+    name: "checkboxShowcase",
     listener: mockListener,
-    datavalue: true,
-    disabled: false,
-    readonly: false,
   },
 };
+
+// export const WithCustomCaption: Story = {
+//   render: Template,
+//   args: {
+//     name: "customCaption",
+//     caption: "I accept the <strong>Privacy Policy</strong>",
+//     listener: mockListener,
+//     datavalue: true,
+//     disabled: false,
+//     readonly: false,
+//   },
+// };
+
 
 // export const Checked: Story = {
 //   render: Template,

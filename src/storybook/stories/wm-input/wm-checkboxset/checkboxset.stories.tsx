@@ -16,11 +16,11 @@ const meta: Meta<typeof CheckboxsetDefaultExport> = {
   title: "Input/CheckboxSet",
   component: CheckboxsetDefaultExport,
   argTypes: {
-    // layout: {
-    //   control: { type: "select" },
-    //   options: ["inline", "stacked"],
-    // },
-    itemsperrow: { control: "text" },
+    layout: {
+      control: { type: "select" },
+      options: ["inline", "stacked"],
+    },
+    itemsperrow: { control: "select", options: ["xs-1 sm-1 md-1 lg-1","xs-1 sm-2 md-2 lg-2","xs-1 sm-2 md-3 lg-3","xs-1 sm-2 md-3 lg-4","xs-1 sm-2 md-4 lg-6"] },
     // itemclass: { control: "text" },
     // listclass: { control: "text" },
     // showcount: { control: "boolean" },
@@ -87,17 +87,7 @@ export const Basic: Story = {
     listener: mockListener,
     disabled: false,
     readonly: false,
-  },
-};
-
-export const WithPreselectedValues: Story = {
-  render: Template,
-  args: {
-    name: "preselected",
-    label: "Notification Settings",
-    dataset: "Email, SMS, Push Notifications, Phone Call",
-    datavalue: ["Email", "Push Notifications"],
-    listener: mockListener,
+    layout: "inline"
   },
 };
 
@@ -105,7 +95,7 @@ export const ObjectDataset: Story = {
   render: Template,
   args: {
     name: "objectDataset",
-    label: "Select Countries",
+    label: "",
     dataset: [
       { id: 1, name: "United States", code: "US" },
       { id: 2, name: "United Kingdom", code: "UK" },
@@ -116,19 +106,171 @@ export const ObjectDataset: Story = {
     datafield: "id",
     displayfield: "name",
     listener: mockListener,
+    layout:"inline"
   },
 };
 
-export const ItemsPerRow: Story = {
-  render: Template,
+export const Showcase: Story = {
+  render: () => (
+    <Box sx={{ p: 3 }}>
+      {/* Main Heading */}
+      <Box sx={{mb: 3}}>
+      <Typography variant="h6" fontWeight={600}>
+        Checkboxset Types
+      </Typography>
+      </Box>
+
+      <Stack spacing={4}>
+        {/* Inline layout */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Inline Layout
+          </Typography>
+          <CheckboxsetDefaultExport
+            name="inlineLayoutShowcase"
+            layout="inline"
+            dataset={[
+              { id: 1, label: "Option A" },
+              { id: 2, label: "Option B" },
+              { id: 3, label: "Option C" },
+            ]}
+            datafield="id"
+            displayfield="label"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Stacked layout */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Stacked Layout
+          </Typography>
+          <CheckboxsetDefaultExport
+            name="stackedLayoutShowcase"
+            layout="stacked"
+            dataset={[
+              { id: 1, label: "Option A" },
+              { id: 2, label: "Option B" },
+              { id: 3, label: "Option C" },
+            ]}
+            datafield="id"
+            displayfield="label"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Preselected values */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Preselected Values
+          </Typography>
+          <CheckboxsetDefaultExport
+            name="preselectedValuesShowcase"
+            dataset={[
+              { id: "email", label: "Email Notifications" },
+              { id: "push", label: "Push Notifications" },
+              { id: "sms", label: "SMS Alerts" },
+            ]}
+            datafield="id"
+            displayfield="label"
+            datavalue={["email", "push"]}
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Alphabetical order */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Alphabetical Order (orderby = label)
+          </Typography>
+          <CheckboxsetDefaultExport
+            name="alphabetOrderShowcase"
+            dataset={[
+              { id: 1, label: "Banana" },
+              { id: 2, label: "Apple" },
+              { id: 3, label: "Orange" },
+              { id: 4, label: "Mango" },
+            ]}
+            datafield="id"
+            displayfield="label"
+            orderby="label"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Grouped dataset */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Grouped Options (groupby)
+          </Typography>
+          <CheckboxsetDefaultExport
+            name="groupedShowcase"
+            dataset={[
+              { id: 1, label: "Chrome", category: "Browsers" },
+              { id: 2, label: "Firefox", category: "Browsers" },
+              { id: 3, label: "VS Code", category: "Editors" },
+              { id: 4, label: "WebStorm", category: "Editors" },
+            ]}
+            datafield="id"
+            displayfield="label"
+            groupby="category"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Items per row */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Items Per Row
+          </Typography>
+          <CheckboxsetDefaultExport
+            name="itemsPerRowShowcase"
+            layout="inline"
+            itemsperrow="xs-1 sm-2 md-3 lg-4"
+            dataset={[
+              { id: 1, label: "HTML" },
+              { id: 2, label: "CSS" },
+              { id: 3, label: "JavaScript" },
+              { id: 4, label: "React" },
+              { id: 5, label: "Angular" },
+              { id: 6, label: "Vue" },
+            ]}
+            datafield="id"
+            displayfield="label"
+            listener={mockListener}
+          />
+        </Box>
+      </Stack>
+    </Box>
+  ),
   args: {
-    name: "itemsPerRow",
-    label: "Items per row: 2",
-    dataset: "Item 1, Item 2, Item 3, Item 4, Item 5, Item 6",
-    itemsperrow: "2",
-    listener: mockListener,
+    name: "showcaseCheckboxset",
   },
 };
+
+
+
+// export const WithPreselectedValues: Story = {
+//   render: Template,
+//   args: {
+//     name: "preselected",
+//     label: "Notification Settings",
+//     dataset: "Email, SMS, Push Notifications, Phone Call",
+//     datavalue: ["Email", "Push Notifications"],
+//     listener: mockListener,
+//   },
+// };
+
+// export const ItemsPerRow: Story = {
+//   render: Template,
+//   args: {
+//     name: "itemsPerRow",
+//     label: "Items per row: 2",
+//     dataset: "Item 1, Item 2, Item 3, Item 4, Item 5, Item 6",
+//     itemsperrow: "2",
+//     listener: mockListener,
+//   },
+// };
 
 // export const ObjectDatasetWithPreselection: Story = {
 //   render: Template,

@@ -1,6 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Box } from "@mui/material";
+import { Box, Stack, Typography, Button, TextField } from "@mui/material";
 
 import SwitchDefaultExport from "../../../../components/input/default/switch/index";
 
@@ -102,6 +102,92 @@ export const ObjectDataset: Story = {
     disabled: false,
     multiple: false,
     displaylabel: "Object Dataset Switch",
+  },
+};
+
+export const Showcase: Story = {
+  render: () => {
+    const dataset = [
+      { id: 1, label: "Banana", value: "banana" },
+      { id: 2, label: "Apple", value: "apple" },
+      { id: 3, label: "Mango", value: "mango" },
+      { id: 4, label: "Cherry", value: "cherry" }
+    ];
+
+    return (
+      <Box style={{ padding: 16 }}>
+        <Box sx={{mb:3}}>
+          <Typography variant="h6" fontWeight={600}>
+            Switch Types
+          </Typography>
+        </Box>
+        <Stack spacing={4}>
+          {/* Preselected Switch */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Preselected Switch
+            </Typography>
+            <SwitchDefaultExport
+              name="preselectedSwitch"
+              dataset={dataset}
+              datafield="id"
+              displayfield="label"
+              datavalue={2} // Preselect Option B
+              listener={mockListener}
+            />
+          </Box>
+
+          {/* Ordered Switch */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Ordered Switch (A-Z)
+            </Typography>
+            <SwitchDefaultExport
+              name="orderedSwitch"
+              dataset={dataset}
+              datafield="id"
+              displayfield="label"
+              orderby="label:asc" // Order by label ascending
+              datavalue={2} // Preselect Apple after ordering
+              listener={mockListener}
+            />
+          </Box>
+
+          {/* Checked Icon Switch */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Checked Icon Switch
+            </Typography>
+            <SwitchDefaultExport
+              name="multiSelectSwitch"
+              dataset={dataset}
+              datafield="id"
+              displayfield="label"
+              multiple={false}
+              datavalue={1}
+              listener={mockListener}
+              checkediconclass="fa fa-check"
+            />
+          </Box>
+
+          {/* Multi-Select Switch */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Multi-Select Switch
+            </Typography>
+            <SwitchDefaultExport
+              name="multiSelectSwitch"
+              dataset={dataset}
+              datafield="id"
+              displayfield="label"
+              multiple={true}
+              datavalue={[1, 3]}
+              listener={mockListener}
+            />
+          </Box>
+        </Stack>
+      </Box>
+    );
   },
 };
 

@@ -87,6 +87,62 @@ export const AutocloseOutsideClick: Story = {
   },
 };
 
+export const Showcase: Story = {
+  render: () => {
+    return (
+      <Box style={{ padding: 16, minHeight: "600px" }}>
+        <Box sx={{mb: 3}}>
+        <Typography variant="h6" fontWeight={600}>
+          Supported Color Formats
+        </Typography>
+        </Box>
+        <Stack spacing={3}>
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">
+              HEX Format (6 digits): #FF5733
+            </Typography>
+            <ColorPickerDefaultExport
+              name="hexFormat"
+              datavalue="#FF5733"
+              placeholder="HEX color"
+              listener={mockListener}
+              autoclose="always"
+            />
+          </Box>
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">
+              RGB Format: rgb(52, 152, 219)
+            </Typography>
+            <ColorPickerDefaultExport
+              name="rgbFormat"
+              datavalue="rgb(52, 152, 219)"
+              placeholder="RGB color"
+              listener={mockListener}
+              autoclose="always"
+            />
+          </Box>
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">
+              RGBA Format: rgba(46, 204, 113, 0.7)
+            </Typography>
+            <ColorPickerDefaultExport
+              name="rgbaFormat"
+              datavalue="rgba(46, 204, 113, 0.7)"
+              placeholder="RGBA color"
+              listener={mockListener}
+              autoclose="always"
+            />
+          </Box>
+        </Stack>
+      </Box>
+    );
+  },
+  args: {
+    name: "showcaseColorPicker",
+    listener: mockListener,
+  },
+};
+
 // export const WithHexColor: Story = {
 //   render: Template,
 //   args: {
@@ -366,79 +422,6 @@ export const AutocloseOutsideClick: Story = {
 //   },
 //   args: {
 //     name: "interactiveDemo",
-//     listener: mockListener,
-//   },
-// };
-
-// export const ColorFormatsComparison: Story = {
-//   render: () => {
-//     return (
-//       <Box style={{ padding: 16, minHeight: "600px" }}>
-//         <Typography variant="h6" mb={3}>
-//           Supported Color Formats
-//         </Typography>
-//         <Stack spacing={3}>
-//           <Box>
-//             <Typography variant="subtitle2" mb={1}>
-//               HEX Format (6 digits): #FF5733
-//             </Typography>
-//             <ColorPickerDefaultExport
-//               name="hexFormat"
-//               datavalue="#FF5733"
-//               placeholder="HEX color"
-//               listener={mockListener}
-//             />
-//           </Box>
-//           <Box>
-//             <Typography variant="subtitle2" mb={1}>
-//               HEX Format (3 digits): #F57
-//             </Typography>
-//             <ColorPickerDefaultExport
-//               name="hexShort"
-//               datavalue="#F57"
-//               placeholder="Short HEX color"
-//               listener={mockListener}
-//             />
-//           </Box>
-//           <Box>
-//             <Typography variant="subtitle2" mb={1}>
-//               RGB Format: rgb(52, 152, 219)
-//             </Typography>
-//             <ColorPickerDefaultExport
-//               name="rgbFormat"
-//               datavalue="rgb(52, 152, 219)"
-//               placeholder="RGB color"
-//               listener={mockListener}
-//             />
-//           </Box>
-//           <Box>
-//             <Typography variant="subtitle2" mb={1}>
-//               RGBA Format with Transparency: rgba(46, 204, 113, 0.7)
-//             </Typography>
-//             <ColorPickerDefaultExport
-//               name="rgbaFormat"
-//               datavalue="rgba(46, 204, 113, 0.7)"
-//               placeholder="RGBA color"
-//               listener={mockListener}
-//             />
-//           </Box>
-//           <Box>
-//             <Typography variant="subtitle2" mb={1}>
-//               Named Color: crimson
-//             </Typography>
-//             <ColorPickerDefaultExport
-//               name="namedFormat"
-//               datavalue="crimson"
-//               placeholder="Named color"
-//               listener={mockListener}
-//             />
-//           </Box>
-//         </Stack>
-//       </Box>
-//     );
-//   },
-//   args: {
-//     name: "colorFormats",
 //     listener: mockListener,
 //   },
 // };

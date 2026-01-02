@@ -102,19 +102,93 @@ export const ObjectDataset: Story = {
   },
 };
 
-// Multiple Selection
-export const MultipleSelection: Story = {
-  render: Template,
-  args: {
-    name: "multipleSelect",
-    placeholder: "Select multiple options with shift + click item",
-    dataset: "JavaScript, Python, Java, C++, Ruby, Go, Rust",
-    multiple: true,
-    listener: mockListener,
-    disabled: false,
-    readonly: false,
+export const Showcase: Story = {
+  render: () => {
+    const dataset = [
+      { id: 1, name: "JavaScript", category: "Frontend" },
+      { id: 2, name: "TypeScript", category: "Frontend" },
+      { id: 3, name: "React", category: "Frontend" },
+      { id: 4, name: "Node.js", category: "Backend" },
+      { id: 5, name: "Python", category: "Backend" },
+      { id: 6, name: "Java", category: "Backend" },
+      { id: 7, name: "SQL", category: "Database" },
+      { id: 8, name: "MongoDB", category: "Database" },
+    ];
+
+    return (
+      <Stack spacing={4}>
+        <Box sx={{mb:3}}>
+          <Typography variant="h6" fontWeight={600}>
+            Select Types
+          </Typography>
+        </Box>
+
+        {/* Single Select with OrderBy */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Single Select (Ordered by Name A-Z)
+          </Typography>
+          <SelectDefaultExport
+            name="singleOrderBy"
+            placeholder="Select a technology"
+            dataset={dataset}
+            datafield="id"
+            displayfield="name"
+            orderby="name:asc"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Grouped Select */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Grouped Select by Category
+          </Typography>
+          <SelectDefaultExport
+            name="groupedSelect"
+            placeholder="Select a technology"
+            dataset={dataset}
+            datafield="id"
+            displayfield="name"
+            groupby="category"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Multiple Selection */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Multi-Select
+          </Typography>
+          <SelectDefaultExport
+            name="multiSelect"
+            placeholder="Select multiple options with shift + click item"
+            dataset={dataset}
+            datafield="id"
+            displayfield="name"
+            multiple={true}
+            listener={mockListener}
+          />
+        </Box>
+      </Stack>
+    );
   },
 };
+
+
+// Multiple Selection
+// export const MultipleSelection: Story = {
+//   render: Template,
+//   args: {
+//     name: "multipleSelect",
+//     placeholder: "Select multiple options with shift + click item",
+//     dataset: "JavaScript, Python, Java, C++, Ruby, Go, Rust",
+//     multiple: true,
+//     listener: mockListener,
+//     disabled: false,
+//     readonly: false,
+//   },
+// };
 
 // // Grouped Data
 // export const GroupedData: Story = {
