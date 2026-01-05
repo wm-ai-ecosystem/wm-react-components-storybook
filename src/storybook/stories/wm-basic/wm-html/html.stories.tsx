@@ -82,7 +82,7 @@ export const Showcase: Story = {
     <Box sx={{ p: 4 }}>
       <Stack spacing={4}>
         <Typography variant="h6" fontWeight={600}>
-          HTML Examples
+          HTML Showcase
         </Typography>
 
         {/* 2. Code Snippet */}

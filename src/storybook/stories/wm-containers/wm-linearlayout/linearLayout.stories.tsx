@@ -94,7 +94,7 @@ export const Showcase: Story = {
     <Box sx={{ p: 3 }}>
       <Box sx={{mb: 3}}>
         <Typography variant="h6" fontWeight={600}>
-          Linear Layout Types
+          Linear Layout Showcase
         </Typography>
       </Box>
 

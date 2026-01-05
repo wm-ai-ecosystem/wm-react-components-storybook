@@ -117,7 +117,7 @@ export const Showcase: Story = {
       <Box sx={{ p: 3 }}>
         <Box mb={3} id="datetime-showcase">
           <Typography variant="h6" mr={2} fontWeight={600}>
-            DateTime Input Types
+            DateTime Input Showcase
           </Typography>
           {/* <Typography variant="body2" color="text.secondary">
             Various examples of DateTime input configurations

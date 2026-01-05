@@ -125,7 +125,7 @@ export const Showcase: Story = {
     return (
       <Box style={{ padding: 16 }}>
         <Stack spacing={3}>
-          <Typography variant="h6">Currency Types</Typography>
+          <Typography variant="h6">Currency Showcase</Typography>
 
           <Box>
             <Typography variant="subtitle2" mb={1}>

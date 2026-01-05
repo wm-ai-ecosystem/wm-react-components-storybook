@@ -113,7 +113,7 @@ export const Showcase: Story = {
       <Stack spacing={4}>
         {/* Main Heading */}
         <Typography variant="h6" fontWeight={600}>
-          Text Input Types
+          Text Input Showcase
         </Typography>
 
         {/* Text Type Examples */}

@@ -89,7 +89,7 @@ export const Showcase: Story = {
     return (
       <Box style={{ padding: 16 }}>
         <Stack spacing={3}>
-          <Typography variant="h6" fontWeight={600}>Progress Circle Types:</Typography>
+          <Typography variant="h6" fontWeight={600}>Progress Circle Showcase</Typography>
           <Stack direction="row" spacing={3} sx={{ flexWrap: "wrap", gap: 3 }}>
             <Box textAlign="center">
               <Typography variant="caption" display="block" mb={1}>

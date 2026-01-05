@@ -91,7 +91,7 @@ export const Showcase: Story = {
     return (
       <Box style={{ padding: 16 }}>
         <Box sx={{mb: 3}}>
-        <Typography variant="h6" fontWeight={600} mb={4}>File Upload Types</Typography>
+        <Typography variant="h6" fontWeight={600} mb={4}>File Upload Showcase</Typography>
         </Box>
         <Stack spacing={4}>
           {/* Images */}

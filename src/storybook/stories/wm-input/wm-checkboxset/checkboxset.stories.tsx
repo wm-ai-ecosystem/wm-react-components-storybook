@@ -116,7 +116,7 @@ export const Showcase: Story = {
       {/* Main Heading */}
       <Box sx={{mb: 3}}>
       <Typography variant="h6" fontWeight={600}>
-        Checkboxset Types
+        Checkboxset Showcase
       </Typography>
       </Box>
 

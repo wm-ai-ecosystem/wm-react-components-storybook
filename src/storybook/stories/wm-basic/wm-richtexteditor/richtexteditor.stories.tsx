@@ -170,7 +170,7 @@ export const Showcase: Story = {
       <Box sx={{ p: 4 }}>
         <Stack spacing={2}>
         <Typography variant="h6" fontWeight={600} mb={3}>
-          RichTextEditor Examples
+          RichTextEditor Showcase
         </Typography>
         <Box
           sx={{

@@ -118,7 +118,7 @@ export const Showcase: Story = {
         {/* Heading with anchor */}
         <Box mb={3} id="date-showcase">
           <Typography variant="h6" mr={2} fontWeight={600}>
-            Date Input Types
+            Date Input Showcase
           </Typography>
           {/* <Typography variant="body2" color="text.secondary">
             Various examples of date input configurations

@@ -95,7 +95,7 @@ export const Showcase: Story = {
       <Box style={{ padding: 16 }}>
         <Box sx={{mb: 3}}>
           <Typography variant="h6" fontWeight={600} mb={3}>
-            Number Types
+            Number Showcase
           </Typography>
         </Box>
         <Stack spacing={4}>

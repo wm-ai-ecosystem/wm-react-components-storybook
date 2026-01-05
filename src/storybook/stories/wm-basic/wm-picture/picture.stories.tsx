@@ -90,7 +90,7 @@ export const Showcase: Story = {
     return (
       <Box style={{ padding: 16 }}>
         <Stack spacing={3}>
-          <Typography variant="h6" fontWeight={600}>Image Shapes:</Typography>
+          <Typography variant="h6" fontWeight={600}>Image Showcase:</Typography>
           <Stack direction="row" spacing={3} sx={{ flexWrap: "wrap", gap: 2 }}>
             <Box textAlign="center">
               <Typography variant="caption" display="block" mb={1}>

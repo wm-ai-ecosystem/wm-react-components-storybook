@@ -87,7 +87,7 @@ export const Showcase: Story = {
       <Box sx={{ p: 4 }}>
         <Stack spacing={4}>
           <Typography variant="h6" fontWeight={600}>
-            Icon Types
+            Icon Showcase
           </Typography>
 
           {/* Row: Basic, With Caption, With Image URL */}

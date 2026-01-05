@@ -84,7 +84,7 @@ export const Showcase: Story = {
       {/* Slider Types Heading */}
       <Box sx={{mb: 3}}>
       <Typography variant="h6" fontWeight={600} mb={3}>
-        Slider Types
+        Slider Showcase
       </Typography>
       </Box>
 

@@ -139,7 +139,7 @@ export const Showcase: Story = {
         {/* Heading */}
          <Box mb={4}>
           <Typography variant="h6" fontWeight={600}>
-            Spinner Types
+            Spinner Showcase
           </Typography>
         </Box>
 

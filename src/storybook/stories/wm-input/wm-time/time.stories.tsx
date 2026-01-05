@@ -99,7 +99,7 @@ export const Showcase: Story = {
       <Stack spacing={4}>
         {/* Title */}
         <Typography variant="h6" fontWeight={600}>
-          Time Input Types
+          Time Input Showcase
         </Typography>
 
         {/* Time Format */}

@@ -90,7 +90,7 @@ export const Showcase: Story = {
       {/* Heading with anchor */}
       <Box mb={3} id="showcase-composite">
         <Typography variant="h6" fontWeight={600}>
-          Caption Position Types
+          Caption Position Showcase
         </Typography>
         {/* <Typography variant="body2" color="text.secondary">
           Demonstration of left, right, top, and floating label positions

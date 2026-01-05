@@ -108,7 +108,7 @@ export const Showcase: Story = {
     return (
       <Box sx={{ p: 4 }}>
         <Stack spacing={3}>
-          <Typography variant="h6" fontWeight={600}>Progress Bar Types:</Typography>
+          <Typography variant="h6" fontWeight={600}>Progress Bar Showcase</Typography>
 
           <Box
             sx={{

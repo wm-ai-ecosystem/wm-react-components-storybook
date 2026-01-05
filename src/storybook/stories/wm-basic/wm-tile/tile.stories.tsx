@@ -96,7 +96,7 @@ export const Showcase: Story = {
         {/* Main Heading */}
         <Stack mb={2}>
         <Typography variant="h6" fontWeight={600} mb={5}>
-          Tiles Examples
+          Tiles Showcase
         </Typography>
         </Stack>
 

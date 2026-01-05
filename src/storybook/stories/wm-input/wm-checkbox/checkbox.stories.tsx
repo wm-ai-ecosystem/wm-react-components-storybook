@@ -87,7 +87,7 @@ export const Showcase: Story = {
       <Box sx={{ p: 4, maxWidth: 400 }}>
         <Stack spacing={4}>
           <Typography variant="h6" fontWeight={600}>
-            Checkbox Types
+            Checkbox Showcase
           </Typography>
 
           {/* Row 1: Standard Checkbox */}

@@ -94,7 +94,7 @@ export const Showcase: Story = {
       <Stack spacing={4}>
         {/* Heading */}
         <Typography variant="h6" fontWeight={600}>
-          Textarea Types
+          Textarea Showcase
         </Typography>
 
         {/* RegExp Example */}

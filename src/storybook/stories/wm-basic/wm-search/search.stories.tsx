@@ -138,7 +138,7 @@ export const Showcase: Story = {
         <Stack spacing={4}>
           {/* Heading */}
           <Typography variant="h6" fontWeight={600}>
-            Search Types
+            Search Showcase
           </Typography>
 
           {/* Search examples */}

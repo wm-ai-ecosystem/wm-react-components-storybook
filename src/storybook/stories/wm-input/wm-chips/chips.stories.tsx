@@ -154,7 +154,7 @@ export const Showcase: Story = {
     <Box style={{ padding: 16 }}>
       <Box sx={{mb: 3}}>
       <Typography variant="h6" mb={3}>
-        Chips Types
+        Chips Showcase
       </Typography>
       </Box>
       <Stack spacing={4}>

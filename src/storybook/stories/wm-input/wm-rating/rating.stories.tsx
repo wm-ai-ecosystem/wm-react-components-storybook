@@ -84,7 +84,7 @@ export const Showcase: Story = {
     <Box style={{ padding: 16 }}>
       <Box sx={{mb: 3}}>
       <Typography variant="h6" fontWeight={600} mb={4}>
-        Rating Types
+        Rating Showcase
       </Typography>
       </Box>
 
