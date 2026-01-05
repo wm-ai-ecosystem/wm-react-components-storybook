@@ -17,14 +17,6 @@ const mockListener = {
   onChange: () => {},
 };
 
-// Dummy props for WmAccordionPane (normally provided by parent WmAccordion)
-const mockPaneProps = {
-  active: false,
-  toggle: () => {},
-  onExpand: () => {},
-  onCollapse: () => {},
-};
-
 const meta = {
   title: "Containers/Accordion",
   component: WmAccordion,
@@ -33,9 +25,20 @@ const meta = {
     defaultpaneindex: { control: "number" },
     type: { control: { type: "select", options: ["static", "dynamic"] } },
     dataset: { control: "object" },
+    className: {
+      control: { type: "select" },
+      options: [
+        "app-accordion panel panel-default",
+        "app-accordion panel panel-success",
+        "app-accordion panel panel-primary",
+        "app-accordion panel panel-info",
+        "app-accordion panel panel-warning",
+        "app-accordion panel panel-danger",
+      ],
+    }
   },
   parameters: {
-    layout: "padded",
+    layout: "fullscreen",
   },
 } satisfies Meta<typeof WmAccordion>;
 
@@ -58,214 +61,423 @@ export const Docs: Story = {
 };
 
 export const Basic: Story = {
+  render: (args) => (
+    <WmAccordion {...args}>
+      <WmAccordionPane
+        name="pane1"
+        title="Section 1"
+        iconclass="fa fa-file"
+        listener={mockListener}
+      >
+        <Box sx={{ p: 2 }}>
+          <Typography>Content for section 1</Typography>
+        </Box>
+      </WmAccordionPane>
+
+      <WmAccordionPane
+        name="pane2"
+        title="Section 2"
+        iconclass="fa fa-folder"
+        listener={mockListener}
+      >
+        <Box sx={{ p: 2 }}>
+          <Typography>Content for section 2</Typography>
+        </Box>
+      </WmAccordionPane>
+
+      <WmAccordionPane
+        name="pane3"
+        title="Section 3"
+        iconclass="fa fa-cog"
+        listener={mockListener}
+      >
+        <Box sx={{ p: 2 }}>
+          <Typography>Content for section 3</Typography>
+        </Box>
+      </WmAccordionPane>
+    </WmAccordion>
+  ),
   args: {
     name: "basicAccordion",
     type: "static",
     closeothers: true,
     defaultpaneindex: 0,
     listener: mockListener,
-    children: (
-      <>
-        <WmAccordionPane
-          name="pane1"
-          title="Section 1"
-          iconclass="fa fa-file"
-          listener={mockListener}
-          {...mockPaneProps}
-        >
-          <Box sx={{ padding: 2 }}>
-            <Typography variant="body1">
-              Content for section 1. This is the first accordion pane.
-            </Typography>
-          </Box>
-        </WmAccordionPane>
-        <WmAccordionPane
-          name="pane2"
-          title="Section 2"
-          iconclass="fa fa-folder"
-          listener={mockListener}
-          {...mockPaneProps}
-        >
-          <Box sx={{ padding: 2 }}>
-            <Typography variant="body1">
-              Content for section 2. This pane contains different information.
-            </Typography>
-          </Box>
-        </WmAccordionPane>
-        <WmAccordionPane
-          name="pane3"
-          title="Section 3"
-          iconclass="fa fa-cog"
-          listener={mockListener}
-          {...mockPaneProps}
-        >
-          <Box sx={{ padding: 2 }}>
-            <Typography variant="body1">
-              Content for section 3. Each pane can have unique content.
-            </Typography>
-          </Box>
-        </WmAccordionPane>
-      </>
-    ),
+    className: "app-accordion panel panel-default"
   },
 };
 
-export const WithBadges: Story = {
+export const DynamicAccordion: Story = {
   args: {
-    name: "badgesAccordion",
-    type: "static",
+    name: "dynamicAccordion",
+    type: "dynamic",
     closeothers: true,
     defaultpaneindex: 0,
     listener: mockListener,
-    children: (
-      <>
+    className:"app-accordion panel panel-primary",
+    dataset: [
+      {
+        id: 1,
+        name: "pane1",
+        title: "Getting Started",
+        subheading: "Quick introduction",
+        iconclass: "fa fa-rocket",
+        badgevalue: "New",
+        badgetype: "success",
+        content: "Learn the basics of using our platform with step-by-step guides and tutorials.",
+      },
+      {
+        id: 2,
+        name: "pane2",
+        title: "Documentation",
+        iconclass: "fa fa-book",
+        badgevalue: "12",
+        badgetype: "primary",
+        content: "Comprehensive documentation covering all features, APIs, and best practices.",
+      },
+      {
+        id: 3,
+        name: "pane3",
+        title: "Examples",
+        subheading: "Code samples",
+        iconclass: "fa fa-code",
+        content: "Browse through practical examples and code samples to get started quickly.",
+      },
+      // {
+      //   id: 4,
+      //   name: "pane4",
+      //   title: "Support",
+      //   iconclass: "fa fa-life-ring",
+      //   badgevalue: "24/7",
+      //   badgetype: "info",
+      //   content: "Get help from our support team or community forums. We're here to help you succeed.",
+      // },
+      // {
+      //   id: 5,
+      //   name: "pane5",
+      //   title: "Updates",
+      //   subheading: "What's new",
+      //   iconclass: "fa fa-bell",
+      //   badgevalue: "3",
+      //   badgetype: "warning",
+      //   content: "Stay up to date with the latest features, improvements, and bug fixes.",
+      // },
+    ],
+    render: (itemProps: any) => {
+      return (
         <WmAccordionPane
-          name="pane1"
-          title="Inbox"
-          iconclass="fa fa-envelope"
-          badgevalue="12"
-          badgetype="primary"
+          name={itemProps.name}
+          title={itemProps.title}
+          subheading={itemProps.subheading}
+          iconclass={itemProps.iconclass}
+          badgevalue={itemProps.badgevalue}
+          badgetype={itemProps.badgetype}
+          active={itemProps.active}
+          toggle={itemProps.toggle}
+          onExpand={itemProps.expand}
+          onCollapse={itemProps.collapse}
           listener={mockListener}
-          {...mockPaneProps}
         >
-          <Box sx={{ padding: 2 }}>
-            <Typography variant="body1">You have 12 unread messages.</Typography>
-          </Box>
+          {itemProps.active && (
+            <Box sx={{ padding: 2 }}>
+              <Typography variant="body1">{itemProps.content}</Typography>
+            </Box>
+          )}
         </WmAccordionPane>
-        <WmAccordionPane
-          name="pane2"
-          title="Tasks"
-          iconclass="fa fa-check-square"
-          badgevalue="5"
-          badgetype="warning"
-          listener={mockListener}
-          {...mockPaneProps}
-        >
-          <Box sx={{ padding: 2 }}>
-            <Typography variant="body1">5 tasks are pending completion.</Typography>
-          </Box>
-        </WmAccordionPane>
-        <WmAccordionPane
-          name="pane3"
-          title="Alerts"
-          iconclass="fa fa-bell"
-          badgevalue="3"
-          badgetype="danger"
-          listener={mockListener}
-          {...mockPaneProps}
-        >
-          <Box sx={{ padding: 2 }}>
-            <Typography variant="body1">3 important alerts require your attention.</Typography>
-          </Box>
-        </WmAccordionPane>
-      </>
-    ),
+      );
+    },
   },
 };
 
-export const WithSubheadings: Story = {
+
+export const Showcase: Story = {
+  render: () => {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Stack spacing={6}>
+
+          {/* Main Heading */}
+          <Box sx={{mb: 3}}>
+            <Typography variant="h6" fontWeight={600}>
+                  Accordion Types
+            </Typography>
+          </Box>
+
+          {/* Basic Accordion */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2} style={{marginBottom: 12}}>
+              Basic Accordion
+            </Typography>
+            <WmAccordion
+              name="basicShowcase"
+              type="static"
+              closeothers={true}
+              defaultpaneindex={0}
+              listener={mockListener}
+              className="app-accordion panel panel-default"
+            >
+              <WmAccordionPane
+                name="pane1"
+                title="Section 1"
+                iconclass="fa fa-info-circle"
+                listener={mockListener}
+              >
+                <Box sx={{ padding: 2 }}>
+                  <Typography variant="body1">
+                    This is a simple accordion pane with basic text content.
+                  </Typography>
+                </Box>
+              </WmAccordionPane>
+              <WmAccordionPane
+                name="pane2"
+                title="Section 2"
+                iconclass="fa fa-file"
+                listener={mockListener}
+              >
+                <Box sx={{ padding: 2 }}>
+                  <Typography variant="body1">
+                    Content for section 2. Each pane can contain different information.
+                  </Typography>
+                </Box>
+              </WmAccordionPane>
+              {/* <WmAccordionPane
+                name="pane3"
+                title="Section 3"
+                iconclass="fa fa-folder"
+                listener={mockListener}
+              >
+                <Box sx={{ padding: 2 }}>
+                  <Typography variant="body1">
+                    Content for section 3. Click headers to expand/collapse panes.
+                  </Typography>
+                </Box>
+              </WmAccordionPane> */}
+            </WmAccordion>
+          </Box>
+
+          {/* Accordion with Badges & Icons */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2} style={{marginBottom: 12}}>
+              Accordion with Badges & Icons
+            </Typography>
+            <WmAccordion
+              name="badgesShowcase"
+              type="static"
+              closeothers={true}
+              defaultpaneindex={0}
+              listener={mockListener}
+              className="app-accordion panel panel-primary"
+            >
+              <WmAccordionPane
+                name="inbox"
+                title="Inbox"
+                subheading="Notification center"
+                iconclass="fa fa-envelope"
+                badgevalue="12"
+                badgetype="primary"
+                listener={mockListener}
+              >
+                <Box sx={{ padding: 2 }}>
+                  <Typography variant="body1" gutterBottom>
+                    You have 12 unread messages.
+                  </Typography>
+                  <Stack spacing={1} sx={{ mt: 2 }}>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <i className="fa fa-envelope" style={{ color: "#1976d2" }} />
+                      <Typography variant="body2">8 new messages</Typography>
+                    </Box>
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <i className="fa fa-user" style={{ color: "#2e7d32" }} />
+                      <Typography variant="body2">4 from team members</Typography>
+                    </Box>
+                  </Stack>
+                </Box>
+              </WmAccordionPane>
+              <WmAccordionPane
+                name="alerts"
+                title="Alerts"
+                iconclass="fa fa-bell"
+                badgevalue="3"
+                badgetype="danger"
+                listener={mockListener}
+              >
+                <Box sx={{ padding: 2 }}>
+                  <Typography variant="body1">
+                    3 important alerts require your attention.
+                  </Typography>
+                </Box>
+              </WmAccordionPane>
+              {/* <WmAccordionPane
+                name="tasks"
+                title="Tasks"
+                iconclass="fa fa-check-square"
+                badgevalue="5"
+                badgetype="warning"
+                listener={mockListener}
+              >
+                <Box sx={{ padding: 2 }}>
+                  <Typography variant="body1">
+                    5 tasks are pending completion.
+                  </Typography>
+                </Box>
+              </WmAccordionPane> */}
+            </WmAccordion>
+          </Box>
+
+          {/* Accordion with Rich Content */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2} style={{marginBottom: 12}}>
+              Accordion with Rich Content
+            </Typography>
+            <WmAccordion
+              name="richShowcase"
+              type="static"
+              closeothers={true}
+              defaultpaneindex={0}
+              listener={mockListener}
+              className="app-accordion panel panel-default"
+            >
+              <WmAccordionPane
+                name="features"
+                title="Feature List"
+                subheading="Multiple content types"
+                iconclass="fa fa-list-alt"
+                listener={mockListener}
+              >
+                <Box sx={{ padding: 2 }}>
+                  <Stack spacing={2}>
+                    <Box>
+                      <Typography variant="subtitle2" color="primary">
+                        Real-time Collaboration
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Work together with your team in real-time with live updates.
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="subtitle2" color="primary">
+                        Advanced Analytics
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Get detailed insights with customizable dashboards.
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        padding: 2,
+                        bgcolor: "#f5f5f5",
+                        borderRadius: 1,
+                        borderLeft: "4px solid #1976d2",
+                      }}
+                    >
+                      <Typography variant="body2" fontStyle="italic">
+                        "This accordion component supports complex layouts including nested boxes and styled elements."
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Box>
+              </WmAccordionPane>
+            </WmAccordion>
+          </Box>
+
+          {/* Accordion with Interactive Elements */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2} style={{marginBottom: 12}}>
+              Accordion with Interactive Elements
+            </Typography>
+            <WmAccordion
+              name="interactiveShowcase"
+              type="static"
+              closeothers={true}
+              defaultpaneindex={0}
+              listener={mockListener}
+              className="app-accordion panel panel-primary"
+            >
+              <WmAccordionPane
+                name="form"
+                title="Contact Form"
+                subheading="Fill in your details"
+                iconclass="fa fa-edit"
+                badgevalue="New"
+                badgetype="success"
+                listener={mockListener}
+              >
+                <Box sx={{ padding: 2 }}>
+                  <Typography variant="body1" gutterBottom>
+                    You can include interactive elements inside accordion panes:
+                  </Typography>
+                  <Stack spacing={2} sx={{ mt: 2 }}>
+                    <Box>
+                      <Typography variant="body2" gutterBottom>
+                        Name:
+                      </Typography>
+                      <input
+                        type="text"
+                        placeholder="Enter your name"
+                        style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          border: "1px solid #ccc",
+                          borderRadius: "4px",
+                        }}
+                      />
+                    </Box>
+                    <Box>
+                      <Typography variant="body2" gutterBottom>
+                        Email:
+                      </Typography>
+                      <input
+                        type="email"
+                        placeholder="Enter your email"
+                        style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          border: "1px solid #ccc",
+                          borderRadius: "4px",
+                        }}
+                      />
+                    </Box>
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      <button
+                        style={{
+                          padding: "8px 16px",
+                          backgroundColor: "#1976d2",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Submit
+                      </button>
+                      <button
+                        style={{
+                          padding: "8px 16px",
+                          backgroundColor: "#f5f5f5",
+                          color: "#333",
+                          border: "1px solid #ccc",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    </Box>
+                  </Stack>
+                </Box>
+              </WmAccordionPane>
+            </WmAccordion>
+          </Box>
+
+        </Stack>
+      </Box>
+    );
+  },
   args: {
-    name: "subheadingsAccordion",
-    type: "static",
-    closeothers: true,
-    defaultpaneindex: 0,
+    name: "showcaseAccordion",
     listener: mockListener,
-    children: (
-      <>
-        <WmAccordionPane
-          name="pane1"
-          title="Personal Information"
-          subheading="Basic details about yourself"
-          iconclass="fa fa-user"
-          listener={mockListener}
-          {...mockPaneProps}
-        >
-          <Box sx={{ padding: 2 }}>
-            <Typography variant="body1">
-              Name: John Doe
-              <br />
-              Email: john@example.com
-              <br />
-              Phone: (555) 123-4567
-            </Typography>
-          </Box>
-        </WmAccordionPane>
-        <WmAccordionPane
-          name="pane2"
-          title="Address"
-          subheading="Your current residence"
-          iconclass="fa fa-map-marker"
-          listener={mockListener}
-          {...mockPaneProps}
-        >
-          <Box sx={{ padding: 2 }}>
-            <Typography variant="body1">
-              123 Main Street
-              <br />
-              Apt 4B
-              <br />
-              New York, NY 10001
-            </Typography>
-          </Box>
-        </WmAccordionPane>
-        <WmAccordionPane
-          name="pane3"
-          title="Preferences"
-          subheading="Customize your experience"
-          iconclass="fa fa-sliders"
-          listener={mockListener}
-          {...mockPaneProps}
-        >
-          <Box sx={{ padding: 2 }}>
-            <Typography variant="body1">
-              Language: English
-              <br />
-              Theme: Light
-              <br />
-              Notifications: Enabled
-            </Typography>
-          </Box>
-        </WmAccordionPane>
-      </>
-    ),
-  },
+  }
 };
-
-// export const DynamicBasic: Story = {
-//   args: {
-//     name: "dynamicBasicAccordion",
-//     type: "dynamic",
-//     closeothers: true,
-//     defaultpaneindex: 0,
-//     listener: mockListener,
-//     dataset: [
-//       {
-//         id: 1,
-//         title: "Getting Started",
-//         content: "Learn the basics of using our platform with step-by-step guides.",
-//         iconclass: "wi wi-rocket",
-//       },
-//       {
-//         id: 2,
-//         title: "User Guide",
-//         content: "Comprehensive documentation covering all features and functionality.",
-//         iconclass: "wi wi-book",
-//       },
-//       {
-//         id: 3,
-//         title: "API Reference",
-//         content: "Complete API documentation for developers integrating with our service.",
-//         iconclass: "wi wi-code",
-//       },
-//       {
-//         id: 4,
-//         title: "Support",
-//         content: "Get help from our support team or community forums.",
-//         iconclass: "wi wi-life-ring",
-//       },
-//     ],
-//   },
-// };
 
 // export const DynamicWithBadges: Story = {
 //   args: {
