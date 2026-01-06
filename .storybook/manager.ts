@@ -1,6 +1,8 @@
 import { addons } from "storybook/manager-api";
 import { create } from "storybook/theming/create";
 import "../style/theme.css";
+// Import Design Tokens addon registration
+import "./addons/design-tokens/register";
 
 const customTheme = create({
   base: "light", // or 'dark'
