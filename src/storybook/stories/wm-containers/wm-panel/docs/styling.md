@@ -25,7 +25,7 @@ The following classes affect different parts of the panel:
 | .panel-fullscreen | Applied when panel is in full-screen mode |
 | .panel-collapsed | Applied when panel is collapsed |
 
-### Style Customization Example
+## Style Customization Example
 
 To apply custom styles to a panel, set the `className` property to a custom class name, then define that class in your styles:
 

@@ -19,7 +19,7 @@ const meta: Meta<typeof TreeDefaultExport> = {
     datavalue: { control: "text" },
     treeicons: {
       control: { type: "select" },
-      options: ["fa fa-minus", "fa fa-arrow-right", "fa fa-folder-tree"],
+      options: ["fa fa-minus", "fa fa-arrow-right", "fa fa-folder-tree", "fa fa-circle"],
     },
     levels: { control: "number" },
     nodelabel: { control: "text" },
@@ -53,68 +53,68 @@ const mockListener = {
 };
 
 // Sample tree data
-const simpleTreeData = [
-  {
-    label: "Node 1",
-    id: "node1",
-    icon:"",
-    children: [
-      { label: "Node 1.1", id: "node1_1" },
-      { label: "Node 1.2", id: "node1_2" },
-    ],
-  },
-  {
-    label: "Node 2",
-    id: "node2",
-    icon:"",
-    children: [
-      { label: "Node 2.1", id: "node2_1" },
-      { label: "Node 2.2", id: "node2_2" },
-    ],
-  },
-  {
-    label: "Node 3",
-    id: "node3",
-    icon:""
-  },
-];
+// const simpleTreeData = [
+//   {
+//     label: "Node 1",
+//     id: "node1",
+//     icon:"",
+//     children: [
+//       { label: "Node 1.1", id: "node1_1" },
+//       { label: "Node 1.2", id: "node1_2" },
+//     ],
+//   },
+//   {
+//     label: "Node 2",
+//     id: "node2",
+//     icon:"",
+//     children: [
+//       { label: "Node 2.1", id: "node2_1" },
+//       { label: "Node 2.2", id: "node2_2" },
+//     ],
+//   },
+//   {
+//     label: "Node 3",
+//     id: "node3",
+//     icon:""
+//   },
+// ];
 
-const fileSystemData = [
-  {
-    label: "Documents",
-    icon: "fa fa-folder",
-    id: "docs",
-    children: [
-      {
-        label: "Work",
-        icon: "fa fa-folder",
-        id: "work",
-        children: [
-          { label: "Report.pdf", icon: "fa fa-file-pdf-o", id: "report" },
-          { label: "Presentation.pptx", icon: "fa fa-file-powerpoint-o", id: "ppt" },
-        ],
-      },
-      {
-        label: "Personal",
-        icon: "fa fa-folder",
-        id: "personal",
-        children: [
-          { label: "Resume.doc", icon: "fa fa-file-word-o", id: "resume" },
-          { label: "Photo.jpg", icon: "fa fa-file-image-o", id: "photo" },
-        ],
-      },
-    ],
-  },
-  {
-    label: "Downloads",
-    icon: "fa fa-folder",
-    id: "downloads",
-    children: [
-      { label: "Software.zip", icon: "fa fa-file-archive-o", id: "software" },
-      { label: "Music.mp3", icon: "fa fa-file-audio-o", id: "music" },
-    ],
-  },
-];
+// const fileSystemData = [
+//   {
+//     label: "Documents",
+//     icon: "fa fa-folder",
+//     id: "docs",
+//     children: [
+//       {
+//         label: "Work",
+//         icon: "fa fa-folder",
+//         id: "work",
+//         children: [
+//           { label: "Report.pdf", icon: "fa fa-file-pdf-o", id: "report" },
+//           { label: "Presentation.pptx", icon: "fa fa-file-powerpoint-o", id: "ppt" },
+//         ],
+//       },
+//       {
+//         label: "Personal",
+//         icon: "fa fa-folder",
+//         id: "personal",
+//         children: [
+//           { label: "Resume.doc", icon: "fa fa-file-word-o", id: "resume" },
+//           { label: "Photo.jpg", icon: "fa fa-file-image-o", id: "photo" },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     label: "Downloads",
+//     icon: "fa fa-folder",
+//     id: "downloads",
+//     children: [
+//       { label: "Software.zip", icon: "fa fa-file-archive-o", id: "software" },
+//       { label: "Music.mp3", icon: "fa fa-file-audio-o", id: "music" },
+//     ],
+//   },
+// ];
 
 const organizationData = [
   {
@@ -144,33 +144,33 @@ const organizationData = [
   },
 ];
 
-const deepNestedData = [
-  {
-    label: "Level 1",
-    id: "l1",
-    children: [
-      {
-        label: "Level 2",
-        id: "l2",
-        children: [
-          {
-            label: "Level 3",
-            id: "l3",
-            children: [
-              {
-                label: "Level 4",
-                id: "l4",
-                children: [
-                  { label: "Level 5", id: "l5" },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-];
+// const deepNestedData = [
+//   {
+//     label: "Level 1",
+//     id: "l1",
+//     children: [
+//       {
+//         label: "Level 2",
+//         id: "l2",
+//         children: [
+//           {
+//             label: "Level 3",
+//             id: "l3",
+//             children: [
+//               {
+//                 label: "Level 4",
+//                 id: "l4",
+//                 children: [
+//                   { label: "Level 5", id: "l5" },
+//                 ],
+//               },
+//             ],
+//           },
+//         ],
+//       },
+//     ],
+//   },
+// ];
 
 const Template = (args: any) => (
   <Box style={{ padding: 16 }}>
@@ -193,55 +193,55 @@ export const Docs: Story = {
   },
 };
 
+// export const Basic: Story = {
+//   render: Template,
+//   args: {
+//     name: "basicTree",
+//     listener: mockListener,
+//     dataset: simpleTreeData,
+//     treeicons: "fa fa-circle",
+//     nodeclick: "none",
+//     horizontalalign: "left",
+//     show: true,
+//   },
+// };
+
 export const Basic: Story = {
-  render: Template,
-  args: {
-    name: "basicTree",
-    listener: mockListener,
-    dataset: simpleTreeData,
-    treeicons: "",
-    nodeclick: "none",
-    horizontalalign: "left",
-    show: true,
-  },
-};
-
-export const OrganizationChart: Story = {
-  render: Template,
-  args: {
-    name: "orgChart",
-    listener: mockListener,
-    dataset: organizationData,
-    treeicons: "fa fa-arrow-right",
-    levels: 2,
-    horizontalalign: "left",
-    show: true,
-  },
-};
-
-export const CustomNodeProperties: Story = {
   render: Template,
   args: {
     name: "customPropsTree",
     listener: mockListener,
     dataset: [
       {
-        title: "Custom Label 1",
+        title: "Node 1",
         customId: "custom1",
         subnodes: [
-          { title: "Custom Child 1.1", customId: "custom1_1" },
-          { title: "Custom Child 1.2", customId: "custom1_2" },
+          { title: "Node 1.1", customId: "custom1_1" },
+          { title: "Node 1.2", customId: "custom1_2" },
         ],
       },
       {
-        title: "Custom Label 2",
+        title: "Node 2",
         customId: "custom2",
       },
     ],
     nodelabel: "title",
     nodeid: "customId",
     nodechildren: "subnodes",
-    treeicons: "plus-minus",
+    treeicons: "fa fa-folder-tree",
+    horizontalalign: "left",
+    show: true,
+  },
+};
+
+export const Showcase: Story = {
+  render: Template,
+  args: {
+    name: "showcaseOrgChart",
+    listener: mockListener,
+    dataset: organizationData,
+    treeicons: "fa fa-arrow-right",
+    levels: 2,
     horizontalalign: "left",
     show: true,
   },

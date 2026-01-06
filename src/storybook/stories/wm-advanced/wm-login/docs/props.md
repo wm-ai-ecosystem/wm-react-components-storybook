@@ -15,7 +15,7 @@ Although the Login component doesn't have directly defined props in the provided
 | `maxAttempts` | Number | 5 | Maximum login attempts before lockout |
 | `captchaEnabled` | Boolean | false | Enable CAPTCHA after failed attempts |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Basic Login Configuration
 ```javascript

@@ -15,7 +15,7 @@ The Login component typically provides the following callback events for integra
 | `onCaptchaComplete` | Triggered when CAPTCHA verification is completed |
 | `onSessionTimeout` | Triggered when an existing session times out |
 
-### Event Usage Example
+## Event Usage Example
 
 ```javascript
 // Handle login success event

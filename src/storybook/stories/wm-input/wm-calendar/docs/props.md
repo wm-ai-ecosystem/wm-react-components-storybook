@@ -29,7 +29,7 @@
 | width | string | | Width of the calendar (in px, %, pt, or em) |
 | height | string | | Height of the calendar (in px, %, pt, or em) |
 
-### Common Calendar Configuration Use Cases
+## Common Calendar Configuration Use Cases
 
 ```javascript
 // Setting calendar data fields

@@ -84,6 +84,81 @@ export const Basic: Story = {
   },
 };
 
+
+export const Showcase: Story = {
+  render: () => {
+    return (
+      <Box style={{ padding: 16 }}>
+        <Stack spacing={3}>
+          <Typography variant="h6" fontWeight={600}>Image Showcase:</Typography>
+          <Stack direction="row" spacing={3} sx={{ flexWrap: "wrap", gap: 2 }}>
+            <Box textAlign="center">
+              <Typography variant="caption" display="block" mb={1}>
+                Default
+              </Typography>
+              <PictureDefaultExport
+                name="shapeDefault"
+                picturesource="https://picsum.photos/200"
+                alttext="Default shape"
+                width="150px"
+                height="150px"
+                listener={mockListener}
+              />
+            </Box>
+            <Box textAlign="center">
+              <Typography variant="caption" display="block" mb={1}>
+                Circle
+              </Typography>
+              <PictureDefaultExport
+                name="shapeCircle"
+                picturesource="https://picsum.photos/200"
+                alttext="Circle shape"
+                width="150px"
+                height="150px"
+                shape="circle"
+                listener={mockListener}
+              />
+            </Box>
+            <Box textAlign="center">
+              <Typography variant="caption" display="block" mb={1}>
+                Rounded
+              </Typography>
+              <PictureDefaultExport
+                name="shapeRounded"
+                picturesource="https://picsum.photos/200"
+                alttext="Rounded shape"
+                width="150px"
+                height="150px"
+                shape="rounded"
+                listener={mockListener}
+                styles={{ borderRadius: "12px" }}
+              />
+            </Box>
+            <Box textAlign="center">
+              <Typography variant="caption" display="block" mb={1}>
+                Thumbnail
+              </Typography>
+              <PictureDefaultExport
+                name="shapeThumbnail"
+                picturesource="https://picsum.photos/200"
+                alttext="Thumbnail shape"
+                width="150px"
+                height="150px"
+                shape="thumbnail"
+                listener={mockListener}
+              />
+            </Box>
+          </Stack>
+        </Stack>
+      </Box>
+    );
+  },
+  args: {
+    name: "showcasePictureShapes",
+    listener: mockListener,
+  },
+};
+
 // export const Default: Story = {
 //   render: Template,
 //   args: {

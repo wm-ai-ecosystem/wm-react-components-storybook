@@ -48,7 +48,7 @@
 | `selectedRegions` | `string[]` | `[]` | Array of currently selected region IDs. |
 | `availableRegions` | `string[]` | `[]` | Array of all available region IDs that can be selected. |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Basic Pie chart configuration

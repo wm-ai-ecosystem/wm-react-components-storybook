@@ -10,7 +10,7 @@ The checkbox component can be accessed programmatically through the Page.Widgets
 | validate | None | boolean | Validates the checkbox against its required property. Returns true if valid. |
 | focus | None | void | Programmatically sets focus to the checkbox. |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Get the current value

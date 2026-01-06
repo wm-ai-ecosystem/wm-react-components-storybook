@@ -1,0 +1,94 @@
+/* when dialog or modal open in any story book, it is applying as overflow:hidden causing scroll issue */
+body.sb-show-main {
+  overflow: auto !important;
+}
+
+/* search */
+.wm-app .app-search.input-group .input-group-addon{
+  right: 4px !important;
+  left: auto !important;
+}
+
+/* form field styles, foundation css is overriding */
+.wm-app .form-control{
+  height: 40px !important;
+  padding: 4px 8px !important;
+}
+
+.MuiInputBase-formControl::before{
+  border-bottom: none !important;
+}
+
+.wm-app .app-spinner{
+  background: none !important;
+}
+
+/* tree */
+.wm-app .app-tree li span.button{
+  line-height: 1.4 !important;
+  font-size: 14px !important;
+}
+
+.wm-app .app-tree li span.button::before{
+  font-family: 'FontAwesome' !important;
+  padding: 0 !important;
+}
+
+/* chips */
+.wm-app .app-chips:hover{
+  border: 1px solid var(--wm-color-on-surface);
+}
+
+.wm-app .app-chips:focus, .wm-app .app-chips:active{
+  border: 2px solid var(--wm-color-secondary);
+}
+
+/* currency */
+.wm-app .app-currency.input-group .form-control.app-currency-input {
+    padding-left: var(--wm-currency-inputgroup-addon-width) !important;
+}
+
+/* date, datetime, time, text, currency, select etc */
+.form-control.app-textbox, .form-control.app-dateinput, .form-control.app-select{
+  min-width: 275px !important;
+}
+
+/* select - multiple */
+.form-control.app-select[multiple] {
+  height: 80px !important;
+}
+
+.form-control.app-textarea{
+  min-width: 350px !important;
+}
+
+/* time */
+.css-1n04w30-MuiInputBase-root-MuiOutlinedInput-root{
+  padding-right: 0 !important;
+}
+
+/* accordion */
+.wm-app .app-accordion.panel-group{
+  min-width: 350px;
+}
+
+.wm-app a{
+  justify-content: flex-start !important;
+}
+
+/* Button */
+.wm-app .btn:not(.btn-icon) + .btn:not(.btn-icon), .wm-app button:not(.btn-icon) + .btn:not(.btn-icon) {
+    margin-left: var(--wm-space-0) !important;
+}
+
+/* Search */
+.wm-app .app-search.input-group .form-control-feedback.clear-btn.show-btn{
+  top: 0;
+  border: none;
+  background-color: transparent;
+  right: 0;
+}
+
+.wm-app .app-search.input-group .form-control-feedback.clear-btn.show-btn .app-icon.wi.wi-close{
+  font-size: 16px;
+}

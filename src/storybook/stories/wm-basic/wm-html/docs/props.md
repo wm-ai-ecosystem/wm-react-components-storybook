@@ -11,7 +11,7 @@ The HTML component accepts the following properties to customize its behavior an
 | `styles` | `React.CSSProperties` | `{}` | Allows applying custom CSS properties directly to the component. |
 | `hint` | `string` | `""` | Provides a tooltip or contextual hint that appears on hover, useful for providing additional information. |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Basic HTML content rendering

@@ -17,7 +17,7 @@ You can access the Rich Text Editor's methods using the widget reference in your
 | getSelectedText() | None | string | Returns the currently selected text |
 | isEditorEmpty() | None | boolean | Checks if the editor is empty |
 
-### Common Method Usage
+## Common Method Usage
 
 ```javascript
 // Get current content

@@ -92,6 +92,137 @@ export const Basic: Story = {
   },
 };
 
+export const Showcase: StoryObj = {
+  render: () => {
+    const singleSeriesData = mockData;
+    const multiSeriesData = [
+      {
+        x: 0,
+        Series_A: 100,
+        Series_A_size: 400,
+        Series_B: 200,
+        Series_B_size: 600,
+        Series_C: 150,
+        Series_C_size: 500,
+      },
+      {
+        x: 1,
+        Series_A: 120,
+        Series_A_size: 500,
+        Series_B: 180,
+        Series_B_size: 400,
+        Series_C: 160,
+        Series_C_size: 450,
+      },
+      {
+        x: 2,
+        Series_A: 170,
+        Series_A_size: 450,
+        Series_B: 150,
+        Series_B_size: 550,
+        Series_C: 140,
+        Series_C_size: 400,
+      },
+      {
+        x: 3,
+        Series_A: 140,
+        Series_A_size: 350,
+        Series_B: 220,
+        Series_B_size: 650,
+        Series_C: 180,
+        Series_C_size: 550,
+      },
+    ];
+
+    const shapes = ["diamond", "square", "triangle"] as const;
+
+    return (
+      <Box sx={{ width: "100%" }}>
+        <Box sx={{mb: 4}}>
+          <Typography variant="h6" fontWeight={600} mb={4}>
+            Bubble Chart Showcase
+          </Typography>
+        </Box>
+        <Stack spacing={6}>
+          
+          {/* Single Series */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Single Series
+            </Typography>
+            <Box sx={{ height: 400 }}>
+              <BubbleChart
+                data={singleSeriesData}
+                dataKeys={["Product_A"]}
+                selectedRegions={["Product_A"]}
+                chartColors={["#8884d8"]}
+                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                showLegend={false}
+                legendPosition="top"
+                xDataKeyArr={["Q1", "Q2", "Q3", "Q4", "Q5"]}
+                tooltips
+                shape="circle"
+                onLegendClick={() => {}}
+                onChartClick={() => {}}
+              />
+            </Box>
+          </Box>
+
+          {/* Multi Series */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Multi Series
+            </Typography>
+            <Box sx={{ height: 400 }}>
+              <BubbleChart
+                data={multiSeriesData}
+                dataKeys={["Series_A", "Series_B", "Series_C"]}
+                selectedRegions={["Series_A", "Series_B", "Series_C"]}
+                chartColors={["#8884d8", "#82ca9d", "#ffc658"]}
+                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                showLegend
+                legendPosition="top"
+                xDataKeyArr={["Jan", "Feb", "Mar", "Apr"]}
+                tooltips
+                shape="circle"
+                onLegendClick={() => {}}
+                onChartClick={() => {}}
+              />
+            </Box>
+          </Box>
+
+          {/* Shapes Showcase */}
+          {shapes.map((shape) => (
+            <Box key={shape}>
+              <Typography variant="subtitle2" color="text.secondary" mb={2}>
+                Shape: {shape.charAt(0).toUpperCase() + shape.slice(1)}
+              </Typography>
+              <Box sx={{ height: 400 }}>
+                <BubbleChart
+                  data={singleSeriesData}
+                  dataKeys={["Product_A", "Product_B"]}
+                  selectedRegions={["Product_A", "Product_B"]}
+                  chartColors={["#8884d8", "#82ca9d"]}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                  showLegend
+                  legendPosition="top"
+                  xDataKeyArr={["Q1", "Q2", "Q3", "Q4", "Q5"]}
+                  tooltips
+                  shape={shape}
+                  onLegendClick={() => {}}
+                  onChartClick={() => {}}
+                />
+              </Box>
+            </Box>
+          ))}
+
+        </Stack>
+      </Box>
+    );
+  }
+};
+
+
 // export const CircleShape: Story = {
 //   render: Template,
 //   args: {

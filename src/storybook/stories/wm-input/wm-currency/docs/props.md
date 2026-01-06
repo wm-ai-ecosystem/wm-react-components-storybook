@@ -44,7 +44,7 @@
 | width | string | "100%" | The width of the widget, specified in px or %. |
 | height | string | "auto" | The height of the widget, specified in px or %. |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Set currency to Euro

@@ -6,7 +6,7 @@
 | `onLegendClick(region: string, e: React.MouseEvent)` | Triggered when the user clicks on a legend item. Provides the region identifier and the original mouse event. |
 | `onAreaSelect(dotProp: DotProps, series: any)` | Triggered when the user selects a specific area or data point. Provides the dot properties and the associated data series. |
 
-### Example Usage
+## Example Usage
 
 ```javascript
 // Set up chart click handler

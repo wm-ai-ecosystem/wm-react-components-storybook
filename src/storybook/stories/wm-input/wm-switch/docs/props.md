@@ -24,7 +24,7 @@
 | width | string | - | The width of the widget, can be specified in pixels or percentage |
 | height | string | - | The height of the widget, can be specified in pixels or percentage |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Setting custom options for the switch

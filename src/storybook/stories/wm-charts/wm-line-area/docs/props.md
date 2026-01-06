@@ -53,7 +53,7 @@
 | `selectedRegions` | `string[]` | `[]` | Array of currently selected region identifiers |
 | `availableRegions` | `string[]` | `[]` | Array of all available region identifiers |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Basic Line Chart Configuration
 ```javascript

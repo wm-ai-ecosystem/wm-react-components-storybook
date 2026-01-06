@@ -38,7 +38,7 @@
 | rightBadge | string | | Text badge to display on the right side of each chip. |
 | selectedIconClass | string | | Icon to display on selected chips (overrides leftIconClass when selected). |
 
-### Example: Setting up a basic chips component
+## Example: Setting up a basic chips component
 
 ```javascript
 // In Page script
@@ -52,7 +52,7 @@ Page.onPageReady = function() {
 }
 ```
 
-### Example: Restricting selections and setting maximum
+## Example: Restricting selections and setting maximum
 
 ```javascript
 // Allow only values from the dataset

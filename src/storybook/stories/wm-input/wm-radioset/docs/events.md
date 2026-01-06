@@ -10,7 +10,7 @@
 | onMouseLeave | Triggered when the mouse pointer leaves the component area. |
 | onTap | Triggered when the component is tapped on a touch device. |
 
-### Example Usage
+## Example Usage
 
 ```javascript
 Page.Widgets.paymentMethodRadioset.onChange = function(newValue, oldValue) {

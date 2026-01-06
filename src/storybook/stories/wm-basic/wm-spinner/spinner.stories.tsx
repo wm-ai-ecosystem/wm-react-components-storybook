@@ -85,31 +85,113 @@ export const Basic: Story = {
   },
 };
 
-export const IconSpinner: Story = {
+export const Animations: Story = {
   render: Template,
   args: {
-    name: "iconSpinner",
+    name: "animationSpinner",
+    caption: "Loading...",
     listener: mockListener,
     show: true,
     type: "icon",
     iconsize: "22px",
     iconclass: "fa fa-circle-o-notch fa-spin",
+    animation: "bounce"
   },
 };
 
-export const ImageSpinner: Story = {
-  render: Template,
+export const Showcase: Story = {
+  render: () => {
+    const spinners = [
+      {
+        title: "Default Spinner",
+        props: {
+          name: "defaultSpinner",
+          type: "default",
+          show: true,
+        },
+      },
+      {
+        title: "Icon Spinner",
+        props: {
+          name: "iconSpinner",
+          type: "icon",
+          show: true,
+          iconsize: "32px",
+          iconclass: "fa fa-circle-o-notch fa-spin",
+        },
+      },
+      {
+        title: "Image Spinner",
+        props: {
+          name: "imageSpinner",
+          type: "image",
+          show: true,
+          image:
+            "https://media2.giphy.com/media/yyqOUPn5souNBSHUnU/giphy.gif?cid=6c09b952r7hflymkr24fukor7o0567zf293elcewo9s3tia2&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=s",
+          imagewidth: "50px",
+          imageheight: "50px",
+        },
+      },
+    ];
+
+    return (
+      <Box sx={{ p: 4 }}>
+        {/* Heading */}
+         <Box mb={4}>
+          <Typography variant="h6" fontWeight={600}>
+            Spinner Showcase
+          </Typography>
+        </Box>
+
+        {/* Single Row */}
+        <Stack direction="row" spacing={8} alignItems="center">
+          {spinners.map((spinner, index) => (
+            <Box key={index} textAlign="center">
+              <Typography variant="caption" mb={1}>
+                {spinner.title}
+              </Typography>
+              <SpinnerDefaultExport
+                {...spinner.props}
+                listener={mockListener}
+              />
+            </Box>
+          ))}
+        </Stack>
+      </Box>
+    );
+  },
   args: {
-    name: "ImageSpinner",
-    caption: "",
+    name: "showcaseSpinners",
     listener: mockListener,
-    show: true,
-    type: "image",
-    image:"https://media2.giphy.com/media/yyqOUPn5souNBSHUnU/giphy.gif?cid=6c09b952r7hflymkr24fukor7o0567zf293elcewo9s3tia2&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=s",
-    imagewidth: "50px",
-    imageheight: "50px",
   },
 };
+
+
+// export const IconSpinner: Story = {
+//   render: Template,
+//   args: {
+//     name: "iconSpinner",
+//     listener: mockListener,
+//     show: true,
+//     type: "icon",
+//     iconsize: "22px",
+//     iconclass: "fa fa-circle-o-notch fa-spin",
+//   },
+// };
+
+// export const ImageSpinner: Story = {
+//   render: Template,
+//   args: {
+//     name: "ImageSpinner",
+//     caption: "",
+//     listener: mockListener,
+//     show: true,
+//     type: "image",
+//     image:"https://media2.giphy.com/media/yyqOUPn5souNBSHUnU/giphy.gif?cid=6c09b952r7hflymkr24fukor7o0567zf293elcewo9s3tia2&ep=v1_internal_gif_by_id&rid=giphy.gif&ct=s",
+//     imagewidth: "50px",
+//     imageheight: "50px",
+//   },
+// };
 
 // export const WithCaption: Story = {
 //   render: Template,

@@ -15,7 +15,7 @@
 | MouseLeave | Triggered when the mouse cursor leaves the component area. |
 | Tap | Triggered when the component is tapped (touch screens). |
 
-### Example Event Handlers
+## Example Event Handlers
 
 ```javascript
 Page.myDatetimeChange = function($event, widget) {

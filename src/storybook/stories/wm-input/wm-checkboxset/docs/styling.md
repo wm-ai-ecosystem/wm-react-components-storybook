@@ -9,7 +9,7 @@ The CheckboxSet component's appearance can be customized through appropriate sty
 | Label Styling | Changes the styling of checkbox labels |
 | Group Header Styling | Customizes the appearance of group headers when grouping is enabled |
 
-### Core Style Classes
+## Core Style Classes
 
 - `.checkbox-set-container` - The main container for the checkbox set
 - `.checkbox-item` - Individual checkbox items within the set

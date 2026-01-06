@@ -20,7 +20,7 @@ Replace "myTextarea" with the actual name of your textarea widget.
 | setValidationMessage | message: string | void | Sets a custom validation error message |
 | clearValidationMessage | none | void | Clears any validation error messages |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 #### Programmatically updating textarea content
 ```javascript

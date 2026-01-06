@@ -17,7 +17,7 @@
 | **Service Events** |
 | OnBeforeServiceCall | Triggered before sending the service call for fetching search results. |
 
-### Example: Using the OnAdd event
+## Example: Using the OnAdd event
 
 ```javascript
 Page.myChipsOnAdd = function($event, widget, $data) {
@@ -26,7 +26,7 @@ Page.myChipsOnAdd = function($event, widget, $data) {
 };
 ```
 
-### Example: Using the OnBeforeAdd event to validate
+## Example: Using the OnBeforeAdd event to validate
 
 ```javascript
 Page.myChipsOnBeforeAdd = function($event, widget, $data) {

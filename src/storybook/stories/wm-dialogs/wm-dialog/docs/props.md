@@ -33,7 +33,7 @@
 |----------|------|---------|-------------|
 | tabindex | number | 0 | Specifies the tab order for the dialog component (-1 makes it non-focusable) |
 
-### Common Dialog Usage
+## Common Dialog Usage
 ```javascript
 // Open dialog on button click
 Page.button1Click = function($event, widget) {

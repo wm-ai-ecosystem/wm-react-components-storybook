@@ -41,7 +41,7 @@
 | tabIndex | number | 0 | Specifies the tab order for the component; -1 makes it non-focusable |
 | shortcutKey | string | "" | Keyboard shortcut to focus/activate the component |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Set default value to current time

@@ -23,7 +23,7 @@
 |------|------|---------|-------------|
 | `children` | `React.ReactNode` | - | Content to be displayed within accordion panes (for static type) |
 
-### Configure Accordion Behavior
+## Configure Accordion Behavior
 
 ```javascript
 // Allow multiple panes to be open

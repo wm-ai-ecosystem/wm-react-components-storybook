@@ -20,7 +20,7 @@
 | MouseEnter | Triggered when the mouse pointer enters the component |
 | MouseLeave | Triggered when the mouse pointer leaves the component |
 
-### Example Usage
+## Example Usage
 
 ```javascript
 Page.Widgets.myDate.onFocus = function(widget, event) {

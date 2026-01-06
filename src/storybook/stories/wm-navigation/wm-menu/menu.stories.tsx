@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
+import { Box, Typography, Stack } from "@mui/material";
 import WmMenu from "../../../../components/navigation/menu";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
@@ -17,7 +18,7 @@ const meta = {
     caption: { control: "text" },
     height: { control: "text" },
     width: { control: "text" },
-    iconposition: { control: "text" },
+    iconposition: { control: "select", options: ["left", "center", "right"] },
     iconclass: { control: "text" },
     disableMenuContext: { control: "boolean" },
     menulayout: { control: "select", options: ["vertical", "horizontal"] },
@@ -36,7 +37,7 @@ const meta = {
     }
   },
   parameters: {
-    layout: "padded",
+    layout: "fullscreen",
   },
 } satisfies Meta<typeof WmMenu>;
 
@@ -53,8 +54,8 @@ type Story = StoryObj<typeof meta>;
 
 const menuItems = [
   { label: "Home", icon: "fa-thin fa-link" },
-  { label: "Profile", icon: "wi wi-person" },
-  { label: "Settings", icon: "wi wi-settings" },
+  { label: "Profile", icon: "fa fa-user" },
+  { label: "Settings", icon: "fa fa-settings" },
   { label: "Logout", icon: "wi wi-power-settings-new" },
 ];
 
@@ -80,7 +81,7 @@ export const Basic: Story = {
     width: "200px",
     height: "auto",
     iconposition: "left",
-    iconclass: "wm-icon wm-icon-menu",
+    iconclass: "",
     disableMenuContext: false,
     menuposition: "down,right",
     menualign: "left",
@@ -92,3 +93,85 @@ export const Basic: Story = {
     listener: mockListener,
   }
 };
+
+export const Showcase: Story = {
+  render: () => {
+    const showcaseItems = [
+      {
+        title: "Menu Position: down,right",
+        props: { menuposition: "down,right" },
+      },
+      {
+        title: "Menu Position: up,left",
+        props: { menuposition: "up,left" },
+      },
+      {
+        title: "Menu Layout: vertical",
+        props: { menulayout: "vertical" },
+      },
+      {
+        title: "Menu Layout: horizontal",
+        props: { menulayout: "horizontal" },
+      },
+      {
+        title: "Show on Hover: Enabled",
+        props: { showonhover: true },
+      },
+      {
+        title: "Show on Hover: Disabled",
+        props: { showonhover: false },
+      },
+      {
+        title: "AutoOpen: never, AutoClose: outsideClick",
+        props: { autoopen: "never", autoclose: "outsideClick" },
+      },
+      {
+        title: "AutoOpen: always, AutoClose: disabled",
+        props: { autoopen: "always", autoclose: "disabled" },
+      },
+    ];
+
+    return (
+      <Box sx={{ width: "100%", p: 4 }}>
+        <Box sx={{mb: 3}}>
+          <Typography variant="h6" fontWeight={600}>
+            Menu Showcase
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" },
+            gap: 4,
+          }}
+        >
+          {showcaseItems.map(({ title, props }, index) => (
+            <Box key={index}>
+              <Typography variant="subtitle2" color="text.secondary" style={{marginBottom: "6px"}}>
+                {title}
+              </Typography>
+              <WmMenu
+                name={`menu_showcase_${index}`}
+                caption="Menu"
+                width="200px"
+                iconposition="left"
+                iconclass="fa fa-bars"
+                menualign="left"
+                dataset={menuItems}
+                listener={mockListener}
+                {...props}
+              />
+            </Box>
+          ))}
+        </Box>
+      </Box>
+    );
+  },
+  args: {
+    name: "menuShowcase",
+    listener: mockListener,
+  },
+};
+
+

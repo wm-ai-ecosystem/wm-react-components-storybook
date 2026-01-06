@@ -41,7 +41,7 @@
 | showtooltip | boolean | false | Determines whether to display a tooltip over the progress bar |
 | tooltipposition | string | "up" | Position of the tooltip. Options: up, down, left, right |
 
-### Configure Progress Bar Behavior
+## Configure Progress Bar Behavior
 
 ```javascript
 // Set progress value

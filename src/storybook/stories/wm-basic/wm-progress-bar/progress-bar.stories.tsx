@@ -55,8 +55,10 @@ const mockListener = {
 };
 
 const Template = (args: any) => (
-  <Box style={{ padding: 16 }}>
-    <ProgressBarDefaultExport {...args} listener={mockListener} />
+  <Box style={{ padding: 16, width: '100%', maxWidth: 200 }}>
+    <Box style={{ width: '100%' }}>
+      <ProgressBarDefaultExport {...args} listener={mockListener} />
+    </Box>
   </Box>
 );
 
@@ -90,122 +92,45 @@ export const Basic: Story = {
 
 export const Showcase: Story = {
   render: () => {
+    const progressBars = [
+      { name: "allDefault", label: "Default (30%)", value: 30, type: "default" },
+      { name: "allDefaultStriped", label: "Default Striped (40%)", value: 40, type: "default-striped" },
+      { name: "allSuccess", label: "Success (75%)", value: 75, type: "success" },
+      { name: "allSuccessStriped", label: "Success Striped (70%)", value: 70, type: "success-striped" },
+      { name: "allInfo", label: "Info (50%)", value: 50, type: "info" },
+      { name: "allInfoStriped", label: "Info Striped (55%)", value: 55, type: "info-striped" },
+      { name: "allWarning", label: "Warning (60%)", value: 60, type: "warning" },
+      { name: "allWarningStriped", label: "Warning Striped (65%)", value: 65, type: "warning-striped" },
+      { name: "allDanger", label: "Danger (85%)", value: 85, type: "danger" },
+      { name: "allDangerStriped", label: "Danger Striped (90%)", value: 90, type: "danger-striped" },
+    ];
+
     return (
-      <Box style={{ padding: 16 }}>
+      <Box sx={{ p: 4 }}>
         <Stack spacing={3}>
-          <Typography variant="subtitle1">All Progress Bar Types:</Typography>
-          <Stack spacing={2}>
-            <Box>
-              <Typography variant="caption" display="block" mb={1}>
-                Default (30%)
-              </Typography>
-              <ProgressBarDefaultExport
-                name="allDefault"
-                datavalue={30}
-                type="default"
-                listener={mockListener}
-              />
-            </Box>
-            <Box>
-              <Typography variant="caption" display="block" mb={1}>
-                Default Striped (40%)
-              </Typography>
-              <ProgressBarDefaultExport
-                name="allDefaultStriped"
-                datavalue={40}
-                type="default-striped"
-                listener={mockListener}
-              />
-            </Box>
-            <Box>
-              <Typography variant="caption" display="block" mb={1}>
-                Success (75%)
-              </Typography>
-              <ProgressBarDefaultExport
-                name="allSuccess"
-                datavalue={75}
-                type="success"
-                listener={mockListener}
-              />
-            </Box>
-            <Box>
-              <Typography variant="caption" display="block" mb={1}>
-                Success Striped (70%)
-              </Typography>
-              <ProgressBarDefaultExport
-                name="allSuccessStriped"
-                datavalue={70}
-                type="success-striped"
-                listener={mockListener}
-              />
-            </Box>
-            <Box>
-              <Typography variant="caption" display="block" mb={1}>
-                Info (50%)
-              </Typography>
-              <ProgressBarDefaultExport
-                name="allInfo"
-                datavalue={50}
-                type="info"
-                listener={mockListener}
-              />
-            </Box>
-            <Box>
-              <Typography variant="caption" display="block" mb={1}>
-                Info Striped (55%)
-              </Typography>
-              <ProgressBarDefaultExport
-                name="allInfoStriped"
-                datavalue={55}
-                type="info-striped"
-                listener={mockListener}
-              />
-            </Box>
-            <Box>
-              <Typography variant="caption" display="block" mb={1}>
-                Warning (60%)
-              </Typography>
-              <ProgressBarDefaultExport
-                name="allWarning"
-                datavalue={60}
-                type="warning"
-                listener={mockListener}
-              />
-            </Box>
-            <Box>
-              <Typography variant="caption" display="block" mb={1}>
-                Warning Striped (65%)
-              </Typography>
-              <ProgressBarDefaultExport
-                name="allWarningStriped"
-                datavalue={65}
-                type="warning-striped"
-                listener={mockListener}
-              />
-            </Box>
-            <Box>
-              <Typography variant="caption" display="block" mb={1}>
-                Danger (85%)
-              </Typography>
-              <ProgressBarDefaultExport
-                name="allDanger"
-                datavalue={85}
-                type="danger"
-                listener={mockListener}
-              />
-            </Box>
-            <Box>
-              <Typography variant="caption" display="block" mb={1}>
-                Danger Striped (90%)
-              </Typography>
-              <ProgressBarDefaultExport
-                name="allDangerStriped"
-                datavalue={90}
-                type="danger-striped"
-                listener={mockListener}
-              />
-            </Box>
-          </Stack>
+          <Typography variant="h6" fontWeight={600}>Progress Bar Showcase</Typography>
+
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              gap: 3,
+            }}
+          >
+            {progressBars.map((bar, index) => (
+              <Box key={index}>
+                <Typography variant="caption" display="block" mb={1}>
+                  {bar.label}
+                </Typography>
+                <ProgressBarDefaultExport
+                  name={bar.name}
+                  datavalue={bar.value}
+                  type={bar.type}
+                  listener={mockListener}
+                />
+              </Box>
+            ))}
+          </Box>
         </Stack>
       </Box>
     );
@@ -215,6 +140,7 @@ export const Showcase: Story = {
     listener: mockListener,
   },
 };
+
 
 // export const Default: Story = {
 //   render: Template,

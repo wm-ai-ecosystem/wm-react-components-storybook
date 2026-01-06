@@ -10,6 +10,7 @@ import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
+import layoutGrid from "@wavemaker/react-runtime/components/container/layout-grid";
 
 
 const meta: Meta<typeof RadiosetDefaultExport> = {
@@ -26,7 +27,7 @@ const meta: Meta<typeof RadiosetDefaultExport> = {
     displayValue: { control: "text" },
     groupby: { control: "text" },
     // itemclass: { control: "text" },
-    itemsperrow: { control: "text" },
+    itemsperrow: { control: "select", options: ["xs-1 sm-1 md-1 lg-1","xs-1 sm-2 md-2 lg-2","xs-1 sm-2 md-3 lg-3","xs-1 sm-2 md-3 lg-4","xs-1 sm-2 md-4 lg-6"] },
     // listclass: { control: "text" },
     // match: { control: "text" },
     orderby: { control: "text" },
@@ -101,15 +102,115 @@ export const ObjectDataset: Story = {
   },
 };
 
-export const ItemsPerRowTwo: Story = {
-  render: Template,
+export const Showcase: Story = {
+  render: () => (
+    <Box sx={{ p: 3 }}>
+      {/* Main Heading */}
+      <Box sx={{mb: 3}}>
+        <Typography variant="h6" fontWeight={600}>
+          Radioset Showcase
+        </Typography>
+      </Box>
+
+      <Stack spacing={4}>
+        {/* Preselected value */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Preselected Value
+          </Typography>
+          <RadiosetDefaultExport
+            name="preselectedRadioset"
+            dataset={[
+              { id: 1, label: "Small" },
+              { id: 2, label: "Medium" },
+              { id: 3, label: "Large" },
+            ]}
+            datafield="id"
+            displayfield="label"
+            datavalue={2}
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Order by */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Alphabetical Order (orderby = label)
+          </Typography>
+          <RadiosetDefaultExport
+            name="orderedRadioset"
+            dataset={[
+              { id: 1, label: "Banana" },
+              { id: 2, label: "Apple" },
+              { id: 3, label: "Orange" },
+              { id: 4, label: "Mango" },
+            ]}
+            datafield="id"
+            displayfield="label"
+            orderby="label"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Group by */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Grouped Options (groupby)
+          </Typography>
+          <RadiosetDefaultExport
+            name="groupedRadioset"
+            dataset={[
+              { id: 1, label: "Chrome", category: "Browsers" },
+              { id: 2, label: "Firefox", category: "Browsers" },
+              { id: 3, label: "VS Code", category: "Editors" },
+              { id: 4, label: "WebStorm", category: "Editors" },
+            ]}
+            datafield="id"
+            displayfield="label"
+            groupby="category"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Items per row */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Items Per Row
+          </Typography>
+          <RadiosetDefaultExport
+            name="itemsPerRowRadioset"
+            dataset={[
+              { id: 1, label: "HTML" },
+              { id: 2, label: "CSS" },
+              { id: 3, label: "JavaScript" },
+              { id: 4, label: "React" },
+              { id: 5, label: "Angular" },
+              { id: 6, label: "Vue" },
+            ]}
+            datafield="id"
+            displayfield="label"
+            itemsperrow="xs-1 sm-2 md-3 lg-4"
+            listener={mockListener}
+          />
+        </Box>
+      </Stack>
+    </Box>
+  ),
   args: {
-    name: "twoPerRow",
-    dataset: "Option 1, Option 2, Option 3, Option 4, Option 5, Option 6",
-    itemsperrow: "xs-2 sm-2 md-2 lg-2",
-    listener: mockListener,
+    name: "showcaseRadioset",
   },
 };
+
+
+// export const ItemsPerRowTwo: Story = {
+//   render: Template,
+//   args: {
+//     name: "twoPerRow",
+//     dataset: "Option 1, Option 2, Option 3, Option 4, Option 5, Option 6",
+//     itemsperrow: "xs-2 sm-2 md-2 lg-2",
+//     listener: mockListener,
+//   },
+// };
 
 // export const StringDataset: Story = {
 //   render: Template,

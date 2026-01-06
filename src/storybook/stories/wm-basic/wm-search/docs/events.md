@@ -9,7 +9,7 @@
 | onSelect | Triggered when an item is selected from the search results |
 | onBeforeServiceCall | Triggered before sending the service call for fetching search results. The inputData can be modified in this event handler |
 
-### Example Event Usage
+## Example Event Usage
 
 ```javascript
 // Handle item selection

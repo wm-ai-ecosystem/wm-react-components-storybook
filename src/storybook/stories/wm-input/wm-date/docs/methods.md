@@ -14,7 +14,7 @@ The Date component can be accessed in scripts using `Page.Widgets.widgetName`, w
 | enable | - | - | Enables user interaction with the date component |
 | disable | - | - | Disables user interaction with the date component |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 ```javascript
 // Programmatically set date to tomorrow

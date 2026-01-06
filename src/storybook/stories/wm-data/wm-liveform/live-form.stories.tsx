@@ -151,13 +151,13 @@ export const Basic: Story = {
             caption="Email Address"
             required={true}
           />
-          <WmSelect
+          {/* <WmSelect
             name="role"
             datavalue=""
             dataset={["Admin", "User", "Manager", "Guest"]}
             listener={mockListener}
             caption="Role"
-          />
+          /> */}
           <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
             <Button variant="outlined" type="reset">
               Reset

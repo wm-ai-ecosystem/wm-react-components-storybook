@@ -35,7 +35,7 @@
 | tabindex | number | 0 | Controls the tab order for keyboard navigation |
 | shortcutkey | string | - | Keyboard shortcut to focus the widget |
 
-### Configure Number Widget Example
+## Configure Number Widget Example
 ```javascript
 // Set minimum and maximum values
 Page.Widgets.myNumberInput.minvalue = 1;

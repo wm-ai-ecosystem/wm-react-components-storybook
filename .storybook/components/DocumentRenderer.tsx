@@ -7,6 +7,8 @@ interface DocumentationProps {
   events?:string;
   methods?:string;
   styling?: string;
+  style?: string;
+  token?: string;
 }
 
 // Wrapper component to provide Storybook docs context
@@ -48,6 +50,8 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
   events,
   methods,
   styling,
+  style,
+  token,
 }) => {
   const [activeTab, setActiveTab] = useState("overview");
   const activeColor = "#296df6"; // Blue theme
@@ -96,7 +100,6 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
           color: var(--text-primary);
           min-width: 100%;
           padding: 0 24px;
-          scroll-behaviour: auto;
         }
 
         /* Accordion (Details) Styling */
@@ -181,7 +184,7 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
           width: 100%;
           border-collapse: separate;
           border-spacing: 0;
-          margin: 20px 0;
+          margin: 20px 0 30px;
           border: 1px solid var(--border-color);
           border-radius: 8px;
           overflow: hidden;
@@ -229,15 +232,11 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
         }
 
         h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6{
-          margin: 8px 0 8px !important;
+          margin: 24px 0 8px !important;
           padding: 0 0 12px !important
         }
 
-        p, .label.p{
-          margin: 16px 0 !important
-        }
-
-        ul{
+        ul, ol{
           margin: 16px 0 !important
         }
 
@@ -251,13 +250,17 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
           background-color: transparent !important;
         }
 
+        .docblock-source{
+          margin: 20px 0 40px;
+        }
+
       `}</style>
 
       <div
         style={{
           display: "flex",
           borderBottom: "1px solid rgba(128,128,128,0.2)",
-          marginBottom: "20px",
+          marginBottom: "12px",
         }}
       >
         {overview && renderTab("overview", "Overview")}
@@ -265,6 +268,7 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
         {events && renderTab("events", "Events")}
         {methods && renderTab("methods", "Methods")}
         {styling && renderTab("styling", "Styling")}
+        {(style || token) && renderTab("designSystem", "Styling")}
       </div>
 
       <div style={{ padding: "10px 0" }}>
@@ -291,6 +295,26 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
         {activeTab === "styling" && styling && (
           <div>
             <MarkdownWrapper>{styling}</MarkdownWrapper>
+          </div>
+        )}
+        {activeTab === "designSystem" && (style || token) && (
+          <div>
+            {style && (
+              <details>
+                <summary>Variants</summary>
+                <div>
+                  <MarkdownWrapper>{style}</MarkdownWrapper>
+                </div>
+              </details>
+            )}
+            {token && (
+              <details open>
+                <summary>Design Tokens</summary>
+                <div>
+                  <MarkdownWrapper>{token}</MarkdownWrapper>
+                </div>
+              </details>
+            )}
           </div>
         )}
 

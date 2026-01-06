@@ -89,15 +89,103 @@ export const Basic: Story = {
   },
 };
 
-export const WithRegexp: Story = {
-  render: Template,
+export const Showcase: Story = {
+  render: () => {
+    return (
+      <Box style={{ padding: 16 }}>
+        <Box sx={{mb: 3}}>
+          <Typography variant="h6" fontWeight={600} mb={3}>
+            Number Showcase
+          </Typography>
+        </Box>
+        <Stack spacing={4}>
+          {/* RegExp Validation */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>
+              RegExp Validation (3-digit numbers only)
+            </Typography>
+            <NumberDefaultExport
+              name="regexpExample"
+              placeholder="Enter 3-digit number"
+              regexp="[0-9]{3}"
+              listener={mockListener}
+            />
+          </Box>
+
+          {/* Min-Max Value */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>
+              Min-Max Values (0-100)
+            </Typography>
+            <NumberDefaultExport
+              name="minMax"
+              placeholder="Enter number (0-100)"
+              minvalue={0}
+              maxvalue={100}
+              listener={mockListener}
+              inputmode="natural"
+            />
+          </Box>
+
+          {/* Decimal Values */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>
+              Decimal Values (2 decimal places)
+            </Typography>
+            <NumberDefaultExport
+              name="decimalExample"
+              placeholder="Enter decimal number"
+              decimalplaces={2}
+              datavalue={12.34}
+              listener={mockListener}
+            />
+          </Box>
+
+          {/* Step Values */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>
+              Step Values (Step: 5)
+            </Typography>
+            <NumberDefaultExport
+              name="stepExample"
+              placeholder="Increment by 5"
+              step={5}
+              listener={mockListener}
+            />
+          </Box>
+
+          {/* Financial Input Mode */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>
+              Financial Input Mode (Positive/Negative)
+            </Typography>
+            <NumberDefaultExport
+              name="financialExample"
+              placeholder="Enter amount"
+              inputmode="financial"
+              decimalplaces={2}
+              trailingzero={true}
+              listener={mockListener}
+            />
+          </Box>
+        </Stack>
+      </Box>
+    );
+  },
   args: {
-    name: "withRegexp",
-    placeholder: "Even 3 digit number",
-    regexp: "[0-9]{3}",
-    listener: mockListener,
+    name: "showcaseNumber"
   },
 };
+
+// export const WithRegexp: Story = {
+//   render: Template,
+//   args: {
+//     name: "withRegexp",
+//     placeholder: "Even 3 digit number",
+//     regexp: "[0-9]{3}",
+//     listener: mockListener,
+//   },
+// };
 
 // export const WithMinMaxValue: Story = {
 //   render: Template,

@@ -42,7 +42,7 @@ const meta: Meta<typeof FileUploadDefaultExport> = {
     // filelistheight: { control: "number" },
     showprogressbar: { control: "boolean" },
     showprogressbarpercentage: { control: "boolean" },
-    // uploadpath: { control: "text" },
+    uploadpath: { control: "text" },
     // destination: { control: "text" },
     // className: { control: "text" },
   },
@@ -86,27 +86,116 @@ export const Basic: Story = {
   },
 };
 
-export const ImageFilesOnly: Story = {
-  render: Template,
-  args: {
-    name: "imageOnly",
-    caption: "Select Images",
-    multiple: true,
-    extensions: "jpg,jpeg,png,gif",
-    fileuploadmessage: "Drop image files here",
+export const Showcase: Story = {
+  render: () => {
+    return (
+      <Box style={{ padding: 16 }}>
+        <Box sx={{mb: 3}}>
+        <Typography variant="h6" fontWeight={600} mb={4}>File Upload Showcase</Typography>
+        </Box>
+        <Stack spacing={4}>
+          {/* Images */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>Images Only</Typography>
+            <FileUploadDefaultExport
+              name="imagesOnly"
+              caption="Select Images"
+              multiple={false}
+              extensions="jpg,jpeg,png,gif,svg"
+              fileuploadmessage="Drop image files here"
+            />
+          </Box>
+
+          {/* Documents */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>Documents Only</Typography>
+            <FileUploadDefaultExport
+              name="documentsOnly"
+              caption="Select Documents"
+              multiple={false}
+              extensions="pdf,doc,docx,txt"
+              fileuploadmessage="Drop document files here"
+            />
+          </Box>
+
+          {/* Videos */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>Videos Only</Typography>
+            <FileUploadDefaultExport
+              name="videosOnly"
+              caption="Select Videos"
+              multiple={false}
+              extensions="mp4,avi,mov,wmv"
+              fileuploadmessage="Drop video files here"
+            />
+          </Box>
+
+          {/* Audio */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>Audio Only</Typography>
+            <FileUploadDefaultExport
+              name="audioOnly"
+              caption="Select Audio"
+              multiple={false}
+              extensions="mp3,wav,ogg,m4a"
+              fileuploadmessage="Drop audio files here"
+            />
+          </Box>
+
+          {/* Progress Bar Upload */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>Upload with Progress Bar</Typography>
+            <FileUploadDefaultExport
+              name="progressUpload"
+              caption="Upload Files"
+              multiple={false}
+              fileuploadmessage="Drop files here to see progress"
+              showprogressbar={true}
+              showprogressbarpercentage={true}
+            />
+          </Box>
+
+          {/* Multi-select */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={1}>Multi-Select Files (All Types)</Typography>
+            <FileUploadDefaultExport
+              name="multiSelect"
+              caption="Select Files"
+              multiple={true}
+              fileuploadmessage="Drop any type of file here"
+            />
+          </Box>
+        </Stack>
+      </Box>
+    );
   },
+  args:{
+    name: "showcaseFileUpload"
+  }
 };
 
-export const DocumentFilesOnly: Story = {
-  render: Template,
-  args: {
-    name: "documentOnly",
-    caption: "Select Documents",
-    multiple: true,
-    extensions: "pdf,doc,docx,txt",
-    fileuploadmessage: "Drop document files here",
-  },
-};
+
+// export const ImageFilesOnly: Story = {
+//   render: Template,
+//   args: {
+//     name: "imageOnly",
+//     caption: "Select Images",
+//     multiple: true,
+//     extensions: "jpg,jpeg,png,gif",
+//     fileuploadmessage: "Drop image files here",
+//   },
+// };
+
+// export const DocumentFilesOnly: Story = {
+//   render: Template,
+//   args: {
+//     name: "documentOnly",
+//     caption: "Select Documents",
+//     multiple: true,
+//     extensions: "pdf,doc,docx,txt",
+//     fileuploadmessage: "Drop document files here",
+//   },
+// };
 
 // export const PDFOnly: Story = {
 //   render: Template,

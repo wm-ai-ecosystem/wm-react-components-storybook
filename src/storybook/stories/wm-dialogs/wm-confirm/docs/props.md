@@ -18,7 +18,7 @@
 | onOk | function | - | Callback function triggered when the confirmation button is clicked. |
 | onCancel | function | - | Callback function triggered when the cancellation button is clicked. |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Basic confirmation dialog

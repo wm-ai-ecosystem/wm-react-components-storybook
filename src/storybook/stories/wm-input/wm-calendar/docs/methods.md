@@ -14,7 +14,7 @@ Calendar methods can be accessed through script using the widget reference: `Pag
 | rerenderEvents() | none | void | Rerenders all events from the dataset |
 | applyCalendarOptions(option, name, value) | option (string), name (string), value (any) | void | Sets calendar options, including locale |
 
-### Common Method Examples
+## Common Method Examples
 
 ```javascript
 // Select a specific date

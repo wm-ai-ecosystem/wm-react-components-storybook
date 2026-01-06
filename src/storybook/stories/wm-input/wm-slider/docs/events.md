@@ -4,7 +4,7 @@
 | --- | --- |
 | Change | Triggered when the slider's value changes. This event fires when the user manually adjusts the slider or when the value is programmatically changed (unless skipChangeEventFromScript is enabled). |
 
-### Example Usage
+## Example Usage
 
 ```javascript
 Page.onMySliderChange = function(newValue) {

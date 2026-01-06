@@ -10,7 +10,7 @@ The Datetime component can be accessed in script via `Page.Widgets.widgetName`, 
 | focus | None | void | Programmatically sets focus to the datetime component. |
 | isValid | None | boolean | Returns true if the datetime value meets all validation criteria. |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 #### Getting and Setting Values
 ```javascript

@@ -12,7 +12,7 @@ Time component methods can be accessed through the Page.Widgets namespace, using
 | enable | none | void | Enables the time component if it was disabled |
 | disable | none | void | Disables the time component, making it non-editable |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 ```javascript
 // Get the current time value

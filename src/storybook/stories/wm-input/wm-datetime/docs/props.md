@@ -48,7 +48,7 @@
 | disabled | boolean | false | When true, the component becomes display-only and cannot be interacted with. |
 | skipOnChangeEvent | boolean | false | When true, the onChange callback only triggers on user interaction, not script updates. |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Setting Default Date and Time
 ```javascript

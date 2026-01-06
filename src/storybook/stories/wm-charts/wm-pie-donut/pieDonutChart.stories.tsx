@@ -104,6 +104,166 @@ export const Basic: Story = {
   },
 };
 
+export const Showcase: StoryObj = {
+  render: () => {
+    const defaultData = mockData;
+    const budgetData = [
+      { name: "Marketing", value: 35000 },
+      { name: "Development", value: 50000 },
+      { name: "Operations", value: 25000 },
+      { name: "Sales", value: 40000 },
+      { name: "Support", value: 20000 },
+    ];
+
+    const thinDonutRatio = 0.8;
+    const thickDonutRatio = 0.3;
+
+    const chartTypes: Array<"Pie" | "Donut"> = ["Donut"];
+    const labelPositions: Array<"outside" | "inside" | "hide"> = ["outside", "inside", "hide"];
+
+    return (
+      <Box sx={{ width: "100%" }}>
+        <Box sx={{mb: 4}}>
+          <Typography variant="h6" fontWeight={600} mb={4}>
+            Pie / Donut Chart Showcase
+          </Typography>
+        </Box>
+        <Stack spacing={6}>
+
+          {/* Chart Type */}
+          {chartTypes.map((type) => (
+            <Box key={type}>
+              <Typography variant="subtitle2" color="text.secondary" mb={2}>
+                Chart Type: {type}
+              </Typography>
+              <Box sx={{ height: 400 }}>
+                <PieDonutChart
+                  type={type}
+                  data={defaultData}
+                  selectedRegions={defaultData.map((d) => d.name)}
+                  chartColors={["#8884d8", "#82ca9d", "#ffc658", "#ff7c7c", "#a4de6c"]}
+                  margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+                  showlabels="outside"
+                  labeltype="percent"
+                  tooltips
+                  legendPosition="right"
+                  showLegend
+                  donutratio={type === "Donut" ? 0.6 : undefined}
+                  onLegendClick={() => {}}
+                  onChartClick={() => {}}
+                  shouldShowLegend
+                />
+              </Box>
+            </Box>
+          ))}
+
+          {/* Label Positions */}
+          {labelPositions.map((position) => (
+            <Box key={position}>
+              <Typography variant="subtitle2" color="text.secondary" mb={2}>
+                Label Position: {position}
+              </Typography>
+              <Box sx={{ height: 400 }}>
+                <PieDonutChart
+                  type="Pie"
+                  data={defaultData}
+                  selectedRegions={defaultData.map((d) => d.name)}
+                  chartColors={["#8884d8", "#82ca9d", "#ffc658", "#ff7c7c", "#a4de6c"]}
+                  margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+                  showlabels={position}
+                  labeltype="percent"
+                  tooltips
+                  legendPosition="right"
+                  showLegend
+                  onLegendClick={() => {}}
+                  onChartClick={() => {}}
+                  shouldShowLegend
+                />
+              </Box>
+            </Box>
+          ))}
+
+          {/* Thin Donut */}
+          {/* <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Thin Donut
+            </Typography>
+            <Box sx={{ height: 400 }}>
+              <PieDonutChart
+                type="Donut"
+                data={defaultData}
+                selectedRegions={defaultData.map((d) => d.name)}
+                chartColors={["#8884d8", "#82ca9d", "#ffc658", "#ff7c7c", "#a4de6c"]}
+                margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+                showlabels="outside"
+                labeltype="percent"
+                tooltips
+                legendPosition="right"
+                showLegend
+                donutratio={thinDonutRatio}
+                onLegendClick={() => {}}
+                onChartClick={() => {}}
+                shouldShowLegend
+              />
+            </Box>
+          </Box> */}
+
+          {/* Thick Donut */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Thick Donut
+            </Typography>
+            <Box sx={{ height: 400 }}>
+              <PieDonutChart
+                type="Donut"
+                data={defaultData}
+                selectedRegions={defaultData.map((d) => d.name)}
+                chartColors={["#8884d8", "#82ca9d", "#ffc658", "#ff7c7c", "#a4de6c"]}
+                margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+                showlabels="outside"
+                labeltype="percent"
+                tooltips
+                legendPosition="right"
+                showLegend
+                donutratio={thickDonutRatio}
+                onLegendClick={() => {}}
+                onChartClick={() => {}}
+                shouldShowLegend
+              />
+            </Box>
+          </Box>
+
+          {/* Budget Allocation Example */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Budget Allocation
+            </Typography>
+            <Box sx={{ height: 400 }}>
+              <PieDonutChart
+                type="Pie"
+                data={budgetData}
+                selectedRegions={budgetData.map((d) => d.name)}
+                chartColors={["#e74c3c", "#3498db", "#2ecc71", "#f39c12", "#9b59b6"]}
+                margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+                showlabels="outside"
+                labeltype="key-value"
+                tooltips
+                legendPosition="right"
+                showLegend
+                onLegendClick={() => {}}
+                onChartClick={() => {}}
+                shouldShowLegend
+              />
+            </Box>
+          </Box>
+
+        </Stack>
+      </Box>
+    );
+  }
+};
+
+
 // export const DefaultDonut: Story = {
 //   render: Template,
 //   args: {

@@ -12,7 +12,7 @@ The color-picker component does not have any documented methods. However, typica
 | `focus` | None | `void` | Sets focus to the color picker |
 | `clear` | None | `void` | Clears the current selection |
 
-### Common Method Usage
+## Common Method Usage
 
 ```javascript
 // Get the current color value

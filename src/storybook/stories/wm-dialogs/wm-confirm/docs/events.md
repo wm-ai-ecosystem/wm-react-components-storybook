@@ -6,7 +6,7 @@
 | onOk(event?: React.SyntheticEvent) | Triggered when the user clicks the confirmation button (the button with text defined by the `oktext` prop). This is typically used to proceed with the action that required confirmation. |
 | onCancel(event?: React.SyntheticEvent) | Triggered when the user clicks the cancellation button (the button with text defined by the `canceltext` prop). This is typically used to abort the action that required confirmation. |
 
-### Example Usage
+## Example Usage
 
 ```javascript
 // Handle confirmation

@@ -115,7 +115,7 @@ export const Basic: Story = {
   args: {
     name: "basicSearch",
     listener: mockListener,
-    type: "search",
+    type: "autocomplete",
     placeholder: "Search...",
     dataset: sampleDataset,
     datafield: "name",
@@ -130,6 +130,79 @@ export const Basic: Story = {
     autofocus: false,
   },
 };
+
+export const Showcase: Story = {
+  render: () => {
+    return (
+      <Box sx={{ p: 4 }}>
+        <Stack spacing={4}>
+          {/* Heading */}
+          <Typography variant="h6" fontWeight={600}>
+            Search Showcase
+          </Typography>
+
+          {/* Search examples */}
+          <Box>
+            <Typography variant="caption" color="text.secondary" sx={{ mb: 1 }}>
+              Search Type (Click Icon)
+            </Typography>
+            <SearchDefaultExport
+              name="searchIcon"
+              type="search"
+              placeholder="Click search icon to search..."
+              dataset={sampleDataset}
+              datafield="name"
+              displayfield="name"
+              searchon="onsearchiconclick"
+              showclear={false}
+              showsearchicon={true}
+              listener={mockListener}
+            />
+          </Box>
+
+          <Box>
+            <Typography variant="caption" color="text.secondary" sx={{ mb: 1 }}>
+              Search Type (On Typing)
+            </Typography>
+            <SearchDefaultExport
+              name="searchTyping"
+              type="search"
+              placeholder="Search as you type..."
+              dataset={sampleDataset}
+              datafield="name"
+              displayfield="name"
+              searchon="typing"
+              showclear={false}
+              showsearchicon={true}
+              listener={mockListener}
+            />
+          </Box>
+
+          <Box>
+            <Typography variant="caption" color="text.secondary" sx={{ mb: 1 }}>
+              Autocomplete Type
+            </Typography>
+            <SearchDefaultExport
+              name="autocompleteType"
+              type="autocomplete"
+              placeholder="Type to autocomplete..."
+              dataset={sampleDataset}
+              datafield="name"
+              displayfield="name"
+              showclear={true}
+              listener={mockListener}
+            />
+          </Box>
+        </Stack>
+      </Box>
+    );
+  },
+  args: {
+    name: "showcaseSearchTypes",
+    listener: mockListener,
+  },
+};
+
 
 // export const SearchDefault: Story = {
 //   render: Template,
@@ -407,70 +480,6 @@ export const Basic: Story = {
 //     displayfield: "name",
 //     groupby: "category",
 //     showclear: true,
-//   },
-// };
-
-// export const AllSearchTypes: Story = {
-//   render: () => {
-//     return (
-//       <Box style={{ padding: 16 }}>
-//         <Stack spacing={4}>
-//           <Box>
-//             <Typography variant="subtitle1" mb={2}>
-//               Search Type (Click Icon)
-//             </Typography>
-//             <SearchDefaultExport
-//               name="searchIcon"
-//               type="search"
-//               placeholder="Click search icon to search..."
-//               dataset={sampleDataset}
-//               datafield="name"
-//               displayfield="name"
-//               searchon="onsearchiconclick"
-//               showclear={true}
-//               showsearchicon={true}
-//               listener={mockListener}
-//             />
-//           </Box>
-//           <Box>
-//             <Typography variant="subtitle1" mb={2}>
-//               Search Type (On Typing)
-//             </Typography>
-//             <SearchDefaultExport
-//               name="searchTyping"
-//               type="search"
-//               placeholder="Search as you type..."
-//               dataset={sampleDataset}
-//               datafield="name"
-//               displayfield="name"
-//               searchon="typing"
-//               showclear={true}
-//               showsearchicon={true}
-//               listener={mockListener}
-//             />
-//           </Box>
-//           <Box>
-//             <Typography variant="subtitle1" mb={2}>
-//               Autocomplete Type
-//             </Typography>
-//             <SearchDefaultExport
-//               name="autocompleteType"
-//               type="autocomplete"
-//               placeholder="Type to autocomplete..."
-//               dataset={sampleDataset}
-//               datafield="name"
-//               displayfield="name"
-//               showclear={true}
-//               listener={mockListener}
-//             />
-//           </Box>
-//         </Stack>
-//       </Box>
-//     );
-//   },
-//   args: {
-//     name: "allTypes",
-//     listener: mockListener,
 //   },
 // };
 

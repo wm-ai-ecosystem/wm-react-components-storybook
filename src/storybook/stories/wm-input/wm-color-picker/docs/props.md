@@ -12,7 +12,7 @@ The color-picker component does not have any documented props. However, typical 
 | `palette` | `array` | `[]` | Custom color palette options to display |
 | `showHistory` | `boolean` | `true` | Whether to show recently selected colors |
 
-### Basic Usage
+## Basic Usage
 ```javascript
 // Set a default color
 Page.Widgets.myColorPicker.value = "#FF5733";
@@ -24,7 +24,7 @@ Page.Widgets.myColorPicker.disabled = true;
 Page.Widgets.myColorPicker.showAlpha = true;
 ```
 
-### Configure Color Format
+## Configure Color Format
 ```javascript
 // Change color format to RGB
 Page.Widgets.myColorPicker.format = "rgb";

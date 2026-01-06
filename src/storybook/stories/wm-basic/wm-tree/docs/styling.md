@@ -15,7 +15,7 @@ The Tree component can be styled using CSS classes. Here are the key classes tha
 | .wm-tree-node-loading | Applied to nodes in loading state |
 | .wm-tree-children | Container for child nodes |
 
-### Custom Styling Examples
+## Custom Styling Examples
 
 ```css
 /* Customize the selected node appearance */

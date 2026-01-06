@@ -21,7 +21,7 @@ The Radioset component in React Native can be customized using various styling p
 - `focusedStyle`: Style applied to the focused radio button
 - `errorStyle`: Style applied when validation fails
 
-### Example Styling
+## Example Styling
 
 ```javascript
 // Apply custom styles to radioset

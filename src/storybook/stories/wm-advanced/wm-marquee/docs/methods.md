@@ -12,7 +12,7 @@ The Marquee component can be controlled programmatically through the following m
 | `getState()` | None | String | Returns the current state of the marquee ('running', 'paused', 'stopped') |
 | `setContent(content)` | content: String/HTML | void | Dynamically updates the content inside the marquee |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 ```javascript
 // Pause and resume marquee on button clicks

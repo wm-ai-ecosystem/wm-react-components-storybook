@@ -94,9 +94,11 @@ export const Showcase: Story = {
       <Box style={{ padding: 16 }}>
         <Stack spacing={4}>
           <Box>
-            <Typography variant="h6" mb={2}>
-              Autoplay & Loop Settings
-            </Typography>
+            <Stack mb={3}>
+              <Typography variant="h6" mb={2}>
+                Autoplay & Loop Settings
+              </Typography>
+            </Stack>
             <Stack spacing={2}>
               <Box>
                 <Typography variant="subtitle2" mb={1}>

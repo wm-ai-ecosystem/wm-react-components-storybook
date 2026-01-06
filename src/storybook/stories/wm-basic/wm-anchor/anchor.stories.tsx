@@ -39,7 +39,7 @@ const meta = {
         type:"select"
       },
       options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
-        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart",],
+        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-github"],
     },
     iconposition: {
       control: { type: "select" },
@@ -95,94 +95,159 @@ export const Basic: Story = {
     caption: "Click Me",
     hyperlink: "https://www.wavemaker.com",
     target: "_blank",
-    className:"link-muted"
-  },
-};
-
-export const WithIcon: Story = {
-  render: Template,
-  args: {
-    name: "anchorWithIcon",
-    listener: mockListener,
-    caption: "Anchor with icon",
-    hyperlink: "https://www.wavemaker.com",
-    target: "_blank",
-    className:"link-primary",
-    iconclass: "fa fa-anchor",
-    iconposition: "left",
-    iconwidth: "16px",
-    iconheight: "16px",
-    iconmargin: "0 8px 0 0"
-  },
-};  
-
-export const WithBadge: Story = {
-  render: Template,
-  args: {
-    name: "anchorWithBadge",
-    listener: mockListener,
-    caption: "Anchor with icon",
-    hyperlink: "https://www.wavemaker.com",
-    target: "_blank",
-    className:"link-primary",
-    iconclass: "fa fa-anchor",
-    iconposition: "left",
-    iconwidth: "16px",
-    iconheight: "16px",
-    iconmargin: "0 8px 0 0",
-    badgevalue: "5",
+    className:"link-default"
   },
 };
 
 export const Showcase: Story = {
   render: () => {
     return (
-      <Box style={{ padding: 16 }}>
-        <Stack spacing={2}>
-          <Typography variant="subtitle1">Navigation Links:</Typography>
-          <Stack direction="row" spacing={2} sx={{ flexWrap: "wrap", gap: 2 }}>
-            <AnchorDefaultExport
-              name="home"
-              caption="Home"
-              hyperlink="https://www.wavemaker.com"
-              target="_blank"
-              listener={mockListener}
-              className="link-primary"
-            />
-            <AnchorDefaultExport
-              name="about"
-              caption="About"
-              hyperlink="https://www.wavemaker.com"
-              target="_blank"
-              listener={mockListener}
-              className="link-primary"
-            />
-            <AnchorDefaultExport
-              name="services"
-              caption="Services"
-              hyperlink="https://www.wavemaker.com"
-              target="_blank"
-              listener={mockListener}
-              className="link-primary"
-            />
-            <AnchorDefaultExport
-              name="contact"
-              caption="Contact"
-              hyperlink="https://www.wavemaker.com"
-              target="_blank"
-              listener={mockListener}
-              className="link-primary"
-            />
+      <Box sx={{ p: 4 }}>
+        <Stack spacing={4}>
+          <Typography variant="h6" fontWeight={600}>
+            Anchor Showcase
+          </Typography>
+
+          {/* Row 1: Basic / Icon / Badge */}
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2" color="text.secondary">
+              Common Variants
+            </Typography>
+
+            <Stack
+              direction="row"
+              spacing={4}
+              sx={{ flexWrap: "wrap", alignItems: "center" }}
+            >
+              <Stack spacing={1}>
+                <Typography variant="caption" color="text.secondary">
+                  Basic
+                </Typography>
+                <AnchorDefaultExport
+                  name="basic"
+                  caption="Click Me"
+                  hyperlink="https://www.wavemaker.com"
+                  target="_blank"
+                  listener={mockListener}
+                  className="link-primary"
+                />
+              </Stack>
+
+              <Stack spacing={1}>
+                <Typography variant="caption" color="text.secondary">
+                  With Icon
+                </Typography>
+                <AnchorDefaultExport
+                  name="withIcon"
+                  caption="Github Url"
+                  hyperlink="https://www.wavemaker.com"
+                  target="_blank"
+                  listener={mockListener}
+                  className="link-info"
+                  iconclass="fa fa-github"
+                  iconposition="left"
+                  iconwidth="16px"
+                  iconheight="16px"
+                  iconmargin="0 8px 0 0"
+                />
+              </Stack>
+
+              <Stack spacing={1}>
+                <Typography variant="caption" color="text.secondary">
+                  With Badge
+                </Typography>
+                <AnchorDefaultExport
+                  name="withBadge"
+                  caption="Notifications"
+                  hyperlink="https://www.wavemaker.com"
+                  target="_blank"
+                  listener={mockListener}
+                  className="link-warning"
+                  iconclass="fa fa-bell"
+                  iconposition="left"
+                  iconwidth="16px"
+                  iconheight="16px"
+                  iconmargin="0 8px 0 0"
+                  badgevalue="5"
+                />
+              </Stack>
+            </Stack>
+          </Stack>
+
+          {/* Row 2: Variants Grid */}
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2" color="text.secondary">
+              Style Variants
+            </Typography>
+
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: 3,
+                maxWidth: 900,
+              }}
+            >
+              <AnchorDefaultExport
+                name="primary"
+                caption="Primary Link"
+                hyperlink="https://www.wavemaker.com"
+                target="_blank"
+                listener={mockListener}
+                className="link-primary"
+              />
+              <AnchorDefaultExport
+                name="secondary"
+                caption="Secondary Link"
+                hyperlink="https://www.wavemaker.com"
+                target="_blank"
+                listener={mockListener}
+                className="link-secondary"
+              />
+              <AnchorDefaultExport
+                name="danger"
+                caption="Danger Link"
+                hyperlink="https://www.wavemaker.com"
+                target="_blank"
+                listener={mockListener}
+                className="link-danger"
+              />
+              <AnchorDefaultExport
+                name="muted"
+                caption="Muted Link"
+                hyperlink="https://www.wavemaker.com"
+                target="_blank"
+                listener={mockListener}
+                className="link-muted"
+              />
+              <AnchorDefaultExport
+                name="warning"
+                caption="Warning Link"
+                hyperlink="https://www.wavemaker.com"
+                target="_blank"
+                listener={mockListener}
+                className="link-warning"
+              />
+              <AnchorDefaultExport
+                name="info"
+                caption="Info Link"
+                hyperlink="https://www.wavemaker.com"
+                target="_blank"
+                listener={mockListener}
+                className="link-info"
+              />
+            </Box>
           </Stack>
         </Stack>
       </Box>
     );
   },
   args: {
-    name: "linkGroup",
+    name: "showcaseAnchors",
     listener: mockListener,
   },
 };
+
 
 // export const UnderlinedLink: Story = {
 //   render: Template,

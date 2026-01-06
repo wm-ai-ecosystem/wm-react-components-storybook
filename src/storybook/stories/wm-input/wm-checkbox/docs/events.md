@@ -13,7 +13,7 @@
 | mouseleave | Triggered when the mouse cursor leaves the checkbox area. |
 | tap | Triggered when the user taps the checkbox on a touch device. |
 
-### Example Event Usage
+## Example Event Usage
 
 ```javascript
 Page.myCheckboxChange = function($event, widget) {

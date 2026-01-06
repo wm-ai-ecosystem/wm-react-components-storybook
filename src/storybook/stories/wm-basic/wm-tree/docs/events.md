@@ -13,7 +13,7 @@ The Tree component emits the following events that you can handle in your applic
 | onLoad | Triggered when the tree data is loaded |
 | onError | Triggered when an error occurs while loading data |
 
-### Example Event Handlers
+## Example Event Handlers
 
 ```javascript
 Page.onNodeClickEvent = function(event, node) {

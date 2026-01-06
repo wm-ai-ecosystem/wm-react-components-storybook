@@ -106,6 +106,166 @@ export const Basic: Story = {
   },
 };
 
+export const Showcase: StoryObj = {
+  render: () => {
+    const singleSeriesData = mockData;
+    const multiSeriesData = mockData;
+
+    const chartTypes: Array<"Line" | "Area"> = ["Line", "Area"];
+    const interpolations: Array<"linear" | "cardinal" | "step"> = ["linear", "cardinal", "step"];
+    const areaViewTypes: Array<"none" | "expand" | "silhouette" | "wiggle"> = ["none", "expand", "silhouette", "wiggle"];
+
+    return (
+      <Box sx={{ width: "100%" }}>
+        <Box sx={{mb: 4}}>
+          <Typography variant="h6" fontWeight={600} mb={4}>
+            Line / Area Chart Showcase
+          </Typography>
+        </Box>
+        <Stack spacing={6}>
+          
+          {/* Chart Type Showcase */}
+          {chartTypes.map((type) => (
+            <Box key={type}>
+              <Typography variant="subtitle2" color="text.secondary" mb={2}>
+                Chart Type: {type}
+              </Typography>
+              <Box sx={{ height: 400 }}>
+                <LineAreaChart
+                  type={type}
+                  data={multiSeriesData}
+                  dataKeys={["Sales", "Revenue", "Profit"]}
+                  selectedRegions={["Sales", "Revenue", "Profit"]}
+                  chartColors={["#8884d8", "#82ca9d", "#ffc658"]}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  showLegend
+                  legendPosition="top"
+                  xDataKeyArr={multiSeriesData.map((d) => d.x)}
+                  interpolation="linear"
+                  strokeWidth={2}
+                  pointSize={4}
+                  areaViewType={type === "Area" ? "none" : undefined}
+                  onLegendClick={() => {}}
+                  onChartClick={() => {}}
+                  tooltips
+                />
+              </Box>
+            </Box>
+          ))}
+
+          {/* Single Series */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Single Series
+            </Typography>
+            <Box sx={{ height: 400 }}>
+              <LineAreaChart
+                type="Line"
+                data={singleSeriesData}
+                dataKeys={["Sales"]}
+                selectedRegions={["Sales"]}
+                chartColors={["#8884d8"]}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                showLegend={false}
+                legendPosition="top"
+                xDataKeyArr={singleSeriesData.map((d) => d.x)}
+                interpolation="linear"
+                strokeWidth={3}
+                pointSize={5}
+                onLegendClick={() => {}}
+                onChartClick={() => {}}
+                tooltips
+              />
+            </Box>
+          </Box>
+
+          {/* Smooth Line */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Smooth Line (Cardinal)
+            </Typography>
+            <Box sx={{ height: 400 }}>
+              <LineAreaChart
+                type="Line"
+                data={multiSeriesData}
+                dataKeys={["Sales", "Revenue", "Profit"]}
+                selectedRegions={["Sales", "Revenue", "Profit"]}
+                chartColors={["#8884d8", "#82ca9d", "#ffc658"]}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                showLegend
+                legendPosition="top"
+                xDataKeyArr={multiSeriesData.map((d) => d.x)}
+                interpolation="cardinal"
+                strokeWidth={2}
+                pointSize={4}
+                onLegendClick={() => {}}
+                onChartClick={() => {}}
+                tooltips
+              />
+            </Box>
+          </Box>
+
+          {/* Step Line */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Step Line
+            </Typography>
+            <Box sx={{ height: 400 }}>
+              <LineAreaChart
+                type="Line"
+                data={multiSeriesData}
+                dataKeys={["Sales", "Revenue", "Profit"]}
+                selectedRegions={["Sales", "Revenue", "Profit"]}
+                chartColors={["#8884d8", "#82ca9d", "#ffc658"]}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                showLegend
+                legendPosition="top"
+                xDataKeyArr={multiSeriesData.map((d) => d.x)}
+                interpolation="step"
+                strokeWidth={2}
+                pointSize={4}
+                onLegendClick={() => {}}
+                onChartClick={() => {}}
+                tooltips
+              />
+            </Box>
+          </Box>
+
+          {/* Stacked Area */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" mb={2}>
+              Stacked Area
+            </Typography>
+            <Box sx={{ height: 400 }}>
+              <LineAreaChart
+                type="Area"
+                data={multiSeriesData}
+                dataKeys={["Sales", "Revenue", "Profit"]}
+                selectedRegions={["Sales", "Revenue", "Profit"]}
+                chartColors={["#8884d8", "#82ca9d", "#ffc658"]}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                showLegend
+                legendPosition="top"
+                xDataKeyArr={multiSeriesData.map((d) => d.x)}
+                interpolation="linear"
+                strokeWidth={2}
+                pointSize={4}
+                stackId="stacked" // ✅ add this to enable stacking
+                areaViewType="none" // keep normal area
+                onLegendClick={() => {}}
+                onChartClick={() => {}}
+                tooltips
+/>
+            </Box>
+          </Box>
+
+        </Stack>
+      </Box>
+    );
+  }
+};
+
+
 // export const AreaChart: Story = {
 //   render: Template,
 //   args: {

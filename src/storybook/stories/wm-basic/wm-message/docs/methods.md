@@ -7,7 +7,7 @@ Message widget methods can be accessed via JavaScript using the widget reference
 | showMessage | None | void | Displays the message widget |
 | hideMessage | None | void | Hides the message widget |
 
-### Usage Examples
+## Usage Examples
 
 ```javascript
 // Display a message

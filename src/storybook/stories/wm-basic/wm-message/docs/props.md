@@ -15,7 +15,7 @@
 | hideClose | boolean | false | When true, hides the close button option |
 | animation | string | "none" | Controls the animation style of the message widget |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Set message type programmatically

@@ -11,7 +11,7 @@ Radioset component methods can be accessed using the pattern `Page.Widgets.widge
 | setReadOnly | readOnly: boolean | void | Sets the component to read-only mode. |
 | setDataset | dataset: array | void | Dynamically updates the options in the radioset. |
 
-### Examples
+## Examples
 
 #### Setting Value Programmatically
 ```javascript

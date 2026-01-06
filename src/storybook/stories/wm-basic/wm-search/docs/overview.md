@@ -2,7 +2,7 @@
 
 The Search component in WaveMaker provides advanced search capabilities for your application. It offers flexible search functionality with autocomplete features, allowing users to quickly find and select items from a dataset. The component can be configured to search through datasets with customizable filtering logic.
 
-### Features
+## Features
 - Support for both autocomplete and standard search modes
 - Configurable search criteria with multiple match modes
 - Customizable display format with image support

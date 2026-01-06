@@ -6,7 +6,7 @@ The LeftNav component provides the following events that you can handle in your 
 |-------|-------------|
 | `onNavHeightChange` | Triggered when the navigation panel height changes between full and collapsed states. The event handler receives a boolean parameter `isFull` indicating whether the navigation is at full height (`true`) or collapsed (`false`). |
 
-### Example Usage
+## Example Usage
 
 ```javascript
 // Handle navigation height changes

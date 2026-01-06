@@ -4,7 +4,7 @@ The Live-Form component is a dynamic data entry form that allows users to create
 
 The component serves as a container for form fields, managing data binding, submission logic, and overall layout to streamline the user interaction with backend data sources.
 
-### Features
+## Features
 - Support for multiple operational modes (create, edit, view)
 - Configurable form submission methods and encoding types
 - Form field organization with customizable layout

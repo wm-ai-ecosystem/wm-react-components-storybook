@@ -48,7 +48,7 @@
 | `selectedRegions` | `string[]` | `[]` | Array of currently selected data regions or categories |
 | `availableRegions` | `string[]` | `[]` | Array of all available regions or categories |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Basic Column Chart Configuration
 ```javascript

@@ -27,7 +27,7 @@
 | **Accessibility** |||||
 | tabIndex | number | 0 | Controls the tab order for keyboard navigation. Set to -1 to make non-focusable. |
 
-### Examples
+## Examples
 
 #### Basic Configuration
 ```javascript

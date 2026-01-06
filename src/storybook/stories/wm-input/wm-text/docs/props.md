@@ -51,7 +51,7 @@
 | width | string | "" | Width of the component (in px or %) |
 | height | string | "" | Height of the component (in px or %) |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Basic Text Input
 ```javascript

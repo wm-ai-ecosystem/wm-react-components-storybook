@@ -88,36 +88,120 @@ export const Basic: Story = {
   },
 };
 
-export const RegExp: Story = {
-  render: Template,
+export const Showcase: Story = {
+  render: () => (
+    <Box sx={{ p: 3 }}>
+      <Stack spacing={4}>
+        {/* Heading */}
+        <Typography variant="h6" fontWeight={600}>
+          Textarea Showcase
+        </Typography>
+
+        {/* RegExp Example */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Regular Expression Validation
+          </Typography>
+
+          <TextareaDefaultExport
+            name="regexpTextarea"
+            placeholder="Only letters, numbers and spaces allowed"
+            regexp="^[a-zA-Z0-9\\s]*$"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Limit Display Text Types */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={2}>
+            Character Limit Display Types
+          </Typography>
+
+          <Stack spacing={3}>
+            {/* Default format */}
+            <Box>
+              <Typography variant="caption" color="text.secondary" mb={1}>
+                Default Format
+              </Typography>
+              <TextareaDefaultExport
+                name="limitDefault"
+                placeholder="Max 100 characters"
+                maxchars={100}
+                limitdisplaytext="undefined / 100"
+                listener={mockListener}
+              />
+            </Box>
+
+            {/* Descriptive format */}
+            <Box>
+              <Typography variant="caption" color="text.secondary" mb={1}>
+                Descriptive Text
+              </Typography>
+              <TextareaDefaultExport
+                name="limitDescriptive"
+                placeholder="Max 150 characters"
+                maxchars={150}
+                limitdisplaytext="Characters used: undefined out of 150"
+                listener={mockListener}
+              />
+            </Box>
+
+            {/* Remaining characters format */}
+            <Box>
+              <Typography variant="caption" color="text.secondary" mb={1}>
+                Remaining Characters Style
+              </Typography>
+              <TextareaDefaultExport
+                name="limitRemaining"
+                placeholder="Max 200 characters"
+                maxchars={200}
+                limitdisplaytext="Remaining characters: undefined / 200"
+                listener={mockListener}
+              />
+            </Box>
+          </Stack>
+        </Box>
+      </Stack>
+    </Box>
+  ),
   args: {
-    name: "regexpTextarea",
-    placeholder: "Only alphanumeric characters allowed",
-    regexp: "^[a-zA-Z0-9\\s]*$",
+    name: "textareaShowcase",
     listener: mockListener,
-    disabled: false,
-    readonly: false,
-    autofocus: false,
-    autocapitalize: false,
-    required: false,
   },
 };
 
-export const WithCharacterCounter: Story = {
-  render: Template,
-  args: {
-    name: "charCounterTextarea",
-    placeholder: "Type your message (max 200 characters)",
-    maxchars: 200,
-    limitdisplaytext: "undefined / 200 characters",
-    listener: mockListener,
-    disabled: false,
-    readonly: false,
-    autofocus: false,
-    autocapitalize: false,
-    required: false,
-  },
-};
+
+
+// export const RegExp: Story = {
+//   render: Template,
+//   args: {
+//     name: "regexpTextarea",
+//     placeholder: "Only alphanumeric characters allowed",
+//     regexp: "^[a-zA-Z0-9\\s]*$",
+//     listener: mockListener,
+//     disabled: false,
+//     readonly: false,
+//     autofocus: false,
+//     autocapitalize: false,
+//     required: false,
+//   },
+// };
+
+// export const WithCharacterCounter: Story = {
+//   render: Template,
+//   args: {
+//     name: "charCounterTextarea",
+//     placeholder: "Type your message (max 200 characters)",
+//     maxchars: 200,
+//     limitdisplaytext: "undefined / 200 characters",
+//     listener: mockListener,
+//     disabled: false,
+//     readonly: false,
+//     autofocus: false,
+//     autocapitalize: false,
+//     required: false,
+//   },
+// };
 
 // // Character Limit Examples
 // export const WithMaxChars: Story = {

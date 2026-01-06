@@ -47,7 +47,7 @@
 | tabindex | number | 0 | Specifies the tab order for keyboard navigation |
 | shortcutkey | string | "" | Keyboard shortcut to focus/activate the component |
 
-### Configure Slider Behavior
+## Configure Slider Behavior
 ```javascript
 // Set minimum and maximum values
 Page.Widgets.mySlider.minimumValue = 0;

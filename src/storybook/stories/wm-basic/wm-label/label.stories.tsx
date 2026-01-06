@@ -1,6 +1,6 @@
 import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Box } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
 import LabelDefaultExport, { WmLabel as RawWmLabel } from "../../../../components/basic/label/index";
 
@@ -36,7 +36,7 @@ const meta = {
       control: {
         type: "select",
       },
-      options: ["text-primary", "text-secondary", "text-success", "text-danger", "text-warning", "text-info","text-muted","h1", "h2", "h3", "h4", "h5", "h6"],
+      options: ["text-primary", "text-secondary", "text-success", "text-danger", "text-warning", "text-info","text-muted","h1", "h2", "h3", "h4", "h5", "h6", "p", "label-primary", "label-secondary", "label-success", "label-danger", "label-warning", "label-info"],
     },
     textalign:{
       control:{
@@ -83,6 +83,112 @@ export const Basic: Story = {
     hint:"This is a basic label"
   },  
 };
+
+export const Showcase: Story = {
+  render: () => {
+    return (
+      <Box sx={{ p: 4 }}>
+        <Stack spacing={4}>
+          <Typography variant="h6" fontWeight={600}>
+            Label Showcase
+          </Typography>
+
+          {/* Row 1: Text Color Variants */}
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2" color="text.secondary">
+              Text Color Variants
+            </Typography>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: 3,
+              }}
+            >
+              {["text-primary", "text-secondary", "text-success", "text-danger", "text-warning", "text-info", "text-muted"].map((cls, index) => (
+                <Stack key={index} spacing={0.5}>
+                  <Typography variant="caption" color="text.secondary">
+                    {cls}
+                  </Typography>
+                  <LabelDefaultExport
+                    name={`textColor_${index}`}
+                    caption="Sample Text"
+                    type="p"
+                    className={cls}
+                    listener={mockListener}
+                  />
+                </Stack>
+              ))}
+            </Box>
+          </Stack>
+
+          {/* Row 2: Label Style Variants */}
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2" color="text.secondary">
+              Label Style Variants
+            </Typography>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: 3,
+              }}
+            >
+              {["label-primary", "label-secondary", "label-success", "label-danger", "label-warning", "label-info"].map((cls, index) => (
+                <Stack key={index} spacing={0.5}>
+                  <Typography variant="caption" color="text.secondary">
+                    {cls}
+                  </Typography>
+                  <LabelDefaultExport
+                    name={`labelStyle_${index}`}
+                    caption="Sample Label"
+                    type="p"
+                    className={cls}
+                    listener={mockListener}
+                  />
+                </Stack>
+              ))}
+            </Box>
+          </Stack>
+
+          {/* Row 3: Typography / Heading Sizes */}
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2" color="text.secondary">
+              Typography Sizes
+            </Typography>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: 3,
+              }}
+            >
+              {["h1", "h2", "h3", "h4", "h5", "h6", "p"].map((cls, index) => (
+                <Stack key={index} spacing={0.5}>
+                  <Typography variant="caption" color="text.secondary">
+                    {cls}
+                  </Typography>
+                  <LabelDefaultExport
+                    name={`typography_${index}`}
+                    caption={`Sample ${cls.toUpperCase()}`}
+                    type={cls as any}
+                    className={cls}
+                    listener={mockListener}
+                  />
+                </Stack>
+              ))}
+            </Box>
+          </Stack>
+        </Stack>
+      </Box>
+    );
+  },
+  args: {
+    name: "labelShowcase",
+    listener: mockListener,
+  },
+};
+
 
 // export const Default: Story = {
 //   render: Template,

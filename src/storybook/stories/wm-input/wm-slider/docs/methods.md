@@ -15,7 +15,7 @@ var mySlider = Page.Widgets.sliderName;
 | show | None | void | Makes the slider visible |
 | hide | None | void | Hides the slider |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 ```javascript
 // Get the current value

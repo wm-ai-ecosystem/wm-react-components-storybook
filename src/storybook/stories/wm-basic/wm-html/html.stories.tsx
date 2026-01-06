@@ -70,40 +70,92 @@ export const Basic: Story = {
     show: true,
     children: (
       <div>
-        <h2>Basic HTML Content</h2>
+        <h2 style={{margin: '0 0 12px'}}>Basic HTML Content</h2>
         <p>This is basic HTML content rendered inside the HTML component.</p>
       </div>
     ),
   },
 };
 
-export const CodeSnippet: Story = {
-  render: Template,
-  args: {
-    name: "codeSnippet",
-    listener: mockListener,
-    show: true,
-    children: (
-      <div>
-        <h3>Code Example</h3>
-        <pre
-          style={{
-            backgroundColor: "#f5f5f5",
-            padding: "16px",
-            borderRadius: "4px",
-            overflow: "auto",
-          }}
-        >
-          <code>{`function greet(name) {
-  return 'Hello, ' + name + '!';
-}
+export const Showcase: Story = {
+  render: () => (
+    <Box sx={{ p: 4 }}>
+      <Stack spacing={4}>
+        <Typography variant="h6" fontWeight={600}>
+          HTML Showcase
+        </Typography>
 
-console.log(greet('World'));`}</code>
-        </pre>
-      </div>
-    ),
-  },
+        {/* 2. Code Snippet */}
+        <Stack spacing={1}>
+          <Typography variant="subtitle2" color="text.secondary">
+            Code Snippet
+          </Typography>
+
+          <HtmlDefaultExport name="codeHtml" listener={mockListener}>
+            <pre
+              style={{
+                background: "#f5f5f5",
+                padding: "16px",
+                borderRadius: "6px",
+                overflow: "auto",
+              }}
+            >
+              <code>{`function greet(name) {
+  return "Hello, " + name;
+}`}</code>
+            </pre>
+          </HtmlDefaultExport>
+        </Stack>
+
+        {/* 3. Rich Content */}
+        <Stack spacing={2}>
+          <Typography variant="subtitle2" color="text.secondary">
+            Rich Content
+          </Typography>
+
+          <HtmlDefaultExport name="richHtml" listener={mockListener}>
+            <div>
+              <p>
+                This content contains <strong>bold</strong>, <em>italic</em>,
+                and a{" "}
+                <a href="https://www.wavemaker.com" target="_blank" rel="noreferrer">
+                  link
+                </a>
+                .
+              </p>
+              <ul>
+                <li>First item</li>
+                <li>Second item</li>
+              </ul>
+            </div>
+          </HtmlDefaultExport>
+        </Stack>
+
+        {/* 4. Layout Content */}
+        <Stack spacing={2}>
+          <Typography variant="subtitle2" color="text.secondary">
+            Layout Content
+          </Typography>
+
+          <HtmlDefaultExport name="layoutHtml" listener={mockListener}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: "12px",
+              }}
+            >
+              <div style={{ padding: "12px", background: "#e3f2fd" }}>Column 1</div>
+              <div style={{ padding: "12px", background: "#fce4ec" }}>Column 2</div>
+              <div style={{ padding: "12px", background: "#e8f5e9" }}>Column 3</div>
+            </div>
+          </HtmlDefaultExport>
+        </Stack>
+      </Stack>
+    </Box>
+  ),
 };
+
 
 // export const WithBlockquote: Story = {
 //   render: Template,

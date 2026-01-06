@@ -5,7 +5,7 @@
 | `onChartClick(data, index, event)` | Triggered when a chart segment is clicked. Provides the data object, segment index, and the original mouse event. |
 | `onLegendClick(region, e)` | Triggered when a legend item is clicked. Provides the region name/ID and the original mouse event. |
 
-### Examples
+## Examples
 
 ```javascript
 // Handle chart segment click

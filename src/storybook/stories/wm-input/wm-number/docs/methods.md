@@ -19,7 +19,7 @@ The Number widget inherits standard methods for handling values and states:
 | show | - | void | Makes the widget visible |
 | hide | - | void | Hides the widget |
 
-### Method Usage Examples
+## Method Usage Examples
 ```javascript
 // Get current value
 var currentValue = Page.Widgets.myNumberInput.getValue();

@@ -15,7 +15,7 @@ The Rich Text Editor component can be configured with the following properties:
 | sanitize | boolean | true | When true, sanitizes HTML to prevent XSS attacks |
 | plugins | array | [] | Additional plugins to enhance editor functionality |
 
-### Basic Configuration
+## Basic Configuration
 
 ```javascript
 // Set initial content
@@ -25,7 +25,7 @@ Page.Widgets.myRichTextEditor.value = "<p>Hello <strong>World</strong></p>";
 Page.Widgets.myRichTextEditor.readonly = true;
 ```
 
-### Toolbar Configuration
+## Toolbar Configuration
 
 ```javascript
 // Use basic toolbar preset
@@ -40,7 +40,7 @@ Page.Widgets.myRichTextEditor.toolbar = [
 ];
 ```
 
-### Size Configuration
+## Size Configuration
 
 ```javascript
 // Set editor height

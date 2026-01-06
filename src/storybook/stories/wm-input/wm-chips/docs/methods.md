@@ -10,7 +10,7 @@ The Chips component can be accessed programmatically through `Page.Widgets.widge
 | reset | none | void | Resets to the default value. |
 | focus | none | void | Sets focus to the chips input element. |
 
-### Example: Adding items programmatically
+## Example: Adding items programmatically
 
 ```javascript
 // Add a new skill to the chips

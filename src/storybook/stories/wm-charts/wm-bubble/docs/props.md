@@ -37,7 +37,7 @@
 | `xAxisConfig` | `any` | `{}` | Configuration object for the X-axis |
 | `yAxisConfig` | `any` | `{}` | Configuration object for the Y-axis |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Basic bubble chart configuration

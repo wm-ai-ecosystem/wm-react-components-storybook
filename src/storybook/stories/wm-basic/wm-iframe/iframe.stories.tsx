@@ -67,108 +67,11 @@ export const Basic: Story = {
   },
 };
 
-export const ModalWithIframe: Story = {
-  render: () => {
-    const [open, setOpen] = React.useState(false);
-
-    return (
-      <Box style={{ padding: 16 }}>
-        <Typography variant="h6" mb={2}>
-          Modal with Iframe
-        </Typography>
-        <Box
-          component="button"
-          onClick={() => setOpen(true)}
-          sx={{
-            padding: "10px 20px",
-            backgroundColor: "#2196f3",
-            color: "#ffffff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-            fontSize: "16px",
-          }}
-        >
-          Open Iframe Modal
-        </Box>
-        {open && (
-          <Box
-            sx={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.7)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 1000,
-            }}
-            onClick={() => setOpen(false)}
-          >
-            <Box
-              sx={{
-                width: "90%",
-                maxWidth: "900px",
-                height: "80%",
-                backgroundColor: "#ffffff",
-                borderRadius: "8px",
-                overflow: "hidden",
-                position: "relative",
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <Box
-                sx={{
-                  padding: "16px",
-                  backgroundColor: "#f5f5f5",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Typography variant="h6">Embedded Content</Typography>
-                <Box
-                  component="button"
-                  onClick={() => setOpen(false)}
-                  sx={{
-                    padding: "4px 12px",
-                    backgroundColor: "transparent",
-                    border: "1px solid #ccc",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Close
-                </Box>
-              </Box>
-              <Box sx={{ height: "calc(100% - 64px)" }}>
-                <IframeDefaultExport
-                  name="modalIframe"
-                  iframesrc="https://docs.wavemaker.com/learn/"
-                  width="100%"
-                  height="100%"
-                  listener={mockListener}
-                />
-              </Box>
-            </Box>
-          </Box>
-        )}
-      </Box>
-    );
-  },
-  args: {
-    name: "modalWithIframe",
-    listener: mockListener,
-  },
-};
-
-export const SocialMediaEmbed: Story = {
+export const Showcase: Story = {
   render: () => {
     return (
       <Box style={{ padding: 16 }}>
-        <Typography variant="h6" mb={3}>
+        <Typography variant="h6" mb={3} style={{marginBottom: "20px"}}>
           Social Media Embeds
         </Typography>
         <Box
@@ -205,10 +108,108 @@ export const SocialMediaEmbed: Story = {
     );
   },
   args: {
-    name: "socialMediaEmbed",
+    name: "showcaseIframe",
     listener: mockListener,
   },
 };
+
+// export const ModalWithIframe: Story = {
+//   render: () => {
+//     const [open, setOpen] = React.useState(false);
+
+//     return (
+//       <Box style={{ padding: 16 }}>
+//         <Typography variant="h6" mb={2}>
+//           Modal with Iframe
+//         </Typography>
+//         <Box
+//           component="button"
+//           onClick={() => setOpen(true)}
+//           sx={{
+//             padding: "10px 20px",
+//             backgroundColor: "var(--wm-color-secondary) !important",
+//             color: "#ffffff !important",
+//             border: "none",
+//             borderRadius: "4px",
+//             cursor: "pointer",
+//             fontSize: "16px",
+//             margin: "8px 0"
+//           }}
+//         >
+//           Open Iframe Modal
+//         </Box>
+//         {open && (
+//           <Box
+//             sx={{
+//               position: "fixed",
+//               top: 0,
+//               left: 0,
+//               right: 0,
+//               bottom: 0,
+//               backgroundColor: "rgba(0, 0, 0, 0.7)",
+//               display: "flex",
+//               alignItems: "center",
+//               justifyContent: "center",
+//               zIndex: 1000,
+//             }}
+//             onClick={() => setOpen(false)}
+//           >
+//             <Box
+//               sx={{
+//                 width: "90%",
+//                 maxWidth: "900px",
+//                 height: "80%",
+//                 backgroundColor: "#ffffff",
+//                 borderRadius: "8px",
+//                 overflow: "hidden",
+//                 position: "relative",
+//               }}
+//               onClick={(e) => e.stopPropagation()}
+//             >
+//               <Box
+//                 sx={{
+//                   padding: "16px",
+//                   backgroundColor: "#f5f5f5",
+//                   display: "flex",
+//                   justifyContent: "space-between",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <Typography variant="h6">Embedded Content</Typography>
+//                 <Box
+//                   component="button"
+//                   onClick={() => setOpen(false)}
+//                   sx={{
+//                     padding: "4px 12px",
+//                     backgroundColor: "transparent",
+//                     border: "1px solid #ccc",
+//                     borderRadius: "4px",
+//                     cursor: "pointer",
+//                   }}
+//                 >
+//                   Close
+//                 </Box>
+//               </Box>
+//               <Box sx={{ height: "calc(100% - 64px)" }}>
+//                 <IframeDefaultExport
+//                   name="modalIframe"
+//                   iframesrc="https://docs.wavemaker.com/learn/"
+//                   width="100%"
+//                   height="100%"
+//                   listener={mockListener}
+//                 />
+//               </Box>
+//             </Box>
+//           </Box>
+//         )}
+//       </Box>
+//     );
+//   },
+//   args: {
+//     name: "modalWithIframe",
+//     listener: mockListener,
+//   },
+// };
 
 // export const GoogleMaps: Story = {
 //   render: Template,

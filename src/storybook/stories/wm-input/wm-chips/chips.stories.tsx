@@ -136,40 +136,179 @@ export const Basic: Story = {
   args: {
     name: "basicChips",
     listener: mockListener,
-    dataset: simpleDataset,
+    dataset: fruitDataset,
+    datafield: "name",
+    displayfield: "name",
     placeholder: "Add a chip...",
+    datavalue: ["Apple"],
     type: "autocomplete",
+    inputposition:"first",
+    inputwidth: "default",
     disabled: false,
     readonly: false,
   },
 };
 
-export const AllowOnlySelect: Story = {
-  render: Template,
+export const Showcase: Story = {
+  render: () => (
+    <Box style={{ padding: 16 }}>
+      <Box sx={{mb: 3}}>
+      <Typography variant="h6" mb={3}>
+        Chips Showcase
+      </Typography>
+      </Box>
+      <Stack spacing={4}>
+        {/* Autocomplete with one preselected value */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary">
+            Autocomplete (Preselected)
+          </Typography>
+          <ChipsDefaultExport
+            name="autocompleteChip"
+            dataset={fruitDataset}
+            datafield="name"
+            displayfield="name"
+            datavalue={["Apple"]}
+            placeholder="Type to autocomplete..."
+            type="autocomplete"
+            inputposition="last"
+            inputwidth="default"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Search type */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary">
+            Search
+          </Typography>
+          <ChipsDefaultExport
+            name="searchChip"
+            dataset={fruitDataset}
+            datafield="name"
+            displayfield="name"
+            placeholder="Type to search..."
+            type="search"
+            inputposition="first"
+            inputwidth="default"
+            showsearchicon={true}
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Only allow select */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary">
+            Allow Only Select
+          </Typography>
+          <ChipsDefaultExport
+            name="onlySelectChip"
+            dataset={fruitDataset}
+            datafield="name"
+            displayfield="name"
+            allowonlyselect={true}
+            placeholder="Select only from list..."
+            type="autocomplete"
+            inputposition="last"
+            inputwidth="default"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Reorderable chip */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary">
+            Reorderable
+          </Typography>
+          <ChipsDefaultExport
+            name="reorderChip"
+            dataset={fruitDataset}
+            datafield="name"
+            displayfield="name"
+            datavalue={["Apple", "Cherry"]}
+            enablereorder={true}
+            placeholder="Drag to reorder..."
+            type="autocomplete"
+            inputposition="last"
+            inputwidth="default"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Input position first */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary">
+            Input Postion First
+          </Typography>
+          <ChipsDefaultExport
+            name="autocompleteChip"
+            dataset={fruitDataset}
+            datafield="name"
+            displayfield="name"
+            datavalue={["Apple"]}
+            placeholder="Type to autocomplete..."
+            type="autocomplete"
+            inputposition="first"
+            inputwidth="default"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Input position first */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary">
+            Input Width Full
+          </Typography>
+          <ChipsDefaultExport
+            name="autocompleteChip"
+            dataset={fruitDataset}
+            datafield="name"
+            displayfield="name"
+            datavalue={["Apple", "Cherry"]}
+            placeholder="Type to autocomplete..."
+            type="autocomplete"
+            inputposition="first"
+            inputwidth="full"
+            listener={mockListener}
+          />
+        </Box>
+      </Stack>
+    </Box>
+  ),
   args: {
-    name: "onlySelectChips",
+    name: "showcaseChips",
     listener: mockListener,
-    dataset: fruitDataset,
-    datafield: "name",
-    displayfield: "name",
-    allowonlyselect: true,
-    placeholder: "Only select from list...",
-    type: "autocomplete",
   },
 };
 
-export const EnableReorder: Story = {
-  render: Template,
-  args: {
-    name: "reorderChips",
-    listener: mockListener,
-    dataset: simpleDataset,
-    datavalue: ["Apple", "Banana", "Cherry", "Date"],
-    enablereorder: true,
-    placeholder: "Drag to reorder...",
-    type: "autocomplete",
-  },
-};
+
+// export const AllowOnlySelect: Story = {
+//   render: Template,
+//   args: {
+//     name: "onlySelectChips",
+//     listener: mockListener,
+//     dataset: fruitDataset,
+//     datafield: "name",
+//     displayfield: "name",
+//     allowonlyselect: true,
+//     placeholder: "Only select from list...",
+//     type: "autocomplete",
+//   },
+// };
+
+// export const EnableReorder: Story = {
+//   render: Template,
+//   args: {
+//     name: "reorderChips",
+//     listener: mockListener,
+//     dataset: simpleDataset,
+//     datavalue: ["Apple", "Banana", "Cherry", "Date"],
+//     enablereorder: true,
+//     placeholder: "Drag to reorder...",
+//     type: "autocomplete",
+//   },
+// };
+
 
 // export const WithInitialValues: Story = {
 //   render: Template,

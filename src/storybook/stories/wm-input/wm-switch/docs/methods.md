@@ -4,7 +4,7 @@ The Switch widget can be accessed programmatically via the Page.Widgets namespac
 
 While the Switch widget doesn't expose specific public methods beyond standard property access, you can manipulate its state and behavior through its properties.
 
-### Common Method-like Operations
+## Common Method-like Operations
 
 ```javascript
 // Get the current value

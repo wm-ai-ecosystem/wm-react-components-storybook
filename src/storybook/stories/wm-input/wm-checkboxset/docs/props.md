@@ -42,7 +42,7 @@
 | loadOnDemand | boolean | false | When true and the show property is bound, defers initialization until the component becomes visible. |
 | skipChangeEventFromScript | boolean | false | When enabled, Change events only trigger when the user updates the value from the UI, not from scripts. |
 
-### Configure Checkbox Layout
+## Configure Checkbox Layout
 ```javascript
 // Set to display 2 checkboxes per row
 Page.Widgets.myCheckboxSet.itemsPerRow = 2;
@@ -51,7 +51,7 @@ Page.Widgets.myCheckboxSet.itemsPerRow = 2;
 Page.Widgets.myCheckboxSet.itemsPerRow = 1;
 ```
 
-### Configure Grouping
+## Configure Grouping
 ```javascript
 // Group checkboxes by the "category" field
 Page.Widgets.myCheckboxSet.groupBy = "category";

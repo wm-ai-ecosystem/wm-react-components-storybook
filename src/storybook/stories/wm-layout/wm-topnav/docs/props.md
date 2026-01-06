@@ -10,7 +10,7 @@ The topnav component currently does not have any documented properties. However,
 | theme | string | 'light' | The color theme of the navigation ('light' or 'dark') |
 | transparent | boolean | false | Whether the background should be transparent |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Set the navigation to be fixed at the top

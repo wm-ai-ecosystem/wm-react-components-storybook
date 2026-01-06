@@ -19,7 +19,7 @@
 | tabIndex | number | 0 | Controls the tab order for keyboard navigation. -1 makes the component unfocusable. |
 | shortcutKey | string | "" | Keyboard key that acts as a shortcut to toggle the checkbox. |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Setting Default Values
 ```javascript

@@ -8,7 +8,7 @@ Accordion panes can be controlled programmatically through the following methods
 | `collapse` | none | void | Collapses a specific accordion pane |
 | `toggle` | none | void | Toggles the state of a specific accordion pane |
 
-### Common Method Usage
+## Common Method Usage
 
 ```javascript
 // Expand a specific pane
@@ -21,7 +21,7 @@ Page.Widgets.salesEmpPane.collapse();
 Page.Widgets.marketingEmpPane.toggle();
 ```
 
-### Example: Controlling Accordion from a Button
+## Example: Controlling Accordion from a Button
 
 ```javascript
 Page.collapseSalesPaneBtnClick = function($event, widget) {

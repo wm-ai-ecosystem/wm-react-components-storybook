@@ -44,7 +44,7 @@
 | tabindex | number | 0 | Controls the tab order for keyboard navigation. Use -1 to make non-focusable. |
 | shortcutkey | string | "" | Keyboard shortcut to focus/activate the component. |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Basic Select with Static Options
 ```javascript

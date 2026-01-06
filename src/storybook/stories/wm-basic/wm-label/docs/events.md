@@ -7,7 +7,7 @@
 | onDoubleTap | Triggered when the user double taps on the label. |
 | onLongTap | Triggered when the user performs a long press on the label. |
 
-### Event Usage Examples
+## Event Usage Examples
 
 ```javascript
 // Open a URL when label is tapped

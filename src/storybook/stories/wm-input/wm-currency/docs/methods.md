@@ -11,7 +11,7 @@ The Currency widget can be accessed programmatically in scripts using `Page.Widg
 | isValid | None | boolean | Returns true if the widget's value passes all validation rules. |
 | reset | None | void | Resets the widget to its default value. |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 ```javascript
 // Get current value

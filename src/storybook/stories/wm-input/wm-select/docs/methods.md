@@ -9,7 +9,7 @@ Select component methods can be accessed using `Page.Widgets.widgetName` syntax 
 | getDisplayValue | None | String | Returns the currently displayed text in the Select. |
 | reset | None | void | Resets the component to its default value. |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 #### Programmatically Setting Focus
 ```javascript

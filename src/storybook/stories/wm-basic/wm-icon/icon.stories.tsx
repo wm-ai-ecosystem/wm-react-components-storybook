@@ -81,32 +81,76 @@ export const Basic: Story = {
   },
 };
 
-export const WithCaption: Story = {
-  render: Template,
-  args: {
-    name: "iconWithCaption",
-    listener: mockListener,
-    caption: "User Profile",
-    iconclass: "fa fa-user",
-    iconsize: "24px",
-    iconposition: "left",
-  },
-};
+export const Showcase: Story = {
+  render: () => {
+    return (
+      <Box sx={{ p: 4 }}>
+        <Stack spacing={4}>
+          <Typography variant="h6" fontWeight={600}>
+            Icon Showcase
+          </Typography>
 
-export const WithImageUrl: Story = {
-  render: Template,
+          {/* Row: Basic, With Caption, With Image URL */}
+          <Stack direction="row" spacing={6} sx={{ flexWrap: "wrap", gap: 3 }}>
+
+            {/* Basic Icon */}
+            <Stack spacing={1} alignItems="center">
+              <Typography variant="caption" color="text.secondary">
+                Basic Icon
+              </Typography>
+              <IconDefaultExport
+                name="basicIcon"
+                listener={mockListener}
+              >
+                <IconDefaultExport
+                  name="basicIcon"
+                  iconclass="fa fa-adjust"
+                  iconsize="24px"
+                  listener={mockListener}
+                />
+              </IconDefaultExport>
+            </Stack>
+
+            {/* Icon with Caption */}
+            <Stack spacing={1} alignItems="center">
+              <Typography variant="caption" color="text.secondary">
+                With Caption
+              </Typography>
+              <IconDefaultExport
+                name="iconWithCaption"
+                caption="User Profile"
+                iconclass="fa fa-user"
+                iconsize="24px"
+                iconposition="left"
+                listener={mockListener}
+                styles={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+              />
+            </Stack>
+
+            {/* Icon with Image URL */}
+            <Stack spacing={1} alignItems="center">
+              <Typography variant="caption" color="text.secondary">
+                With Image URL
+              </Typography>
+              <IconDefaultExport
+                name="imageIcon"
+                caption="Custom Image"
+                iconurl="https://picsum.photos/200"
+                iconsize="32px"
+                iconposition="left"
+                listener={mockListener}
+                styles={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}
+              />
+            </Stack>
+
+          </Stack>
+        </Stack>
+      </Box>
+    );
+  },
   args: {
-    name: "imageIcon",
+    name: "iconShowcase",
     listener: mockListener,
-    caption: "Custom Image",
-    iconurl: "https://picsum.photos/200",
-    iconsize: "32px",
-    iconposition: "left",
-    styles: {
-      display: "flex",
-      alignItems: "center",
-      gap: "8px",
-    },
   },
 };
 
@@ -131,6 +175,37 @@ export const FontAwesomeLibrary: Story = {
     );
   },
 };
+
+
+// export const WithCaption: Story = {
+//   render: Template,
+//   args: {
+//     name: "iconWithCaption",
+//     listener: mockListener,
+//     caption: "User Profile",
+//     iconclass: "fa fa-user",
+//     iconsize: "24px",
+//     iconposition: "left",
+//   },
+// };
+
+// export const WithImageUrl: Story = {
+//   render: Template,
+//   args: {
+//     name: "imageIcon",
+//     listener: mockListener,
+//     caption: "Custom Image",
+//     iconurl: "https://picsum.photos/200",
+//     iconsize: "32px",
+//     iconposition: "left",
+//     styles: {
+//       display: "flex",
+//       alignItems: "center",
+//       gap: "8px",
+//     },
+//   },
+// };
+
 
 // export const CaptionRight: Story = {
 //   render: Template,
@@ -199,84 +274,6 @@ export const FontAwesomeLibrary: Story = {
 //       gap: "8px",
 //       fontWeight: "600",
 //     },
-//   },
-// };
-
-// export const IconGroup: Story = {
-//   render: () => {
-//     return (
-//       <Box style={{ padding: 16 }}>
-//         <Stack spacing={3}>
-//           <Typography variant="subtitle1">Common Icons:</Typography>
-//           <Stack direction="row" spacing={3} sx={{ flexWrap: "wrap", gap: 2 }}>
-//             <IconDefaultExport
-//               name="home"
-//               caption="Home"
-//               iconclass="wm-sl-l sl-home"
-//               iconsize="24px"
-//               listener={mockListener}
-//               styles={{
-//                 display: "flex",
-//                 alignItems: "center",
-//                 gap: "8px",
-//               }}
-//             />
-//             <IconDefaultExport
-//               name="user"
-//               caption="User"
-//               iconclass="wm-sl-l sl-user"
-//               iconsize="24px"
-//               listener={mockListener}
-//               styles={{
-//                 display: "flex",
-//                 alignItems: "center",
-//                 gap: "8px",
-//               }}
-//             />
-//             <IconDefaultExport
-//               name="settings"
-//               caption="Settings"
-//               iconclass="wm-sl-l sl-settings"
-//               iconsize="24px"
-//               listener={mockListener}
-//               styles={{
-//                 display: "flex",
-//                 alignItems: "center",
-//                 gap: "8px",
-//               }}
-//             />
-//             <IconDefaultExport
-//               name="mail"
-//               caption="Mail"
-//               iconclass="wm-sl-l sl-envelope"
-//               iconsize="24px"
-//               listener={mockListener}
-//               styles={{
-//                 display: "flex",
-//                 alignItems: "center",
-//                 gap: "8px",
-//               }}
-//             />
-//             <IconDefaultExport
-//               name="bell"
-//               caption="Notifications"
-//               iconclass="wm-sl-l sl-bell"
-//               iconsize="24px"
-//               listener={mockListener}
-//               styles={{
-//                 display: "flex",
-//                 alignItems: "center",
-//                 gap: "8px",
-//               }}
-//             />
-//           </Stack>
-//         </Stack>
-//       </Box>
-//     );
-//   },
-//   args: {
-//     name: "iconGroup",
-//     listener: mockListener,
 //   },
 // };
 

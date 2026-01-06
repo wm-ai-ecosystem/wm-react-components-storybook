@@ -9,7 +9,7 @@ var myCard = Page.Widgets.myCard;
 
 Because the Card component is primarily a container component with configurable properties, it doesn't expose many specialized methods beyond the standard widget methods. Most interactions with the Card component involve setting or getting its property values.
 
-### Common Operations
+## Common Operations
 
 ```javascript
 // Toggle visibility
@@ -35,7 +35,7 @@ Page.Widgets.myCard.$.removeClass("highlighted");
 Page.Widgets.myCard.redraw();
 ```
 
-### Advanced Functionality
+## Advanced Functionality
 
 ```javascript
 // Set up card to display dynamic data

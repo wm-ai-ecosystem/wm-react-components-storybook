@@ -9,7 +9,8 @@ const config: StorybookConfig = {
     // "@chromatic-com/storybook",
     "@storybook/addon-vitest",
     // "@storybook/addon-a11y",
-    "@storybook/addon-docs"
+    "@storybook/addon-docs",
+    // Note: Design Tokens addon is loaded via manager.ts import
   ],
   "framework": "@storybook/nextjs-vite",
   "staticDirs": [

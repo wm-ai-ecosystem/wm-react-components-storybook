@@ -2,7 +2,7 @@
 
 The Checkbox component supports styling through the application theme and style properties. Since this is a React Native component, styling is applied through style objects rather than CSS classes.
 
-### Component Parts
+## Component Parts
 
 The checkbox consists of the following styleable parts:
 
@@ -10,7 +10,7 @@ The checkbox consists of the following styleable parts:
 - Checkbox indicator - The visual box that shows checked/unchecked state
 - Checkbox label - The text caption next to the checkbox
 
-### Styling Properties
+## Styling Properties
 
 | Style Property | Description |
 |---|---|
@@ -22,7 +22,7 @@ The checkbox consists of the following styleable parts:
 | margin | Space around the checkbox component |
 | padding | Inner spacing within the checkbox component |
 
-### Theming
+## Theming
 
 The checkbox respects the application theme settings for:
 

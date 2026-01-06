@@ -10,7 +10,7 @@
 | onMouseleave | Triggered when the pointer leaves the switch widget |
 | onTap | Triggered when the switch widget is tapped (mobile-specific) |
 
-### Example Usage
+## Example Usage
 
 ```javascript
 // Handling switch value changes

@@ -15,7 +15,7 @@ The Login component can be accessed in scripts via `Page.Widgets.loginComponent`
 | `redirectToProvider(providerName)` | String | void | Redirects to specified OAuth/SAML provider |
 | `cancelLogin()` | None | void | Cancels current login process and resets form |
 
-### Common Method Use Cases
+## Common Method Use Cases
 
 #### Programmatic Login
 ```javascript

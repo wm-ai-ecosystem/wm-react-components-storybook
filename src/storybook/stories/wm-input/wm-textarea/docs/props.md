@@ -44,7 +44,7 @@
 | width | string | "100%" | Width of the textarea, can be specified in px or % |
 | height | string | "100px" | Height of the textarea, can be specified in px or % |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Setting up a feedback form textarea
 ```javascript

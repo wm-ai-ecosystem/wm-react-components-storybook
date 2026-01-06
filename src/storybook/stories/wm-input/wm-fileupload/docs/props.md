@@ -36,7 +36,7 @@
 | hint | string | "" | Tooltip text shown on hover after 1.5 seconds |
 | tabindex | number | 0 | Order in which the component gets focus when tabbing |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Configure file extensions and size

@@ -13,7 +13,7 @@ The color-picker component does not have documented styling options. However, ty
 | `.color-picker-swatch` | Individual color swatches in the palette |
 | `.color-picker-preview` | Preview area showing the selected color |
 
-### Custom Styling Examples
+## Custom Styling Examples
 
 ```css
 /* Customize the color picker trigger button */

@@ -103,7 +103,7 @@ export const Basic: Story = {
   },
 };
 
-export const CurrencySelector: Story = {
+export const Showcase: Story = {
   render: () => {
     const [selectedCurrency, setSelectedCurrency] = useState<string>("USD");
     const [amount, setAmount] = useState<number>(1000);
@@ -125,7 +125,7 @@ export const CurrencySelector: Story = {
     return (
       <Box style={{ padding: 16 }}>
         <Stack spacing={3}>
-          <Typography variant="h6">Currency Selector Demo</Typography>
+          <Typography variant="h6">Currency Showcase</Typography>
 
           <Box>
             <Typography variant="subtitle2" mb={1}>
@@ -185,7 +185,7 @@ export const CurrencySelector: Story = {
     );
   },
   args: {
-    name: "currencySelector",
+    name: "showcaseCurrency",
     listener: mockListener,
   },
 };

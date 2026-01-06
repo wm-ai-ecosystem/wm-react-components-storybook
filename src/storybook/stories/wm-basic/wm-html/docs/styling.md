@@ -4,7 +4,7 @@ The HTML component can be styled using the `styles` prop, which accepts a React.
 
 For more comprehensive styling, you can include CSS class definitions in your HTML content and reference them from your application's stylesheets.
 
-### Example of Using the Styles Prop
+## Example of Using the Styles Prop
 
 ```javascript
 Page.Widgets.myHtml.styles = {
@@ -17,7 +17,7 @@ Page.Widgets.myHtml.styles = {
 };
 ```
 
-### Styling HTML Content
+## Styling HTML Content
 
 When including HTML content within the component, you can use classes that are defined in your application's CSS:
 

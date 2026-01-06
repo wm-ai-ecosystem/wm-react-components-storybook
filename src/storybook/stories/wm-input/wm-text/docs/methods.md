@@ -14,7 +14,7 @@ Page.Widgets.myTextInput
 | reset | none | void | Resets the input to its default value |
 | setValidationMessage | message: string, key: string | void | Sets a custom validation message |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Focus Management
 ```javascript

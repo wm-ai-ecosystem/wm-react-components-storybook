@@ -2,7 +2,7 @@
 
 The LeftNav component can be customized using CSS classes. While the component does not expose specific style properties through its API, you can target it and its children through standard CSS selectors.
 
-### Common Styling Patterns
+## Common Styling Patterns
 
 ```css
 /* Style the main left navigation container */
@@ -31,7 +31,7 @@ The LeftNav component can be customized using CSS classes. While the component d
 }
 ```
 
-### Responsive Considerations
+## Responsive Considerations
 
 For responsive designs, consider using media queries to adjust the LeftNav component based on screen size:
 

@@ -84,6 +84,84 @@ export const Basic: Story = {
   },
 };
 
+export const Showcase: Story = {
+  render: () => {
+    return (
+      <Box style={{ padding: 16 }}>
+        <Stack spacing={3}>
+          <Typography variant="h6" fontWeight={600}>Progress Circle Showcase</Typography>
+          <Stack direction="row" spacing={3} sx={{ flexWrap: "wrap", gap: 3 }}>
+            <Box textAlign="center">
+              <Typography variant="caption" display="block" mb={1}>
+                Default (30%)
+              </Typography>
+              <ProgressCircleDefaultExport
+                name="allDefault"
+                datavalue={30}
+                type="default"
+                captionplacement="inside"
+                listener={mockListener}
+              />
+            </Box>
+            <Box textAlign="center">
+              <Typography variant="caption" display="block" mb={1}>
+                Success (75%)
+              </Typography>
+              <ProgressCircleDefaultExport
+                name="allSuccess"
+                datavalue={75}
+                type="success"
+                captionplacement="inside"
+                listener={mockListener}
+              />
+            </Box>
+            <Box textAlign="center">
+              <Typography variant="caption" display="block" mb={1}>
+                Info (50%)
+              </Typography>
+              <ProgressCircleDefaultExport
+                name="allInfo"
+                datavalue={50}
+                type="info"
+                captionplacement="inside"
+                listener={mockListener}
+              />
+            </Box>
+            <Box textAlign="center">
+              <Typography variant="caption" display="block" mb={1}>
+                Warning (60%)
+              </Typography>
+              <ProgressCircleDefaultExport
+                name="allWarning"
+                datavalue={60}
+                type="warning"
+                captionplacement="inside"
+                listener={mockListener}
+              />
+            </Box>
+            <Box textAlign="center">
+              <Typography variant="caption" display="block" mb={1}>
+                Danger (85%)
+              </Typography>
+              <ProgressCircleDefaultExport
+                name="allDanger"
+                datavalue={85}
+                type="danger"
+                captionplacement="inside"
+                listener={mockListener}
+              />
+            </Box>
+          </Stack>
+        </Stack>
+      </Box>
+    );
+  },
+  args: {
+    name: "allTypes",
+    listener: mockListener,
+  },
+};
+
 // export const Default: Story = {
 //   render: Template,
 //   args: {
@@ -257,84 +335,6 @@ export const Basic: Story = {
 //       width: "250px",
 //       height: "250px",
 //     },
-//   },
-// };
-
-// export const AllTypes: Story = {
-//   render: () => {
-//     return (
-//       <Box style={{ padding: 16 }}>
-//         <Stack spacing={3}>
-//           <Typography variant="subtitle1">All Progress Circle Types:</Typography>
-//           <Stack direction="row" spacing={3} sx={{ flexWrap: "wrap", gap: 3 }}>
-//             <Box textAlign="center">
-//               <Typography variant="caption" display="block" mb={1}>
-//                 Default (30%)
-//               </Typography>
-//               <ProgressCircleDefaultExport
-//                 name="allDefault"
-//                 datavalue={30}
-//                 type="default"
-//                 captionplacement="inside"
-//                 listener={mockListener}
-//               />
-//             </Box>
-//             <Box textAlign="center">
-//               <Typography variant="caption" display="block" mb={1}>
-//                 Success (75%)
-//               </Typography>
-//               <ProgressCircleDefaultExport
-//                 name="allSuccess"
-//                 datavalue={75}
-//                 type="success"
-//                 captionplacement="inside"
-//                 listener={mockListener}
-//               />
-//             </Box>
-//             <Box textAlign="center">
-//               <Typography variant="caption" display="block" mb={1}>
-//                 Info (50%)
-//               </Typography>
-//               <ProgressCircleDefaultExport
-//                 name="allInfo"
-//                 datavalue={50}
-//                 type="info"
-//                 captionplacement="inside"
-//                 listener={mockListener}
-//               />
-//             </Box>
-//             <Box textAlign="center">
-//               <Typography variant="caption" display="block" mb={1}>
-//                 Warning (60%)
-//               </Typography>
-//               <ProgressCircleDefaultExport
-//                 name="allWarning"
-//                 datavalue={60}
-//                 type="warning"
-//                 captionplacement="inside"
-//                 listener={mockListener}
-//               />
-//             </Box>
-//             <Box textAlign="center">
-//               <Typography variant="caption" display="block" mb={1}>
-//                 Danger (85%)
-//               </Typography>
-//               <ProgressCircleDefaultExport
-//                 name="allDanger"
-//                 datavalue={85}
-//                 type="danger"
-//                 captionplacement="inside"
-//                 listener={mockListener}
-//               />
-//             </Box>
-//           </Stack>
-//         </Stack>
-//       </Box>
-//     );
-//   },
-//   args: {
-//     name: "allTypes",
-//     listener: mockListener,
 //   },
 // };
 

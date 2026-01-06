@@ -7,7 +7,7 @@
 | **verticalalign** | "top" \| "bottom" \| "center" | "top" | Controls the vertical alignment of child elements within the container. |
 | **spacing** | string \| number | 0 | Defines the space between child elements. Can be specified as a numeric value (in pixels) or as a string with units (e.g., "10px", "1rem"). |
 
-### Common Use Cases
+## Common Use Cases
 
 #### Creating a Horizontal Layout
 ```javascript

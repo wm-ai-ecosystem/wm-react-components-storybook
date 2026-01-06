@@ -11,7 +11,7 @@ The Panel component exposes several methods that can be accessed via JavaScript 
 | toggleFullScreen | none | void | Toggles the panel between normal and full-screen states |
 | toggleHelp | none | void | Shows or hides the help text popup |
 
-### Method Usage Examples
+## Method Usage Examples
 
 ```javascript
 // Close a panel programmatically
@@ -33,7 +33,7 @@ Page.Widgets.reportPanel.toggleFullScreen();
 Page.Widgets.settingsPanel.toggleHelp();
 ```
 
-### Complete Panel Interaction Example
+## Complete Panel Interaction Example
 
 ```javascript
 // Function to control multiple panels

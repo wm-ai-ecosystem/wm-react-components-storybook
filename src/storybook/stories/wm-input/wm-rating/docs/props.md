@@ -22,7 +22,7 @@
 | **Appearance** |
 | iconSize | string | "1em" | Defines the size of the rating icons (in em or px units) |
 
-### Setting up a Rating with Static Data
+## Setting up a Rating with Static Data
 
 ```javascript
 // Configure a rating with 5 stars and preset value of 3
@@ -34,7 +34,7 @@ Page.Widgets.myRating.dataset = "Poor,Fair,Good,Very Good,Excellent";
 Page.Widgets.myRating.showCaptions = true;
 ```
 
-### Using with Dataset
+## Using with Dataset
 
 ```javascript
 // Using a variable 'ratingOptions' with objects containing 'id' and 'label' fields

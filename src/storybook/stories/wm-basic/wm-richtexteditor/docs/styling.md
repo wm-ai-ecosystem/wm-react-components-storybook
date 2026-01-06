@@ -32,7 +32,7 @@ The Rich Text Editor can be styled using CSS classes to match your application's
 | .rich-text-editor-image | Image elements in the editor |
 | .rich-text-editor-link | Link elements in the editor |
 
-### Example Custom Styling
+## Example Custom Styling
 
 ```css
 /* Custom editor height */

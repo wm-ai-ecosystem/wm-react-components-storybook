@@ -5,7 +5,7 @@
 | `onLegendClick` | Triggered when a user clicks on a legend item. Provides the region name and the mouse event. |
 | `onChartClick` | Triggered when a user clicks on a bubble in the chart. Provides the data object, index, and the mouse event. |
 
-### Example Usage
+## Example Usage
 
 ```javascript
 // Handle legend click event

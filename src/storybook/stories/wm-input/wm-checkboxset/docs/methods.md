@@ -13,7 +13,7 @@ For example: `Page.Widgets.myCheckboxSet`
 | show | None | None | Makes the component visible. |
 | hide | None | None | Hides the component. |
 
-### Example Usage
+## Example Usage
 ```javascript
 // Get current selected values
 const selectedValues = Page.Widgets.myCheckboxSet.getValue();

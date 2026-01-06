@@ -7,7 +7,7 @@ Dialog components can be accessed in script through the Page.Widgets namespace.
 | open | none | void | Opens the dialog and displays it to the user. |
 | close | none | void | Closes the dialog, removing it from view. |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Open dialog when button is clicked

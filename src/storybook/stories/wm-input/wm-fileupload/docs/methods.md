@@ -9,7 +9,7 @@ FileUpload component methods can be accessed using the pattern:
 | setClearIconClass | iconClass: string | void | Sets the CSS class for the clear icon |
 | setClearIconHint | hint: string | void | Sets the tooltip text for the clear icon |
 
-### Common Use Cases
+## Common Use Cases
 
 ```javascript
 // Clear all uploaded files programmatically

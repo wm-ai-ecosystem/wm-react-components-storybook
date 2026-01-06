@@ -22,7 +22,7 @@ const meta: Meta<typeof RatingDefaultExport> = {
     iconcolor: { control: "color" },
     iconsize: { control: "text" },
     activeiconclass: { control: "select", options:["fa fa-star", "fa fa-heart"] },
-    inactiveiconclass: { control: "text" },
+    inactiveiconclass: { control: "select", options:["fa fa-star", "fa fa-heart"] },
     datavalue: { control: "number" },
     dataset: { control: "object" },
     datafield: { control: "text" },
@@ -79,27 +79,128 @@ export const Basic: Story = {
   },
 };
 
-export const CustomDataset: Story = {
-  render: Template,
-  args: {
-    name: "customDataset",
-    dataset: [
-      { index: 1, label: "Poor", value: 1 },
-      { index: 2, label: "Fair", value: 2 },
-      { index: 3, label: "Good", value: 3 },
-      { index: 4, label: "Very Good", value: 4 },
-      { index: 5, label: "Excellent", value: 5 },
-    ],
-    showcaptions: true,
-    datavalue: 3,
-    datafield: "value",
-    displayfield: "label",
-    listener: mockListener,
-    disabled: false,
-    readonly: false,
-    required: false,
-  },
-};
+export const Showcase: Story = {
+  render: () => (
+    <Box style={{ padding: 16 }}>
+      <Box sx={{mb: 3}}>
+      <Typography variant="h6" fontWeight={600} mb={4}>
+        Rating Showcase
+      </Typography>
+      </Box>
+
+      <Stack spacing={6}>
+        {/* Icon Types */}
+        <Box>
+          <Stack spacing={3}>
+            <Box>
+              <Typography variant="subtitle2" color="text.secondary" mb={1}>Default Star</Typography>
+              <RatingDefaultExport
+                name="starIcon"
+                maxvalue={5}
+                datavalue={3}
+                listener={mockListener}
+              />
+            </Box>
+            <Box>
+              <Typography variant="subtitle2" color="text.secondary" mb={1}>Red Heart</Typography>
+              <RatingDefaultExport
+                name="heartIcon"
+                maxvalue={5}
+                iconcolor="#FF0000"
+                activeiconclass="fa fa-heart"
+                inactiveiconclass="fa fa-heart"
+                datavalue={4}
+                listener={mockListener}
+              />
+            </Box>
+          </Stack>
+        </Box>
+
+        {/* Custom Dataset with Captions */}
+        <Box>
+          <Typography variant="subtitle2" color="text.secondary" mb={1}>Custom Dataset with Captions</Typography>
+          <RatingDefaultExport
+            name="customDataset"
+            dataset={[
+              { index: 1, label: "Poor", value: 1 },
+              { index: 2, label: "Fair", value: 2 },
+              { index: 3, label: "Good", value: 3 },
+              { index: 4, label: "Very Good", value: 4 },
+              { index: 5, label: "Excellent", value: 5 },
+            ]}
+            showcaptions={true}
+            datavalue={3}
+            datafield="value"
+            displayfield="label"
+            listener={mockListener}
+          />
+        </Box>
+
+        {/* Icon Size Variations */}
+        {/* <Box>
+          <Typography variant="h6" mb={2}>Icon Size Variations with Captions</Typography>
+          <Stack direction="row" spacing={4}>
+            <Box>
+              <Typography variant="body2" mb={1}>Small</Typography>
+              <RatingDefaultExport
+                name="smallIcon"
+                iconsize="16px"
+                caption="Rate this"
+                showcaptions={true}
+                datavalue={3}
+                listener={mockListener}
+              />
+            </Box>
+            <Box>
+              <Typography variant="body2" mb={1}>Medium</Typography>
+              <RatingDefaultExport
+                name="mediumIcon"
+                iconsize="24px"
+                caption="Rate this"
+                showcaptions={true}
+                datavalue={4}
+                listener={mockListener}
+              />
+            </Box>
+            <Box>
+              <Typography variant="body2" mb={1}>Large</Typography>
+              <RatingDefaultExport
+                name="largeIcon"
+                iconsize="36px"
+                caption="Rate this"
+                showcaptions={true}
+                datavalue={5}
+                listener={mockListener}
+              />
+            </Box>
+          </Stack>
+        </Box> */}
+      </Stack>
+    </Box>
+  ),
+}
+
+// export const CustomDataset: Story = {
+//   render: Template,
+//   args: {
+//     name: "customDataset",
+//     dataset: [
+//       { index: 1, label: "Poor", value: 1 },
+//       { index: 2, label: "Fair", value: 2 },
+//       { index: 3, label: "Good", value: 3 },
+//       { index: 4, label: "Very Good", value: 4 },
+//       { index: 5, label: "Excellent", value: 5 },
+//     ],
+//     showcaptions: true,
+//     datavalue: 3,
+//     datafield: "value",
+//     displayfield: "label",
+//     listener: mockListener,
+//     disabled: false,
+//     readonly: false,
+//     required: false,
+//   },
+// };
 
 // export const WithCaption: Story = {
 //   render: Template,

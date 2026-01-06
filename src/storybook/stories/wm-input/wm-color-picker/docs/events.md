@@ -10,7 +10,7 @@ The color-picker component does not have any documented events. However, typical
 | `onBlur` | Triggered when the color picker loses focus |
 | `onFocus` | Triggered when the color picker receives focus |
 
-### Example Event Usage
+## Example Event Usage
 
 To handle color selection changes, you might use code similar to:
 
