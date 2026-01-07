@@ -32,7 +32,7 @@ const meta = {
         type:"select"
       },
       options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
-        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
+        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user", "wi wi-dashboard"],
     },
     iconurl: { control: "text" },
     picturesource: { control: "text" },
@@ -44,7 +44,7 @@ const meta = {
     actions: { control: "text" },
   },
   parameters: {
-    layout: "padded",
+    layout: "fullscreen",
   },
 } satisfies Meta<typeof WmCard>;
 
@@ -64,111 +64,345 @@ export const Docs: Story = {
   parameters: {
     layout: 'fullscreen',
   },
+  args:{
+    name: "cardsDocs",
+    listener: mockListener
+  }
 };
 
 export const Showcase: Story = {
   render: () => {
-    const products = [
+    const contactCards = [
       {
         id: 1,
-        title: "Laptop Pro",
-        price: "$1,499",
-        image: "https://picsum.photos/300/200?random=10",
-        rating: 4.7,
+        name: "Eric Lin",
+        title: "Product Manager",
+        team: "Engineering",
+        location: "San Francisco",
+        phone: "+1 923-33-56",
+        avatar: "https://i.pravatar.cc/150?img=32",
       },
       {
         id: 2,
-        title: "Wireless Mouse",
-        price: "$49",
-        image: "https://picsum.photos/300/200?random=11",
-        rating: 4.5,
+        name: "Jane Liu",
+        title: "Marketing Lead",
+        team: "Marketing",
+        location: "New York",
+        phone: "+1 821-44-90",
+        avatar: "https://i.pravatar.cc/150?img=47",
+      },
+    ];
+
+    const mediaPosts = [
+      {
+        id: 1,
+        author: "Brad Tucker",
+        published: "May 13 · 4 mins read",
+        headline: "Design systems at scale",
+        image: "https://picsum.photos/600/300?random=21",
+        description:
+          "Design systems help teams build consistent experiences faster across products.",
+        likes: 75,
+        comments: 10,
       },
       {
-        id: 3,
-        title: "Mechanical Keyboard",
-        price: "$129",
-        image: "https://picsum.photos/300/200?random=12",
-        rating: 4.8,
-      },
-      {
-        id: 4,
-        title: "USB-C Hub",
-        price: "$79",
-        image: "https://picsum.photos/300/200?random=13",
-        rating: 4.4,
+        id: 2,
+        author: "Olivia Martin",
+        published: "Jun 02 · 6 mins read",
+        headline: "Why component reuse matters",
+        image: "https://picsum.photos/600/300?random=22",
+        description:
+          "Reusable components reduce development time and improve maintainability.",
+        likes: 112,
+        comments: 24,
       },
     ];
 
     return (
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          gap: 2,
-          padding: 2,
-        }}
-      >
-        {products.map((product) => (
-          <WmCard
-            key={product.id}
-            name={`productCard${product.id}`}
-            title={product.title}
-            picturesource={product.image}
-            imageheight="160px"
-            listener={mockListener}
-          >
-            <WmCardContent name="cardContent">
-              <Box sx={{ padding: 2 }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <Typography variant="h6" color="primary.main">
-                    {product.price}
-                  </Typography>
-                  <Typography variant="caption" color="text.secondary">
-                    ⭐ {product.rating}
-                  </Typography>
-                </Box>
-              </Box>
-            </WmCardContent>
-            <WmCardActions name="cardActions">
-              <Button size="small" color="primary">
-                Add to Cart
-              </Button>
-              <Button size="small">Details</Button>
-            </WmCardActions>
-          </WmCard>
-        ))}
+      <Box sx={{ p: 3 }}>
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h6" fontWeight={600}>
+            Cards Showcase
+          </Typography>
+        </Box>
+
+        <Stack spacing={6} sx={{ mt: 4 }}>
+          {/* CONTACT CARDS — RESPONSIVE 2 COLUMN */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">
+              Contact Cards
+            </Typography>
+            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }} style={{marginBottom: 12}} fontWeight={300}>
+              Horizontal content • Responsive two-column layout
+            </Typography>
+
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  sm: "repeat(2, 1fr)",
+                },
+                gap: 2,
+              }}
+            >
+              {contactCards.map((item) => (
+                <WmCard
+                  key={item.id}
+                  name={`contactCard${item.id}`}
+                  listener={mockListener}
+                >
+                  <WmCardContent name="cardContent">
+                    <Stack
+                      direction="row"
+                      spacing={2}
+                      alignItems="center"
+                      sx={{ p: 2 }}
+                    >
+                      <Box
+                        component="img"
+                        src={item.avatar}
+                        alt={item.name}
+                        sx={{
+                          width: 64,
+                          height: 64,
+                          borderRadius: 1,
+                          objectFit: "cover",
+                        }}
+                      />
+
+                      <Stack spacing={0.3}>
+                        <Typography variant="subtitle1">
+                          {item.name}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {item.title}
+                        </Typography>
+                        <Typography variant="caption">
+                          {item.team}
+                        </Typography>
+                        <Typography variant="caption">
+                          {item.location}
+                        </Typography>
+                        <Typography variant="caption">
+                          {item.phone}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  </WmCardContent>
+                </WmCard>
+              ))}
+            </Box>
+          </Box>
+
+          {/* MEDIA POSTS — VERTICAL STACK */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">
+              Media Post Cards
+            </Typography>
+            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }} style={{marginBottom: 12}} fontWeight={300}>
+              Vertical layout with image, content and footer
+            </Typography>
+
+            <Stack spacing={3}>
+              {mediaPosts.map((post) => (
+                <WmCard
+                  key={post.id}
+                  name={`mediaPost${post.id}`}
+                  listener={mockListener}
+                  picturesource={post.image}
+                  imageheight="220px"
+                >
+                  <WmCardContent name="cardContent">
+                    <Box sx={{ p: 2 }}>
+                      <Typography variant="subtitle1">
+                        {post.headline}
+                      </Typography>
+
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                      >
+                        {post.author} • {post.published}
+                      </Typography>
+
+                      <Typography
+                        variant="body2"
+                        sx={{ mt: 1, lineHeight: 1.6 }}
+                      >
+                        {post.description}
+                      </Typography>
+                    </Box>
+                  </WmCardContent>
+
+                  <WmCardFooter name="cardFooter">
+                    <Box
+                      sx={{
+                        px: 2,
+                        py: 1,
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Typography variant="caption">
+                        ❤️ {post.likes}
+                      </Typography>
+                      <Typography variant="caption">
+                        💬 {post.comments}
+                      </Typography>
+                    </Box>
+                  </WmCardFooter>
+                </WmCard>
+              ))}
+            </Stack>
+          </Box>
+        </Stack>
       </Box>
     );
   },
   args:{
     name: "showcaseCards",
-    listener: mockListener
+    listener:mockListener
   }
 };
 
 export const Basic: Story = {
   tags: ['show-panel'],
   args: {
-    name: "basicCard",
-    title: "User Profile",
-    subheading: "View and edit your profile information",
-    iconclass: "fa fa-user",
+    name: "actionMenuCard",
+    title: "Dashboard Card",
+    subheading: "Quick actions available",
+    iconclass: "wi wi-dashboard",
+    actions: JSON.stringify([
+      { id: 1, label: "Edit", icon: "wi wi-edit" },
+      { id: 2, label: "Share", icon: "wi wi-share" },
+      { id: 3, label: "Delete", icon: "wi wi-trash" },
+    ]),
+    itemlabel: "label",
+    itemicon: "icon",
+    picturesource: "https://picsum.photos/200",
+    imageheight: "200px",
+    width: "500px",
     listener: mockListener,
     children: (
       <WmCardContent name="cardContent">
         <Box sx={{ padding: 2 }}>
           <Typography variant="body1">
-            Name: John Doe
-            <br />
-            Email: john@example.com
-            <br />
-            Role: Administrator
+            This card has a menu with multiple actions. Click the menu icon in the header to see
+            available options.
           </Typography>
         </Box>
       </WmCardContent>
     ),
   },
 };
+
+
+
+
+// export const Showcase: Story = {
+//   render: () => {
+//     const products = [
+//       {
+//         id: 1,
+//         title: "Laptop Pro",
+//         price: "$1,499",
+//         image: "https://picsum.photos/300/200?random=10",
+//         rating: 4.7,
+//       },
+//       {
+//         id: 2,
+//         title: "Wireless Mouse",
+//         price: "$49",
+//         image: "https://picsum.photos/300/200?random=11",
+//         rating: 4.5,
+//       },
+//       {
+//         id: 3,
+//         title: "Mechanical Keyboard",
+//         price: "$129",
+//         image: "https://picsum.photos/300/200?random=12",
+//         rating: 4.8,
+//       },
+//       {
+//         id: 4,
+//         title: "USB-C Hub",
+//         price: "$79",
+//         image: "https://picsum.photos/300/200?random=13",
+//         rating: 4.4,
+//       },
+//     ];
+
+//     return (
+//       <Box
+//         sx={{
+//           display: "grid",
+//           gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+//           gap: 2,
+//           padding: 2,
+//         }}
+//       >
+//         {products.map((product) => (
+//           <WmCard
+//             key={product.id}
+//             name={`productCard${product.id}`}
+//             title={product.title}
+//             picturesource={product.image}
+//             imageheight="160px"
+//             listener={mockListener}
+//           >
+//             <WmCardContent name="cardContent">
+//               <Box sx={{ padding: 2 }}>
+//                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+//                   <Typography variant="h6" color="primary.main">
+//                     {product.price}
+//                   </Typography>
+//                   <Typography variant="caption" color="text.secondary">
+//                     ⭐ {product.rating}
+//                   </Typography>
+//                 </Box>
+//               </Box>
+//             </WmCardContent>
+//             <WmCardActions name="cardActions">
+//               <Button size="small" color="primary">
+//                 Add to Cart
+//               </Button>
+//               <Button size="small">Details</Button>
+//             </WmCardActions>
+//           </WmCard>
+//         ))}
+//       </Box>
+//     );
+//   },
+//   args:{
+//     name: "showcaseCards",
+//     listener: mockListener
+//   }
+// };
+
+// export const Basic: Story = {
+//   tags: ['show-panel'],
+//   args: {
+//     name: "basicCard",
+//     title: "User Profile",
+//     subheading: "View and edit your profile information",
+//     iconclass: "fa fa-user",
+//     listener: mockListener,
+//     children: (
+//       <WmCardContent name="cardContent">
+//         <Box sx={{ padding: 2 }}>
+//           <Typography variant="body1">
+//             Name: John Doe
+//             <br />
+//             Email: john@example.com
+//             <br />
+//             Role: Administrator
+//           </Typography>
+//         </Box>
+//       </WmCardContent>
+//     ),
+//   },
+// };
 
 // export const Default: Story = {
 //   args: {
@@ -349,32 +583,6 @@ export const Basic: Story = {
 //   },
 // };
 
-// export const WithActionMenu: Story = {
-//   args: {
-//     name: "actionMenuCard",
-//     title: "Dashboard Card",
-//     subheading: "Quick actions available",
-//     iconclass: "wi wi-dashboard",
-//     actions: JSON.stringify([
-//       { id: 1, label: "Edit", icon: "wi wi-edit" },
-//       { id: 2, label: "Share", icon: "wi wi-share" },
-//       { id: 3, label: "Delete", icon: "wi wi-trash" },
-//     ]),
-//     itemlabel: "label",
-//     itemicon: "icon",
-//     listener: mockListener,
-//     children: (
-//       <WmCardContent name="cardContent">
-//         <Box sx={{ padding: 2 }}>
-//           <Typography variant="body1">
-//             This card has a menu with multiple actions. Click the menu icon in the header to see
-//             available options.
-//           </Typography>
-//         </Box>
-//       </WmCardContent>
-//     ),
-//   },
-// };
 
 // export const CustomSize: Story = {
 //   args: {
@@ -397,25 +605,6 @@ export const Basic: Story = {
 //   },
 // };
 
-// export const WithAnimation: Story = {
-//   args: {
-//     name: "animationCard",
-//     title: "Animated Card",
-//     subheading: "Card with animation effect",
-//     iconclass: "wi wi-star",
-//     animation: "fadeIn",
-//     listener: mockListener,
-//     children: (
-//       <WmCardContent name="cardContent">
-//         <Box sx={{ padding: 2 }}>
-//           <Typography variant="body1">
-//             This card uses the 'fadeIn' animation effect when it appears.
-//           </Typography>
-//         </Box>
-//       </WmCardContent>
-//     ),
-//   },
-// };
 
 // export const ProductShowcase: Story = {
 //   args: {

@@ -1,16 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography, Button } from "@mui/material";
 import WmForm from "../../../../components/data/form";
 import WmText from "../../../../components/input/text";
-import WmNumber from "../../../../components/input/number";
 import WmTextarea from "../../../../components/input/textarea";
 import WmSelect from "../../../../components/input/select";
 import WmCheckbox from "../../../../components/input/default/checkbox";
-import WmSwitch from "../../../../components/input/default/switch";
 import WmDate from "../../../../components/input/epoch/date";
-import WmFormField from "../../../../components/data/form/form-field";
-import WmFormAction from "../../../../components/data/form/form-action";
+import WmNumber from "../../../../components/input/number";
+import WmSwitch from "../../../../components/input/default/switch";
 
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
@@ -71,139 +69,424 @@ export const Docs: Story = {
   parameters: {
     layout: 'fullscreen',
   },
+  args: {} as any,
 };
 
 
 export const Showcase: Story = {
-  args: {
-    name: "showcaseForm",
-    title: "Shipping Information",
-    subheading: "Enter your delivery address",
-    iconclass: "",
-    listener: mockListener,
-    children: (
-      <Box sx={{ padding: 3 }}>
-        <Stack spacing={3}>
-          <Stack direction="row" spacing={2}>
-            <WmText
-              name="firstName"
-              placeholder="First name"
-              datavalue=""
-              listener={mockListener}
-              caption="First Name"
-            />
-            <WmText
-              name="lastName"
-              placeholder="Last name"
-              datavalue=""
-              listener={mockListener}
-              caption="Last Name"
-            />
-          </Stack>
-          <WmText
-            name="address1"
-            placeholder="Street address"
-            datavalue=""
-            listener={mockListener}
-            caption="Address Line 1"
-          />
-          <WmText
-            name="address2"
-            placeholder="Apt, suite, etc. (optional)"
-            datavalue=""
-            listener={mockListener}
-            caption="Address Line 2"
-          />
-          <Stack direction="row" spacing={2}>
-            <WmText
-              name="city"
-              placeholder="City"
-              datavalue=""
-              listener={mockListener}
-              caption="City"
-            />
-            <WmText
-              name="state"
-              placeholder="State"
-              datavalue=""
-              listener={mockListener}
-              caption="State/Province"
-            />
-            <WmText
-              name="zipCode"
-              placeholder="ZIP"
-              datavalue=""
-              listener={mockListener}
-              caption="ZIP Code"
-            />
-          </Stack>
-          <WmSelect
-            name="country"
-            datavalue="USA"
-            dataset={["USA", "Canada", "UK", "Australia"]}
-            listener={mockListener}
-            caption="Country"
-          />
-          <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
-            <Button variant="outlined">Back</Button>
-            <Button variant="contained" type="submit">
-              Continue to Payment
-            </Button>
+  render: () => {
+    return (
+      <Box sx={{ p: 3 }}>
+        <Box sx={{ mb: 3 }}>
+          <Typography variant="h6" fontWeight={600}>
+            Forms Showcase
+          </Typography>
+        </Box>
+
+        <Stack spacing={6} sx={{ mt: 4 }}>
+          {/* USER PROFILE FORM */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">
+              User Profile Form
+            </Typography>
+            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }} style={{marginBottom: 12}} fontWeight={300}>
+              Edit profile with pre-filled data
+            </Typography>
+
+            <WmForm {...({
+              name: "profileForm",
+              title: "Edit Profile",
+              subheading: "Update your personal information",
+              iconclass: "fa fa-user",
+              captionposition: "left",
+              captionalign: "left",
+              listener: mockListener,
+            } as any)}>
+              <Box sx={{ padding: 3 }}>
+                <Stack spacing={3}>
+                  {/* Two-column layout for form fields */}
+                  <Stack direction="row" spacing={2}>
+                    <Box sx={{ flex: 1 }}>
+                      <WmText
+                        name="firstName"
+                        placeholder="Enter first name"
+                        datavalue="John"
+                        listener={mockListener}
+                        caption="First Name"
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmText
+                        name="lastName"
+                        placeholder="Enter last name"
+                        datavalue="Doe"
+                        listener={mockListener}
+                        caption="Last Name"
+                      />
+                    </Box>
+                  </Stack>
+
+                  <Stack direction="row" spacing={2}>
+                    <Box sx={{ flex: 1 }}>
+                      <WmText
+                        name="email"
+                        type="email"
+                        placeholder="Enter email"
+                        datavalue="john.doe@example.com"
+                        listener={mockListener}
+                        caption="Email"
+                        readonly={true}
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmNumber
+                        name="phone"
+                        placeholder="Enter phone number"
+                        datavalue={2345678900}
+                        listener={mockListener}
+                        caption="Phone Number"
+                        minvalue={1000000000}
+                        maxvalue={9999999999}
+                      />
+                    </Box>
+                  </Stack>
+
+                  <Stack direction="row" spacing={2}>
+                    <Box sx={{ flex: 1 }}>
+                      <WmDate
+                        name="birthdate"
+                        datavalue="1990-01-15"
+                        listener={mockListener}
+                        caption="Date of Birth"
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmSwitch
+                        name="gender"
+                        datavalue="Male"
+                        dataset="Male, Female, Other"
+                        listener={mockListener}
+                        caption="Gender"
+                      />
+                    </Box>
+                  </Stack>
+
+                  <Stack direction="row" spacing={2}>
+                    <Box sx={{ flex: 1 }}>
+                      <WmSelect
+                        name="country"
+                        datavalue="USA"
+                        dataset={["USA", "Canada", "UK", "Australia", "Other"]}
+                        listener={mockListener}
+                        caption="Country"
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmText
+                        name="city"
+                        placeholder="Enter city"
+                        datavalue="San Francisco"
+                        listener={mockListener}
+                        caption="City"
+                      />
+                    </Box>
+                  </Stack>
+
+                  <WmTextarea
+                    name="bio"
+                    placeholder="Tell us about yourself"
+                    datavalue="Software engineer passionate about web development"
+                    listener={mockListener}
+                    caption="Bio"
+                    rows={4}
+                  />
+
+                  <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end", mt: 2 }}>
+                    <Button variant="outlined">Cancel</Button>
+                    <Button variant="contained" type="submit">
+                      Save Changes
+                    </Button>
+                  </Box>
+                </Stack>
+              </Box>
+            </WmForm>
+          </Box>
+
+          {/* REGISTRATION FORM */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">
+              Registration Form
+            </Typography>
+            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }} style={{marginBottom: 12}} fontWeight={300}>
+              Three-column layout
+            </Typography>
+
+            <WmForm {...({
+              name: "registrationForm",
+              title: "User Registration",
+              subheading: "Create your account",
+              iconclass: "fa fa-user",
+              captionposition: "top",
+              captionalign: "left",
+              listener: mockListener,
+            } as any)}>
+              <Box sx={{ padding: 3 }}>
+                <Stack spacing={3}>
+                  {/* Three-column layout for name fields */}
+                  <Stack direction="row" spacing={2}>
+                    <Box sx={{ flex: 1 }}>
+                      <WmText
+                        name="firstName"
+                        placeholder="First name"
+                        datavalue=""
+                        listener={mockListener}
+                        caption="First Name *"
+                        required={true}
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmText
+                        name="middleName"
+                        placeholder="Middle name"
+                        datavalue=""
+                        listener={mockListener}
+                        caption="Middle Name"
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmText
+                        name="lastName"
+                        placeholder="Last name"
+                        datavalue=""
+                        listener={mockListener}
+                        caption="Last Name *"
+                        required={true}
+                      />
+                    </Box>
+                  </Stack>
+
+                  <Stack direction="row" spacing={2}>
+                    <Box sx={{ flex: 1 }}>
+                      <WmText
+                        name="username"
+                        placeholder="Choose a username"
+                        datavalue=""
+                        listener={mockListener}
+                        caption="Username *"
+                        required={true}
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmText
+                        name="email"
+                        type="email"
+                        placeholder="your.email@example.com"
+                        datavalue=""
+                        listener={mockListener}
+                        caption="Email Address *"
+                        required={true}
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmNumber
+                        name="mobile"
+                        placeholder="Mobile number"
+                        datavalue={null}
+                        listener={mockListener}
+                        caption="Mobile Number *"
+                        required={true}
+                        minvalue={1000000000}
+                        maxvalue={9999999999}
+                      />
+                    </Box>
+                  </Stack>
+
+                  <Stack direction="row" spacing={2}>
+                    <Box sx={{ flex: 1 }}>
+                      <WmText
+                        name="password"
+                        type="password"
+                        placeholder="Enter password"
+                        datavalue=""
+                        listener={mockListener}
+                        caption="Password *"
+                        required={true}
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmText
+                        name="confirmPassword"
+                        type="password"
+                        placeholder="Confirm password"
+                        datavalue=""
+                        listener={mockListener}
+                        caption="Confirm Password *"
+                        required={true}
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmDate
+                        name="dob"
+                        datavalue=""
+                        listener={mockListener}
+                        caption="Date of Birth *"
+                        required={true}
+                      />
+                    </Box>
+                  </Stack>
+
+                  <Stack direction="row" spacing={2}>
+                    <Box sx={{ flex: 1 }}>
+                      <WmSwitch
+                        name="gender"
+                        datavalue="Male"
+                        dataset="Male, Female, Other"
+                        listener={mockListener}
+                        caption="Gender"
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmSelect
+                        name="country"
+                        datavalue=""
+                        dataset={["USA", "Canada", "UK", "Australia", "India", "Other"]}
+                        listener={mockListener}
+                        caption="Country *"
+                        required={true}
+                      />
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmText
+                        name="zipcode"
+                        placeholder="ZIP/Postal code"
+                        datavalue=""
+                        listener={mockListener}
+                        caption="ZIP Code"
+                      />
+                    </Box>
+                  </Stack>
+
+                  <WmCheckbox
+                    name="terms"
+                    caption="I agree to the terms and conditions *"
+                    datavalue={false}
+                    listener={mockListener}
+                    required={true}
+                  />
+
+                  <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
+                    <Button variant="outlined" type="reset">
+                      Clear
+                    </Button>
+                    <Button variant="contained" type="submit">
+                      Register
+                    </Button>
+                  </Box>
+                </Stack>
+              </Box>
+            </WmForm>
           </Box>
         </Stack>
       </Box>
-    ),
+    );
   },
+  args: {} as any,
 };
 
 export const Basic: Story = {
   tags: ['show-panel'],
-  args: {
-    name: "basicForm",
-    title: "Contact Form",
-    subheading: "Please fill in your details",
-    iconclass: "",
-    listener: mockListener,
-    children: (
-      <Box sx={{ padding: 3 }}>
-        <Stack spacing={3}>
-          <WmText
-            name="fullName"
-            placeholder="Enter your full name"
-            datavalue=""
-            listener={mockListener}
-            caption="Full Name"
-            required={true}
-          />
-          <WmText
-            name="email"
-            type="email"
-            placeholder="Enter your email"
-            datavalue=""
-            listener={mockListener}
-            caption="Email Address"
-            required={true}
-          />
-          <WmTextarea
-            name="message"
-            placeholder="Enter your message"
-            datavalue=""
-            listener={mockListener}
-            caption="Message"
-            rows={4}
-          />
-          <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
-            <Button variant="outlined" type="reset">
-              Reset
-            </Button>
-            <Button variant="contained" type="submit">
-              Submit
-            </Button>
-          </Box>
-        </Stack>
+  render: (args) => {
+    const handleFormSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      console.log('Form submitted');
+    };
+
+    return (
+      <Box sx={{ p: 3, maxWidth: 600, mx: 'auto' }}>
+        <form onSubmit={handleFormSubmit}>
+          <WmForm {...({
+            name: "basicContactForm",
+            title: args.title,
+            subheading: args.subheading,
+            iconclass: args.iconclass,
+            captionposition: args.captionposition,
+            captionalign: args.captionalign,
+            collapsible: args.collapsible,
+            expanded: args.expanded,
+            listener: mockListener,
+          } as any)}>
+            <Box sx={{ padding: 3 }}>
+              <Stack spacing={3}>
+                <WmText
+                  name="fullName"
+                  placeholder="Enter your full name"
+                  datavalue=""
+                  listener={mockListener}
+                  caption="Full Name *"
+                  required={true}
+                />
+
+                <WmText
+                  name="email"
+                  type="email"
+                  placeholder="your.email@example.com"
+                  datavalue=""
+                  listener={mockListener}
+                  caption="Email Address *"
+                  required={true}
+                />
+
+                <WmNumber
+                  name="phone"
+                  placeholder="Contact number"
+                  datavalue={null}
+                  listener={mockListener}
+                  caption="Phone Number"
+                />
+
+                <WmSelect
+                  name="subject"
+                  datavalue=""
+                  dataset={["General Inquiry", "Support", "Feedback", "Partnership", "Other"]}
+                  listener={mockListener}
+                  caption="Subject *"
+                  required={true}
+                />
+
+                <WmTextarea
+                  name="message"
+                  placeholder="Your message here..."
+                  datavalue=""
+                  listener={mockListener}
+                  caption="Message *"
+                  rows={5}
+                  required={true}
+                />
+
+                <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end", mt: 2 }}>
+                  <Button variant="outlined" type="reset">
+                    Reset
+                  </Button>
+                  <Button variant="contained" type="submit" color="primary">
+                    Submit
+                  </Button>
+                </Box>
+              </Stack>
+            </Box>
+          </WmForm>
+        </form>
       </Box>
-    ),
+    );
   },
+  args: {
+    title: "Contact Form",
+    subheading: "Simple form example",
+    iconclass: "fa fa-user",
+    captionposition: "top",
+    captionalign: "left",
+    collapsible: false,
+    expanded: true,
+  } as any,
 };
 
 

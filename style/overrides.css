@@ -53,6 +53,10 @@ body.sb-show-main {
   min-width: 275px !important;
 }
 
+.app-form .css-1weydn8-MuiInputBase-root-MuiInput-root{
+  width: 100%;
+}
+
 /* select - multiple */
 .form-control.app-select[multiple] {
   height: 80px !important;
