@@ -35,9 +35,96 @@
     font-weight: normal;
     font-style: normal;
   }
+
+  /* Version Switcher Styles */
+  .wm-version-switcher {
+    padding: 10px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    background: linear-gradient(135deg, rgba(41, 109, 246, 0.03) 0%, rgba(41, 109, 246, 0.08) 100%);
+    order: 2 !important;
+    /* Position between logo (1) and search (3) */
+  }
+
+  /* Make sidebar header use flexbox for ordering */
+  .sidebar-container>div:first-child {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Logo/branding area comes first */
+  .sidebar-container>div:first-child>a:first-child,
+  .sidebar-container>div:first-child>div:first-child {
+    order: 1 !important;
+  }
+
+  /* Search bar comes after version switcher */
+  .sidebar-container>div:first-child>form,
+  .sidebar-container>div:first-child>div:has(form) {
+    order: 3 !important;
+  }
+
+  .wm-version-switcher-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .wm-framework-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: transparent;
+    color: #296df6;
+    font-family: "neurial-grotesk-medium", sans-serif;
+  }
+
+  .wm-version-select {
+    padding: 4px 24px 4px 8px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 5px;
+    background: white;
+    font-size: 12px;
+    color: rgba(48, 48, 48, 1);
+    cursor: pointer;
+    appearance: none;
+    outline: none;
+    font-family: "neurial-grotesk-regular", sans-serif;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+    background-size: 10px;
+  }
+
+  .wm-version-select:hover {
+    /* border-color: #296df6; */
+    background-color: rgb(226, 244, 254);
+  }
+
+  .wm-version-select:focus {
+    /* border-color: #296df6; */
+    box-shadow: 0 0 0 2px rgba(41, 109, 246, 0.15);
+  }
 </style>
 
 <script type="text/javascript" ;>
+  const versionsConfig = {
+        frameworkLabel: "React",
+        frameworkIcon: `<svg width="14" height="14" viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><ellipse cx="16" cy="16" rx="14" ry="5.5" fill="none" stroke="currentColor" stroke-width="2"/><ellipse cx="16" cy="16" rx="14" ry="5.5" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(60 16 16)"/><ellipse cx="16" cy="16" rx="14" ry="5.5" fill="none" stroke="currentColor" stroke-width="2" transform="rotate(120 16 16)"/><circle cx="16" cy="16" r="3" fill="currentColor"/></svg>`,
+        versions: [
+          { label: "11.01", url: "https://react-components.onwavemaker.com", current: true },
+          { label: "11.2", url: "https://react-components.onwavemaker.com" },
+          // { label: "11.11", url: "https://dev-rn-components.onwavemaker.com" },
+        ]
+  };
+
   const componentIcons = {
     accordion: "fa-thin fa-bars-staggered",
     anchor: "fa-thin fa-link",
@@ -179,6 +266,81 @@
       });
     };
 
+    const injectVersionSwitcher = () => {
+      // Check if already injected
+      if (document.querySelector('.wm-version-switcher')) return;
+
+      // Try multiple selectors to find the right insertion point
+      let insertTarget = null;
+      let insertPosition = 'afterend';
+
+      // Try 1: Find the search input container
+      const searchForm = document.querySelector('form[role="search"]') ||
+        document.querySelector('[role="search"]') ||
+        document.querySelector('.sidebar-container form');
+      if (searchForm) {
+        insertTarget = searchForm.closest('div') || searchForm;
+      }
+
+      // Try 2: Find sidebar header/branding area
+      if (!insertTarget) {
+        const sidebarHeader = document.querySelector('.sidebar-container > div:first-child') ||
+          document.querySelector('[class*="sidebar"] > div:first-child');
+        if (sidebarHeader) {
+          insertTarget = sidebarHeader;
+        }
+      }
+
+      // Try 3: Just get the sidebar container itself
+      if (!insertTarget) {
+        const sidebar = document.querySelector('.sidebar-container') ||
+          document.querySelector('[class*="Sidebar"]') ||
+          document.querySelector('nav');
+        if (sidebar && sidebar.firstChild) {
+          insertTarget = sidebar.firstChild;
+        }
+      }
+
+      if (!insertTarget) {
+        console.log('WM Version Switcher: Could not find sidebar element');
+        return;
+      }
+
+      // Create version switcher element
+      const switcher = document.createElement('div');
+      switcher.className = 'wm-version-switcher';
+
+      // Build version options HTML
+      const optionsHtml = versionsConfig.versions.map(v =>
+        `<option value="${v.url}"${v.current ? ' selected' : ''}>${v.label}${v.current ? ' ✓' : ''}</option>`
+      ).join('');
+
+      switcher.innerHTML = `
+        <div class="wm-version-switcher-header">
+          <div class="wm-framework-badge">
+            <span>${versionsConfig.frameworkIcon}</span>
+            <span>${versionsConfig.frameworkLabel}</span>
+          </div>
+          <select class="wm-version-select" title="Switch version">
+            ${optionsHtml}
+          </select>
+        </div>
+      `;
+
+      // Add change handler
+      const select = switcher.querySelector('.wm-version-select');
+      select.addEventListener('change', (e) => {
+        const url = e.target.value;
+        if (url && url !== '#') {
+          window.location.href = url;
+        }
+      });
+
+      // Insert BEFORE the target element (above the search bar)
+      insertTarget.insertAdjacentElement('beforebegin', switcher);
+      console.log('WM Version Switcher: Injected above search bar');
+    };
+
     // MutationObserver to monitor when the sidebar is added/updated
     const observer = new MutationObserver((mutationsList) => {
       for (const mutation of mutationsList) {
@@ -187,6 +349,7 @@
           if (sidebar) {
             replaceSVGs(); // Replace SVGs
             setupAutoCollapse(); // Setup auto-collapse logic
+            injectVersionSwitcher(); // Inject version switcher
           }
         }
       }
@@ -194,5 +357,8 @@
 
     // Start observing the DOM for sidebar injection
     observer.observe(document.body, { childList: true, subtree: true });
+
+    // Try to inject immediately in case sidebar is already present
+    injectVersionSwitcher();
   });
 </script>
