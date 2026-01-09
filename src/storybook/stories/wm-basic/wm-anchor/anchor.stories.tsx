@@ -11,48 +11,50 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import anchorTokensData from "../../../../designTokens/components/anchor/anchor.json";
+
 const meta = {
   title: "Basic/Anchor",
   component: AnchorDefaultExport,
-   args:{
-    name:"",
-    caption:"",
-    hyperlink:"",
-    className:"",
-    iconclass:""
-  },
-  argTypes: {
-    caption: { control: "text" },
-    hyperlink: { control: "text" },
-    target: {
-      control: { type: "select" },
-      options: ["_self", "_blank", "_parent", "_top"],
-    },
-    className: {
-      control: {
-        type: "select",
-      },
-      options: ["link-primary", "link-secondary", "link-success", "link-danger", "link-warning", "link-info","link-muted","link-default"],
-    },
-    iconclass:{
-      control:{
-        type:"select"
-      },
-      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
-        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-github"],
-    },
-    iconposition: {
-      control: { type: "select" },
-      options: ["left", "right", "top"],
-    },
-    iconwidth: { control: "text" },
-    iconheight: { control: "text" },
-    iconmargin: { control: "text" },
-    badgevalue: { control: "text" },
-    // shortcutkey: { control: "text" },
-    // arialabel: { control: "text" },
-    // encodeurl: { control: "boolean" },
-  },
+  //  args:{
+  //   name:"",
+  //   caption:"",
+  //   hyperlink:"",
+  //   className:"",
+  //   iconclass:""
+  // },
+  // argTypes: {
+  //   caption: { control: "text" },
+  //   hyperlink: { control: "text" },
+  //   target: {
+  //     control: { type: "select" },
+  //     options: ["_self", "_blank", "_parent", "_top"],
+  //   },
+  //   className: {
+  //     control: {
+  //       type: "select",
+  //     },
+  //     options: ["link-primary", "link-secondary", "link-success", "link-danger", "link-warning", "link-info","link-muted","link-default"],
+  //   },
+  //   iconclass:{
+  //     control:{
+  //       type:"select"
+  //     },
+  //     options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+  //       "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-github"],
+  //   },
+  //   iconposition: {
+  //     control: { type: "select" },
+  //     options: ["left", "right", "top"],
+  //   },
+  //   iconwidth: { control: "text" },
+  //   iconheight: { control: "text" },
+  //   iconmargin: { control: "text" },
+  //   badgevalue: { control: "text" },
+  //   // shortcutkey: { control: "text" },
+  //   // arialabel: { control: "text" },
+  //   // encodeurl: { control: "boolean" },
+  // },
 } satisfies Meta<typeof AnchorDefaultExport>;
 
 export default meta;
@@ -82,6 +84,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name: "docsAnchor",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -247,6 +253,80 @@ export const Basic: Story = {
     target: "_blank",
     className:"link-default"
   },
+  argTypes: {
+    caption: { control: "text" },
+    hyperlink: { control: "text" },
+    target: {
+      control: { type: "select" },
+      options: ["_self", "_blank", "_parent", "_top"],
+    },
+    className: {
+      control: {
+        type: "select",
+      },
+      options: ["link-primary", "link-secondary", "link-success", "link-danger", "link-warning", "link-info","link-muted","link-default"],
+    },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-github"],
+    },
+    iconposition: {
+      control: { type: "select" },
+      options: ["left", "right", "top"],
+    },
+    iconurl: {control: "text"},
+    iconwidth: { control: "text" },
+    iconheight: { control: "text" },
+    iconmargin: { control: "text" },
+    badgevalue: { control: "text" },
+  }
+};
+
+export const DesignToken: Story = {
+  tags: ['show-panel'],
+  render: Template,
+  args: {
+    name: "designTokenAnchor",
+    listener: mockListener,
+    caption: "Click Me",
+    // className:"link-primary",
+    "data-design-token-target":"true"
+  },
+  argTypes: {
+    caption: { control: "text" },
+    // className: {
+    //   control: {
+    //     type: "select",
+    //   },
+    //   options: ["link-primary", "link-secondary", "link-success", "link-danger", "link-warning", "link-info","link-muted","link-default"],
+    // },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-github"],
+    },
+    iconposition: {
+      control: { type: "select" },
+      options: ["left", "right", "top"],
+    },
+    iconurl: {control: "text"},
+    badgevalue: { control: "text" },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: anchorTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "anchor",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
+  }, 
 };
 
 

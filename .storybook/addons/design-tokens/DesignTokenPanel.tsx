@@ -791,6 +791,31 @@ ${fullSelector} {
       css += `}\n\n`;
     }
 
+    // Add rules for images
+    // Use childSelectors.image if defined, otherwise default to common image selectors
+    const hasImageSize = tokenValues[getVarName('image-size')];
+    const hasImageRadius = tokenValues[getVarName('image-radius')];
+
+    if (hasImageSize || hasImageRadius) {
+      // Default image selectors that work across components
+      const defaultImageSelectors = 'img,.image,[class*="-image"],[class*="image-"]';
+      const imageSelectorList = config.childSelectors?.image || defaultImageSelectors;
+      const imageSelectors = imageSelectorList.split(',').map(s => `${fullSelector} ${s.trim()}`).join(',\n');
+
+      css += `${imageSelectors} {\n`;
+      if (hasImageSize) {
+        css += `  width: ${tokenValues[getVarName('image-size')]} !important;\n`;
+        css += `  height: ${tokenValues[getVarName('image-size')]} !important;\n`;
+        css += `  min-width: ${tokenValues[getVarName('image-size')]} !important;\n`;
+        css += `  min-height: ${tokenValues[getVarName('image-size')]} !important;\n`;
+      }
+      if (hasImageRadius) {
+        css += `  border-radius: ${tokenValues[getVarName('image-radius')]} !important;\n`;
+      }
+      css += `  object-fit: cover !important;\n`;
+      css += `}\n\n`;
+    }
+
     // Add rules for badges (if badge child selector is defined)
     if (config.childSelectors?.badge && tokenValues[getVarName('color')]) {
       const badgeSelectors = config.childSelectors.badge.split(',').map(s => `${fullSelector} ${s.trim()}`).join(',\n');
