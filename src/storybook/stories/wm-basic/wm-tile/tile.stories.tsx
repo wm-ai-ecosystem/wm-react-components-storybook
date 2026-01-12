@@ -11,17 +11,19 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import tileTokensData from "../../../../designTokens/components/tile/tile.json";
+
 const meta: Meta<typeof TileDefaultExport> = {
   title: "Basic/Tile",
   component: TileDefaultExport,
-  argTypes: {
-    className: {
-      control: {
-        type: "select",
-      },
-      options: ["bg-primary", "bg-success", "bg-danger", "bg-warning", "bg-info"],
-    },
-  },
+  // argTypes: {
+  //   className: {
+  //     control: {
+  //       type: "select",
+  //     },
+  //     options: ["bg-primary", "bg-success", "bg-danger", "bg-warning", "bg-info"],
+  //   },
+  // },
 };
 
 export default meta;
@@ -53,6 +55,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsTile",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -171,6 +177,53 @@ export const Basic: Story = {
     ),
     className: "bg-primary",
   },
+  argTypes: {
+    className: {
+      control: {
+        type: "select",
+      },
+      options: ["bg-primary", "bg-success", "bg-danger", "bg-warning", "bg-info"],
+    },
+  },
+};
+
+export const DesignToken: Story = {
+  tags: ['show-panel'],
+  render: Template,
+  args: {
+    name: "designTokenTile",
+    listener: mockListener,
+    children: (
+      <Box>
+        <Typography variant="h6" gutterBottom>
+          Tile Title
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          This is a tile with structured content including a title and description text.
+        </Typography>
+      </Box>
+    ),
+    className: "bg-primary",
+    "data-design-token-target":"true"
+  },
+  argTypes: {
+    className: {
+      control: {
+        type: "select",
+      },
+      options: ["bg-primary", "bg-success", "bg-danger", "bg-warning", "bg-info"],
+    },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: tileTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "tile",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
+  }, 
 };
 
 

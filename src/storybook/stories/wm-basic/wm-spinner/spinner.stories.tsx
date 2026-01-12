@@ -12,33 +12,35 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import spinnerTokensData from "../../../../designTokens/components/spinner/spinner.json";
+
 const meta: Meta<typeof SpinnerDefaultExport> = {
   title: "Basic/Spinner",
   component: SpinnerDefaultExport,
-  argTypes: {
-    caption: { control: "text" },
-    type: {
-      control: { type: "select" },
-      options: ["icon", "image", "default"],
-    },
-    show: { control: "boolean" },
-    iconclass:{
-      control:{
-        type:"select"
-      },
-      options:["fa fa-spinner fa-spin", "fa fa-cog fa-spin", "fa fa-refresh fa-spin",],
-    },
-    iconsize: { control: "text" },
-    image: { control: "text" },
-    imagewidth: { control: "text" },
-    imageheight: { control: "text" },
-    animation: {
-      control: { type: "select" },
-      options: animationNames,
-    },
-    // hint: { control: "text" },
-    // arialabel: { control: "text" },
-  },
+  // argTypes: {
+  //   caption: { control: "text" },
+  //   type: {
+  //     control: { type: "select" },
+  //     options: ["icon", "image", "default"],
+  //   },
+  //   show: { control: "boolean" },
+  //   iconclass:{
+  //     control:{
+  //       type:"select"
+  //     },
+  //     options:["fa fa-spinner fa-spin", "fa fa-cog fa-spin", "fa fa-refresh fa-spin",],
+  //   },
+  //   iconsize: { control: "text" },
+  //   image: { control: "text" },
+  //   imagewidth: { control: "text" },
+  //   imageheight: { control: "text" },
+  //   animation: {
+  //     control: { type: "select" },
+  //     options: animationNames,
+  //   },
+  //   // hint: { control: "text" },
+  //   // arialabel: { control: "text" },
+  // },
 };
 
 export default meta;
@@ -69,6 +71,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsSpinner",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -151,6 +157,24 @@ export const Basic: Story = {
     show: true,
     type: "default",
   },
+  argTypes: {
+    caption: { control: "text" },
+    type: {
+      control: { type: "select" },
+      options: ["icon", "image", "default"],
+    },
+    show: { control: "boolean" },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:["fa fa-spinner fa-spin", "fa fa-cog fa-spin", "fa fa-refresh fa-spin",],
+    },
+    iconsize: { control: "text" },
+    image: { control: "text" },
+    imagewidth: { control: "text" },
+    imageheight: { control: "text" },
+  },
 };
 
 export const Animations: Story = {
@@ -166,6 +190,78 @@ export const Animations: Story = {
     iconclass: "fa fa-circle-o-notch fa-spin",
     animation: "bounce"
   },
+  argTypes: {
+    caption: { control: "text" },
+    type: {
+      control: { type: "select" },
+      options: ["icon", "image", "default"],
+    },
+    show: { control: "boolean" },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:["fa fa-spinner fa-spin", "fa fa-cog fa-spin", "fa fa-refresh fa-spin",],
+    },
+    iconsize: { control: "text" },
+    image: { control: "text" },
+    imagewidth: { control: "text" },
+    imageheight: { control: "text" },
+    animation: {
+      control: { type: "select" },
+      options: animationNames,
+    },
+  },
+};
+
+export const DesignToken: Story = {
+  tags: ['show-panel'],
+  render: (args) => {
+      // Spinner component can't spread data-design-token-target, so we apply it to a wrapper
+      const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+
+      return (
+        <Box className="wm-app" style={{ padding: 16 }} data-design-token-target={dataAttr}>
+          <SpinnerDefaultExport {...componentArgs} listener={mockListener} />
+        </Box>
+      );
+    },
+  args: {
+    name: "designTokenSpinner",
+    caption: "Loading...",
+    listener: mockListener,
+    show: true,
+    type: "default",
+    "data-design-token-target": true
+  },
+  argTypes: {
+    caption: { control: "text" },
+    type: {
+      control: { type: "select" },
+      options: ["icon", "image", "default"],
+    },
+    show: { control: "boolean" },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:["fa fa-spinner fa-spin", "fa fa-cog fa-spin", "fa fa-refresh fa-spin",],
+    },
+    iconsize: { control: "text" },
+    image: { control: "text" },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: spinnerTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "spinner",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+      // Note: propToVariantMap not needed - spinner JSON has no variant definitions
+      // The spinner component uses base tokens only (no variants for default/icon/image types)
+    },
+    layout: 'fullscreen',
+  }, 
 };
 
 

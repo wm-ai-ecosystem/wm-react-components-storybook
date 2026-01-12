@@ -14,30 +14,30 @@ import styling from "./docs/styling.md?raw";
 const meta: Meta<typeof TreeDefaultExport> = {
   title: "Basic/Tree",
   component: TreeDefaultExport,
-  argTypes: {
-    dataset: { control: "object" },
-    datavalue: { control: "text" },
-    treeicons: {
-      control: { type: "select" },
-      options: ["fa fa-minus", "fa fa-arrow-right", "fa fa-folder-tree", "fa fa-circle"],
-    },
-    levels: { control: "number" },
-    nodelabel: { control: "text" },
-    nodeicon: { control: "text" },
-    nodechildren: { control: "text" },
-    nodeid: { control: "text" },
-    nodeclick: {
-      control: { type: "select" },
-      options: ["expand", "none"],
-    },
-    orderby: { control: "text" },
-    horizontalalign: {
-      control: { type: "select" },
-      options: ["left", "center", "right"],
-    },
-    show: { control: "boolean" },
-    // tabindex: { control: "number" },
-  },
+  // argTypes: {
+  //   dataset: { control: "object" },
+  //   datavalue: { control: "text" },
+  //   treeicons: {
+  //     control: { type: "select" },
+  //     options: ["fa fa-minus", "fa fa-arrow-right", "fa fa-folder-tree", "fa fa-circle"],
+  //   },
+  //   levels: { control: "number" },
+  //   nodelabel: { control: "text" },
+  //   nodeicon: { control: "text" },
+  //   nodechildren: { control: "text" },
+  //   nodeid: { control: "text" },
+  //   nodeclick: {
+  //     control: { type: "select" },
+  //     options: ["expand", "none"],
+  //   },
+  //   orderby: { control: "text" },
+  //   horizontalalign: {
+  //     control: { type: "select" },
+  //     options: ["left", "center", "right"],
+  //   },
+  //   show: { control: "boolean" },
+  //   // tabindex: { control: "number" },
+  // },
 };
 
 export default meta;
@@ -188,6 +188,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsTree",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -216,6 +220,19 @@ export const Showcase: Story = {
     levels: 2,
     horizontalalign: "left",
     show: true,
+  },
+  argTypes: {
+    dataset: { control: "object" },
+    treeicons: {
+      control: { type: "select" },
+      options: ["fa fa-minus", "fa fa-arrow-right", "fa fa-folder-tree", "fa fa-circle"],
+    },
+    levels: { control: "number" },
+    horizontalalign: {
+      control: { type: "select" },
+      options: ["left", "center", "right"],
+    },
+    show: { control: "boolean" },
   },
 };
 
@@ -246,7 +263,31 @@ export const Basic: Story = {
     horizontalalign: "left",
     show: true,
   },
+  argTypes: {
+    dataset: { control: "object" },
+    datavalue: { control: "text" },
+    treeicons: {
+      control: { type: "select" },
+      options: ["fa fa-minus", "fa fa-arrow-right", "fa fa-folder-tree", "fa fa-circle"],
+    },
+    levels: { control: "number" },
+    nodelabel: { control: "text" },
+    nodeicon: { control: "text" },
+    nodechildren: { control: "text" },
+    nodeid: { control: "text" },
+    nodeclick: {
+      control: { type: "select" },
+      options: ["expand", "none"],
+    },
+    orderby: { control: "text" },
+    horizontalalign: {
+      control: { type: "select" },
+      options: ["left", "center", "right"],
+    },
+    show: { control: "boolean" },
+  },
 };
+
 
 // export const FileSystemTree: Story = {
 //   render: Template,

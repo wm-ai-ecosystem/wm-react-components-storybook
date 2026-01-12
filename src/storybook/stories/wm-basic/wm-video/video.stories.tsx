@@ -11,29 +11,31 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import videoTokensData from "../../../../designTokens/components/video/video.json";
+
 const meta: Meta<typeof VideoDefaultExport> = {
   title: "Basic/Video",
   component: VideoDefaultExport,
-  argTypes: {
-    mp4format: { control: "text" },
-    webmformat: { control: "text" },
-    oggformat: { control: "text" },
-    controls: { control: "boolean" },
-    autoplay: { control: "boolean" },
-    loop: { control: "boolean" },
-    muted: { control: "boolean" },
-    poster: { control: "text" },
-    videopreload: {
-      control: { type: "select" },
-      options: ["auto", "metadata", "none"],
-    },
-    subtitlesource: { control: "text" },
-    subtitlelang: { control: "text" },
-    videosupportmessage: { control: "text" },
-    // hint: { control: "text" },
-    // arialabel: { control: "text" },
-    // tabindex: { control: "number" },
-  },
+  // argTypes: {
+  //   mp4format: { control: "text" },
+  //   webmformat: { control: "text" },
+  //   oggformat: { control: "text" },
+  //   controls: { control: "boolean" },
+  //   autoplay: { control: "boolean" },
+  //   loop: { control: "boolean" },
+  //   muted: { control: "boolean" },
+  //   poster: { control: "text" },
+  //   videopreload: {
+  //     control: { type: "select" },
+  //     options: ["auto", "metadata", "none"],
+  //   },
+  //   subtitlesource: { control: "text" },
+  //   subtitlelang: { control: "text" },
+  //   videosupportmessage: { control: "text" },
+  //   // hint: { control: "text" },
+  //   // arialabel: { control: "text" },
+  //   // tabindex: { control: "number" },
+  // },
 };
 
 export default meta;
@@ -68,6 +70,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsVideo",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -161,6 +167,67 @@ export const Basic: Story = {
     showcontrols: true,
     muted: false,
   },
+  argTypes: {
+    mp4format: { control: "text" },
+    webmformat: { control: "text" },
+    oggformat: { control: "text" },
+    controls: { control: "boolean" },
+    autoplay: { control: "boolean" },
+    loop: { control: "boolean" },
+    muted: { control: "boolean" },
+    poster: { control: "text" },
+    videopreload: {
+      control: { type: "select" },
+      options: ["auto", "metadata", "none"],
+    },
+    subtitlesource: { control: "text" },
+    subtitlelang: { control: "text" },
+    videosupportmessage: { control: "text" },
+  },
+};
+
+export const DesignToken: Story = {
+  tags: ['show-panel'],
+  render: Template,
+  args: {
+    name: "designVideo",
+    listener: mockListener,
+    mp4format: sampleMp4Video,
+    controls: true,
+    autoplay: false,
+    loop:false,
+    videopreload: "none",
+    showcontrols: true,
+    muted: false,
+    "data-design-token-target":"true"
+  },
+  argTypes: {
+    mp4format: { control: "text" },
+    webmformat: { control: "text" },
+    oggformat: { control: "text" },
+    controls: { control: "boolean" },
+    autoplay: { control: "boolean" },
+    loop: { control: "boolean" },
+    muted: { control: "boolean" },
+    poster: { control: "text" },
+    videopreload: {
+      control: { type: "select" },
+      options: ["auto", "metadata", "none"],
+    },
+    subtitlesource: { control: "text" },
+    subtitlelang: { control: "text" },
+    videosupportmessage: { control: "text" },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: videoTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "video",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
+  }, 
 };
 
 // export const Default: Story = {

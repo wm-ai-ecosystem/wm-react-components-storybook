@@ -11,6 +11,8 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import progressCircleTokensData from "../../../../designTokens/components/progress-circle/progress-circle.json";
+
 const meta: Meta<typeof ProgressCircleDefaultExport> = {
   title: "Basic/ProgressCircle",
   component: ProgressCircleDefaultExport,
@@ -181,6 +183,70 @@ export const Basic: Story = {
     title: { control: "text" },
     subtitle: { control: "text" },
     hint: { control: "text" },
+  },
+};
+
+export const DesignToken: Story = {
+  tags: ['show-panel'],
+  render: (args) => {
+        // component can't spread data-design-token-target, so we apply it to a wrapper
+        const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+    
+        return (
+          <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
+            <ProgressCircleDefaultExport {...componentArgs} listener={mockListener} />
+          </Box>
+        );
+      },
+  args: {
+    name: "designTokenProgressCircle",
+    listener: mockListener,
+    datavalue: 75,
+    type: "default",
+    minvalue: 0,
+    maxvalue: 100,
+    captionplacement: "inside",
+    hint: "75% Complete",
+    title: "",
+    subtitle:"",
+    "data-design-token-target": true,
+  },
+  argTypes: {
+    datavalue: { control: "number" },
+    minvalue: { control: "number" },
+    maxvalue: { control: "number" },
+    type: {
+      control: { type: "select" },
+      options: ["default", "success", "info", "warning", "danger"],
+    },
+    captionplacement: {
+      control: { type: "radio" },
+      options: ["hidden", "inside"],
+    },
+    // displayformat: { control: "text" },
+    title: { control: "text" },
+    subtitle: { control: "text" },
+    hint: { control: "text" },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: progressCircleTokensData,
+      componentKey: "progress-circle",
+      extractCSSVariablesAtRuntime: true,
+      propToVariantMap: {
+        propName: "type",
+        mapping: {
+          default: "progress-circle-default",
+          success: "progress-circle-success",
+          info: "progress-circle-info",
+          warning: "progress-circle-warning",
+          danger: "progress-circle-danger"
+        }
+      }
+    },
+    layout: 'fullscreen',
   },
 };
 
