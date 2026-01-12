@@ -11,31 +11,33 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import pictureTokensData from "../../../../designTokens/components/picture/picture.json";
+
 const meta: Meta<typeof PictureDefaultExport> = {
   title: "Basic/Picture",
   component: PictureDefaultExport,
-  argTypes: {
-    picturesource: { control: "text" },
-    // pictureplaceholder: { control: "text" },
-    alttext: { control: "text" },
-    pictureaspect: {
-      control: { type: "select" },
-      options: ["None", "H", "V", "Both"],
-    },
-    shape:{
-      control:"select",
-      options:['circle',"rounded","thumbnail"]
-    },
-    resizemode: {
-      control: { type: "select" },
-      options: ["fill", "cover", "contain", "none", "scale-down"],
-    },
-    width: { control: "text" },
-    height: { control: "text" },
-    // encodeurl: { control: "boolean" },
-    // arialabel: { control: "text" },
-    // tabindex: { control: "number" },
-  },
+  // argTypes: {
+  //   picturesource: { control: "text" },
+  //   // pictureplaceholder: { control: "text" },
+  //   alttext: { control: "text" },
+  //   pictureaspect: {
+  //     control: { type: "select" },
+  //     options: ["None", "H", "V", "Both"],
+  //   },
+  //   shape:{
+  //     control:"select",
+  //     options:['circle',"rounded","thumbnail"]
+  //   },
+  //   resizemode: {
+  //     control: { type: "select" },
+  //     options: ["fill", "cover", "contain", "none", "scale-down"],
+  //   },
+  //   width: { control: "text" },
+  //   height: { control: "text" },
+  //   // encodeurl: { control: "boolean" },
+  //   // arialabel: { control: "text" },
+  //   // tabindex: { control: "number" },
+  // },
 };
 
 export default meta;
@@ -65,6 +67,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsPicture",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -154,9 +160,54 @@ export const Basic: Story = {
     alttext: "Placeholder image",
     width: "200px",
     height: "200px",
-    resizemode: "stretch",
+    resizemode: "cover",
     shape: "thumbnail"
   },
+  argTypes: {
+    picturesource: { control: "text" },
+    // pictureplaceholder: { control: "text" },
+    alttext: { control: "text" },
+    pictureaspect: {
+      control: { type: "select" },
+      options: ["None", "H", "V", "Both"],
+    },
+    shape:{
+      control:"select",
+      options:['circle',"rounded","thumbnail"]
+    },
+    resizemode: {
+      control: { type: "select" },
+      options: ["fill", "cover", "contain", "none", "scale-down"],
+    },
+    width: { control: "text" },
+    height: { control: "text" },
+  },
+};
+
+export const DesignToken: Story = {
+  tags: ['show-panel'],
+  render: Template,
+  args: {
+    name: "designTokenPicture",
+    listener: mockListener,
+    picturesource: "https://picsum.photos/200",
+    alttext: "Placeholder image",
+    "data-design-token-target":"true"
+  },
+  argTypes: {
+    picturesource: { control: "text" },
+    alttext: { control: "text" },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: pictureTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "picture",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
+  }, 
 };
 
 // export const Default: Story = {

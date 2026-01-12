@@ -14,25 +14,25 @@ import styling from "./docs/styling.md?raw";
 const meta: Meta<typeof ProgressCircleDefaultExport> = {
   title: "Basic/ProgressCircle",
   component: ProgressCircleDefaultExport,
-  argTypes: {
-    datavalue: { control: "number" },
-    minvalue: { control: "number" },
-    maxvalue: { control: "number" },
-    type: {
-      control: { type: "select" },
-      options: ["default", "success", "info", "warning", "danger"],
-    },
-    captionplacement: {
-      control: { type: "radio" },
-      options: ["hidden", "inside"],
-    },
-    // displayformat: { control: "text" },
-    title: { control: "text" },
-    subtitle: { control: "text" },
-    hint: { control: "text" },
-    // arialabel: { control: "text" },
-    // tabindex: { control: "number" },
-  },
+  // argTypes: {
+  //   datavalue: { control: "number" },
+  //   minvalue: { control: "number" },
+  //   maxvalue: { control: "number" },
+  //   type: {
+  //     control: { type: "select" },
+  //     options: ["default", "success", "info", "warning", "danger"],
+  //   },
+  //   captionplacement: {
+  //     control: { type: "radio" },
+  //     options: ["hidden", "inside"],
+  //   },
+  //   // displayformat: { control: "text" },
+  //   title: { control: "text" },
+  //   subtitle: { control: "text" },
+  //   hint: { control: "text" },
+  //   // arialabel: { control: "text" },
+  //   // tabindex: { control: "number" },
+  // },
 };
 
 export default meta;
@@ -63,6 +63,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsProgressCircle",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -160,6 +164,23 @@ export const Basic: Story = {
     hint: "75% Complete",
     title: "",
     subtitle:""
+  },
+  argTypes: {
+    datavalue: { control: "number" },
+    minvalue: { control: "number" },
+    maxvalue: { control: "number" },
+    type: {
+      control: { type: "select" },
+      options: ["default", "success", "info", "warning", "danger"],
+    },
+    captionplacement: {
+      control: { type: "radio" },
+      options: ["hidden", "inside"],
+    },
+    // displayformat: { control: "text" },
+    title: { control: "text" },
+    subtitle: { control: "text" },
+    hint: { control: "text" },
   },
 };
 

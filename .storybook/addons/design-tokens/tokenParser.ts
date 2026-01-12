@@ -435,8 +435,10 @@ export function parseDesignTokens(
  * This function is FULLY GENERIC and works with ANY component by matching the className
  * against the actual variant keys defined in the tokenConfig.
  *
- * @param className - CSS class string from the component
+ * @param className - CSS class string from the component (e.g., "btn-filled btn-primary", "alert-success")
  * @param tokenConfig - Parsed token configuration with available variants
+ * @param tokenData - Optional raw JSON data to look up variant selectors
+ * @param componentKey - Optional component identifier for JSON lookup
  * @returns The matching variant key, or null if no match found
  *
  * Examples:
@@ -444,19 +446,23 @@ export function parseDesignTokens(
  * - Label: "text-primary" → matches variant key "text-primary"
  * - Label: "label-danger" → matches variant key "label-danger"
  * - Label: "h1" → matches variant key "default-h1"
+ * - Message: "alert-success" → matches variant key "filled-success" (via selector lookup)
  * - Pagination: "basic" → matches variant key "basic"
  * - Tabs: any class → returns null (no variants)
  *
  * Algorithm:
  * 1. Try exact match: className === variantKey
- * 2. Try direct lookup: className maps to a variant key
- * 3. Try multi-class pattern: "btn-filled btn-primary" → "filled-primary"
- * 4. Try single-class pattern: "text-primary" → "text-primary"
- * 5. Try size variant pattern: "h1" → "default-h1"
+ * 2. Try selector-based lookup: match CSS class against variant selectors in JSON
+ * 3. Try direct lookup: className maps to a variant key
+ * 4. Try multi-class pattern: "btn-filled btn-primary" → "filled-primary"
+ * 5. Try single-class pattern: "text-primary" → "text-primary"
+ * 6. Try size variant pattern: "h1" → "default-h1"
  */
 export function parseClassName(
   className: string,
-  tokenConfig: ComponentTokenConfig
+  tokenConfig: ComponentTokenConfig,
+  tokenData?: any,
+  componentKey?: string
 ): string | null {
   if (!className || !tokenConfig.variants) {
     return null;
@@ -478,7 +484,60 @@ export function parseClassName(
     return normalizedClassName;
   }
 
-  // Strategy 2: Try matching single classes directly
+  // Strategy 2: Dynamic selector-based lookup for ALL components
+  // Automatically reads variant selectors from JSON and matches against className
+  // Works for any component (message, progressbar, accordion, etc.) without hardcoding
+  // JSON structure: componentData.meta.appearances.{appearance}.variantGroups.{group}.{variant}.selector.web
+  if (tokenData && componentKey) {
+    const componentData = tokenData[componentKey];
+    if (!componentData) {
+      return null;
+    }
+
+    // Selectors are in meta.appearances (not appearances which has the token values)
+    const appearancesSource = componentData.meta?.appearances;
+
+    if (appearancesSource) {
+      // Iterate through all appearances (e.g., "filled", "outlined", "default")
+      for (const [appearanceKey, appearanceValue] of Object.entries(appearancesSource)) {
+        const appearanceData = appearanceValue as any;
+
+        // Check if this appearance has variant groups
+        if (appearanceData.variantGroups) {
+          // Iterate through all variant groups (e.g., "status", "size")
+          for (const groupData of Object.values(appearanceData.variantGroups)) {
+            // Iterate through all variants in the group (e.g., "success", "danger", "warning")
+            for (const [variantKey, variantValue] of Object.entries(groupData as any)) {
+              const variantData = variantValue as any;
+
+              // Check if the variant has a selector definition
+              if (variantData.selector?.web) {
+                const selectorWeb = variantData.selector.web;
+
+                // Clean selector by removing leading dot and converting to lowercase
+                // ".alert-success" → "alert-success"
+                const cleanedSelector = selectorWeb.replace(/^\./, '').toLowerCase().trim();
+
+                // Check if the className matches this selector
+                if (classes.includes(cleanedSelector) || normalizedClassName === cleanedSelector) {
+                  // Found a match! Return the variant key in format "appearance-variant"
+                  // e.g., "filled-success", "default-primary", etc.
+                  const fullVariantKey = `${appearanceKey}-${variantKey}`;
+
+                  // Verify this variant key exists in the parsed config
+                  if (variantKeys.includes(fullVariantKey)) {
+                    return fullVariantKey;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Strategy 3: Try matching single classes directly
   // Example: "text-primary" in classes matches variant key "text-primary"
   for (const cls of classes) {
     if (variantKeys.includes(cls)) {
@@ -486,7 +545,7 @@ export function parseClassName(
     }
   }
 
-  // Strategy 3: Try matching multi-class patterns to hyphenated variant keys
+  // Strategy 4: Try matching multi-class patterns to hyphenated variant keys
   // Example: ["btn-filled", "btn-primary"] → "filled-primary"
   // Extract base names by removing common prefixes (btn-, text-, label-, etc.)
   const baseNames = classes.map(cls => {
@@ -509,7 +568,7 @@ export function parseClassName(
     }
   }
 
-  // Strategy 4: Try matching size variants with "default-" prefix
+  // Strategy 5: Try matching size variants with "default-" prefix
   // Example: "h1" → "default-h1", "h2" → "default-h2"
   // This handles label size variants (h1, h2, h3, h4, h5, h6, p)
   for (const cls of classes) {
@@ -519,7 +578,7 @@ export function parseClassName(
     }
   }
 
-  // Strategy 5: Partial matching - check if any class contains a variant key part
+  // Strategy 6: Partial matching - check if any class contains a variant key part
   // Example: "text-primary" contains "text" and "primary"
   for (const variantKey of variantKeys) {
     const variantParts = variantKey.split('-');
@@ -534,7 +593,7 @@ export function parseClassName(
     }
   }
 
-  // Strategy 6: Try matching without prefixes more aggressively
+  // Strategy 7: Try matching without prefixes more aggressively
   // Example: "btn-filled btn-primary" with baseNames ["filled", "primary"]
   for (const variantKey of variantKeys) {
     const variantParts = variantKey.split('-');
@@ -561,22 +620,27 @@ export function parseClassName(
  * 3. Merges base tokens with variant tokens (variant overrides base)
  *
  * @param tokenConfig - Parsed token configuration
- * @param className - CSS class string (e.g., "btn-filled btn-primary", "text-primary", "h1")
+ * @param className - CSS class string (e.g., "btn-filled btn-primary", "text-primary", "h1", "alert-success")
+ * @param tokenData - Optional raw JSON data for selector-based variant matching
+ * @param componentKey - Optional component identifier for selector-based variant matching
  * @returns Merged array of tokens showing values for this specific variant
  *
  * Examples:
  * - Button: "btn-filled btn-primary" → variantKey="filled-primary" → base + filled-primary tokens
  * - Label: "text-primary" → variantKey="text-primary" → base + text-primary tokens
  * - Label: "h1" → variantKey="default-h1" → base + default-h1 tokens
+ * - Message: "alert-success" → variantKey="filled-success" → base + filled-success tokens
  * - Pagination: "basic" → variantKey="basic" → base + basic tokens
  * - Tabs: any class → variantKey=null → base tokens only
  */
 export function getTokensForClassName(
   tokenConfig: ComponentTokenConfig,
-  className: string
+  className: string,
+  tokenData?: any,
+  componentKey?: string
 ): TokenDefinition[] {
   // Use the generic parseClassName function to get the variant key
-  const variantKey = parseClassName(className, tokenConfig);
+  const variantKey = parseClassName(className, tokenConfig, tokenData, componentKey);
 
   // Get variant-specific tokens (if a variant key was found)
   const variantTokens = variantKey ? (tokenConfig.variants?.[variantKey] || []) : [];

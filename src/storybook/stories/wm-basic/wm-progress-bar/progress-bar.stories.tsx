@@ -11,36 +11,38 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import progressBarTokensData from "../../../../designTokens/components/progress-bar/progress-bar.json";
+
 const meta: Meta<typeof ProgressBarDefaultExport> = {
   title: "Basic/ProgressBar",
   component: ProgressBarDefaultExport,
-  argTypes: {
-    datavalue: { control: "number" },
-    minvalue: { control: "number" },
-    maxvalue: { control: "number" },
-    type: {
-      control: { type: "select" },
-      options: [
-        "default",
-        "default-striped",
-        "success",
-        "success-striped",
-        "info",
-        "info-striped",
-        "warning",
-        "warning-striped",
-        "danger",
-        "danger-striped",
-      ],
-    },
-    captionplacement: {
-      control: { type: "radio" },
-      options: ["hidden", "inside"],
-    },
-    // displayformat: { control: "text" },
-    // hint: { control: "text" },
-    // arialabel: { control: "text" },
-  },
+  // argTypes: {
+  //   datavalue: { control: "number" },
+  //   minvalue: { control: "number" },
+  //   maxvalue: { control: "number" },
+  //   type: {
+  //     control: { type: "select" },
+  //     options: [
+  //       "default",
+  //       "default-striped",
+  //       "success",
+  //       "success-striped",
+  //       "info",
+  //       "info-striped",
+  //       "warning",
+  //       "warning-striped",
+  //       "danger",
+  //       "danger-striped",
+  //     ],
+  //   },
+  //   captionplacement: {
+  //     control: { type: "radio" },
+  //     options: ["hidden", "inside"],
+  //   },
+  //   // displayformat: { control: "text" },
+  //   // hint: { control: "text" },
+  //   // arialabel: { control: "text" },
+  // },
 };
 
 export default meta;
@@ -72,6 +74,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsProgressBar",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -140,7 +146,84 @@ export const Basic: Story = {
     maxvalue: 100,
     captionplacement: "inside",
   },
+  argTypes: {
+    datavalue: { control: "number" },
+    minvalue: { control: "number" },
+    maxvalue: { control: "number" },
+    type: {
+      control: { type: "select" },
+      options: [
+        "default",
+        "default-striped",
+        "success",
+        "success-striped",
+        "info",
+        "info-striped",
+        "warning",
+        "warning-striped",
+        "danger",
+        "danger-striped",
+      ],
+    },
+    captionplacement: {
+      control: { type: "radio" },
+      options: ["hidden", "inside"],
+    },
+  },
 };
+
+// DesignToken story commented out until progress-bar support is fully implemented
+// export const DesignToken: Story = {
+//   tags: ['show-panel'],
+//   render: Template,
+//   args: {
+//     name: "designTokenProgressBar",
+//     listener: mockListener,
+//     datavalue: 30,
+//     type: "default",
+//     minvalue: 0,
+//     maxvalue: 100,
+//     captionplacement: "inside",
+//   },
+//   argTypes: {
+//     datavalue: { control: "number" },
+//     minvalue: { control: "number" },
+//     maxvalue: { control: "number" },
+//     type: {
+//       control: { type: "select" },
+//       options: [
+//         "default",
+//         "success",
+//         "info",
+//         "warning",
+//         "danger",
+//       ],
+//     },
+//     captionplacement: {
+//       control: { type: "radio" },
+//       options: ["hidden", "inside"],
+//     },
+//   },
+//   parameters: {
+//     designTokens: {
+//       enabled: true,
+//       tokenData: progressBarTokensData,
+//       componentKey: "progress-bar",
+//       extractCSSVariablesAtRuntime: true,
+//       propToVariantMap: {
+//         propName: "type",
+//         mapping: {
+//           default: "progress-bar-default",
+//           success: "progress-bar-success",
+//           info: "progress-bar-info",
+//           warning: "progress-bar-warning",
+//           danger: "progress-bar-danger"
+//         }
+//       }
+//     },
+//     layout: 'fullscreen',
+//   },
+// };
 
 
 // export const Default: Story = {

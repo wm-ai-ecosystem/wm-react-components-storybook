@@ -140,19 +140,22 @@ User switches story → Previous tokens cleared → Clean slate for new story
 ## Key Features
 
 ✅ **Generic className parsing** - Automatically works with ANY component className pattern (button, label, pagination, etc.)
+✅ **Type prop support (propToVariantMap)** - Works with components using type/variant props instead of className (message, progress-bar, accordion, etc.)
+✅ **Dynamic selector lookup** - Reads selectors from JSON and matches variants automatically
+✅ **Automatic wrapper detection** - Intelligently handles components that can't spread attributes
 ✅ **Dynamic token resolution** - Automatically converts ANY token reference to CSS variable name
 ✅ **Runtime extraction** - Reads actual values from foundation.css (no hardcoding)
 ✅ **Zero manual mapping** - Works with ALL foundation CSS variables automatically
 ✅ **Fully generic** - Works for ANY component with ANY JSON structure
 ✅ **Multiple JSON structures** - Supports appearances at root/meta, with/without variantGroups
-✅ **Variant-aware** - Different tokens for different className variants
+✅ **Variant-aware** - Different tokens for different className/type variants
 ✅ **Real-time updates** - Changes apply instantly without reload
 ✅ **Smart controls** - Color pickers, dropdowns, number inputs based on token type
 ✅ **Automatic conversion** - Handles percentages (8% ↔ 0.08) for opacity values
 ✅ **Fallback support** - Uses hardcoded values if extraction fails
 ✅ **Reset button** - Restore default values anytime
 ✅ **Default Controls tab** - No performance impact on story load, CSS extraction only when panel active
-✅ **Polling-based detection** - Reliably detects className changes (300ms polling when active)
+✅ **Polling-based detection** - Reliably detects className/type changes (300ms polling when active)
 ✅ **Story isolation** - Automatic cleanup when switching stories prevents glitches
 ✅ **Icon size support** - Works with .app-icon, Font Awesome, and all icon classes automatically
 ✅ **Performance optimized** - Reduced delays (50-100ms) and minimal re-renders
@@ -161,7 +164,11 @@ User switches story → Previous tokens cleared → Clean slate for new story
 
 ## Adding New Components
 
-To add design tokens for ANY component (anchor, tabs, pagination, card, input, list, etc.):
+The Design Token system supports two types of components based on how they handle styling:
+
+### Standard Components (with className prop)
+
+To add design tokens for components that accept a className prop and can spread `data-design-token-target` attribute (anchor, button, label, checkbox, etc.):
 
 ### 1. Create JSON file
 ```json
@@ -246,6 +253,188 @@ export const DesignToken: Story = {
 - `{border.style.base.value}` → `--wm-border-style-base`
 - `{elevation.shadow-3.value}` → `--wm-elevation-shadow-3`
 - `{any.new.token.value}` → `--wm-any-new-token` (works automatically!)
+
+---
+
+### Components with Type Prop (without className)
+
+Some components use a `type` or similar prop that internally maps to specific CSS classes, rather than accepting a `className` prop directly. Examples include:
+- **Message**: `type="success"` → CSS class `"alert-success"`
+- **Progress Bar**: `type="success"` → CSS class `"progress-bar-success"`
+- **Accordion**: `type="primary"` → CSS class `"panel-primary"`
+
+For these components, use the **propToVariantMap** configuration to map prop values to CSS class names.
+
+### 1. JSON file structure remains the same
+
+```json
+// /src/designTokens/components/message/message.json
+{
+  "message": {
+    "meta": {
+      "mapping": {
+        "selector": { "web": ".app-message" }
+      },
+      "appearances": {
+        "filled": {
+          "mapping": {
+            "selector": { "web": ".app-message" }
+          },
+          "variantGroups": {
+            "status": {
+              "success": {
+                "selector": { "web": ".alert-success" }  // CSS class
+              },
+              "danger": {
+                "selector": { "web": ".alert-danger" }
+              },
+              "warning": {
+                "selector": { "web": ".alert-warning" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "mapping": {
+      "background": {
+        "value": "{color.surface.@.value}",
+        "type": "color",
+        "attributes": {
+          "subtype": "color",
+          "description": "Message background color"
+        }
+      }
+    },
+    "appearances": {
+      "filled": {
+        "variantGroups": {
+          "status": {
+            "success": {
+              "container": {
+                "background": { "value": "{color.success.@.value}", ... }
+              }
+            },
+            "danger": {
+              "container": {
+                "background": { "value": "{color.danger.@.value}", ... }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+**Key Point**: The `meta.appearances.{appearance}.variantGroups.{group}.{variant}.selector.web` must match the CSS class name that the component renders in the DOM.
+
+### 2. Configure Story with propToVariantMap
+
+```typescript
+import messageTokensData from "../../../../designTokens/components/message/message.json";
+
+export const DesignToken: Story = {
+  render: (args) => {
+    // Message component can't spread data-design-token-target, so we apply it to a wrapper
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+
+    return (
+      <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
+        <MessageComponent {...componentArgs} listener={mockListener} />
+      </Box>
+    );
+  },
+  args: {
+    name: "designTokenMessage",
+    listener: mockListener,
+    caption: "Operation completed successfully!",
+    type: "success",  // This is the prop we're watching
+    "data-design-token-target": true,  // Applied to wrapper
+  },
+  argTypes: {
+    caption: { control: "text" },
+    type: {
+      control: { type: "select" },
+      options: ["success", "error", "warning", "info", "loading"],
+    }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: messageTokensData,  // Pass raw JSON data
+      componentKey: "message",  // Component identifier
+      extractCSSVariablesAtRuntime: true,
+      // NEW: Map the "type" prop to CSS class names
+      propToVariantMap: {
+        propName: "type",  // Watch the "type" prop instead of className
+        mapping: {
+          success: "alert-success",   // Prop value → CSS class (NOT variant key!)
+          error: "alert-danger",
+          warning: "alert-warning",
+          info: "alert-info",
+          loading: "alert-loading"
+        }
+      }
+    },
+    layout: 'fullscreen',
+  },
+};
+```
+
+### 3. How It Works
+
+```
+User changes type="warning" in Controls tab
+  ↓
+propToVariantMap maps "warning" → CSS class "alert-warning"
+  ↓
+Parser reads JSON: meta.appearances.filled.variantGroups.status.warning.selector.web = ".alert-warning"
+  ↓
+Parser matches ".alert-warning" to find variant key "filled-warning"
+  ↓
+Tokens load for "filled-warning" variant from appearances
+  ↓
+CSS generates: [data-design-token-target="true"] .app-message.alert-warning { ... }
+  ↓
+Tokens update in real-time! ✅
+```
+
+### 4. Important Notes
+
+**Wrapper Pattern**:
+- Components that can't spread `data-design-token-target` need a wrapper element
+- The wrapper (usually a Box) gets the `data-design-token-target` attribute
+- CSS targets child elements: `[data-design-token-target="true"] .app-message`
+
+**CSS Class vs Variant Key**:
+- Mapping must use **CSS class names** (what's in the DOM), NOT variant keys
+- Example: `success: "alert-success"` ✅ (CSS class in DOM)
+- Example: `success: "filled-success"` ❌ (variant key from JSON)
+
+**Automatic Variant Detection**:
+- System automatically detects wrapper pattern when `propToVariantMap` is present
+- No manual configuration needed for wrapper behavior
+
+### 5. Compatible Components
+
+This approach works with ANY component that follows the pattern `type/variant prop → CSS class`. No code changes needed, just configure your story:
+
+✅ **Message** (`type="success"` → `.alert-success`)
+✅ **Progress Bar** (`type="success"` → `.progress-bar-success`)
+✅ **Progress Circle** (`type="success"` → similar pattern)
+✅ **Accordion** (`type="primary"` → `.panel-primary`)
+✅ **Any future component** following the same pattern
+
+### 6. Done! ✅
+
+The system now:
+- Watches the specified prop (e.g., `type`) instead of `className`
+- Maps prop values to CSS class names dynamically
+- Looks up variant keys from JSON selectors automatically
+- Updates tokens in real-time when prop changes
+- Works with ANY component following this pattern
 
 ---
 
@@ -583,6 +772,8 @@ This prevents glitches and ensures a clean slate for each story.
 The system is **fully generic** and works with:
 - ✅ wm-button.json (completed)
 - ✅ Any component in `/src/designTokens/components/*/*.json`
+- ✅ Components with className prop (button, anchor, label, checkbox, etc.)
+- ✅ Components with type prop (message, progress-bar, accordion, etc.)
 - ✅ tabs, pagination, radioset, progress-circle, fileupload, etc.
 - ✅ Components with variantGroups (buttons)
 - ✅ Components without variantGroups (pagination)
@@ -592,3 +783,13 @@ The system is **fully generic** and works with:
 **Just create the JSON file and add to story - it works automatically!**
 
 No code changes needed. No manual mapping required. **Zero configuration.**
+
+### Component Categories
+
+**Standard Components (className prop)**:
+- Button, Anchor, Label, Checkbox, Radio, Cards, Chips, etc.
+- Configuration: Standard story setup with `className` in args
+
+**Type Prop Components (propToVariantMap)**:
+- Message, Progress Bar, Progress Circle, Accordion, etc.
+- Configuration: Use `propToVariantMap` with wrapper pattern

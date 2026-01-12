@@ -248,10 +248,10 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
    * This effect:
    * 1. Gets the current story ID
    * 2. Reads story parameters (designTokens configuration)
-   * 3. Reads args.className from Controls tab
+   * 3. Reads args.className from Controls tab OR mapped prop (e.g., args.type)
    * 4. Updates state when either changes
    *
-   * Uses polling to detect className changes since argsUpdated event is unreliable
+   * Uses polling to detect className/prop changes since argsUpdated event is unreliable
    */
   useEffect(() => {
     if (!api) return;
@@ -270,9 +270,23 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
       const designTokenParams = storyData?.parameters?.designTokens as DesignTokenParameters;
       setParameters(designTokenParams || { enabled: false });
 
-      // Get className from story data args
-      const argsClassName = (storyData as any)?.args?.className as string;
-      const className = argsClassName || designTokenParams?.className || "";
+      // Get className from story data args OR from mapped prop
+      let className = "";
+
+      // Check if we should use prop-to-variant mapping
+      if (designTokenParams?.propToVariantMap) {
+        const { propName, mapping } = designTokenParams.propToVariantMap;
+        const propValue = (storyData as any)?.args?.[propName];
+
+        // Map prop value to variant key
+        if (propValue && mapping[propValue]) {
+          className = mapping[propValue];
+        }
+      } else {
+        // Traditional className-based approach
+        const argsClassName = (storyData as any)?.args?.className as string;
+        className = argsClassName || designTokenParams?.className || "";
+      }
 
       // Only update if className actually changed
       if (className !== currentClassName) {
@@ -456,7 +470,12 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
       // Get variant-specific tokens if className is provided
       // This merges base tokens with variant overrides
       if (currentClassName && tokenConfig.variants) {
-        tokensToUse = getTokensForClassName(tokenConfig, currentClassName);
+        tokensToUse = getTokensForClassName(
+          tokenConfig,
+          currentClassName,
+          parameters.tokenData,
+          parameters.componentKey
+        );
       }
 
       // Convert token array to key-value pairs
@@ -677,36 +696,100 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
     // We'll use the first selector for high specificity
     const baseSelector = selector.split(',')[0].trim();
 
+    // Get variant-specific selector from JSON if available
+    // Dynamically look up the selector for any component
+    let variantSelector = '';
+    if (className && parameters.tokenData && parameters.componentKey) {
+      const componentData = parameters.tokenData[parameters.componentKey];
+      // Selectors are in meta.appearances, not in appearances
+      const appearancesSource = componentData?.meta?.appearances;
+
+      if (appearancesSource) {
+        // Iterate through all appearances to find the variant selector
+        for (const appearanceValue of Object.values(appearancesSource)) {
+          const appearanceData = appearanceValue as any;
+
+          if (appearanceData.variantGroups) {
+            // Iterate through all variant groups
+            for (const groupData of Object.values(appearanceData.variantGroups)) {
+              // Iterate through all variants in the group
+              for (const variantValue of Object.values(groupData as any)) {
+                const variantData = variantValue as any;
+
+                // Check if the variant has a selector definition
+                if (variantData.selector?.web) {
+                  const selectorWeb = variantData.selector.web;
+                  const cleanedSelector = selectorWeb.replace(/^\./, '').toLowerCase().trim();
+
+                  // Check if the className matches this selector
+                  if (cleanedSelector === className.toLowerCase()) {
+                    variantSelector = selectorWeb;
+                    break;
+                  }
+                }
+              }
+              if (variantSelector) break;
+            }
+            if (variantSelector) break;
+          }
+        }
+      }
+    }
+
     // Add className selectors for variant specificity
-    const classSelectors = className ? `.${className.split(' ').join('.')}` : '';
+    // If we found a variant selector from JSON (e.g., ".alert-success"), use it
+    // Otherwise, treat className as space-separated classes (e.g., "btn-filled btn-primary" → ".btn-filled.btn-primary")
+    let classSelectors = '';
+    if (variantSelector) {
+      // For components like Message: variantSelector is already a CSS selector like ".alert-success"
+      // Just use it directly without modification
+      classSelectors = variantSelector;
+    } else if (className) {
+      // For components like Button: className is space-separated classes like "btn-filled btn-primary"
+      // Convert to CSS selector: ".btn-filled.btn-primary"
+      classSelectors = `.${className.split(' ').join('.')}`;
+    }
 
     // ============================================================================
     // UNIVERSAL SELECTOR PATTERN SYSTEM
     // ============================================================================
     // This system supports two selector patterns to handle all component types:
     //
-    // PATTERN 1: Direct Selector (Most Components)
+    // PATTERN 1: Direct Selector (Components with className prop)
     // Format: .component[data-design-token-target="true"].variant-class
     // Example: .app-button[data-design-token-target="true"].btn-filled.btn-primary
-    // Use when: Component can spread props to its root element
-    // Components: Button, Anchor, Label, Audio, Video, Picture, Message, etc.
+    // Use when: Component accepts className prop and can spread data attributes
+    // Components: Button, Anchor, Label, Checkbox, Radio, Audio, Video, Picture, etc.
     //
-    // PATTERN 2: Ancestor Selector (Special Components)
+    // PATTERN 2: Ancestor Selector (Components with type/variant prop OR special cases)
     // Format: [data-design-token-target="true"] .component.variant-class
+    // Example: [data-design-token-target="true"] .app-message.alert-success
+    // Example: [data-design-token-target="true"] .progress-bar.progress-bar-success
     // Example: [data-design-token-target="true"] .app-icon-wrapper
-    // Use when: Component CANNOT spread props OR has inline styles to override
-    // Components: Icon (renders FontAwesome elements), Iframe (has inline width/height)
+    // Use when: Component uses propToVariantMap OR cannot spread props OR has special rendering
+    // Components:
+    // - Type-based (DYNAMIC): Message, Progress Bar, Accordion, Progress Circle, etc.
+    // - Special cases (HARDCODED): Icon (renders FontAwesome child elements), Iframe (inline styles)
     //
     // Why two patterns?
-    // - Some components like Icon render child elements (i.fa-*) that don't accept custom attributes
-    // - Some components like Iframe have inline styles that need wrapper pattern to override
-    // - Wrapper pattern requires wrapping component in <Box data-design-token-target="true">
+    // - Type-based components (propToVariantMap) use wrapper Box with data-design-token-target
+    // - Icon renders child elements (i.fa-*) that don't accept custom attributes
+    // - Iframe has inline width/height styles that need wrapper pattern to override
+    // - Wrapper pattern: <Box data-design-token-target="true"><Component /></Box>
     //
-    // Adding new special cases:
-    // - If component can't spread data attribute to root: add to this condition
-    // - Also add child element targeting below in mainSelectors section
+    // FULLY DYNAMIC: propToVariantMap automatically uses wrapper pattern
+    // - Works for ANY component with type/variant prop without code changes
+    // - No hardcoding needed for new type-based components!
+    //
+    // HARDCODED: Only icon and iframe need special handling
+    // - These have fundamental DOM structure differences that cannot be configured in JSON
     // ============================================================================
-    const fullSelector = (componentName === 'icon' || componentName === 'iframe')
+    const usesWrapperPattern =
+      componentName === 'icon' ||
+      componentName === 'iframe' ||
+      !!parameters.propToVariantMap; // Any component using propToVariantMap uses wrapper pattern
+
+    let fullSelector = usesWrapperPattern
       ? `${dataAttr} ${baseSelector}${classSelectors}`
       : `${baseSelector}${dataAttr}${classSelectors}`;
 
@@ -761,31 +844,34 @@ ${fullSelector} {
     // ============================================================================
     // Different components need CSS applied to different elements:
     //
-    // MOST COMPONENTS: Apply directly to root element
-    // - Button, Anchor, Label: styles go on the root element
+    // MOST COMPONENTS (DYNAMIC): Apply directly to root element
+    // - Button, Anchor, Label, Message, Progress Bar, Accordion, etc.
+    // - Styles go on the root element
+    // - Works automatically with propToVariantMap for type-based components
     // - May also target text children (.btn-caption) if defined in childSelectors.text
     //
-    // ICON COMPONENT: Apply to child icon elements
+    // SPECIAL CASES (HARDCODED): Only icon and iframe need hardcoded handling
+    //
+    // ICON COMPONENT: Apply to child icon elements (MUST BE HARDCODED)
     // - Icon wrapper (.app-icon-wrapper) is just a container
     // - Actual icons are: .app-icon, i.fa-*, i.wi-*, img
     // - Must target these children for color, font-size to work
-    // - Icon component uses wrapper pattern (ancestor selector)
+    // - Cannot be made generic due to FontAwesome/Weather icon rendering
     //
-    // IFRAME COMPONENT: Apply to child iframe element
+    // IFRAME COMPONENT: Apply to child iframe element (MUST BE HARDCODED)
     // - Wrapper (Box) only provides container
     // - iframe element has inline width/height that needs overriding
     // - Must target child iframe element: iframe, .iframe-content
-    // - Iframe component uses wrapper pattern (ancestor selector)
+    // - Cannot be made generic due to inline style overriding requirements
     //
-    // CONTAINER COMPONENTS: May have nested subsections
+    // CONTAINER COMPONENTS (DYNAMIC): Handled automatically
     // - Card: .card-body, .card-footer with nested properties
     // - List: .list-item, .list-item-header with item-level styling
     // - Handled automatically by nested token path system (body.padding → .card-body)
+    // - No hardcoding needed!
     //
-    // Adding new special cases:
-    // - Add else if (componentName === 'newComponent') block
-    // - Specify which child elements need styling
-    // - Must also be added to special selector condition above
+    // NOTE: Only add new hardcoded cases if component has fundamental DOM structure
+    // differences that cannot be handled through JSON configuration.
     // ============================================================================
     let mainSelectors = `${fullSelector}`;
 
@@ -798,7 +884,8 @@ ${fullSelector} {
       // iframe has inline width/height that needs !important to override
       mainSelectors = `${fullSelector} iframe,\n${fullSelector} .iframe-content`;
     } else {
-      // Standard components: Apply to root element + optional text children
+      // Standard components (ALL DYNAMIC): Apply to root element + optional text children
+      // Includes: Button, Anchor, Label, Message, Progress Bar, Accordion, etc.
       // childSelectors.text defines text child elements (e.g., .btn-caption for buttons)
       if (config.childSelectors?.text) {
         const textSelectors = config.childSelectors.text.split(',').map(s => `${fullSelector} ${s.trim()}`).join(',\n');
@@ -878,13 +965,6 @@ ${fullSelector} {
         css += `  ${cssProperty}: ${value} !important;\n`;
       }
     });
-
-    // For icon component, add additional properties to ensure proper rendering
-    if (componentName === 'icon') {
-      css += `  display: inline-flex !important;\n`;
-      css += `  align-items: center !important;\n`;
-      css += `  justify-content: center !important;\n`;
-    }
 
     css += `}\n\n`;
 
@@ -1087,8 +1167,9 @@ ${fullSelector} {
 
   /**
    * Maps token property names to CSS property names
-   * 
+   *
    * Example: "background" → "background-color"
+   * Example: "container-background" → "background-color" (for nested tokens like message)
    */
   const mapToCSSProperty = (property: string): string | null => {
     // Normalize property - remove @ suffix if present (e.g., "shadow-@" -> "shadow")
@@ -1118,6 +1199,21 @@ ${fullSelector} {
       'height': 'height',
       'shadow': 'box-shadow',
       'icon-size': 'font-size',
+      // Nested token paths (used by message, card, etc.)
+      // Pattern: nested.path → nested-path (e.g., container.background → container-background)
+      'container-background': 'background-color',
+      'container-color': 'color',
+      'container-border-color': 'border-color',
+      'container-border-width': 'border-width',
+      'container-border-style': 'border-style',
+      'container-border-radius': 'border-radius',
+      'container-padding': 'padding',
+      'container-gap': 'gap',
+      'container-shadow': 'box-shadow',
+      // Border nested paths (e.g., border.color, border.width)
+      'border': 'border',
+      // Width property
+      'width': 'width',
       // State layer properties are used for interactive states, not base styles
       // They're handled in the :hover, :focus, :active pseudo-class rules
     };
@@ -1245,7 +1341,12 @@ ${fullSelector} {
 
   // Get variant-specific tokens if className is provided
   if (currentClassName && tokenConfig.variants) {
-    tokensToDisplay = getTokensForClassName(tokenConfig, currentClassName);
+    tokensToDisplay = getTokensForClassName(
+      tokenConfig,
+      currentClassName,
+      parameters.tokenData,
+      parameters.componentKey
+    );
   }
 
   // Group tokens by category
@@ -1397,17 +1498,41 @@ ${fullSelector} {
     );
   };
 
+  // Helper function to get current prop value for display
+  const getCurrentPropInfo = () => {
+    if (parameters.propToVariantMap && api) {
+      const storyId = api.getUrlState().storyId;
+      if (storyId) {
+        const storyData = api.getData(storyId);
+        const propValue = (storyData as any)?.args?.[parameters.propToVariantMap.propName];
+        return {
+          propName: parameters.propToVariantMap.propName,
+          propValue: propValue,
+          variantKey: currentClassName
+        };
+      }
+    }
+    return null;
+  };
+
+  const propInfo = getCurrentPropInfo();
+
   return (
     <PanelContent>
       <InfoBox>
         <InfoText>
           <strong>{tokenConfig.componentName.toUpperCase()} Design Tokens</strong>
-          {currentClassName && (
+          {propInfo ? (
+            <>
+              {" "}
+              - <code>{propInfo.propName}="{propInfo.propValue}"</code> (variant: <code>{propInfo.variantKey}</code>)
+            </>
+          ) : currentClassName ? (
             <>
               {" "}
               - Applied variant: <code>{currentClassName}</code>
             </>
-          )}
+          ) : null}
           <br />
           Modify any token below to see real-time changes in the component above.
         </InfoText>

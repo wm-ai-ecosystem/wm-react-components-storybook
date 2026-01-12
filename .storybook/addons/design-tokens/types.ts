@@ -86,24 +86,84 @@ export interface ComponentTokenConfig {
  * DesignTokenParameters - Story-level configuration
  * This is passed in the story's parameters.designTokens object
  *
- * Example usage in story (NEW APPROACH - pass raw JSON):
+ * =============================================================================
+ * STANDARD COMPONENTS (with className prop)
+ * =============================================================================
+ * Components: button, anchor, label, checkbox, radio, etc.
+ * These components accept a className prop and can spread data-design-token-target
+ *
+ * Example usage:
  * parameters: {
  *   designTokens: {
  *     enabled: true,
- *     tokenData: buttonTokensData,  // Raw JSON data (not pre-parsed)
- *     componentKey: "btn",  // Component identifier for parsing
- *     extractCSSVariablesAtRuntime: true,  // Enable runtime CSS extraction
+ *     tokenData: buttonTokensData,
+ *     componentKey: "btn",
+ *     extractCSSVariablesAtRuntime: true
  *   }
  * }
  *
- * Example usage in story (OLD APPROACH - pre-parsed config):
- * parameters: {
- *   designTokens: {
- *     enabled: true,
- *     tokenConfig: buttonTokenConfig,  // Pre-parsed configuration (deprecated)
- *     extractCSSVariablesAtRuntime: true,  // Enable runtime CSS extraction
+ * =============================================================================
+ * COMPONENTS WITH TYPE PROP (no direct className prop)
+ * =============================================================================
+ * Components: message, progress-bar, progress-circle, accordion, etc.
+ * These components use a "type" or similar prop and render with specific CSS classes
+ *
+ * Supported components (fully dynamic, no code changes needed):
+ * - Message: type="success" → CSS class "alert-success" → variant "filled-success"
+ * - Progress Bar: type="success" → CSS class "progress-bar-success" → variant "filled-success"
+ * - Accordion: type="primary" → CSS class "panel-primary" → variant "default-primary"
+ *
+ * Example usage:
+ * export const DesignToken: Story = {
+ *   render: (args) => {
+ *     const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+ *     return (
+ *       <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
+ *         <MessageComponent {...componentArgs} />
+ *       </Box>
+ *     );
+ *   },
+ *   args: {
+ *     type: "success",
+ *     "data-design-token-target": true,
+ *   },
+ *   parameters: {
+ *     designTokens: {
+ *       enabled: true,
+ *       tokenData: messageTokensData,
+ *       componentKey: "message",
+ *       extractCSSVariablesAtRuntime: true,
+ *       propToVariantMap: {
+ *         propName: "type",
+ *         mapping: {
+ *           success: "alert-success",    // Prop value → CSS class name
+ *           error: "alert-danger",
+ *           warning: "alert-warning"
+ *         }
+ *       }
+ *     }
  *   }
  * }
+ *
+ * How it works:
+ * 1. User changes type="warning" in Controls
+ * 2. propToVariantMap maps to CSS class "alert-warning"
+ * 3. Parser reads JSON: meta.appearances.filled.variantGroups.status.warning.selector.web = ".alert-warning"
+ * 4. Parser finds variant key "filled-warning"
+ * 5. Tokens load for "filled-warning" variant
+ * 6. CSS generates: [data-design-token-target="true"] .app-message.alert-warning
+ * 7. Tokens update in real-time!
+ *
+ * =============================================================================
+ * ADDING NEW COMPONENTS
+ * =============================================================================
+ * NO CODE CHANGES NEEDED! Just configure your story as shown above.
+ * The system automatically reads variant selectors from your JSON file.
+ *
+ * Requirements:
+ * 1. Your JSON must have: componentData.meta.appearances.{appearance}.variantGroups.{group}.{variant}.selector.web
+ * 2. Wrap your component in a Box with data-design-token-target attribute
+ * 3. Configure propToVariantMap to map prop values to CSS class names
  */
 export interface DesignTokenParameters {
   enabled: boolean;                   // Whether to show Design Tokens tab
@@ -113,4 +173,8 @@ export interface DesignTokenParameters {
   tokenFilePath?: string;            // (Optional) Path to JSON file
   className?: string;                // (Optional) Fallback className if not in args
   extractCSSVariablesAtRuntime?: boolean;  // Enable runtime CSS variable extraction from foundation.css
+  propToVariantMap?: {               // (Optional) Map a prop value to variant key for components without className prop
+    propName: string;                // Name of the prop to watch (e.g., "type", "variant", "appearance")
+    mapping: Record<string, string>; // Maps prop values to variant keys (e.g., { success: "filled-success" })
+  };
 }

@@ -43,6 +43,9 @@ Will automatically convert to `--wm-my-custom-token` and look it up. **Zero conf
     ├── tabs/tabs.json
     ├── pagination/pagination.json
     ├── radioset/radioset.json
+    ├── message/message.json
+    ├── progress-bar/progress-bar.json
+    ├── accordion/accordion.json
     └── ... (50+ components supported)
 
 /src/storybook/stories/wm-basic/wm-button/
@@ -289,6 +292,347 @@ No manual mapping needed! Works with ANY foundation token!
 
 ---
 
+## 🔄 Type Prop Component Support (propToVariantMap)
+
+### Overview
+
+Some components don't accept a `className` prop directly. Instead, they use a `type` or similar prop that internally maps to CSS classes. The **propToVariantMap** feature enables design tokens for these components without requiring code changes.
+
+### Supported Component Pattern
+
+**Component Types That Use This Feature**:
+- **Message**: `type="success"` → renders `<div class="alert app-message alert-success">`
+- **Progress Bar**: `type="success"` → renders `<div class="progress-bar progress-bar-success">`
+- **Accordion**: `type="primary"` → renders `<div class="panel panel-primary">`
+- **Any component** following the `prop → CSS class` pattern
+
+### Architecture Flow
+
+```
+1. User sets type="success" in Controls
+   ↓
+2. propToVariantMap configuration: { propName: "type", mapping: { success: "alert-success" } }
+   ↓
+3. DesignTokenPanel monitors args.type (not args.className)
+   ↓
+4. When type changes → Maps "success" → CSS class "alert-success"
+   ↓
+5. tokenParser.ts Strategy 2 (Dynamic Selector Lookup):
+   - Read componentData.meta.appearances
+   - Iterate through all appearances (e.g., "filled", "outlined")
+   - Iterate through all variantGroups (e.g., "status", "size")
+   - Iterate through all variants (e.g., "success", "danger", "warning")
+   - Find variant where selector.web matches ".alert-success"
+   - Return variant key "filled-success"
+   ↓
+6. Load tokens for "filled-success" variant
+   ↓
+7. Generate scoped CSS:
+   [data-design-token-target="true"] .app-message.alert-success {
+     --wm-message-background: #d4edda;
+     --wm-message-color: #155724;
+     background-color: var(--wm-message-background) !important;
+     color: var(--wm-message-color) !important;
+   }
+   ↓
+8. Inject CSS into iframe → Tokens update in real-time ✅
+```
+
+### Implementation Details
+
+#### 1. JSON Structure (No Changes Needed!)
+
+The JSON structure remains the same, but **selectors in meta.appearances must match DOM CSS classes**:
+
+```json
+{
+  "message": {
+    "meta": {
+      "appearances": {
+        "filled": {
+          "variantGroups": {
+            "status": {
+              "success": {
+                "selector": { "web": ".alert-success" }  // ← Must match DOM class
+              },
+              "danger": {
+                "selector": { "web": ".alert-danger" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "appearances": {
+      "filled": {
+        "variantGroups": {
+          "status": {
+            "success": {
+              "container": {
+                "background": { "value": "{color.success.@.value}" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+**Critical Requirement**: `meta.appearances.{appearance}.variantGroups.{group}.{variant}.selector.web` must exactly match the CSS class name in the DOM.
+
+#### 2. Story Configuration
+
+```typescript
+import messageTokensData from "../../../../designTokens/components/message/message.json";
+
+export const DesignToken: Story = {
+  render: (args) => {
+    // Extract data-design-token-target from args
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+
+    // Wrapper pattern: Component can't spread attributes, so wrap in Box
+    return (
+      <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
+        <MessageComponent {...componentArgs} listener={mockListener} />
+      </Box>
+    );
+  },
+  args: {
+    name: "designTokenMessage",
+    listener: mockListener,
+    caption: "Operation completed successfully!",
+    type: "success",  // ← Prop we're watching
+    "data-design-token-target": true,  // ← Applied to wrapper
+  },
+  argTypes: {
+    type: {
+      control: { type: "select" },
+      options: ["success", "error", "warning", "info", "loading"],
+    }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: messageTokensData,
+      componentKey: "message",
+      extractCSSVariablesAtRuntime: true,
+
+      // ⭐ NEW: propToVariantMap configuration
+      propToVariantMap: {
+        propName: "type",  // Watch this prop instead of className
+        mapping: {
+          // Prop value → CSS class name (what's in the DOM, NOT variant key!)
+          success: "alert-success",
+          error: "alert-danger",
+          warning: "alert-warning",
+          info: "alert-info",
+          loading: "alert-loading"
+        }
+      }
+    },
+    layout: 'fullscreen',
+  },
+};
+```
+
+#### 3. DesignTokenPanel.tsx Changes
+
+**Prop Monitoring**:
+```typescript
+// Monitor the mapped prop instead of className
+if (designTokenParams?.propToVariantMap) {
+  const { propName, mapping } = designTokenParams.propToVariantMap;
+  const propValue = (storyData as any)?.args?.[propName];
+
+  if (propValue && mapping[propValue]) {
+    className = mapping[propValue];  // Map to CSS class
+  }
+}
+```
+
+**Automatic Wrapper Detection**:
+```typescript
+// Automatically use wrapper pattern when propToVariantMap is present
+const usesWrapperPattern =
+  componentName === 'icon' ||
+  componentName === 'iframe' ||
+  !!parameters.propToVariantMap;  // ← Automatic detection
+```
+
+**Variant Selector Lookup**:
+```typescript
+// Dynamic selector lookup from JSON (fully generic, no hardcoding!)
+if (className && parameters.tokenData && parameters.componentKey) {
+  const componentData = parameters.tokenData[parameters.componentKey];
+  const appearancesSource = componentData?.meta?.appearances;
+
+  if (appearancesSource) {
+    // Iterate through all appearances
+    for (const [appearanceKey, appearanceValue] of Object.entries(appearancesSource)) {
+      const appearanceData = appearanceValue as any;
+
+      if (appearanceData.variantGroups) {
+        // Iterate through all variant groups
+        for (const groupData of Object.values(appearanceData.variantGroups)) {
+          // Iterate through all variants
+          for (const [variantKey, variantValue] of Object.entries(groupData as any)) {
+            const variantData = variantValue as any;
+
+            if (variantData.selector?.web) {
+              const selectorWeb = variantData.selector.web;
+              const cleanedSelector = selectorWeb.replace(/^\./, '').toLowerCase().trim();
+
+              // Check if className matches this selector
+              if (cleanedSelector === className.toLowerCase()) {
+                variantSelector = selectorWeb;  // Found matching selector!
+                break;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+#### 4. tokenParser.ts Changes (Strategy 2)
+
+**Dynamic Selector-Based Lookup** (fully generic for ALL components):
+
+```typescript
+// Strategy 2: Dynamic selector-based lookup
+// Works for message, progressbar, accordion, and ANY component with selectors in JSON
+if (tokenData && componentKey) {
+  const componentData = tokenData[componentKey];
+  if (!componentData) return null;
+
+  // Look in meta.appearances (NOT appearances - that has token values)
+  const appearancesSource = componentData.meta?.appearances;
+
+  if (appearancesSource) {
+    // Iterate through all appearances (e.g., "filled", "outlined", "default")
+    for (const [appearanceKey, appearanceValue] of Object.entries(appearancesSource)) {
+      const appearanceData = appearanceValue as any;
+
+      if (appearanceData.variantGroups) {
+        // Iterate through all variant groups (e.g., "status", "size")
+        for (const groupData of Object.values(appearanceData.variantGroups)) {
+          // Iterate through all variants (e.g., "success", "danger", "warning")
+          for (const [variantKey, variantValue] of Object.entries(groupData as any)) {
+            const variantData = variantValue as any;
+
+            if (variantData.selector?.web) {
+              const selectorWeb = variantData.selector.web;
+              const cleanedSelector = selectorWeb.replace(/^\./, '').toLowerCase().trim();
+
+              // Check if the className matches this selector
+              if (classes.includes(cleanedSelector) || normalizedClassName === cleanedSelector) {
+                const fullVariantKey = `${appearanceKey}-${variantKey}`;
+
+                if (variantKeys.includes(fullVariantKey)) {
+                  return fullVariantKey;  // e.g., "filled-success"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+return null;  // No matching variant found
+```
+
+**Key Points**:
+- Fully dynamic - no hardcoded component names
+- Reads selectors from `meta.appearances` (not `appearances`)
+- Iterates through all variant groups and variants
+- Matches CSS class to selector
+- Returns variant key like "filled-success"
+
+### CSS Class vs Variant Key
+
+**Critical Distinction**:
+
+| Type | Example | Usage |
+|------|---------|-------|
+| **CSS Class** | `alert-success` | What's in the DOM: `<div class="alert-success">` |
+| **Variant Key** | `filled-success` | What's in JSON: `appearances.filled.variantGroups.status.success` |
+
+**In propToVariantMap mapping**:
+```typescript
+// ✅ CORRECT: Use CSS class name
+mapping: {
+  success: "alert-success"  // What's in the DOM
+}
+
+// ❌ WRONG: Don't use variant key
+mapping: {
+  success: "filled-success"  // This won't match DOM classes
+}
+```
+
+The system automatically converts CSS class → variant key via JSON selector lookup.
+
+### Wrapper Pattern
+
+**Why Needed**:
+- Some components (Message, Progress Bar, etc.) don't accept arbitrary props
+- They can't spread `data-design-token-target` attribute
+- Solution: Wrap in a Box/div that accepts the attribute
+
+**Pattern**:
+```typescript
+// Extract the attribute from args
+const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+
+// Apply to wrapper, not component
+<Box data-design-token-target={dataAttr}>
+  <MessageComponent {...componentArgs} />
+</Box>
+```
+
+**CSS Targeting**:
+- With wrapper: `[data-design-token-target="true"] .app-message.alert-success`
+- Without wrapper: `[data-design-token-target="true"].app-message.alert-success`
+- System automatically detects which pattern to use
+
+### Compatibility Matrix
+
+| Component | Prop Used | CSS Class Pattern | Status |
+|-----------|-----------|------------------|---------|
+| Button | `className` | `.btn-filled` `.btn-primary` | ✅ Standard |
+| Anchor | `className` | `.anchor-primary` | ✅ Standard |
+| Message | `type` | `.alert-success` | ✅ propToVariantMap |
+| Progress Bar | `type` | `.progress-bar-success` | ✅ propToVariantMap |
+| Accordion | `type` | `.panel-primary` | ✅ propToVariantMap |
+| Progress Circle | `type` | Similar pattern | ✅ propToVariantMap |
+| Label | `className` | `.text-primary` | ✅ Standard |
+| Calendar | Various | Various | ✅ Works with both |
+| Cards | `className` | Card-specific | ✅ Standard |
+| Chips | `className` | Chip-specific | ✅ Standard |
+| Date | Various | Various | ✅ Works with both |
+
+### Adding New Type-Based Components
+
+**Steps**:
+1. Create JSON with proper `meta.appearances.{appearance}.variantGroups.{group}.{variant}.selector.web`
+2. Ensure selectors match actual DOM CSS classes
+3. Configure story with propToVariantMap
+4. Use wrapper pattern if component can't spread attributes
+5. Done! No code changes needed ✅
+
+**Requirements**:
+- JSON must have `meta.appearances` with selectors
+- Selectors must match DOM CSS classes exactly
+- propToVariantMap mapping must use CSS class names (not variant keys)
+
+---
+
 ## 🎨 Key Features
 
 ### ✅ Dynamic Token Resolution (NEW!)
@@ -471,18 +815,45 @@ You now have a **production-ready, fully generic, zero-configuration Design Toke
 - ✅ **Works with ALL 1300+ foundation CSS variables automatically**
 - ✅ **Supports multiple JSON structures** (variantGroups, meta.appearances, nested tokens)
 - ✅ **Compatible with ALL 50+ components** in `/src/designTokens/components/`
+- ✅ **Supports both className and type prop components** (button, anchor, message, progress-bar, etc.)
+- ✅ **Dynamic selector lookup from JSON** - zero hardcoding for variant detection
+- ✅ **Automatic wrapper pattern detection** - intelligently handles components that can't spread attributes
 - ✅ Reads tokens from JSON files
-- ✅ Shows default values based on className (btn-filled btn-primary, etc.)
+- ✅ Shows default values based on className or type prop
 - ✅ Updates in real-time when tokens are modified
-- ✅ Updates automatically when className changes in Controls tab
+- ✅ Updates automatically when className or type changes in Controls tab
 - ✅ Extracts values from foundation.css at runtime
-- ✅ **Future-proof: New foundation tokens work immediately**
-- ✅ Is fully generic for ANY future component
+- ✅ **Future-proof: New foundation tokens and components work immediately**
+- ✅ Is fully generic for ANY future component (regardless of prop pattern)
 - ✅ Has comprehensive comments and documentation
 
 ## 🆕 What's New (Latest Updates)
 
-### Performance & UX Improvements (Current Release)
+### Type Prop Component Support (Latest Release)
+
+#### propToVariantMap Feature
+- **Before**: Only components with `className` prop were supported (button, anchor, label, etc.)
+- **After**: Components with `type` or similar props now fully supported (message, progress-bar, accordion, etc.)
+- **Impact**: Works with ALL components regardless of styling approach
+
+#### Dynamic Selector Lookup
+- **Before**: Variant detection only worked with className patterns
+- **After**: Reads selectors from JSON `meta.appearances` and matches dynamically
+- **Impact**: Zero hardcoding, works with any component following the pattern
+
+#### Automatic Wrapper Pattern Detection
+- **Before**: Wrapper pattern required manual configuration
+- **After**: Automatically detects when `propToVariantMap` is present
+- **Impact**: No manual configuration needed, cleaner story code
+
+#### Fully Generic Implementation
+- **Before**: Each new component type might need code changes
+- **After**: Just configure JSON + story, no code changes ever needed
+- **Impact**: True zero-configuration for ANY component
+
+---
+
+### Performance & UX Improvements (Previous Release)
 
 #### 1. Controls Tab as Default
 - **Before**: Design Tokens tab would sometimes be default, causing performance issues

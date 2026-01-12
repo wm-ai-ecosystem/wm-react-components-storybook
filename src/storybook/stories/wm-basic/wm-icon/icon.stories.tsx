@@ -230,10 +230,10 @@ export const DesignToken: Story = {
         "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
     },
     iconurl: { control: "text" },
-    iconposition: {
-      control: { type: "select" },
-      options: ["left", "right"],
-    },
+    // iconposition: {
+    //   control: { type: "select" },
+    //   options: ["left", "right"],
+    // },
     "data-design-token-target": { control: false }
   },
   parameters: {

@@ -247,7 +247,8 @@ export const DesignToken: Story = {
         type: "select",
       },
       options: ["text-primary", "text-secondary", "text-success", "text-danger", "text-warning", "text-info","text-muted","h1", "h2", "h3", "h4", "h5", "h6", "p", "label-primary", "label-secondary", "label-success", "label-danger", "label-warning", "label-info"],
-    }
+    },
+    "data-design-token-target": { control: false }
   },
   parameters: {
     designTokens: {
