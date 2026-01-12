@@ -173,57 +173,59 @@ export const Basic: Story = {
 };
 
 // DesignToken story commented out until progress-bar support is fully implemented
-// export const DesignToken: Story = {
-//   tags: ['show-panel'],
-//   render: Template,
-//   args: {
-//     name: "designTokenProgressBar",
-//     listener: mockListener,
-//     datavalue: 30,
-//     type: "default",
-//     minvalue: 0,
-//     maxvalue: 100,
-//     captionplacement: "inside",
-//   },
-//   argTypes: {
-//     datavalue: { control: "number" },
-//     minvalue: { control: "number" },
-//     maxvalue: { control: "number" },
-//     type: {
-//       control: { type: "select" },
-//       options: [
-//         "default",
-//         "success",
-//         "info",
-//         "warning",
-//         "danger",
-//       ],
-//     },
-//     captionplacement: {
-//       control: { type: "radio" },
-//       options: ["hidden", "inside"],
-//     },
-//   },
-//   parameters: {
-//     designTokens: {
-//       enabled: true,
-//       tokenData: progressBarTokensData,
-//       componentKey: "progress-bar",
-//       extractCSSVariablesAtRuntime: true,
-//       propToVariantMap: {
-//         propName: "type",
-//         mapping: {
-//           default: "progress-bar-default",
-//           success: "progress-bar-success",
-//           info: "progress-bar-info",
-//           warning: "progress-bar-warning",
-//           danger: "progress-bar-danger"
-//         }
-//       }
-//     },
-//     layout: 'fullscreen',
-//   },
-// };
+export const DesignToken: Story = {
+  tags: ['show-panel'],
+  render: Template,
+  args: {
+    name: "designTokenProgressBar",
+    listener: mockListener,
+    datavalue: 30,
+    type: "default",
+    minvalue: 0,
+    maxvalue: 100,
+    captionplacement: "inside",
+    "data-design-token-target": true,
+  },
+  argTypes: {
+    datavalue: { control: "number" },
+    minvalue: { control: "number" },
+    maxvalue: { control: "number" },
+    type: {
+      control: { type: "select" },
+      options: [
+        "default",
+        "success",
+        "info",
+        "warning",
+        "danger",
+      ],
+    },
+    captionplacement: {
+      control: { type: "radio" },
+      options: ["hidden", "inside"],
+    },
+     "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: progressBarTokensData,
+      componentKey: "progress-bar",
+      extractCSSVariablesAtRuntime: true,
+      propToVariantMap: {
+        propName: "type",
+        mapping: {
+          default: "progress-bar-default",
+          success: "progress-bar-success",
+          info: "progress-bar-info",
+          warning: "progress-bar-warning",
+          danger: "progress-bar-danger"
+        }
+      }
+    },
+    layout: 'fullscreen',
+  },
+};
 
 
 // export const Default: Story = {

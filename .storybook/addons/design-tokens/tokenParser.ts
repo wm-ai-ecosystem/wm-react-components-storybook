@@ -110,9 +110,12 @@ function getSelectOptions(subtype?: string): string[] | undefined {
  * - componentKey="btn", path=["background"] → "--wm-btn-background"
  * - componentKey="btn", path=["border", "color"] → "--wm-btn-border-color"
  * - componentKey="btn", path=["states", "hover", "state", "layer", "opacity"] → "--wm-btn-states-hover-state-layer-opacity"
+ * - componentKey="anchor", path=["color", "@"] → "--wm-anchor-color" (@ is filtered out)
  */
 function getCSSVariableName(componentKey: string, path: string[]): string {
-  const tokenPath = path.join("-");
+  // Filter out "@" placeholders from the path
+  const filteredPath = path.filter(segment => segment !== "@");
+  const tokenPath = filteredPath.join("-");
   return `--wm-${componentKey}-${tokenPath}`;
 }
 
@@ -306,9 +309,13 @@ function parseTokenObject(
         }
       }
 
+      // Generate label from the last non-@ path segment
+      const filteredPath = currentPath.filter(segment => segment !== "@");
+      const labelPath = filteredPath.length > 0 ? filteredPath[filteredPath.length - 1] : currentPath[currentPath.length - 1];
+
       const token: TokenDefinition = {
         name: cssVar,
-        label: currentPath[currentPath.length - 1]
+        label: labelPath
           .replace(/-/g, " ")
           .replace(/\b\w/g, (l) => l.toUpperCase()),
         value: resolvedValue,

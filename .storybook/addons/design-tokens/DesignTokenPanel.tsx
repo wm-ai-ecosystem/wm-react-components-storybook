@@ -313,12 +313,41 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
       setCurrentClassName("");
       setParameters({ enabled: false });
 
-      // Remove any injected style tags from previous story
+      // Reset CSS variable values from previous story
       const iframe = document.querySelector("#storybook-preview-iframe") as HTMLIFrameElement;
       if (iframe?.contentDocument) {
-        // Remove all design token style tags
-        const styleTags = iframe.contentDocument.querySelectorAll('style[id^="design-tokens-"]');
-        styleTags.forEach(tag => tag.remove());
+        // Remove inline CSS variable overrides from all elements with data-design-token-target AND their children
+        const targetElements = iframe.contentDocument.querySelectorAll('[data-design-token-target="true"]');
+
+        targetElements.forEach((element: Element) => {
+          const htmlElement = element as HTMLElement;
+
+          // Remove variables from target element (including global state variables)
+          const inlineStyles = htmlElement.style;
+          const propertiesToRemove: string[] = [];
+          for (let i = 0; i < inlineStyles.length; i++) {
+            const propertyName = inlineStyles[i];
+            if (propertyName.startsWith('--wm-')) {
+              propertiesToRemove.push(propertyName);
+            }
+          }
+          propertiesToRemove.forEach(prop => htmlElement.style.removeProperty(prop));
+
+          // Remove variables from all descendant elements
+          const childElements = htmlElement.querySelectorAll('*');
+          childElements.forEach((child: Element) => {
+            const childHtmlElement = child as HTMLElement;
+            const childInlineStyles = childHtmlElement.style;
+            const childPropertiesToRemove: string[] = [];
+            for (let i = 0; i < childInlineStyles.length; i++) {
+              const propertyName = childInlineStyles[i];
+              if (propertyName.startsWith('--wm-')) {
+                childPropertiesToRemove.push(propertyName);
+              }
+            }
+            childPropertiesToRemove.forEach(prop => childHtmlElement.style.removeProperty(prop));
+          });
+        });
       }
 
       // Clear cache
@@ -562,97 +591,284 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
   /**
    * Applies tokens to the Storybook preview iframe
    *
-   * This function:
-   * 1. Sets CSS variables on the iframe's root element
-   * 2. Generates CSS rules dynamically from token values
-   * 3. Injects/updates a <style> tag in the iframe's <head>
+   * This function directly updates CSS variable values at the :root level
+   * instead of generating override CSS rules. This allows the natural CSS
+   * cascade to work without !important declarations.
    *
-   * The generated CSS overrides foundation.css styles using !important
-   * and higher specificity selectors. Changes are scoped to elements with
-   * data-design-token-target="true" attribute.
+   * Changes are applied by setting CSS custom properties on the documentElement:
+   * iframe.contentDocument.documentElement.style.setProperty('--wm-var', 'value')
    */
   const applyTokens = (tokenValues: Record<string, string>) => {
     const iframe = document.querySelector("#storybook-preview-iframe") as HTMLIFrameElement;
 
-    // Helper function to apply tokens once iframe and buttons are ready
-    // Optimized with reduced retries and delays for better performance
+    // Helper function to apply tokens once iframe is ready
     const applyTokensToIframe = (attempt = 1, maxAttempts = 4) => {
       if (!iframe || !iframe.contentDocument) {
         // Iframe not ready yet, retry with reduced delay
         if (attempt < maxAttempts) {
-          // console.log(`[Design Tokens] Iframe not ready, retrying... (attempt ${attempt}/${maxAttempts})`);
-          // Reduced delay for better responsiveness
           setTimeout(() => applyTokensToIframe(attempt + 1, maxAttempts), 100);
         } else {
-          // console.error('[Design Tokens] Failed to apply tokens: iframe not ready after max attempts');
+          console.error('[Design Tokens] Failed to apply tokens: iframe not ready after max attempts');
         }
         return;
       }
 
-      // Get token config first - need it to determine component selector
-      let tokenConfig: ComponentTokenConfig | undefined;
+      // Helper function to check if an element is a component element
+      // This function identifies all WaveMaker component elements by their CSS classes
+      const isComponentElement = (element: Element): boolean => {
+        const classList = Array.from(element.classList);
+        return classList.some(c =>
+          // ===== VARIANT PATTERNS (must check first for specificity) =====
+          c.startsWith('alert-') ||                // message: alert-success, alert-danger, alert-warning, alert-info, alert-loading
+          c.startsWith('progress-bar-') ||         // progress-bar: progress-bar-success, progress-bar-danger, etc.
+          c.startsWith('progress-circle-') ||      // progress-circle: progress-circle-success, etc.
+          c.startsWith('panel-') ||                // accordion/panel: panel-primary, panel-secondary, panel-default, etc.
+          c.startsWith('text-') ||                 // label: text-primary, text-secondary, text-danger, etc.
+          c.startsWith('toast-') ||                // toast: toast-success, toast-error, toast-warning, toast-info
+          c.startsWith('btn-') ||                  // button: btn-filled, btn-outlined, btn-text, btn-primary, etc.
+          c.startsWith('card-') ||                 // card: card-default, card-elevated, card-filled
+          c.startsWith('modal-') ||                // modal: modal-lg, modal-sm, modal-xl, modal-xs, modal-full-screen
+          c.startsWith('label-') ||                // badge/label: label-primary, label-success, etc.
+          c.startsWith('nav-') ||                  // nav: nav-item, nav-link, etc.
 
-      if (parameters.tokenData && parameters.componentKey) {
-        // NEW APPROACH: Parse tokens at runtime
-        if (parameters.extractCSSVariablesAtRuntime && cssVariableMap.size > 0) {
-          tokenConfig = parseDesignTokens(parameters.tokenData, parameters.componentKey, cssVariableMap);
+          // ===== BASIC COMPONENTS =====
+          c === 'app-button' ||                    // button base class
+          c === 'app-anchor' ||                    // anchor/link base class
+          c === 'app-label' ||                     // label base class
+          c === 'btn' ||                           // button alternate class
+          c === 'app-icon' ||                      // icon base class
+          c === 'app-picture' ||                   // picture/image base class
+          c === 'app-badge' ||                     // badge base class
+
+          // ===== FORM CONTROLS =====
+          c === 'app-checkbox' ||                  // checkbox base class
+          c === 'app-radioset' ||                  // radioset base class
+          c === 'app-radio' ||                     // radio base class
+          c === 'app-switch' ||                    // switch/toggle base class
+          c === 'app-toggle' ||                    // toggle base class
+          c === 'app-textbox' ||                   // text input base class
+          c === 'app-textarea' ||                  // textarea base class
+          c === 'app-select' ||                    // select/dropdown base class
+          c === 'app-checkboxset' ||               // checkboxset base class
+          c === 'app-date' ||                      // date picker base class
+          c === 'app-datetime' ||                  // datetime picker base class
+          c === 'app-time' ||                      // time picker base class
+          c === 'app-number' ||                    // number input base class
+          c === 'app-currency' ||                  // currency input base class
+          c === 'app-colorpicker' ||               // color picker base class
+          c === 'app-ratings' ||                   // rating/star rating base class
+          c === 'app-fileupload' ||                // file upload base class
+          c === 'app-chips' ||                     // chips/tags base class
+          c === 'app-chip' ||                      // individual chip class
+          c === 'app-search' ||                    // search input base class
+          c === 'app-slider' ||                    // slider base class
+
+          // ===== LAYOUT COMPONENTS =====
+          c === 'app-accordion' ||                 // accordion base class
+          c === 'app-panel' ||                     // panel base class
+          c === 'app-tabs' ||                      // tabs base class
+          c === 'app-container' ||                 // container base class
+          c === 'app-grid-layout' ||               // grid layout base class
+          c === 'app-list' ||                      // list base class
+          c === 'app-livelist' ||                  // live list base class
+          c === 'app-tile' ||                      // tile base class
+          c === 'panel' ||                         // panel alternate class
+
+          // ===== DATA/FEEDBACK COMPONENTS =====
+          c === 'app-message' ||                   // message/alert base class
+          c === 'app-progress' ||                  // progress bar base class
+          c === 'app-spinner' ||                   // spinner/loader base class
+          c === 'app-wizard' ||                    // wizard base class
+          c === 'toast' ||                         // toast notification class
+          c === 'toast-container' ||               // toast container class
+
+          // ===== NAVIGATION COMPONENTS =====
+          c === 'app-nav' ||                       // nav base class
+          c === 'app-navbar' ||                    // navbar base class
+          c === 'app-breadcrumb' ||                // breadcrumb base class
+          c === 'app-menu' ||                      // menu base class
+          c === 'app-top-nav' ||                   // top navigation base class
+          c === 'app-left-panel' ||                // left panel/sidebar base class
+          c === 'app-right-panel' ||               // right panel/sidebar base class
+          c === 'app-datanavigator' ||             // data navigator/pagination base class
+          c === 'pagination' ||                    // pagination alternate class
+          c === 'pager' ||                         // pager alternate class
+
+          // ===== CONTENT/DISPLAY COMPONENTS =====
+          c === 'app-card' ||                      // card base class
+          c === 'app-carousel' ||                  // carousel base class
+          c === 'app-dialog' ||                    // dialog/modal base class
+          c === 'app-popover' ||                   // popover base class
+          c === 'modal-dialog' ||                  // modal dialog class
+          c === 'app-page-content' ||              // page content base class
+          c === 'app-header' ||                    // header base class
+          c === 'app-footer' ||                    // footer base class
+
+          // ===== MEDIA COMPONENTS =====
+          c === 'app-audio' ||                     // audio player base class
+          c === 'app-video' ||                     // video player base class
+          c === 'app-iframe' ||                    // iframe base class
+
+          // ===== RICH TEXT EDITOR (Complex component) =====
+          c === 'app-richtexteditor' ||            // richtext editor base class
+          c === 'note-editor' ||                   // richtext editor summernote class
+          c === 'note-frame' ||                    // richtext editor summernote frame
+          c === 'note-editable' ||                 // richtext editor editable area
+
+          // ===== DATA TABLE/GRID =====
+          c === 'app-datagrid' ||                  // data grid base class
+          c === 'app-grid' ||                      // grid base class
+          c === 'app-livegrid' ||                  // live grid base class
+          c === 'app-calendar' ||                  // calendar base class
+
+          // ===== BUTTON GROUP =====
+          c === 'app-button-group' ||              // button group base class
+          c === 'button-group' ||                  // button group alternate class
+
+          // ===== MISC UTILITY CLASSES (for comprehensive coverage) =====
+          c === 'app-form' ||                      // form base class
+          c === 'app-composite-widget' ||          // composite widget base class
+          c === 'app-prefab' ||                    // prefab component base class
+          c === 'app-partial' ||                   // partial content base class
+          c === 'app-template' ||                  // template base class
+          c === 'app-view'                         // view base class
+        );
+      };
+
+      // Helper function to apply CSS variables with retry for child elements
+      const applyToElementAndChildren = (targetElements: NodeListOf<Element>, retryAttempt = 1, maxRetries = 3) => {
+        let appliedCount = 0;
+        let childElementsCount = 0;
+        let componentElementsCount = 0;
+        const componentClasses: string[] = [];
+
+        targetElements.forEach((element: Element) => {
+          const htmlElement = element as HTMLElement;
+
+          // Check if the target element itself is a component element (Button, Anchor, Label)
+          const targetIsComponent = isComponentElement(htmlElement);
+          if (targetIsComponent) {
+            componentElementsCount++;
+            componentClasses.push(Array.from(htmlElement.classList).join(' '));
+          }
+
+          // 1. Set CSS variables on the target element itself
+          // - For direct prop components (Button, Anchor, Label): target IS the component
+          // - For wrapper patterns (Message, Progress-bar): target is the wrapper Box
+          Object.entries(tokenValues).forEach(([varName, value]) => {
+            if (varName.startsWith('--wm-')) {
+              htmlElement.style.setProperty(varName, value);
+              appliedCount++;
+
+              // SPECIAL HANDLING FOR STATE TOKENS (hover, focus, active)
+              // Button/component hover states reference global opacity variables like --wm-opacity-hover
+              // Example: .btn:hover::before { --wm-btn-state-layer-opacity: var(--wm-opacity-hover); }
+              // So we need to set BOTH the component variable AND the global opacity variable
+              if (varName.includes('-states-hover-state-layer-opacity')) {
+                htmlElement.style.setProperty('--wm-opacity-hover', value);
+                appliedCount++;
+              } else if (varName.includes('-states-focus-state-layer-opacity')) {
+                htmlElement.style.setProperty('--wm-opacity-focus', value);
+                appliedCount++;
+              } else if (varName.includes('-states-active-state-layer-opacity')) {
+                htmlElement.style.setProperty('--wm-opacity-active', value);
+                appliedCount++;
+              }
+            }
+          });
+
+          // 2. Set CSS variables on all descendant elements within the target
+          // - For direct prop components: applies to child elements like icons, text, etc.
+          // - For wrapper patterns: applies to the actual component and its children
+          const childElements = htmlElement.querySelectorAll('*');
+          childElements.forEach((child: Element) => {
+            const childHtmlElement = child as HTMLElement;
+
+            // Track component classes for logging
+            if (isComponentElement(child)) {
+              componentElementsCount++;
+              componentClasses.push(Array.from(child.classList).join(' '));
+            }
+
+            Object.entries(tokenValues).forEach(([varName, value]) => {
+              if (varName.startsWith('--wm-')) {
+                childHtmlElement.style.setProperty(varName, value);
+                appliedCount++;
+
+                // SPECIAL HANDLING FOR STATE TOKENS (hover, focus, active)
+                // Set global opacity variables so hover/focus/active states work correctly
+                if (varName.includes('-states-hover-state-layer-opacity')) {
+                  childHtmlElement.style.setProperty('--wm-opacity-hover', value);
+                  appliedCount++;
+                } else if (varName.includes('-states-focus-state-layer-opacity')) {
+                  childHtmlElement.style.setProperty('--wm-opacity-focus', value);
+                  appliedCount++;
+                } else if (varName.includes('-states-active-state-layer-opacity')) {
+                  childHtmlElement.style.setProperty('--wm-opacity-active', value);
+                  appliedCount++;
+                }
+              }
+            });
+          });
+
+          childElementsCount += childElements.length;
+        });
+
+        console.log(`%c[Design Tokens] ✓ Applied ${appliedCount} CSS variables (attempt ${retryAttempt})`, 'color: #4CAF50; font-weight: bold', `to ${targetElements.length} target + ${childElementsCount} children (${componentElementsCount} component elements)`);
+
+        if (componentClasses.length > 0) {
+          console.log('[Design Tokens] Found component elements:', componentClasses.slice(0, 5)); // Show first 5
         } else {
-          tokenConfig = parseDesignTokens(parameters.tokenData, parameters.componentKey);
+          console.warn('[Design Tokens] No component elements found (looking for: alert-*, btn-*, app-*, etc.)');
         }
-      } else if (parameters.tokenConfig) {
-        // OLD APPROACH: Use pre-parsed tokenConfig
-        tokenConfig = parameters.tokenConfig;
-      }
 
-      if (!tokenConfig) {
-        // console.error('[Design Tokens] No token configuration available for applying tokens');
+        // Retry if we haven't found the main component elements yet
+        // This handles React components that haven't fully rendered yet (wrapper pattern only)
+        if (componentElementsCount === 0 && retryAttempt < maxRetries) {
+          console.log(`[Design Tokens] No component elements found, retrying in 150ms... (attempt ${retryAttempt + 1}/${maxRetries})`);
+          setTimeout(() => {
+            const updatedTargetElements = iframe.contentDocument!.querySelectorAll('[data-design-token-target="true"]');
+            applyToElementAndChildren(updatedTargetElements, retryAttempt + 1, maxRetries);
+          }, 150);
+        }
+      };
+
+      // Find target element(s) with data-design-token-target="true"
+      const targetElements = iframe.contentDocument.querySelectorAll('[data-design-token-target="true"]');
+
+      if (targetElements.length === 0) {
+        console.warn('[Design Tokens] No elements found with data-design-token-target="true"');
         return;
       }
 
-      // Check if target elements are rendered (generic for any component)
-      // Use the component's selector with data-design-token-target attribute
-      const targetSelector = `[data-design-token-target="true"]`;
-      const targetElements = iframe.contentDocument.querySelectorAll(targetSelector);
+      console.log('%c[Design Tokens] Applying tokens...', 'color: #4CAF50; font-weight: bold; font-size: 14px');
+      console.log('[Design Tokens] Total tokens received:', Object.keys(tokenValues).length);
+      console.log('[Design Tokens] Target elements found:', targetElements.length);
+      console.log('[Design Tokens] Sample token names:', Object.keys(tokenValues).slice(0, 5));
 
-      if (targetElements.length === 0 && attempt < maxAttempts) {
-        // Target elements not rendered yet, retry with reduced delay
-        // console.log(`[Design Tokens] Target elements (${tokenConfig.componentName}) not rendered yet, retrying... (attempt ${attempt}/${maxAttempts})`);
-        // Reduced delay for better responsiveness
-        setTimeout(() => applyTokensToIframe(attempt + 1, maxAttempts), 100);
-        return;
-      }
+      // Apply tokens with retry logic for child elements
+      applyToElementAndChildren(targetElements);
 
-      // Iframe and target elements are ready, apply tokens
-      if (tokenConfig) {
-        const { componentName, selector } = tokenConfig;
-        const styleId = `design-tokens-${componentName}`;
+      // Verification - check if the values are actually being used
+      const firstElement = targetElements[0] as HTMLElement;
+      const labelColorVar = '--wm-label-color';
+      if (tokenValues[labelColorVar]) {
+        const inlineValue = firstElement.style.getPropertyValue(labelColorVar);
+        const computedValue = iframe.contentWindow?.getComputedStyle(firstElement).getPropertyValue(labelColorVar).trim();
+        const actualColor = iframe.contentWindow?.getComputedStyle(firstElement).color;
 
-        // Remove existing style tag if present
-        let styleTag = iframe.contentDocument.getElementById(styleId) as HTMLStyleElement;
-        if (styleTag) {
-          styleTag.remove();
+        console.log('%c[Design Tokens] Verification:', 'color: #9C27B0; font-weight: bold');
+        console.log(`  CSS Variable (${labelColorVar}):`);
+        console.log(`    Inline value: "${inlineValue}"`);
+        console.log(`    Computed value: "${computedValue}"`);
+        console.log(`    Expected value: "${tokenValues[labelColorVar]}"`);
+        console.log(`  Actual element color: "${actualColor}"`);
+
+        if (computedValue === tokenValues[labelColorVar]) {
+          console.log('%c  ✓ CSS variable set correctly!', 'color: #4CAF50');
+        } else {
+          console.error('%c  ✗ CSS variable mismatch!', 'color: #F44336');
         }
-
-        // Create new style tag with generated CSS
-        styleTag = iframe.contentDocument.createElement("style");
-        styleTag.id = styleId;
-
-        // Generate CSS rules from tokens
-        const cssRules = generateCSSRules(tokenValues, selector || `.${componentName}`, currentClassName, componentName, tokenConfig);
-        styleTag.textContent = cssRules;
-
-        iframe.contentDocument.head.appendChild(styleTag);
-
-        // Tokens applied successfully
-
-        // Verify styles applied (debugging - commented out)
-        // if (targetElements.length > 0) {
-        //   const element = targetElements[0];
-        //   const computed = iframe.contentWindow?.getComputedStyle(element);
-        //   console.log(`  → Element background: ${computed?.backgroundColor}`);
-        //   console.log(`  → Element color: ${computed?.color}`);
-        //   console.log(`  → Element font-size: ${computed?.fontSize}`);
-        // }
       }
     };
 
@@ -661,604 +877,14 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
   };
 
   /**
-   * Generates CSS rules from token values
-   *
-   * This function creates CSS like:
-   * ```css
-   * .selector[data-design-token-target="true"].variant-class {
-   *   background-color: var(--wm-component-background) !important;
-   *   color: var(--wm-component-color) !important;
-   *   ...
-   * }
-   * ```
-   *
-   * The [data-design-token-target="true"] attribute ensures that styles
-   * only apply to components in the DesignToken story, not globally.
-   * This prevents token changes from affecting all instances of the component.
-   *
-   * It also generates rules for :hover, :focus, :active, :disabled states
-   */
-  const generateCSSRules = (
-    tokenValues: Record<string, string>,
-    selector: string,
-    className: string,
-    componentName: string,
-    config: ComponentTokenConfig
-  ): string => {
-    // Build selector with data attribute to scope to DesignToken story only
-    // Example: ".app-button[data-design-token-target="true"].btn-filled.btn-primary"
-    // This ensures token changes ONLY affect components in the DesignToken story
-    const dataAttr = '[data-design-token-target="true"]';
-
-    // Use the component's selector from meta.mapping.selector.web
-    // For button: ".app-button,button,.btn"
-    // For anchor: ".app-anchor,a"
-    // We'll use the first selector for high specificity
-    const baseSelector = selector.split(',')[0].trim();
-
-    // Get variant-specific selector from JSON if available
-    // Dynamically look up the selector for any component
-    let variantSelector = '';
-    if (className && parameters.tokenData && parameters.componentKey) {
-      const componentData = parameters.tokenData[parameters.componentKey];
-      // Selectors are in meta.appearances, not in appearances
-      const appearancesSource = componentData?.meta?.appearances;
-
-      if (appearancesSource) {
-        // Iterate through all appearances to find the variant selector
-        for (const appearanceValue of Object.values(appearancesSource)) {
-          const appearanceData = appearanceValue as any;
-
-          if (appearanceData.variantGroups) {
-            // Iterate through all variant groups
-            for (const groupData of Object.values(appearanceData.variantGroups)) {
-              // Iterate through all variants in the group
-              for (const variantValue of Object.values(groupData as any)) {
-                const variantData = variantValue as any;
-
-                // Check if the variant has a selector definition
-                if (variantData.selector?.web) {
-                  const selectorWeb = variantData.selector.web;
-                  const cleanedSelector = selectorWeb.replace(/^\./, '').toLowerCase().trim();
-
-                  // Check if the className matches this selector
-                  if (cleanedSelector === className.toLowerCase()) {
-                    variantSelector = selectorWeb;
-                    break;
-                  }
-                }
-              }
-              if (variantSelector) break;
-            }
-            if (variantSelector) break;
-          }
-        }
-      }
-    }
-
-    // Add className selectors for variant specificity
-    // If we found a variant selector from JSON (e.g., ".alert-success"), use it
-    // Otherwise, treat className as space-separated classes (e.g., "btn-filled btn-primary" → ".btn-filled.btn-primary")
-    let classSelectors = '';
-    if (variantSelector) {
-      // For components like Message: variantSelector is already a CSS selector like ".alert-success"
-      // Just use it directly without modification
-      classSelectors = variantSelector;
-    } else if (className) {
-      // For components like Button: className is space-separated classes like "btn-filled btn-primary"
-      // Convert to CSS selector: ".btn-filled.btn-primary"
-      classSelectors = `.${className.split(' ').join('.')}`;
-    }
-
-    // ============================================================================
-    // UNIVERSAL SELECTOR PATTERN SYSTEM
-    // ============================================================================
-    // This system supports two selector patterns to handle all component types:
-    //
-    // PATTERN 1: Direct Selector (Components with className prop)
-    // Format: .component[data-design-token-target="true"].variant-class
-    // Example: .app-button[data-design-token-target="true"].btn-filled.btn-primary
-    // Use when: Component accepts className prop and can spread data attributes
-    // Components: Button, Anchor, Label, Checkbox, Radio, Audio, Video, Picture, etc.
-    //
-    // PATTERN 2: Ancestor Selector (Components with type/variant prop OR special cases)
-    // Format: [data-design-token-target="true"] .component.variant-class
-    // Example: [data-design-token-target="true"] .app-message.alert-success
-    // Example: [data-design-token-target="true"] .progress-bar.progress-bar-success
-    // Example: [data-design-token-target="true"] .app-icon-wrapper
-    // Use when: Component uses propToVariantMap OR cannot spread props OR has special rendering
-    // Components:
-    // - Type-based (DYNAMIC): Message, Progress Bar, Accordion, Progress Circle, etc.
-    // - Special cases (HARDCODED): Icon (renders FontAwesome child elements), Iframe (inline styles)
-    //
-    // Why two patterns?
-    // - Type-based components (propToVariantMap) use wrapper Box with data-design-token-target
-    // - Icon renders child elements (i.fa-*) that don't accept custom attributes
-    // - Iframe has inline width/height styles that need wrapper pattern to override
-    // - Wrapper pattern: <Box data-design-token-target="true"><Component /></Box>
-    //
-    // FULLY DYNAMIC: propToVariantMap automatically uses wrapper pattern
-    // - Works for ANY component with type/variant prop without code changes
-    // - No hardcoding needed for new type-based components!
-    //
-    // HARDCODED: Only icon and iframe need special handling
-    // - These have fundamental DOM structure differences that cannot be configured in JSON
-    // ============================================================================
-    const usesWrapperPattern =
-      componentName === 'icon' ||
-      componentName === 'iframe' ||
-      !!parameters.propToVariantMap; // Any component using propToVariantMap uses wrapper pattern
-
-    let fullSelector = usesWrapperPattern
-      ? `${dataAttr} ${baseSelector}${classSelectors}`
-      : `${baseSelector}${dataAttr}${classSelectors}`;
-
-    // Helper function to build dynamic CSS variable names
-    const getVarName = (property: string) => `--wm-${componentName}-${property}`;
-
-    let css = `
-/* Design Token Generated Styles - Auto-generated by Design Tokens Panel */
-/* Ultra-high specificity selector to override MUI inline styles and foundation.css */
-${fullSelector} {
-`;
-
-    // Map CSS variables to CSS properties
-    // Use actual token values instead of CSS variables for better scoping
-    Object.entries(tokenValues).forEach(([varName, value]) => {
-      // Extract property name from CSS variable name (--wm-btn-background -> background)
-      const parts = varName.split('-');
-      if (parts.length >= 4) {
-        // Remove --wm-{component} prefix (first 4 parts: '', '', 'wm', 'btn')
-        const property = parts.slice(4).join('-');
-
-        // Skip ONLY interactive state tokens (hover, focus, active, disabled)
-        // These have 'states-' followed by the state name
-        // Do NOT skip base tokens like 'state-layer-color'
-        if (property.startsWith('states-hover-') ||
-            property.startsWith('states-focus-') ||
-            property.startsWith('states-active-') ||
-            property.startsWith('states-disabled-')) {
-          return;
-        }
-
-        // Map property names to CSS properties
-        const cssProperty = mapToCSSProperty(property);
-        if (cssProperty) {
-          // Use the actual value directly instead of CSS variable reference
-          css += `  ${cssProperty}: ${value} !important;\n`;
-        }
-      }
-    });
-
-    css += `}\n\n`;
-
-    // Add rules for text content (targets the span.btn-caption)
-    // Ensure all child elements have z-index above state layer overlays
-    css += `${fullSelector} > * {\n`;
-    css += `  position: relative !important;\n`;
-    css += `  z-index: 1 !important;\n`;
-    css += `}\n\n`;
-
-    // ============================================================================
-    // CHILD ELEMENT TARGETING SYSTEM
-    // ============================================================================
-    // Different components need CSS applied to different elements:
-    //
-    // MOST COMPONENTS (DYNAMIC): Apply directly to root element
-    // - Button, Anchor, Label, Message, Progress Bar, Accordion, etc.
-    // - Styles go on the root element
-    // - Works automatically with propToVariantMap for type-based components
-    // - May also target text children (.btn-caption) if defined in childSelectors.text
-    //
-    // SPECIAL CASES (HARDCODED): Only icon and iframe need hardcoded handling
-    //
-    // ICON COMPONENT: Apply to child icon elements (MUST BE HARDCODED)
-    // - Icon wrapper (.app-icon-wrapper) is just a container
-    // - Actual icons are: .app-icon, i.fa-*, i.wi-*, img
-    // - Must target these children for color, font-size to work
-    // - Cannot be made generic due to FontAwesome/Weather icon rendering
-    //
-    // IFRAME COMPONENT: Apply to child iframe element (MUST BE HARDCODED)
-    // - Wrapper (Box) only provides container
-    // - iframe element has inline width/height that needs overriding
-    // - Must target child iframe element: iframe, .iframe-content
-    // - Cannot be made generic due to inline style overriding requirements
-    //
-    // CONTAINER COMPONENTS (DYNAMIC): Handled automatically
-    // - Card: .card-body, .card-footer with nested properties
-    // - List: .list-item, .list-item-header with item-level styling
-    // - Handled automatically by nested token path system (body.padding → .card-body)
-    // - No hardcoding needed!
-    //
-    // NOTE: Only add new hardcoded cases if component has fundamental DOM structure
-    // differences that cannot be handled through JSON configuration.
-    // ============================================================================
-    let mainSelectors = `${fullSelector}`;
-
-    if (componentName === 'icon') {
-      // Icon component: Target child icon elements (not the wrapper)
-      // Includes: .app-icon (wavemaker icon), FontAwesome (i.fa-*), Weather icons (i.wi-*), img
-      mainSelectors = `${fullSelector} .app-icon,\n${fullSelector} i[class*="fa-"],\n${fullSelector} i[class*="wi-"],\n${fullSelector} img`;
-    } else if (componentName === 'iframe') {
-      // Iframe component: Target child iframe element (not the wrapper Box)
-      // iframe has inline width/height that needs !important to override
-      mainSelectors = `${fullSelector} iframe,\n${fullSelector} .iframe-content`;
-    } else {
-      // Standard components (ALL DYNAMIC): Apply to root element + optional text children
-      // Includes: Button, Anchor, Label, Message, Progress Bar, Accordion, etc.
-      // childSelectors.text defines text child elements (e.g., .btn-caption for buttons)
-      if (config.childSelectors?.text) {
-        const textSelectors = config.childSelectors.text.split(',').map(s => `${fullSelector} ${s.trim()}`).join(',\n');
-        mainSelectors += `,\n${textSelectors}`;
-      }
-    }
-
-    css += `${mainSelectors} {\n`;
-
-    // ============================================================================
-    // UNIVERSAL DYNAMIC PROPERTY APPLICATION
-    // ============================================================================
-    // This is the CORE of the universal system. Instead of hardcoding each property
-    // (background, color, font-size, etc.), we dynamically apply ALL properties
-    // found in the tokenValues object.
-    //
-    // How it works:
-    // 1. Loop through all CSS variables: --wm-component-property
-    // 2. Extract property name: "property"
-    // 3. Map to CSS property via mapToCSSProperty(): "property" -> "css-property"
-    // 4. Apply: css-property: value !important;
-    //
-    // Examples:
-    // - --wm-audio-width -> width: 600px !important;
-    // - --wm-button-color -> color: #FFFFFF !important;
-    // - --wm-card-body-padding -> padding: 24px !important; (nested token)
-    // - --wm-list-item-header-font-size -> font-size: 14px !important; (deeply nested)
-    //
-    // Why this is universal:
-    // - Works with ANY component without code changes
-    // - Supports nested tokens automatically (body.padding, footer.border.color)
-    // - New properties in JSON work immediately
-    // - No hardcoded property list to maintain
-    //
-    // Special handling:
-    // - Some properties (icon-size, image-size, state-layer) have dedicated sections
-    // - State properties (states-hover-*, states-focus-*) handled in :hover, :focus rules
-    // - Skip these here to avoid duplication
-    // ============================================================================
-    Object.entries(tokenValues).forEach(([varName, value]) => {
-      // Extract property name from CSS variable name
-      // --wm-audio-width -> prefix="--wm-audio-", property="width"
-      // --wm-card-body-padding -> prefix="--wm-card-", property="body-padding"
-      const prefix = `--wm-${componentName}-`;
-      if (!varName.startsWith(prefix)) {
-        return; // Skip variables from other components
-      }
-      const property = varName.substring(prefix.length);
-
-      // Skip properties that have dedicated handling sections below
-      const skipProperties = [
-        'icon-size',           // Handled in "Child Icon Elements" section (for buttons/anchors with icons)
-        'image-size',          // Handled in "Child Image Elements" section (for anchors with images)
-        'image-radius',        // Handled in "Child Image Elements" section
-        'state-layer-color',   // Handled in "State Layer Overlays" section (interactive feedback)
-        'state-layer-opacity', // Handled in "State Layer Overlays" section
-      ];
-
-      // Skip interactive state properties - handled in :hover, :focus, :active, :disabled rules below
-      // states-hover-background, states-focus-color, etc.
-      if (property.startsWith('states-')) {
-        return;
-      }
-
-      // Skip if this property has special handling
-      // EXCEPTION: For icon/iframe components, DON'T skip because properties apply to child elements
-      // Icon component needs width/height applied to the icon element itself
-      // Iframe component needs width/height applied to the iframe element itself
-      if (skipProperties.includes(property) && componentName !== 'icon' && componentName !== 'iframe') {
-        return;
-      }
-
-      // Map token property to CSS property and apply
-      // Examples: "background" -> "background-color", "radius" -> "border-radius"
-      const cssProperty = mapToCSSProperty(property);
-      if (cssProperty && value) {
-        css += `  ${cssProperty}: ${value} !important;\n`;
-      }
-    });
-
-    css += `}\n\n`;
-
-    // Add rules for icons
-    // Use childSelectors.icon if defined, otherwise default to common icon selectors
-    const hasIconSize = tokenValues[getVarName('icon-size')];
-    const hasIconColor = tokenValues[getVarName('color')];
-
-    if (hasIconSize || hasIconColor) {
-      // Default icon selectors for button component
-      const defaultIconSelectors = '.app-icon,i[class*="fa-"],i[class*="wi-"],i[class*="icon-"]';
-      const iconSelectorList = config.childSelectors?.icon || defaultIconSelectors;
-      const iconSelectors = iconSelectorList.split(',').map(s => `${fullSelector} ${s.trim()}`).join(',\n');
-
-      css += `${iconSelectors} {\n`;
-      if (hasIconColor) {
-        css += `  color: ${tokenValues[getVarName('color')]} !important;\n`;
-      }
-      if (hasIconSize) {
-        css += `  font-size: ${tokenValues[getVarName('icon-size')]} !important;\n`;
-        css += `  width: ${tokenValues[getVarName('icon-size')]} !important;\n`;
-        css += `  height: ${tokenValues[getVarName('icon-size')]} !important;\n`;
-        css += `  min-width: ${tokenValues[getVarName('icon-size')]} !important;\n`;
-        css += `  min-height: ${tokenValues[getVarName('icon-size')]} !important;\n`;
-        css += `  line-height: 1 !important;\n`;
-        css += `  display: inline-flex !important;\n`;
-        css += `  align-items: center !important;\n`;
-        css += `  justify-content: center !important;\n`;
-      }
-      css += `  position: relative !important;\n`;
-      css += `  z-index: 1 !important;\n`;
-      css += `}\n\n`;
-    }
-
-    // Add rules for images
-    // Use childSelectors.image if defined, otherwise default to common image selectors
-    const hasImageSize = tokenValues[getVarName('image-size')];
-    const hasImageRadius = tokenValues[getVarName('image-radius')];
-
-    if (hasImageSize || hasImageRadius) {
-      // Default image selectors that work across components
-      const defaultImageSelectors = 'img,.image,[class*="-image"],[class*="image-"]';
-      const imageSelectorList = config.childSelectors?.image || defaultImageSelectors;
-      const imageSelectors = imageSelectorList.split(',').map(s => `${fullSelector} ${s.trim()}`).join(',\n');
-
-      css += `${imageSelectors} {\n`;
-      if (hasImageSize) {
-        css += `  width: ${tokenValues[getVarName('image-size')]} !important;\n`;
-        css += `  height: ${tokenValues[getVarName('image-size')]} !important;\n`;
-        css += `  min-width: ${tokenValues[getVarName('image-size')]} !important;\n`;
-        css += `  min-height: ${tokenValues[getVarName('image-size')]} !important;\n`;
-      }
-      if (hasImageRadius) {
-        css += `  border-radius: ${tokenValues[getVarName('image-radius')]} !important;\n`;
-      }
-      css += `  object-fit: cover !important;\n`;
-      css += `}\n\n`;
-    }
-
-    // Add rules for badges (if badge child selector is defined)
-    if (config.childSelectors?.badge && tokenValues[getVarName('color')]) {
-      const badgeSelectors = config.childSelectors.badge.split(',').map(s => `${fullSelector} ${s.trim()}`).join(',\n');
-      css += `${badgeSelectors} {\n`;
-      css += `  background-color: ${tokenValues[getVarName('color')]} !important;\n`;
-      css += `  color: ${tokenValues[getVarName('background')]} !important;\n`;
-      css += `  position: relative !important;\n`;
-      css += `  z-index: 1 !important;\n`;
-      css += `  font-size: 0.75em !important;\n`;
-      css += `}\n\n`;
-    }
-
-    // Ensure button has position:relative for state layer overlays
-    if (tokenValues[getVarName('state-layer-color')]) {
-      css += `${fullSelector} {\n`;
-      css += `  position: relative !important;\n`;
-      css += `  overflow: hidden !important;\n`;
-      css += `}\n\n`;
-    }
-
-    // Add hover state with state layer effect
-    // State layers create a semi-transparent overlay for interactive feedback
-    css += `${fullSelector}:hover:not(:disabled) {\n`;
-    Object.entries(tokenValues).forEach(([varName, value]) => {
-      if (varName.includes('-states-hover-')) {
-        const parts = varName.split('-');
-        const property = parts.slice(4).join('-').replace('states-hover-', '');
-        const cssProperty = mapToCSSProperty(property);
-        if (cssProperty) {
-          css += `  ${cssProperty}: ${value} !important;\n`;
-        }
-      }
-    });
-    css += `}\n\n`;
-
-    // Create state layer overlay for hover using ::before pseudo-element
-    if (tokenValues[getVarName('state-layer-color')] && tokenValues[getVarName('states-hover-state-layer-opacity')]) {
-      css += `${fullSelector}:hover:not(:disabled)::before {\n`;
-      css += `  content: '' !important;\n`;
-      css += `  position: absolute !important;\n`;
-      css += `  top: 0 !important;\n`;
-      css += `  left: 0 !important;\n`;
-      css += `  right: 0 !important;\n`;
-      css += `  bottom: 0 !important;\n`;
-      css += `  background-color: ${tokenValues[getVarName('state-layer-color')]} !important;\n`;
-      css += `  opacity: ${tokenValues[getVarName('states-hover-state-layer-opacity')]} !important;\n`;
-      css += `  pointer-events: none !important;\n`;
-      css += `  border-radius: inherit !important;\n`;
-      css += `}\n\n`;
-    }
-
-    // Add focus state with state layer effect
-    css += `${fullSelector}:focus:not(:disabled) {\n`;
-    Object.entries(tokenValues).forEach(([varName, value]) => {
-      if (varName.includes('-states-focus-')) {
-        const parts = varName.split('-');
-        const property = parts.slice(4).join('-').replace('states-focus-', '');
-        const cssProperty = mapToCSSProperty(property);
-        if (cssProperty) {
-          css += `  ${cssProperty}: ${value} !important;\n`;
-        }
-      }
-    });
-    css += `  outline: 2px solid currentColor;\n`;
-    css += `  outline-offset: 2px;\n`;
-    css += `}\n\n`;
-
-    // Create state layer overlay for focus
-    if (tokenValues[getVarName('state-layer-color')] && tokenValues[getVarName('states-focus-state-layer-opacity')]) {
-      css += `${fullSelector}:focus:not(:disabled)::before {\n`;
-      css += `  content: '' !important;\n`;
-      css += `  position: absolute !important;\n`;
-      css += `  top: 0 !important;\n`;
-      css += `  left: 0 !important;\n`;
-      css += `  right: 0 !important;\n`;
-      css += `  bottom: 0 !important;\n`;
-      css += `  background-color: ${tokenValues[getVarName('state-layer-color')]} !important;\n`;
-      css += `  opacity: ${tokenValues[getVarName('states-focus-state-layer-opacity')]} !important;\n`;
-      css += `  pointer-events: none !important;\n`;
-      css += `  border-radius: inherit !important;\n`;
-      css += `}\n\n`;
-    }
-
-    // Add active state with state layer effect
-    css += `${fullSelector}:active:not(:disabled) {\n`;
-    Object.entries(tokenValues).forEach(([varName, value]) => {
-      if (varName.includes('-states-active-')) {
-        const parts = varName.split('-');
-        const property = parts.slice(4).join('-').replace('states-active-', '');
-        const cssProperty = mapToCSSProperty(property);
-        if (cssProperty) {
-          css += `  ${cssProperty}: ${value} !important;\n`;
-        }
-      }
-    });
-    css += `}\n\n`;
-
-    // Create state layer overlay for active (pressed down)
-    if (tokenValues[getVarName('state-layer-color')] && tokenValues[getVarName('states-active-state-layer-opacity')]) {
-      css += `${fullSelector}:active:not(:disabled)::before {\n`;
-      css += `  content: '' !important;\n`;
-      css += `  position: absolute !important;\n`;
-      css += `  top: 0 !important;\n`;
-      css += `  left: 0 !important;\n`;
-      css += `  right: 0 !important;\n`;
-      css += `  bottom: 0 !important;\n`;
-      css += `  background-color: ${tokenValues[getVarName('state-layer-color')]} !important;\n`;
-      css += `  opacity: ${tokenValues[getVarName('states-active-state-layer-opacity')]} !important;\n`;
-      css += `  pointer-events: none !important;\n`;
-      css += `  border-radius: inherit !important;\n`;
-      css += `}\n\n`;
-    }
-
-    // Add disabled state
-    css += `${fullSelector}:disabled {\n`;
-    Object.entries(tokenValues).forEach(([varName, value]) => {
-      if (varName.includes('-states-disabled-')) {
-        const parts = varName.split('-');
-        const property = parts.slice(4).join('-').replace('states-disabled-', '');
-        const cssProperty = mapToCSSProperty(property);
-        if (cssProperty) {
-          css += `  ${cssProperty}: ${value} !important;\n`;
-        }
-      }
-    });
-    // Use disabled-specific values if available, otherwise use defaults
-    if (tokenValues[getVarName('states-disabled-opacity')]) {
-      css += `  opacity: ${tokenValues[getVarName('states-disabled-opacity')]} !important;\n`;
-    } else {
-      css += `  opacity: 0.38 !important;\n`;
-    }
-    if (tokenValues[getVarName('states-disabled-cursor')]) {
-      css += `  cursor: ${tokenValues[getVarName('states-disabled-cursor')]} !important;\n`;
-    } else {
-      css += `  cursor: not-allowed !important;\n`;
-    }
-    css += `}\n`;
-
-    return css;
-  };
-
-  /**
-   * Maps token property names to CSS property names
-   *
-   * Example: "background" → "background-color"
-   * Example: "container-background" → "background-color" (for nested tokens like message)
-   */
-  const mapToCSSProperty = (property: string): string | null => {
-    // Normalize property - remove @ suffix if present (e.g., "shadow-@" -> "shadow")
-    const normalizedProperty = property.replace('-@', '').replace('@', '');
-
-    const mapping: Record<string, string> = {
-      'background': 'background-color',
-      'background-color': 'background-color',  // Support explicit background-color (used by label component)
-      'color': 'color',
-      'border-color': 'border-color',
-      'border-width': 'border-width',
-      'border-style': 'border-style',
-      'border-radius': 'border-radius',
-      'radius': 'border-radius',
-      'padding': 'padding',
-      'margin': 'margin',  // Support margin (used by label component)
-      'font-family': 'font-family',
-      'font-size': 'font-size',
-      'font-weight': 'font-weight',
-      'line-height': 'line-height',
-      'letter-spacing': 'letter-spacing',
-      'text-transform': 'text-transform',
-      'gap': 'gap',
-      'cursor': 'cursor',
-      'opacity': 'opacity',
-      'min-width': 'min-width',
-      'height': 'height',
-      'shadow': 'box-shadow',
-      'icon-size': 'font-size',
-      // Nested token paths (used by message, card, etc.)
-      // Pattern: nested.path → nested-path (e.g., container.background → container-background)
-      'container-background': 'background-color',
-      'container-color': 'color',
-      'container-border-color': 'border-color',
-      'container-border-width': 'border-width',
-      'container-border-style': 'border-style',
-      'container-border-radius': 'border-radius',
-      'container-padding': 'padding',
-      'container-gap': 'gap',
-      'container-shadow': 'box-shadow',
-      // Border nested paths (e.g., border.color, border.width)
-      'border': 'border',
-      // Width property
-      'width': 'width',
-      // State layer properties are used for interactive states, not base styles
-      // They're handled in the :hover, :focus, :active pseudo-class rules
-    };
-
-    // Skip state-layer-* properties in base styles (they're decorative overlay properties)
-    if (normalizedProperty.startsWith('state-layer-')) {
-      return null;
-    }
-
-    // Return mapped property, or if not in mapping, check if it's already a valid CSS property
-    // This allows properties like "background-color", "text-align", etc. to work even if not explicitly mapped
-    const mappedProperty = mapping[normalizedProperty];
-    if (mappedProperty) {
-      return mappedProperty;
-    }
-
-    // Common CSS properties that should pass through as-is
-    const validCSSProperties = [
-      'text-align', 'text-decoration', 'display', 'position', 'overflow',
-      'width', 'max-width', 'min-height', 'max-height',
-      'margin', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
-      'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
-      'border', 'border-top', 'border-right', 'border-bottom', 'border-left',
-      'flex', 'flex-direction', 'flex-wrap', 'justify-content', 'align-items',
-      'grid', 'grid-template-columns', 'grid-template-rows', 'grid-gap',
-      'transform', 'transition', 'animation',
-      'z-index', 'visibility', 'box-sizing',
-    ];
-
-    if (validCSSProperties.includes(normalizedProperty)) {
-      return normalizedProperty;
-    }
-
-    // If not in mapping and not a common CSS property, return null
-    return null;
-  };
-
-  /**
    * Handles token value changes from UI controls
    * Updates both state and applies to iframe
    */
   const handleTokenChange = (tokenName: string, value: string) => {
-    // const propertyName = tokenName.split('-').slice(4).join('-');
-    // console.log(`%c[Design Tokens] Changed: ${propertyName}`, 'color: #2196F3', `→ ${value}`);
+    const propertyName = tokenName.split('-').slice(3).join('-');
+    console.log(`%c[Design Tokens] Token changed: ${propertyName}`, 'color: #2196F3; font-weight: bold', `\n  Variable: ${tokenName}\n  New value: ${value}`);
     const newTokens = { ...tokens, [tokenName]: value };
+    console.log('[Design Tokens] Updated tokens object:', newTokens);
     setTokens(newTokens);
     applyTokens(newTokens);
   };
