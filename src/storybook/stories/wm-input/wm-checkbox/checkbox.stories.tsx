@@ -11,28 +11,30 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import checkboxTokensData from "../../../../designTokens/components/checkbox/checkbox.json";
+
 const meta: Meta<typeof CheckboxDefaultExport> = {
   title: "Input/Checkbox",
   component: CheckboxDefaultExport,
-  argTypes: {
-    caption: { control: "text" },
-    // checkedvalue: { control: "text" },
-    // uncheckedvalue: { control: "text" },
-    datavalue: { control: "boolean" },
-    disabled: { control: "boolean" },
-    readonly: { control: "boolean" },
-    required: { control: "boolean" },
-    // hint: { control: "text" },
-    // arialabel: { control: "text" },
-    // tabindex: { control: "number" },
-    // shortcutkey: { control: "text" },
-    type: {
-      control: { type: "select" },
-      options: ["checkbox", "toggle"],
-    },
-    // className: { control: "text" },
-    // displayValue: { control: "text" },
-  }
+  // argTypes: {
+  //   caption: { control: "text" },
+  //   // checkedvalue: { control: "text" },
+  //   // uncheckedvalue: { control: "text" },
+  //   datavalue: { control: "boolean" },
+  //   disabled: { control: "boolean" },
+  //   readonly: { control: "boolean" },
+  //   required: { control: "boolean" },
+  //   // hint: { control: "text" },
+  //   // arialabel: { control: "text" },
+  //   // tabindex: { control: "number" },
+  //   // shortcutkey: { control: "text" },
+  //   type: {
+  //     control: { type: "select" },
+  //     options: ["checkbox", "toggle"],
+  //   },
+  //   // className: { control: "text" },
+  //   // displayValue: { control: "text" },
+  // }
 };
 
 export default meta;
@@ -53,6 +55,17 @@ const Template = (args: any) => (
   </Box>
 );
 
+const DesignTokenTemplate = (args: any) => {
+  // Remove data-design-token-target from args to avoid passing it to the component
+  const { "data-design-token-target": _, ...componentProps } = args;
+
+  return (
+    <Box className="wm-app" style={{ padding: 16 }} data-design-token-target="true">
+      <CheckboxDefaultExport {...componentProps} listener={mockListener} />
+    </Box>
+  );
+};
+
 export const Docs: Story = {
   render: () => (
     <ComponentDocumentation
@@ -63,6 +76,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsCheckbox",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -128,6 +145,57 @@ export const Basic: Story = {
     disabled: false,
     readonly: false,
     type: "checkbox"
+  },
+  argTypes: {
+    caption: { control: "text" },
+    datavalue: { control: "boolean" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    required: { control: "boolean" },
+    type: {
+      control: { type: "select" },
+      options: ["checkbox", "toggle"],
+    },
+    // className: { control: "text" },
+    // displayValue: { control: "text" },
+  }
+};
+
+export const DesignToken: Story = {
+  tags: ['show-panel'],
+  render: DesignTokenTemplate,
+  args: {
+    name: "designTokenCheckbox",
+    caption: "Accept terms and conditions",
+    listener: mockListener,
+    datavalue: true,
+    disabled: false,
+    readonly: false,
+    type: "checkbox",
+    "data-design-token-target": "true"
+  },
+  argTypes: {
+    caption: { control: "text" },
+    datavalue: { control: "boolean" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    required: { control: "boolean" },
+    type: {
+      control: { type: "select" },
+      options: ["checkbox", "toggle"],
+    },
+    "data-design-token-target": { control: false }
+    // className: { control: "text" },
+    // displayValue: { control: "text" },
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: checkboxTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "checkbox",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
   },
 };
 

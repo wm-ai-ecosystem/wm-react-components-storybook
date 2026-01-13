@@ -11,53 +11,55 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import chipsTokensData from "../../../../designTokens/components/chips/chips.json";
+
 const meta: Meta<typeof ChipsDefaultExport> = {
   title: "Input/Chips",
   component: ChipsDefaultExport,
-  argTypes: {
-    type: {
-      control: { type: "select" },
-      options: ["search", "autocomplete"],
-    },
-    inputposition: {
-      control: { type: "select" },
-      options: ["first", "last"],
-    },
-    inputwidth: {
-      control: { type: "select" },
-      options: ["default", "full"],
-    },
-    matchmode: {
-      control: { type: "select" },
-      options: ["contains", "start", "end", "exact"],
-    },
-    allowonlyselect: { control: "boolean" },
-    autofocus: { control: "boolean" },
-    disabled: { control: "boolean" },
-    readonly: { control: "boolean" },
-    enablereorder: { control: "boolean" },
-    showsearchicon: { control: "boolean" },
-    maxsize: { control: "number" },
-    // minchars: { control: "number" },
-    debouncetime: { control: "number" },
-    // tabindex: { control: "number" },
-    limit: { control: "number" },
-    placeholder: { control: "text" },
-    // chipclass: { control: "text" },
-    // className: { control: "text" },
-    datafield: { control: "text" },
-    displayfield: { control: "text" },
-    // displayimagesrc: { control: "text" },
-    // dateformat: { control: "text" },
-    // groupby: { control: "text" },
-    // orderby: { control: "text" },
-    // searchkey: { control: "text" },
-    match: { control: "text" },
-    datacompletemsg: { control: "text" },
-    // width: { control: "text" },
-    // height: { control: "text" },
-    // compareby: { control: "text" },
-  },
+  // argTypes: {
+  //   type: {
+  //     control: { type: "select" },
+  //     options: ["search", "autocomplete"],
+  //   },
+  //   inputposition: {
+  //     control: { type: "select" },
+  //     options: ["first", "last"],
+  //   },
+  //   inputwidth: {
+  //     control: { type: "select" },
+  //     options: ["default", "full"],
+  //   },
+  //   matchmode: {
+  //     control: { type: "select" },
+  //     options: ["contains", "start", "end", "exact"],
+  //   },
+  //   allowonlyselect: { control: "boolean" },
+  //   autofocus: { control: "boolean" },
+  //   disabled: { control: "boolean" },
+  //   readonly: { control: "boolean" },
+  //   enablereorder: { control: "boolean" },
+  //   showsearchicon: { control: "boolean" },
+  //   maxsize: { control: "number" },
+  //   // minchars: { control: "number" },
+  //   debouncetime: { control: "number" },
+  //   // tabindex: { control: "number" },
+  //   limit: { control: "number" },
+  //   placeholder: { control: "text" },
+  //   // chipclass: { control: "text" },
+  //   // className: { control: "text" },
+  //   datafield: { control: "text" },
+  //   displayfield: { control: "text" },
+  //   // displayimagesrc: { control: "text" },
+  //   // dateformat: { control: "text" },
+  //   // groupby: { control: "text" },
+  //   // orderby: { control: "text" },
+  //   // searchkey: { control: "text" },
+  //   match: { control: "text" },
+  //   datacompletemsg: { control: "text" },
+  //   // width: { control: "text" },
+  //   // height: { control: "text" },
+  //   // compareby: { control: "text" },
+  // },
 };
 
 export default meta;
@@ -126,6 +128,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsChips",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -279,6 +285,133 @@ export const Basic: Story = {
     inputwidth: "default",
     disabled: false,
     readonly: false,
+  },
+  argTypes: {
+    type: {
+      control: { type: "select" },
+      options: ["search", "autocomplete"],
+    },
+    inputposition: {
+      control: { type: "select" },
+      options: ["first", "last"],
+    },
+    inputwidth: {
+      control: { type: "select" },
+      options: ["default", "full"],
+    },
+    matchmode: {
+      control: { type: "select" },
+      options: ["contains", "start", "end", "exact"],
+    },
+    allowonlyselect: { control: "boolean" },
+    autofocus: { control: "boolean" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    enablereorder: { control: "boolean" },
+    showsearchicon: { control: "boolean" },
+    maxsize: { control: "number" },
+    // minchars: { control: "number" },
+    debouncetime: { control: "number" },
+    // tabindex: { control: "number" },
+    limit: { control: "number" },
+    placeholder: { control: "text" },
+    // chipclass: { control: "text" },
+    // className: { control: "text" },
+    datafield: { control: "text" },
+    displayfield: { control: "text" },
+    // displayimagesrc: { control: "text" },
+    // dateformat: { control: "text" },
+    // groupby: { control: "text" },
+    // orderby: { control: "text" },
+    // searchkey: { control: "text" },
+    match: { control: "text" },
+    datacompletemsg: { control: "text" },
+    // width: { control: "text" },
+    // height: { control: "text" },
+    // compareby: { control: "text" },
+  },
+};
+
+export const DesignToken: Story = {
+  tags: ['show-panel'],
+  render: (args) => {
+      // Icon component can't spread data-design-token-target, so we apply it to a wrapper
+      const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+  
+      return (
+        <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
+          <ChipsDefaultExport {...componentArgs} listener={mockListener} />
+        </Box>
+      );
+    },
+  args: {
+    name: "designTokenChips",
+    listener: mockListener,
+    dataset: fruitDataset,
+    datafield: "name",
+    displayfield: "name",
+    placeholder: "Add a chip...",
+    datavalue: ["Apple"],
+    type: "autocomplete",
+    inputposition:"first",
+    inputwidth: "default",
+    disabled: false,
+    readonly: false,
+    "data-design-token-target":"true"
+  },
+  argTypes: {
+    type: {
+      control: { type: "select" },
+      options: ["search", "autocomplete"],
+    },
+    inputposition: {
+      control: { type: "select" },
+      options: ["first", "last"],
+    },
+    inputwidth: {
+      control: { type: "select" },
+      options: ["default", "full"],
+    },
+    matchmode: {
+      control: { type: "select" },
+      options: ["contains", "start", "end", "exact"],
+    },
+    allowonlyselect: { control: "boolean" },
+    autofocus: { control: "boolean" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    enablereorder: { control: "boolean" },
+    showsearchicon: { control: "boolean" },
+    maxsize: { control: "number" },
+    // minchars: { control: "number" },
+    debouncetime: { control: "number" },
+    // tabindex: { control: "number" },
+    limit: { control: "number" },
+    placeholder: { control: "text" },
+    // chipclass: { control: "text" },
+    // className: { control: "text" },
+    datafield: { control: "text" },
+    displayfield: { control: "text" },
+    // displayimagesrc: { control: "text" },
+    // dateformat: { control: "text" },
+    // groupby: { control: "text" },
+    // orderby: { control: "text" },
+    // searchkey: { control: "text" },
+    match: { control: "text" },
+    datacompletemsg: { control: "text" },
+    // width: { control: "text" },
+    // height: { control: "text" },
+    // compareby: { control: "text" },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: chipsTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "chips",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
   },
 };
 

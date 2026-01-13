@@ -11,51 +11,53 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import dateTokensData from "../../../../designTokens/components/date/date.json";
+
 const meta: Meta<typeof DateDefaultExport> = {
   title: "Input/Date",
   component: DateDefaultExport,
-  argTypes: {
-    placeholder: { control: "text" },
-    // hint: { control: "text" },
-    // className: { control: "text" },
-    // tabindex: { control: "number" },
-    // shortcutkey: { control: "text" },
-    datavalue: { control: "text" },
-    datepattern: { control: "select", options: ["yyyy-MM-dd", "MM/dd/yyyy", "dd/MM/yyyy", "dd.MM.yyyy", "MMMM d, yyyy", "M/d/yy"] },
-    outputformat: { control: "text" },
-    required: { control: "boolean" },
-    mindate: { control: "text" },
-    maxdate: { control: "text" },
-    excludedays: { control: "text" },
-    excludedates: { control: "text" },
-    showweeks: { control: "boolean" },
-    showbuttonbar: { control: "boolean" },
-    autofocus: { control: "boolean" },
-    readonly: { control: "boolean" },
-    disabled: { control: "boolean" },
-    showdropdownon: {
-      control: { type: "select" },
-      options: ["default", "button"],
-    },
-    adaptiveposition: { control: "boolean" },
-    selectfromothermonth: { control: "boolean" },
-    todaybutton: { control: "boolean" },
-    clearbutton: { control: "boolean" },
-    todaybuttonlabel: { control: "text" },
-    clearbuttonlabel: { control: "text" },
-    showcustompicker: { control: "boolean" },
-    showdateformatasplaceholder: { control: "boolean" },
-    viewmode: {
-      control: { type: "select" },
-      options: ["day", "month", "year"],
-    },
-    dataentrymode: {
-      control: { type: "select" },
-      options: ["default", "picker"],
-    },
-    // width: { control: "text" },
-    // arialabel: { control: "text" },
-  },
+  // argTypes: {
+  //   placeholder: { control: "text" },
+  //   // hint: { control: "text" },
+  //   // className: { control: "text" },
+  //   // tabindex: { control: "number" },
+  //   // shortcutkey: { control: "text" },
+  //   datavalue: { control: "text" },
+  //   datepattern: { control: "select", options: ["yyyy-MM-dd", "MM/dd/yyyy", "dd/MM/yyyy", "dd.MM.yyyy", "MMMM d, yyyy", "M/d/yy"] },
+  //   outputformat: { control: "text" },
+  //   required: { control: "boolean" },
+  //   mindate: { control: "text" },
+  //   maxdate: { control: "text" },
+  //   excludedays: { control: "text" },
+  //   excludedates: { control: "text" },
+  //   showweeks: { control: "boolean" },
+  //   showbuttonbar: { control: "boolean" },
+  //   autofocus: { control: "boolean" },
+  //   readonly: { control: "boolean" },
+  //   disabled: { control: "boolean" },
+  //   showdropdownon: {
+  //     control: { type: "select" },
+  //     options: ["default", "button"],
+  //   },
+  //   adaptiveposition: { control: "boolean" },
+  //   selectfromothermonth: { control: "boolean" },
+  //   todaybutton: { control: "boolean" },
+  //   clearbutton: { control: "boolean" },
+  //   todaybuttonlabel: { control: "text" },
+  //   clearbuttonlabel: { control: "text" },
+  //   showcustompicker: { control: "boolean" },
+  //   showdateformatasplaceholder: { control: "boolean" },
+  //   viewmode: {
+  //     control: { type: "select" },
+  //     options: ["day", "month", "year"],
+  //   },
+  //   dataentrymode: {
+  //     control: { type: "select" },
+  //     options: ["default", "picker"],
+  //   },
+  //   // width: { control: "text" },
+  //   // arialabel: { control: "text" },
+  // },
 };
 
 export default meta;
@@ -86,6 +88,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsDate",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -217,6 +223,120 @@ export const Basic: Story = {
     showdropdownon: "default",
     datavalue:"CURRENT_DATE"
   },
+  argTypes: {
+    placeholder: { control: "text" },
+    // hint: { control: "text" },
+    // className: { control: "text" },
+    // tabindex: { control: "number" },
+    // shortcutkey: { control: "text" },
+    datavalue: { control: "text" },
+    datepattern: { control: "select", options: ["yyyy-MM-dd", "MM/dd/yyyy", "dd/MM/yyyy", "dd.MM.yyyy", "MMMM d, yyyy", "M/d/yy"] },
+    outputformat: { control: "text" },
+    required: { control: "boolean" },
+    mindate: { control: "text" },
+    maxdate: { control: "text" },
+    excludedays: { control: "text" },
+    excludedates: { control: "text" },
+    showweeks: { control: "boolean" },
+    showbuttonbar: { control: "boolean" },
+    autofocus: { control: "boolean" },
+    readonly: { control: "boolean" },
+    disabled: { control: "boolean" },
+    showdropdownon: {
+      control: { type: "select" },
+      options: ["default", "button"],
+    },
+    adaptiveposition: { control: "boolean" },
+    selectfromothermonth: { control: "boolean" },
+    todaybutton: { control: "boolean" },
+    clearbutton: { control: "boolean" },
+    todaybuttonlabel: { control: "text" },
+    clearbuttonlabel: { control: "text" },
+    showcustompicker: { control: "boolean" },
+    showdateformatasplaceholder: { control: "boolean" },
+    viewmode: {
+      control: { type: "select" },
+      options: ["day", "month", "year"],
+    },
+    dataentrymode: {
+      control: { type: "select" },
+      options: ["default", "picker"],
+    },
+    // width: { control: "text" },
+    // arialabel: { control: "text" },
+  },
+};
+
+export const Standard: Story = {
+  tags: ['show-panel'],
+  render: Template,
+  args: {
+    name: "standardDate",
+    placeholder: "Select Date",
+    listener: mockListener,
+    disabled: false,
+    readonly: false,
+    required: false,
+    datepattern: "yyyy-MM-dd",
+    outputformat: "yyyy-MM-dd",
+    selectfromothermonth: true,
+    dataentrymode: "default",
+    showdropdownon: "default",
+    datavalue:"CURRENT_DATE",
+    "data-design-token-target":"true"
+  },
+  argTypes: {
+    placeholder: { control: "text" },
+    // hint: { control: "text" },
+    // className: { control: "text" },
+    // tabindex: { control: "number" },
+    // shortcutkey: { control: "text" },
+    datavalue: { control: "text" },
+    datepattern: { control: "select", options: ["yyyy-MM-dd", "MM/dd/yyyy", "dd/MM/yyyy", "dd.MM.yyyy", "MMMM d, yyyy", "M/d/yy"] },
+    outputformat: { control: "text" },
+    required: { control: "boolean" },
+    mindate: { control: "text" },
+    maxdate: { control: "text" },
+    excludedays: { control: "text" },
+    excludedates: { control: "text" },
+    showweeks: { control: "boolean" },
+    showbuttonbar: { control: "boolean" },
+    autofocus: { control: "boolean" },
+    readonly: { control: "boolean" },
+    disabled: { control: "boolean" },
+    showdropdownon: {
+      control: { type: "select" },
+      options: ["default", "button"],
+    },
+    adaptiveposition: { control: "boolean" },
+    selectfromothermonth: { control: "boolean" },
+    todaybutton: { control: "boolean" },
+    clearbutton: { control: "boolean" },
+    todaybuttonlabel: { control: "text" },
+    clearbuttonlabel: { control: "text" },
+    showcustompicker: { control: "boolean" },
+    showdateformatasplaceholder: { control: "boolean" },
+    viewmode: {
+      control: { type: "select" },
+      options: ["day", "month", "year"],
+    },
+    dataentrymode: {
+      control: { type: "select" },
+      options: ["default", "picker"],
+    },
+    "data-design-token-target": { control: false }
+    // width: { control: "text" },
+    // arialabel: { control: "text" },
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: dateTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "datepicker",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
+  }, 
 };
 
 

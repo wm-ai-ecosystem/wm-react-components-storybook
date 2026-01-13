@@ -11,32 +11,34 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import calendarTokensData from "../../../../designTokens/components/calendar/calendar.json";
+
 const meta: Meta<typeof CalendarDefaultExport> = {
   title: "Input/Calendar",
   component: CalendarDefaultExport,
-  argTypes: {
-    view: {
-      control: { type: "select" },
-      options: ["month", "week", "day", "year"],
-    },
-    calendartype: {
-      control: { type: "select" },
-      options: ["basic", "agenda", "list"],
-    },
-    selectionmode: {
-      control: { type: "select" },
-      options: ["none", "single", "multiple"],
-    },
-    controls: { control: "text" },
-    height: { control: "text" },
-    width: { control: "text" },
-    eventtitle: { control: "text" },
-    eventstart: { control: "text" },
-    eventend: { control: "text" },
-    eventallday: { control: "boolean" },
-    eventclass: { control: "text" },
-    // tabindex: { control: "number" },
-  },
+  // argTypes: {
+  //   view: {
+  //     control: { type: "select" },
+  //     options: ["month", "week", "day", "year"],
+  //   },
+  //   calendartype: {
+  //     control: { type: "select" },
+  //     options: ["basic", "agenda", "list"],
+  //   },
+  //   selectionmode: {
+  //     control: { type: "select" },
+  //     options: ["none", "single", "multiple"],
+  //   },
+  //   controls: { control: "text" },
+  //   height: { control: "text" },
+  //   width: { control: "text" },
+  //   eventtitle: { control: "text" },
+  //   eventstart: { control: "text" },
+  //   eventend: { control: "text" },
+  //   eventallday: { control: "boolean" },
+  //   eventclass: { control: "text" },
+  //   // tabindex: { control: "number" },
+  // },
 };
 
 export default meta;
@@ -218,6 +220,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsCalendar",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -360,9 +366,87 @@ export const Basic: Story = {
     width: "100%",
     dataset: []
   },
+  argTypes: {
+    view: {
+      control: { type: "select" },
+      options: ["month", "week", "day", "year"],
+    },
+    calendartype: {
+      control: { type: "select" },
+      options: ["basic", "agenda", "list"],
+    },
+    selectionmode: {
+      control: { type: "select" },
+      options: ["none", "single", "multiple"],
+    },
+    controls: { control: "text" },
+    height: { control: "text" },
+    width: { control: "text" },
+    eventtitle: { control: "text" },
+    eventstart: { control: "text" },
+    eventend: { control: "text" },
+    eventallday: { control: "boolean" },
+    eventclass: { control: "text" },
+  },
 };
 
-
+export const DesignToken: Story = {
+  tags: ['show-panel'],
+  render: (args) => {
+      // component can't spread data-design-token-target, so we apply it to a wrapper
+      const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+  
+      return (
+        <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
+          <CalendarDefaultExport {...componentArgs} listener={mockListener} />
+        </Box>
+      );
+    },
+  args: {
+    name: "designTokenCalendar",
+    listener: mockListener,
+    view: "month",
+    calendartype: "basic",
+    selectionmode: "single",
+    controls: "navigation, today, year, month, week, day",
+    height: "600px",
+    width: "100%",
+    dataset: meetingEvents,
+    "data-design-token-target":"true"
+  },
+  argTypes: {
+    view: {
+      control: { type: "select" },
+      options: ["month", "week", "day", "year"],
+    },
+    calendartype: {
+      control: { type: "select" },
+      options: ["basic", "agenda", "list"],
+    },
+    selectionmode: {
+      control: { type: "select" },
+      options: ["none", "single", "multiple"],
+    },
+    controls: { control: "text" },
+    height: { control: "text" },
+    width: { control: "text" },
+    eventtitle: { control: "text" },
+    eventstart: { control: "text" },
+    eventend: { control: "text" },
+    eventallday: { control: "boolean" },
+    eventclass: { control: "text" },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: calendarTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "calendar",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
+  }, 
+};
 
 // export const Showcase: Story = {
 //   render: () => {

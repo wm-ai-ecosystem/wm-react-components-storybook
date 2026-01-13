@@ -11,39 +11,41 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import checkboxsetTokensData from "../../../../designTokens/components/checkboxset/checkboxset.json";
+
 
 const meta: Meta<typeof CheckboxsetDefaultExport> = {
   title: "Input/CheckboxSet",
   component: CheckboxsetDefaultExport,
-  argTypes: {
-    layout: {
-      control: { type: "select" },
-      options: ["inline", "stacked"],
-    },
-    itemsperrow: { control: "select", options: ["xs-1 sm-1 md-1 lg-1","xs-1 sm-2 md-2 lg-2","xs-1 sm-2 md-3 lg-3","xs-1 sm-2 md-3 lg-4","xs-1 sm-2 md-4 lg-6"] },
-    // itemclass: { control: "text" },
-    // listclass: { control: "text" },
-    // showcount: { control: "boolean" },
-    disabled: { control: "boolean" },
-    readonly: { control: "boolean" },
-    // required: { control: "boolean" },
-    dataset: { control: "object" },
-    datafield: { control: "text" },
-    displayfield: { control: "text" },
-    datavalue: { control: "object" },
-    // usekeys: { control: "boolean" },
-    groupby: { control: "text" },
-    // match: { control: "text" },
-    orderby: { control: "text" },
-    label: { control: "text" },
-    // collapsible: { control: "boolean" },
-    // collapsed: { control: "boolean" },
-    // tabIndex: { control: "number" },
-    // className: { control: "text" },
-    // compareby: { control: "object" },
-    // height: { control: "text" },
-    // width: { control: "text" },
-  },
+  // argTypes: {
+  //   layout: {
+  //     control: { type: "select" },
+  //     options: ["inline", "stacked"],
+  //   },
+  //   itemsperrow: { control: "select", options: ["xs-1 sm-1 md-1 lg-1","xs-1 sm-2 md-2 lg-2","xs-1 sm-2 md-3 lg-3","xs-1 sm-2 md-3 lg-4","xs-1 sm-2 md-4 lg-6"] },
+  //   // itemclass: { control: "text" },
+  //   // listclass: { control: "text" },
+  //   // showcount: { control: "boolean" },
+  //   disabled: { control: "boolean" },
+  //   readonly: { control: "boolean" },
+  //   // required: { control: "boolean" },
+  //   dataset: { control: "object" },
+  //   datafield: { control: "text" },
+  //   displayfield: { control: "text" },
+  //   datavalue: { control: "object" },
+  //   // usekeys: { control: "boolean" },
+  //   groupby: { control: "text" },
+  //   // match: { control: "text" },
+  //   orderby: { control: "text" },
+  //   label: { control: "text" },
+  //   // collapsible: { control: "boolean" },
+  //   // collapsed: { control: "boolean" },
+  //   // tabIndex: { control: "number" },
+  //   // className: { control: "text" },
+  //   // compareby: { control: "object" },
+  //   // height: { control: "text" },
+  //   // width: { control: "text" },
+  // },
 };
 
 export default meta;
@@ -74,6 +76,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsCheckboxset",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -229,6 +235,35 @@ export const Basic: Story = {
     readonly: false,
     layout: "inline"
   },
+  argTypes: {
+    layout: {
+      control: { type: "select" },
+      options: ["inline", "stacked"],
+    },
+    itemsperrow: { control: "select", options: ["xs-1 sm-1 md-1 lg-1","xs-1 sm-2 md-2 lg-2","xs-1 sm-2 md-3 lg-3","xs-1 sm-2 md-3 lg-4","xs-1 sm-2 md-4 lg-6"] },
+    // itemclass: { control: "text" },
+    // listclass: { control: "text" },
+    // showcount: { control: "boolean" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    // required: { control: "boolean" },
+    dataset: { control: "object" },
+    datafield: { control: "text" },
+    displayfield: { control: "text" },
+    datavalue: { control: "object" },
+    // usekeys: { control: "boolean" },
+    groupby: { control: "text" },
+    // match: { control: "text" },
+    orderby: { control: "text" },
+    label: { control: "text" },
+    // collapsible: { control: "boolean" },
+    // collapsed: { control: "boolean" },
+    // tabIndex: { control: "number" },
+    // className: { control: "text" },
+    // compareby: { control: "object" },
+    // height: { control: "text" },
+    // width: { control: "text" },
+  },
 };
 
 export const ObjectDataset: Story = {
@@ -249,6 +284,79 @@ export const ObjectDataset: Story = {
     listener: mockListener,
     layout:"inline"
   },
+  argTypes: {
+    layout: {
+      control: { type: "select" },
+      options: ["inline", "stacked"],
+    },
+    itemsperrow: { control: "select", options: ["xs-1 sm-1 md-1 lg-1","xs-1 sm-2 md-2 lg-2","xs-1 sm-2 md-3 lg-3","xs-1 sm-2 md-3 lg-4","xs-1 sm-2 md-4 lg-6"] },
+    // itemclass: { control: "text" },
+    // listclass: { control: "text" },
+    // showcount: { control: "boolean" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    // required: { control: "boolean" },
+    dataset: { control: "object" },
+    datafield: { control: "text" },
+    displayfield: { control: "text" },
+    datavalue: { control: "object" },
+    // usekeys: { control: "boolean" },
+    groupby: { control: "text" },
+    // match: { control: "text" },
+    orderby: { control: "text" },
+    label: { control: "text" },
+    // collapsible: { control: "boolean" },
+    // collapsed: { control: "boolean" },
+    // tabIndex: { control: "number" },
+    // className: { control: "text" },
+    // compareby: { control: "object" },
+    // height: { control: "text" },
+    // width: { control: "text" },
+  },
+};
+
+export const DesignToken: Story = {
+  tags: ['show-panel'],
+  render: (args) => {
+      //component can't spread data-design-token-target, so we apply it to a wrapper
+      const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+  
+      return (
+        <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
+          <CheckboxsetDefaultExport {...componentArgs} listener={mockListener} />
+        </Box>
+      );
+    },
+  args: {
+    name: "designTokenCheckboxset",
+    dataset: "Option 1, Option 2, Option 3",
+    listener: mockListener,
+    disabled: false,
+    readonly: false,
+    layout: "inline",
+    datavalue:"Option 1",
+    "data-design-token-target":"true"
+  },
+  argTypes: {
+    layout: {
+      control: { type: "select" },
+      options: ["inline", "stacked"],
+    },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    dataset: { control: "object" },
+    datavalue: { control: "object" },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: checkboxsetTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "checkboxset",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
+  }, 
 };
 
 

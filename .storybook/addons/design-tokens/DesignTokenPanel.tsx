@@ -608,7 +608,7 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
         if (attempt < maxAttempts) {
           setTimeout(() => applyTokensToIframe(attempt + 1, maxAttempts), 100);
         } else {
-          console.error('[Design Tokens] Failed to apply tokens: iframe not ready after max attempts');
+          // console.error('[Design Tokens] Failed to apply tokens: iframe not ready after max attempts');
         }
         return;
       }
@@ -814,18 +814,18 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
           childElementsCount += childElements.length;
         });
 
-        console.log(`%c[Design Tokens] ✓ Applied ${appliedCount} CSS variables (attempt ${retryAttempt})`, 'color: #4CAF50; font-weight: bold', `to ${targetElements.length} target + ${childElementsCount} children (${componentElementsCount} component elements)`);
+        // console.log(`%c[Design Tokens] ✓ Applied ${appliedCount} CSS variables (attempt ${retryAttempt})`, 'color: #4CAF50; font-weight: bold', `to ${targetElements.length} target + ${childElementsCount} children (${componentElementsCount} component elements)`);
 
-        if (componentClasses.length > 0) {
-          console.log('[Design Tokens] Found component elements:', componentClasses.slice(0, 5)); // Show first 5
-        } else {
-          console.warn('[Design Tokens] No component elements found (looking for: alert-*, btn-*, app-*, etc.)');
-        }
+        // if (componentClasses.length > 0) {
+        //   console.log('[Design Tokens] Found component elements:', componentClasses.slice(0, 5)); // Show first 5
+        // } else {
+        //   console.warn('[Design Tokens] No component elements found (looking for: alert-*, btn-*, app-*, etc.)');
+        // }
 
         // Retry if we haven't found the main component elements yet
         // This handles React components that haven't fully rendered yet (wrapper pattern only)
         if (componentElementsCount === 0 && retryAttempt < maxRetries) {
-          console.log(`[Design Tokens] No component elements found, retrying in 150ms... (attempt ${retryAttempt + 1}/${maxRetries})`);
+          // console.log(`[Design Tokens] No component elements found, retrying in 150ms... (attempt ${retryAttempt + 1}/${maxRetries})`);
           setTimeout(() => {
             const updatedTargetElements = iframe.contentDocument!.querySelectorAll('[data-design-token-target="true"]');
             applyToElementAndChildren(updatedTargetElements, retryAttempt + 1, maxRetries);
@@ -837,14 +837,14 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
       const targetElements = iframe.contentDocument.querySelectorAll('[data-design-token-target="true"]');
 
       if (targetElements.length === 0) {
-        console.warn('[Design Tokens] No elements found with data-design-token-target="true"');
+        // console.warn('[Design Tokens] No elements found with data-design-token-target="true"');
         return;
       }
 
-      console.log('%c[Design Tokens] Applying tokens...', 'color: #4CAF50; font-weight: bold; font-size: 14px');
-      console.log('[Design Tokens] Total tokens received:', Object.keys(tokenValues).length);
-      console.log('[Design Tokens] Target elements found:', targetElements.length);
-      console.log('[Design Tokens] Sample token names:', Object.keys(tokenValues).slice(0, 5));
+      // console.log('%c[Design Tokens] Applying tokens...', 'color: #4CAF50; font-weight: bold; font-size: 14px');
+      // console.log('[Design Tokens] Total tokens received:', Object.keys(tokenValues).length);
+      // console.log('[Design Tokens] Target elements found:', targetElements.length);
+      // console.log('[Design Tokens] Sample token names:', Object.keys(tokenValues).slice(0, 5));
 
       // Apply tokens with retry logic for child elements
       applyToElementAndChildren(targetElements);
@@ -857,18 +857,18 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
         const computedValue = iframe.contentWindow?.getComputedStyle(firstElement).getPropertyValue(labelColorVar).trim();
         const actualColor = iframe.contentWindow?.getComputedStyle(firstElement).color;
 
-        console.log('%c[Design Tokens] Verification:', 'color: #9C27B0; font-weight: bold');
-        console.log(`  CSS Variable (${labelColorVar}):`);
-        console.log(`    Inline value: "${inlineValue}"`);
-        console.log(`    Computed value: "${computedValue}"`);
-        console.log(`    Expected value: "${tokenValues[labelColorVar]}"`);
-        console.log(`  Actual element color: "${actualColor}"`);
+        // console.log('%c[Design Tokens] Verification:', 'color: #9C27B0; font-weight: bold');
+        // console.log(`  CSS Variable (${labelColorVar}):`);
+        // console.log(`    Inline value: "${inlineValue}"`);
+        // console.log(`    Computed value: "${computedValue}"`);
+        // console.log(`    Expected value: "${tokenValues[labelColorVar]}"`);
+        // console.log(`  Actual element color: "${actualColor}"`);
 
-        if (computedValue === tokenValues[labelColorVar]) {
-          console.log('%c  ✓ CSS variable set correctly!', 'color: #4CAF50');
-        } else {
-          console.error('%c  ✗ CSS variable mismatch!', 'color: #F44336');
-        }
+        // if (computedValue === tokenValues[labelColorVar]) {
+        //   console.log('%c  ✓ CSS variable set correctly!', 'color: #4CAF50');
+        // } else {
+        //   console.error('%c  ✗ CSS variable mismatch!', 'color: #F44336');
+        // }
       }
     };
 
@@ -882,9 +882,9 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
    */
   const handleTokenChange = (tokenName: string, value: string) => {
     const propertyName = tokenName.split('-').slice(3).join('-');
-    console.log(`%c[Design Tokens] Token changed: ${propertyName}`, 'color: #2196F3; font-weight: bold', `\n  Variable: ${tokenName}\n  New value: ${value}`);
+    // console.log(`%c[Design Tokens] Token changed: ${propertyName}`, 'color: #2196F3; font-weight: bold', `\n  Variable: ${tokenName}\n  New value: ${value}`);
     const newTokens = { ...tokens, [tokenName]: value };
-    console.log('[Design Tokens] Updated tokens object:', newTokens);
+    // console.log('[Design Tokens] Updated tokens object:', newTokens);
     setTokens(newTokens);
     applyTokens(newTokens);
   };

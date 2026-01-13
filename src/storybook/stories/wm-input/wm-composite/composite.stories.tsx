@@ -22,15 +22,15 @@ const WmLabel = ({ children, required }: { children: React.ReactNode; required?:
 const meta: Meta<typeof CompositeDefaultExport> = {
   title: "Input/Composite",
   component: CompositeDefaultExport,
-  argTypes: {
-    captionposition: {
-      control: { type: "select" },
-      options: ["left", "right", "top", "floating"],
-    },
-    required: { control: "boolean" },
-    // className: { control: "text" },
-    // id: { control: "text" },
-  },
+  // argTypes: {
+  //   captionposition: {
+  //     control: { type: "select" },
+  //     options: ["left", "right", "top", "floating"],
+  //   },
+  //   required: { control: "boolean" },
+  //   // className: { control: "text" },
+  //   // id: { control: "text" },
+  // },
 };
 
 export default meta;
@@ -61,6 +61,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsComposite",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -148,6 +152,15 @@ export const Basic: Story = {
         />
       </>
     ),
+  },
+  argTypes: {
+    captionposition: {
+      control: { type: "select" },
+      options: ["left", "right", "top", "floating"],
+    },
+    // required: { control: "boolean" },
+    // className: { control: "text" },
+    // id: { control: "text" },
   },
 };
 

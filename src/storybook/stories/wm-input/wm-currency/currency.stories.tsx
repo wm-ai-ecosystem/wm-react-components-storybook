@@ -12,45 +12,47 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import currencyTokensData from "../../../../designTokens/components/currency/currency.json";
+
 // Get all currency codes for the select control
 const currencyCodes = Object.keys(CURRENCY_INFO);
 
 const meta: Meta<typeof CurrencyDefaultExport> = {
   title: "Input/Currency",
   component: CurrencyDefaultExport,
-  argTypes: {
-    currency: {
-      control: { type: "select" },
-      options: currencyCodes,
-      description: "Currency code (ISO 4217)",
-    },
-    datavalue: { control: "number" },
-    disabled: { control: "boolean" },
-    readonly: { control: "boolean" },
-    required: { control: "boolean" },
-    placeholder: { control: "text" },
-    // arialabel: { control: "text" },
-    // tabindex: { control: "number" },
-    // shortcutkey: { control: "text" },
-    maxvalue: { control: "number" },
-    minvalue: { control: "number" },
-    step: { control: "number" },
-    // textAlign: { control: "text" },
-    // hint: { control: "text" },
-    trailingzero: { control: "boolean" },
-    inputmode: {
-      control: { type: "select" },
-      options: ["natural", "positive", "negative"],
-    },
-    decimalplaces: { control: "number" },
-    // updateon: {
-    //   control: { type: "select" },
-    //   options: ["blur", "keypress"],
-    // },
-    // updatedelay: { control: "text" },
-    // className: { control: "text" },
-    autofocus: { control: "boolean" },
-  },
+  // argTypes: {
+  //   currency: {
+  //     control: { type: "select" },
+  //     options: currencyCodes,
+  //     description: "Currency code (ISO 4217)",
+  //   },
+  //   datavalue: { control: "number" },
+  //   disabled: { control: "boolean" },
+  //   readonly: { control: "boolean" },
+  //   required: { control: "boolean" },
+  //   placeholder: { control: "text" },
+  //   // arialabel: { control: "text" },
+  //   // tabindex: { control: "number" },
+  //   // shortcutkey: { control: "text" },
+  //   maxvalue: { control: "number" },
+  //   minvalue: { control: "number" },
+  //   step: { control: "number" },
+  //   // textAlign: { control: "text" },
+  //   // hint: { control: "text" },
+  //   trailingzero: { control: "boolean" },
+  //   inputmode: {
+  //     control: { type: "select" },
+  //     options: ["natural", "positive", "negative"],
+  //   },
+  //   decimalplaces: { control: "number" },
+  //   // updateon: {
+  //   //   control: { type: "select" },
+  //   //   options: ["blur", "keypress"],
+  //   // },
+  //   // updatedelay: { control: "text" },
+  //   // className: { control: "text" },
+  //   autofocus: { control: "boolean" },
+  // },
 };
 
 export default meta;
@@ -81,6 +83,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsCurrency",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -190,6 +196,90 @@ export const Basic: Story = {
     decimalplaces: 2,
     trailingzero: false,
   },
+  argTypes: {
+    currency: {
+      control: { type: "select" },
+      options: currencyCodes,
+      description: "Currency code (ISO 4217)",
+    },
+    datavalue: { control: "number" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    required: { control: "boolean" },
+    placeholder: { control: "text" },
+    maxvalue: { control: "number" },
+    minvalue: { control: "number" },
+    step: { control: "number" },
+    // textAlign: { control: "text" },
+    trailingzero: { control: "boolean" },
+    inputmode: {
+      control: { type: "select" },
+      options: ["natural", "positive", "negative"],
+    },
+    decimalplaces: { control: "number" },
+    autofocus: { control: "boolean" },
+  },
+};
+
+export const DesignToken: Story = {
+  tags: ['show-panel'],
+  render: (args) => {
+      //component can't spread data-design-token-target, so we apply it to a wrapper
+      const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+
+      return (
+        <Box className="wm-app" style={{ padding: 16 }} data-design-token-target={dataAttr}>
+          <CurrencyDefaultExport {...componentArgs} listener={mockListener} />
+        </Box>
+      );
+    },
+  args: {
+    name: "designTokenCurrency",
+    listener: mockListener,
+    currency: "USD",
+    placeholder: "Enter amount",
+    inputmode: "natural",
+    datavalue: null,
+    disabled : false,
+    readonly: false,
+    required: false,
+    decimalplaces: 2,
+    trailingzero: false,
+    "data-design-token-target": true
+  },
+  argTypes: {
+    currency: {
+      control: { type: "select" },
+      options: currencyCodes,
+      description: "Currency code (ISO 4217)",
+    },
+    datavalue: { control: "number" },
+    disabled: { control: "boolean" },
+    readonly: { control: "boolean" },
+    required: { control: "boolean" },
+    placeholder: { control: "text" },
+    maxvalue: { control: "number" },
+    minvalue: { control: "number" },
+    step: { control: "number" },
+    // textAlign: { control: "text" },
+    trailingzero: { control: "boolean" },
+    inputmode: {
+      control: { type: "select" },
+      options: ["natural", "positive", "negative"],
+    },
+    decimalplaces: { control: "number" },
+    autofocus: { control: "boolean" },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: currencyTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "currency",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
+  }, 
 };
 
 // export const WithDecimalPlaces: Story = {
