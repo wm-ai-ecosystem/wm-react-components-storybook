@@ -221,7 +221,7 @@ export const Basic: Story = {
   },
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: (args) => {
       //component can't spread data-design-token-target, so we apply it to a wrapper
@@ -234,7 +234,7 @@ export const DesignToken: Story = {
       );
     },
   args: {
-    name: "designTokenCurrency",
+    name: "standardCurrency",
     listener: mockListener,
     currency: "USD",
     placeholder: "Enter amount",

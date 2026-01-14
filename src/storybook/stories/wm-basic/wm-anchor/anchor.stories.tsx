@@ -285,37 +285,91 @@ export const Basic: Story = {
   }
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
-  render: Template,
+  render: (args) => {
+      const { className} = args;
+      // const variant = className.split(' ')[1]?.replace('btn-', '') || 'primary';
+      // const variantLabel = variant.charAt(0).toUpperCase() + variant.slice(1);
+  
+      return (
+        <Box sx={{ p: 4 }}>
+          <Stack spacing={4}>
+            <Typography variant="h6" fontWeight={600}>
+              Anchor {/* Anchors - {variantLabel} */}
+            </Typography>
+  
+            <Stack direction="row" spacing={2} alignItems="center" sx={{ gap: 2 }}>
+              <AnchorDefaultExport
+                  name="basic"
+                  caption="Anchor"
+                  hyperlink="https://www.wavemaker.com"
+                  target="_blank"
+                  listener={mockListener}
+                  className={className}
+                  data-design-token-target="true"
+                />
+              <AnchorDefaultExport
+                  name="withIcon"
+                  caption="Icon Anchor"
+                  hyperlink="https://www.wavemaker.com"
+                  target="_blank"
+                  listener={mockListener}
+                  className={className}
+                  iconclass="fa fa-github"
+                  iconposition="left"
+                  iconwidth="16px"
+                  iconheight="16px"
+                  iconmargin="0 8px 0 0"
+                  data-design-token-target="true"
+                />
+              <AnchorDefaultExport
+                  name="withBadge"
+                  caption="Image Anchor"
+                  hyperlink="https://www.wavemaker.com"
+                  target="_blank"
+                  listener={mockListener}
+                  className={className}
+                  iconposition="left"
+                  iconurl="https://picsum.photos/200"
+                  iconwidth="16px"
+                  iconheight="16px"
+                  iconmargin="0 8px 0 0"
+                  data-design-token-target="true"
+                />
+            </Stack>
+          </Stack>
+        </Box>
+      );
+    },
   args: {
-    name: "designTokenAnchor",
+    name: "standardAnchor",
     listener: mockListener,
-    caption: "Click Me",
+    // caption: "Click Me",
     // className:"link-primary",
-    "data-design-token-target":"true"
+    // "data-design-token-target":"true"
   },
   argTypes: {
-    caption: { control: "text" },
-    // className: {
-    //   control: {
-    //     type: "select",
-    //   },
-    //   options: ["link-primary", "link-secondary", "link-success", "link-danger", "link-warning", "link-info","link-muted","link-default"],
-    // },
-    iconclass:{
-      control:{
-        type:"select"
+    // caption: { control: "text" },
+    className: {
+      control: {
+        type: "select",
       },
-      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
-        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-github"],
+      options: ["link-primary", "link-secondary", "link-success", "link-danger", "link-warning", "link-info","link-muted","link-default"],
     },
-    iconposition: {
-      control: { type: "select" },
-      options: ["left", "right", "top"],
-    },
-    iconurl: {control: "text"},
-    badgevalue: { control: "text" },
+    // iconclass:{
+    //   control:{
+    //     type:"select"
+    //   },
+    //   options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+    //     "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-github"],
+    // },
+    // iconposition: {
+    //   control: { type: "select" },
+    //   options: ["left", "right", "top"],
+    // },
+    // iconurl: {control: "text"},
+    // badgevalue: { control: "text" },
     "data-design-token-target": { control: false }
   },
   parameters: {

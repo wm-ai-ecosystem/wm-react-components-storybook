@@ -187,11 +187,11 @@ export const Basic: Story = {
   },
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: Template,
   args: {
-    name: "designTokenTile",
+    name: "standardTile",
     listener: mockListener,
     children: (
       <Box>

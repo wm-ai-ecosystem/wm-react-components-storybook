@@ -161,11 +161,11 @@ export const Basic: Story = {
   }
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: DesignTokenTemplate,
   args: {
-    name: "designTokenCheckbox",
+    name: "standardCheckbox",
     caption: "Accept terms and conditions",
     listener: mockListener,
     datavalue: true,

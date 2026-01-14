@@ -332,7 +332,7 @@ export const Basic: Story = {
   },
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: (args) => {
       // Icon component can't spread data-design-token-target, so we apply it to a wrapper
@@ -345,7 +345,7 @@ export const DesignToken: Story = {
       );
     },
   args: {
-    name: "designTokenChips",
+    name: "standardChips",
     listener: mockListener,
     dataset: fruitDataset,
     datafield: "name",

@@ -241,11 +241,11 @@ export const Basic: Story = {
   },
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: Template,
   args: {
-    name: "designTokenSearch",
+    name: "standardSearch",
     listener: mockListener,
     type: "autocomplete",
     placeholder: "Search...",

@@ -215,7 +215,7 @@ export const Basic: Story = {
   }, 
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: (args) => {
     const {className} = args;
@@ -229,7 +229,7 @@ export const DesignToken: Story = {
     )
   },
   args: {
-    name: "designTokenLabel",
+    name: "stanrdardLabel",
     listener: mockListener,
     caption: "Label",
     type: "p",

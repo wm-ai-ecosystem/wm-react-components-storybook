@@ -186,11 +186,11 @@ export const Basic: Story = {
   },
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: Template,
   args: {
-    name: "designVideo",
+    name: "standardVideo",
     listener: mockListener,
     mp4format: sampleMp4Video,
     controls: true,

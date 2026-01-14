@@ -173,11 +173,11 @@ export const Basic: Story = {
   },
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: Template,
   args: {
-    name: "designTokenAudio",
+    name: "standardAudio",
     listener: mockListener,
     mp3format: sampleAudioUrl,
     controls: true,

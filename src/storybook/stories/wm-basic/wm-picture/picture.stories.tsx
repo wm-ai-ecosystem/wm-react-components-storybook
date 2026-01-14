@@ -184,11 +184,11 @@ export const Basic: Story = {
   },
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: Template,
   args: {
-    name: "designTokenPicture",
+    name: "standardPicture",
     listener: mockListener,
     picturesource: "https://picsum.photos/200",
     alttext: "Placeholder image",

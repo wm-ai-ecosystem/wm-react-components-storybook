@@ -125,7 +125,7 @@ export const Basic: Story = {
   },
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: (args) => {
     // Iframe component can't spread data-design-token-target and has inline styles
@@ -139,7 +139,7 @@ export const DesignToken: Story = {
     );
   },
   args: {
-    name: "designTokenIframe",
+    name: "standardIframe",
     listener: mockListener,
     iframesrc: "https://docs.wavemaker.com/learn/",
     width: undefined,  // Don't pass width so CSS can control it, design token change not working

@@ -159,7 +159,7 @@ export const Animation: Story = {
   },
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: (args) =>{
      // Message component can't spread data-design-token-target, so we apply it to a wrapper
@@ -172,7 +172,7 @@ export const DesignToken: Story = {
         );
   },
   args: {
-    name: "designTokenMessage",
+    name: "standardMessage",
     listener: mockListener,
     caption: "Operation completed successfully!",
     type: "success",

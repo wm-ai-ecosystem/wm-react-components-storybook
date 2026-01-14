@@ -173,11 +173,11 @@ export const Basic: Story = {
 };
 
 // DesignToken story commented out until progress-bar support is fully implemented
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: Template,
   args: {
-    name: "designTokenProgressBar",
+    name: "standardProgressBar",
     listener: mockListener,
     datavalue: 30,
     type: "default",

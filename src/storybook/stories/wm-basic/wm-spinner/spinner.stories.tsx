@@ -214,7 +214,7 @@ export const Animations: Story = {
   },
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: (args) => {
       // Spinner component can't spread data-design-token-target, so we apply it to a wrapper
@@ -227,7 +227,7 @@ export const DesignToken: Story = {
       );
     },
   args: {
-    name: "designTokenSpinner",
+    name: "standardSpinner",
     caption: "Loading...",
     listener: mockListener,
     show: true,

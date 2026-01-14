@@ -315,7 +315,7 @@ export const ObjectDataset: Story = {
   },
 };
 
-export const DesignToken: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: (args) => {
       //component can't spread data-design-token-target, so we apply it to a wrapper
@@ -328,7 +328,7 @@ export const DesignToken: Story = {
       );
     },
   args: {
-    name: "designTokenCheckboxset",
+    name: "standardCheckboxset",
     dataset: "Option 1, Option 2, Option 3",
     listener: mockListener,
     disabled: false,
