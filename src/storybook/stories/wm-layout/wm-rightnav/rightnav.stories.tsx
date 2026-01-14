@@ -2,16 +2,13 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   Box,
-  Stack,
   Typography,
-  Link,
-  Avatar,
-  Divider,
-  IconButton,
-  Button,
 } from "@mui/material";
 
 import RightNavDefaultExport from "../../../../components/layout/rightnav/index";
+import WmNavItem from "../../../../components/navbar/nav-item";
+import WmAnchor from "../../../../components/basic/anchor/index";
+import WmMenu from "../../../../components/navigation/menu";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
 import overview from "./docs/overview.md?raw";
@@ -20,18 +17,20 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import rightnavTokensData from "../../../../designTokens/components/page-right-nav/page-right-nav.json";
+
 const meta: Meta<typeof RightNavDefaultExport> = {
   title: "Layout/RightNav",
   component: RightNavDefaultExport,
-  argTypes: {
-    columnwidth: {
-      control: "select",
-      options: ["1", "2", "3", "4", "6"],
-      description: "Column width for the right nav panel"
-    },
-    show: { control: "boolean" },
-    className: { control: "text" },
-  },
+  // argTypes: {
+  //   columnwidth: {
+  //     control: "select",
+  //     options: ["1", "2", "3", "4", "6"],
+  //     description: "Column width for the right nav panel"
+  //   },
+  //   show: { control: "boolean" },
+  //   className: { control: "text" },
+  // },
 };
 
 export default meta;
@@ -55,6 +54,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsRightNav",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -62,6 +65,11 @@ export const Docs: Story = {
 
 export const Showcase: Story = {
   render: () => {
+    const helpMenuItems = [
+      { label: "Contact Support", icon: "fa fa-life-ring", link: "#support" },
+      { label: "Community Forum", icon: "fa fa-comments", link: "#forum" },
+    ];
+
     return (
       <Box>
         {/* Story Heading */}
@@ -74,30 +82,60 @@ export const Showcase: Story = {
         <Box display="flex" minHeight="400px">
           {/* Main Content for Minimal Icon Nav */}
           <Box flex={1} p={2} bgcolor="#f5f5f5">
+            <Typography variant="h6" fontWeight={600} gutterBottom>
+              Quick Actions Panel
+            </Typography>
             <Typography variant="body2" color="text.secondary">
-              Minimal Icon Navigation Content Area
+              Simple right navigation with icons and labels using WmNavItem and WmAnchor components.
             </Typography>
           </Box>
 
           {/* Minimal Icon Nav */}
-          <RightNavDefaultExport name="minimalIconNav" listener={mockListener} columnwidth="3">
-            <Box bgcolor="#f1ececff" height="100%" borderLeft="1px solid #e0e0e0" py={2}>
-              <Stack spacing={2} alignItems="center">
-                <IconButton color="primary">
-                  <i className="fa fa-bell" />
-                </IconButton>
-                <IconButton>
-                  <i className="fa fa-bookmark" />
-                </IconButton>
-                <IconButton>
-                  <i className="fa fa-share" />
-                </IconButton>
-                <Divider sx={{ width: "80%", my: 1 }} />
-                <IconButton>
-                  <i className="fa fa-cog" />
-                </IconButton>
-                <Avatar sx={{ width: 32, height: 32, mt: 2 }}>U</Avatar>
-              </Stack>
+          <RightNavDefaultExport name="minimalIconNav" listener={mockListener} columnwidth="2">
+            <Box height="100%">
+              <Box p={2} borderBottom="1px solid rgba(0,0,0,0.08)">
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Actions
+                </Typography>
+              </Box>
+              <Box component="nav" className="app-nav nav navbar-nav nav-vertical">
+                <WmNavItem name="nav-notifications" listener={mockListener} className="active">
+                  <WmAnchor
+                    name="nav-notifications-anchor"
+                    caption="Notifications"
+                    iconclass="fa fa-bell"
+                    hyperlink="#notifications"
+                    listener={mockListener}
+                  />
+                </WmNavItem>
+                <WmNavItem name="nav-bookmarks" listener={mockListener}>
+                  <WmAnchor
+                    name="nav-bookmarks-anchor"
+                    caption="Bookmarks"
+                    iconclass="fa fa-bookmark"
+                    hyperlink="#bookmarks"
+                    listener={mockListener}
+                  />
+                </WmNavItem>
+                <WmNavItem name="nav-share" listener={mockListener}>
+                  <WmAnchor
+                    name="nav-share-anchor"
+                    caption="Share"
+                    iconclass="fa fa-share-alt"
+                    hyperlink="#share"
+                    listener={mockListener}
+                  />
+                </WmNavItem>
+                <WmNavItem name="nav-settings" listener={mockListener}>
+                  <WmAnchor
+                    name="nav-settings-anchor"
+                    caption="Settings"
+                    iconclass="fa fa-cog"
+                    hyperlink="#settings"
+                    listener={mockListener}
+                  />
+                </WmNavItem>
+              </Box>
             </Box>
           </RightNavDefaultExport>
         </Box>
@@ -108,92 +146,312 @@ export const Showcase: Story = {
         <Box display="flex" minHeight="400px">
           {/* Main Content for User Info Panel */}
           <Box flex={1} p={2} bgcolor="#f5f5f5">
+            <Typography variant="h6" fontWeight={600} gutterBottom>
+              Navigation with Dropdown Menus
+            </Typography>
             <Typography variant="body2" color="text.secondary">
-              User Info Panel Content Area
+              Full navigation menu with dropdown support using WmMenu component. Click on "Help" to see the dropdown.
             </Typography>
           </Box>
 
           {/* User Info Panel */}
-          <RightNavDefaultExport name="userInfoPanel" listener={mockListener} columnwidth="6">
-            <Box p={2} bgcolor="#f1ececff" height="100%" borderLeft="1px solid #e0e0e0">
-              <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
-                <Avatar sx={{ width: 80, height: 80, mb: 2 }}>JD</Avatar>
-                <Typography variant="h6">John Doe</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  john.doe@example.com
+          <RightNavDefaultExport name="userInfoPanel" listener={mockListener} columnwidth="4">
+            <Box height="100%">
+              <Box p={2} borderBottom="1px solid rgba(0,0,0,0.08)">
+                <Typography variant="h6" fontWeight={600}>
+                  Resources
                 </Typography>
               </Box>
-              <Divider sx={{ mb: 2 }} />
-              <Stack spacing={2}>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    ROLE
-                  </Typography>
-                  <Typography variant="body1">Administrator</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    DEPARTMENT
-                  </Typography>
-                  <Typography variant="body1">Engineering</Typography>
-                </Box>
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    LOCATION
-                  </Typography>
-                  <Typography variant="body1">San Francisco, CA</Typography>
-                </Box>
-              </Stack>
-              <Button variant="outlined" fullWidth sx={{ mt: 3 }}>
-                View Profile
-              </Button>
+              <Box component="nav" className="app-nav nav navbar-nav nav-vertical">
+                <WmNavItem name="nav-notifications" listener={mockListener} className="active">
+                  <WmAnchor
+                    name="nav-notifications-anchor"
+                    caption="Notifications"
+                    iconclass="fa fa-bell"
+                    hyperlink="#notifications"
+                    listener={mockListener}
+                  />
+                </WmNavItem>
+
+                <WmNavItem name="nav-help" listener={mockListener} className="nav-navbar">
+                  <WmMenu
+                    name="nav-help-menu"
+                    caption="Help"
+                    iconclass="fa fa-question-circle"
+                    type="anchor"
+                    dataset={helpMenuItems}
+                    menuposition="down,left"
+                    menulayout="vertical"
+                    autoclose="outsideClick"
+                    autoopen="never"
+                    listener={mockListener}
+                    isFromNav={true}
+                  />
+                </WmNavItem>
+
+                <WmNavItem name="nav-bookmarks" listener={mockListener}>
+                  <WmAnchor
+                    name="nav-bookmarks-anchor"
+                    caption="Bookmarks"
+                    iconclass="fa fa-bookmark"
+                    hyperlink="#bookmarks"
+                    listener={mockListener}
+                  />
+                </WmNavItem>
+
+                <WmNavItem name="nav-profile" listener={mockListener}>
+                  <WmAnchor
+                    name="nav-profile-anchor"
+                    caption="Profile"
+                    iconclass="fa fa-user"
+                    hyperlink="#profile"
+                    listener={mockListener}
+                  />
+                </WmNavItem>
+              </Box>
             </Box>
           </RightNavDefaultExport>
         </Box>
       </Box>
     );
   },
+  args:{
+    name:"showcaseRightnav",
+    listener:mockListener
+  }
 };
 
 
-export const Basic: Story = {
+// export const Basic: Story = {
+//   tags: ['show-panel'],
+//   render: (args) => {
+//     const contentColumns = 12 - parseInt(args.columnwidth || "3");
+//     return (
+//       <Box style={{ padding: 16, display: "flex", minHeight: "400px" }}>
+//         <Box className={`col-sm-${contentColumns}`} p={2} bgcolor="#f5f5f5">
+//           <Typography variant="body2" color="text.secondary">
+//             Main Content Area (Width: {contentColumns}/12 columns)
+//           </Typography>
+//         </Box>
+//         <RightNavDefaultExport {...args} listener={mockListener}>
+//           <Box height="100%">
+//             <Box p={2} borderBottom="1px solid rgba(0,0,0,0.08)">
+//               <Typography variant="h6" fontWeight={600}>
+//                 Sidebar
+//               </Typography>
+//             </Box>
+//             <Box component="nav" className="app-nav nav navbar-nav nav-vertical">
+//               <WmNavItem name="nav-quick-actions" listener={mockListener} className="active">
+//                 <WmAnchor
+//                   name="nav-quick-actions-anchor"
+//                   caption="Quick Actions"
+//                   iconclass="fa fa-bolt"
+//                   hyperlink="#quick-actions"
+//                   listener={mockListener}
+//                 />
+//               </WmNavItem>
+//               <WmNavItem name="nav-resources" listener={mockListener}>
+//                 <WmAnchor
+//                   name="nav-resources-anchor"
+//                   caption="Resources"
+//                   iconclass="fa fa-book"
+//                   hyperlink="#resources"
+//                   listener={mockListener}
+//                 />
+//               </WmNavItem>
+//               <WmNavItem name="nav-help" listener={mockListener}>
+//                 <WmAnchor
+//                   name="nav-help-anchor"
+//                   caption="Help"
+//                   iconclass="fa fa-question-circle"
+//                   hyperlink="#help"
+//                   listener={mockListener}
+//                 />
+//               </WmNavItem>
+//             </Box>
+//           </Box>
+//         </RightNavDefaultExport>
+//       </Box>
+//     );
+//   },
+//   args: {
+//     name: "basicRightNav",
+//     columnwidth: "3",
+//   },
+//   argTypes: {
+//     columnwidth: {
+//       control: "select",
+//       options: ["1", "2", "3", "4", "6"],
+//       description: "Column width for the right nav panel"
+//     },
+//     show: { control: "boolean" },
+//     className: { control: "text" },
+//   },
+// };
+
+export const Standard: Story = {
   tags: ['show-panel'],
   render: (args) => {
     const contentColumns = 12 - parseInt(args.columnwidth || "3");
+
+    //component can't spread data-design-token-target, so we apply it to a wrapper
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+
+    // Menu datasets for dropdowns
+    const resourcesMenuItems = [
+      { label: "Documentation", icon: "fa fa-file-text", link: "#documentation" },
+      { label: "Video Tutorials", icon: "fa fa-video-camera", link: "#tutorials" },
+      { label: "API Reference", icon: "fa fa-code", link: "#api" },
+    ];
+
+    const helpMenuItems = [
+      { label: "Contact Support", icon: "fa fa-life-ring", link: "#support" },
+      { label: "Community Forum", icon: "fa fa-comments", link: "#forum" },
+    ];
+
     return (
-      <Box style={{ padding: 16, display: "flex", minHeight: "400px" }}>
-        <Box className={`col-sm-${contentColumns}`} p={2} bgcolor="#f5f5f5">
-          <Typography variant="body2" color="text.secondary">
-            Main Content Area (Width: {contentColumns}/12 columns)
+      <Box style={{ padding: 16, display: "flex", minHeight: "500px" }} data-design-token-target={dataAttr}>
+        <Box className={`col-sm-${contentColumns}`} p={3} bgcolor="#fafafa">
+          <Typography variant="h5" fontWeight={600} gutterBottom>
+            Main Content Area
           </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+            This is the main content area. Use the right panel to access quick actions, resources, and help.
+          </Typography>
+          <Box mt={3} p={2} bgcolor="white" borderRadius={1} boxShadow="0 1px 3px rgba(0,0,0,0.1)">
+            <Typography variant="body2">
+              Try hovering over navigation items to see the hover state design tokens in action.
+              Click on "Resources" or "Help" to expand dropdown menus.
+            </Typography>
+          </Box>
         </Box>
-        <RightNavDefaultExport {...args} listener={mockListener}>
-          {args.children}
+
+        <RightNavDefaultExport {...componentArgs} listener={mockListener}>
+          <Box height="100%">
+            {/* Navigation Header */}
+            <Box p={2} borderBottom="1px solid rgba(0,0,0,0.08)">
+              <Typography variant="h6" fontWeight={600}>
+                Quick Access
+              </Typography>
+            </Box>
+
+            {/* Navigation Items using nav and nav-item */}
+            <Box component="nav" className="app-nav nav navbar-nav nav-vertical">
+              {/* Notifications - Active */}
+              <WmNavItem name="nav-notifications" listener={mockListener} className="active">
+                <WmAnchor
+                  name="nav-notifications-anchor"
+                  caption="Notifications"
+                  iconclass="fa fa-bell"
+                  hyperlink="#notifications"
+                  listener={mockListener}
+                />
+              </WmNavItem>
+
+              {/* Resources - Menu Dropdown */}
+              <WmNavItem name="nav-resources" listener={mockListener} className="nav-navbar">
+                <WmMenu
+                  name="nav-resources-menu"
+                  caption="Resources"
+                  iconclass="fa fa-book"
+                  type="anchor"
+                  dataset={resourcesMenuItems}
+                  menuposition="down,left"
+                  menulayout="vertical"
+                  autoclose="outsideClick"
+                  autoopen="never"
+                  listener={mockListener}
+                  isFromNav={true}
+                />
+              </WmNavItem>
+
+              {/* Bookmarks */}
+              <WmNavItem name="nav-bookmarks" listener={mockListener}>
+                <WmAnchor
+                  name="nav-bookmarks-anchor"
+                  caption="Bookmarks"
+                  iconclass="fa fa-bookmark"
+                  hyperlink="#bookmarks"
+                  listener={mockListener}
+                />
+              </WmNavItem>
+
+              {/* Help - Menu Dropdown */}
+              <WmNavItem name="nav-help" listener={mockListener} className="nav-navbar">
+                <WmMenu
+                  name="nav-help-menu"
+                  caption="Help"
+                  iconclass="fa fa-question-circle"
+                  type="anchor"
+                  dataset={helpMenuItems}
+                  menuposition="down,left"
+                  menulayout="vertical"
+                  autoclose="outsideClick"
+                  autoopen="never"
+                  listener={mockListener}
+                  isFromNav={true}
+                />
+              </WmNavItem>
+
+              {/* Share */}
+              <WmNavItem name="nav-share" listener={mockListener}>
+                <WmAnchor
+                  name="nav-share-anchor"
+                  caption="Share"
+                  iconclass="fa fa-share-alt"
+                  hyperlink="#share"
+                  listener={mockListener}
+                />
+              </WmNavItem>
+
+              {/* Settings */}
+              <WmNavItem name="nav-settings" listener={mockListener}>
+                <WmAnchor
+                  name="nav-settings-anchor"
+                  caption="Settings"
+                  iconclass="fa fa-cog"
+                  hyperlink="#settings"
+                  listener={mockListener}
+                />
+              </WmNavItem>
+
+              {/* Profile */}
+              <WmNavItem name="nav-profile" listener={mockListener}>
+                <WmAnchor
+                  name="nav-profile-anchor"
+                  caption="Profile"
+                  iconclass="fa fa-user"
+                  hyperlink="#profile"
+                  listener={mockListener}
+                />
+              </WmNavItem>
+            </Box>
+          </Box>
         </RightNavDefaultExport>
       </Box>
     );
   },
   args: {
-    name: "basicRightNav",
+    name: "standardRightNav",
     columnwidth: "3",
-    children: (
-      <Box p={2} bgcolor="#f1ececff" height="100%" borderLeft="1px solid #e0e0e0">
-        <Typography variant="h6" mb={2}>
-          Sidebar
-        </Typography>
-        <Stack spacing={1}>
-          <Link href="#" underline="hover">
-            Quick Actions
-          </Link>
-          <Link href="#" underline="hover">
-            Resources
-          </Link>
-          <Link href="#" underline="hover">
-            Help
-          </Link>
-        </Stack>
-      </Box>
-    ),
+    "data-design-token-target":"true"
+  },
+  argTypes: {
+    columnwidth: {
+      control: "select",
+      options: ["1", "2", "3", "4", "6"],
+      description: "Column width for the right nav panel"
+    },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: rightnavTokensData,
+      componentKey: "aside-right",
+      extractCSSVariablesAtRuntime: true,
+    },
+    layout: 'fullscreen',
   },
 };
 

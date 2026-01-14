@@ -19,12 +19,15 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import headerTokensData from "../../../../designTokens/components/page-header/page-header.json";
+
+
 const meta: Meta<typeof HeaderDefaultExport> = {
   title: "Layout/Header",
   component: HeaderDefaultExport,
-  argTypes: {
-    className: { control: "text" },
-  },
+  // argTypes: {
+  //   className: { control: "text" },
+  // },
 };
 
 export default meta;
@@ -48,10 +51,12 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsHeader"
+  },
   parameters: {
     layout: 'fullscreen',
   },
-  args: {} as any,
 };
 
 export const Showcase: Story = {
@@ -223,15 +228,68 @@ export const Showcase: Story = {
 };
 
 
-export const Basic: Story = {
+// export const Basic: Story = {
+//   tags: ['show-panel'],
+//   render: (args: any) => (
+//     <HeaderDefaultExport {...args} listener={mockListener}>
+//       {args.children}
+//     </HeaderDefaultExport>
+//   ),
+//   args: {
+//     name: "basicHeader",
+//     listener: mockListener,
+//     children: (
+//       <Box
+//         px={3}
+//         py={2}
+//         display="flex"
+//         alignItems="center"
+//         justifyContent="space-between"
+//         bgcolor="#ffffff"
+//       >
+//         <Stack direction="row" spacing={1.5} alignItems="center">
+//           <Avatar
+//             src="https://docs.wavemaker.com/learn/img/WM_blue_logo.png"
+//             sx={{ width: 40, height: 40 }}
+//           />
+//           <Typography variant="body2" fontWeight={600} color="text.secondary">
+//             Wavemaker
+//           </Typography>
+//         </Stack>
+
+//         <Box
+//           component="input"
+//           type="search"
+//           placeholder="Search…"
+//           style={{
+//             minWidth: "200px",
+//             padding: "10px 16px",
+//             borderRadius: 6,
+//             border: "1px solid #e0e0e0",
+//             fontSize: "14px",
+//           }}
+//         />
+//       </Box>
+//     ),
+//   },
+// };
+
+export const Standard: Story = {
   tags: ['show-panel'],
-  render: (args: any) => (
-    <HeaderDefaultExport {...args} listener={mockListener}>
-      {args.children}
-    </HeaderDefaultExport>
-  ),
+  render: (args) => {
+    //component can't spread data-design-token-target, so we apply it to a wrapper
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+    
+    return (
+      <Box style={{ padding: 16, width: "100%" }} data-design-token-target={dataAttr}>
+        <HeaderDefaultExport {...componentArgs} listener={mockListener}>
+          {componentArgs.children}
+        </HeaderDefaultExport>
+      </Box>
+    );
+  },
   args: {
-    name: "basicHeader",
+    name: "StandardHeader",
     listener: mockListener,
     children: (
       <Box
@@ -247,7 +305,7 @@ export const Basic: Story = {
             src="https://docs.wavemaker.com/learn/img/WM_blue_logo.png"
             sx={{ width: 40, height: 40 }}
           />
-          <Typography variant="body2" fontWeight={600} color="text.secondary">
+          <Typography variant="body2" fontWeight={600}>
             Wavemaker
           </Typography>
         </Stack>
@@ -266,6 +324,19 @@ export const Basic: Story = {
         />
       </Box>
     ),
+    "data-design-token-target":"true"
+  },
+  argTypes:{
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: headerTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "header",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
   },
 };
 

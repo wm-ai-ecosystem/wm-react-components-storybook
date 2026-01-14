@@ -11,13 +11,15 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import footerTokensData from "../../../../designTokens/components/page-footer/page-footer.json";
+
 const meta: Meta<typeof FooterDefaultExport> = {
   title: "Layout/Footer",
   component: FooterDefaultExport,
-  argTypes: {
-    // show: { control: "boolean" },
-    className: { control: "text" },
-  },
+  // argTypes: {
+  //   // show: { control: "boolean" },
+  //   // className: { control: "text" },
+  // },
 };
 
 export default meta;
@@ -49,6 +51,9 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsFooter"
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -208,22 +213,64 @@ export const Showcase: Story = {
 };
 
 
-export const Basic: Story = {
+// export const Basic: Story = {
+//   tags: ['show-panel'],
+//   render: Template,
+//   args: {
+//     name: "basicFooter",
+//     listener: mockListener,
+//     // show:true,
+//     children: (
+//       <Box p={3} textAlign="center">
+//         <Typography variant="body2" color="text.secondary">
+//           © 2024 Wavemaker. All rights reserved.
+//         </Typography>
+//       </Box>
+//     ),
+//   },
+// };
+
+export const Standard: Story = {
   tags: ['show-panel'],
-  render: Template,
+  render: (args) => {
+      // Icon component can't spread data-design-token-target, so we apply it to a wrapper
+      const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+  
+      return (
+        <Box style={{ padding: 16, width:"100%" }} data-design-token-target={dataAttr}>
+          <FooterDefaultExport {...componentArgs} listener={mockListener}>
+            {componentArgs.children}
+          </FooterDefaultExport>
+        </Box>
+      );
+    },
   args: {
-    name: "basicFooter",
+    name: "standardFooter",
     listener: mockListener,
     // show:true,
     children: (
       <Box p={3} textAlign="center">
-        <Typography variant="body2" color="text.secondary">
+        <Typography>
           © 2024 Wavemaker. All rights reserved.
         </Typography>
       </Box>
     ),
+    "data-design-token-target":"true"
   },
+  argTypes:{
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: footerTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "footer",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
+  }, 
 };
+
 
 // export const SimpleFooter: Story = {
 //   render: Template,
