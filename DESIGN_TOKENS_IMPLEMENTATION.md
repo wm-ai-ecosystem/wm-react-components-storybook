@@ -1,7 +1,7 @@
 # Design Tokens Implementation - Complete Guide
 
 ## 🎯 Overview
-A **fully generic, zero-configuration Design Token system** for Storybook with **dynamic token reference resolution**. Works with ANY component and ANY JSON structure automatically - no manual mapping needed!
+A **fully generic, zero-configuration Design Token system** for Storybook with **dynamic token reference resolution** and **intuitive UI**. Works with ANY component and ANY JSON structure automatically - no manual mapping needed!
 
 ## ⚡ Quick Reference
 
@@ -9,6 +9,16 @@ A **fully generic, zero-configuration Design Token system** for Storybook with *
 1. Create JSON file: `/src/designTokens/components/yourcomponent/yourcomponent.json`
 2. Add to story with `designTokens` parameters
 3. **That's it!** No code changes needed ✅
+
+### Latest UI/UX Improvements:
+- ✅ **Smart label generation** - Labels extracted from CSS variable names (e.g., `border.color` from `--wm-btn-border-color`)
+- ✅ **Simplified categories** - Only 4 categories: Color, Text, Size, Style (type-based)
+- ✅ **Hover-based help icons** - Help icons appear only on label hover
+- ✅ **Clean white tooltips** - White background with black text for better readability
+- ✅ **Variable name display** - Tooltips show CSS variable name with "Variable name:" prefix
+- ✅ **Text wrapping** - Long labels wrap properly with word-break support
+- ✅ **Portal-based tooltips** - Tooltips render at document.body to escape overflow
+- ✅ **No state badges** - Clean UI without redundant badges
 
 ### Latest Architecture Improvements:
 - ✅ **Controls tab is default** - No performance impact on story load
@@ -62,6 +72,197 @@ Will automatically convert to `--wm-my-custom-token` and look it up. **Zero conf
     ├── preset.ts                 # Storybook preset
     └── README.md                 # Technical documentation
 ```
+
+---
+
+## 🏷️ Label Generation & Categorization System
+
+### Smart Label Extraction from CSS Variables
+
+Labels are **automatically extracted** from CSS variable names in `tokenParser.ts`, making them intuitive and directly related to the CSS:
+
+#### Implementation (`tokenParser.ts`)
+
+```typescript
+function extractLabelFromCSSVariable(cssVarName: string, componentKey: string): string {
+  const prefix = `--wm-${componentKey}-`;
+  if (!cssVarName.startsWith(prefix)) {
+    return cssVarName.replace(/^--/, '');
+  }
+
+  // Extract the token path
+  let tokenPath = cssVarName.substring(prefix.length);
+
+  // Remove "states-" prefix if present
+  if (tokenPath.startsWith('states-')) {
+    tokenPath = tokenPath.substring(7);
+  }
+
+  // Convert hyphens to dots for nested properties
+  return tokenPath.replace(/-/g, '.');
+}
+```
+
+#### Examples
+
+| CSS Variable | Label |
+|-------------|-------|
+| `--wm-btn-background` | `background` |
+| `--wm-btn-border-color` | `border.color` |
+| `--wm-btn-border-width` | `border.width` |
+| `--wm-btn-states-disabled-background` | `disabled.background` |
+| `--wm-btn-states-hover-state-layer-opacity` | `hover.state.layer.opacity` |
+| `--wm-editor-blockquote-color-reset-background` | `blockquote.color.reset.background` |
+
+**Benefits:**
+- Labels directly reflect CSS structure
+- No manual label definitions needed
+- Consistent across all components
+- Easy to understand for developers familiar with CSS
+
+### Type-Based Categorization System
+
+Tokens are organized into **4 simple categories** based on their `type` field, implemented in `DesignTokenPanel.tsx`:
+
+#### Implementation (`DesignTokenPanel.tsx`)
+
+```typescript
+const getCategoryKey = (token: TokenDefinition): string => {
+  const type = token.type?.toLowerCase() || '';
+
+  if (type === 'color') {
+    return 'color';
+  } else if (type === 'font') {
+    return 'font';
+  } else if (type === 'space') {
+    return 'space';
+  } else {
+    return 'others';
+  }
+};
+
+const categoryNames: Record<string, string> = {
+  'color': 'Color',
+  'font': 'Text',
+  'space': 'Size',
+  'others': 'Style'
+};
+
+const categoryOrder = ['color', 'font', 'space', 'others'];
+```
+
+#### Category Mapping
+
+| Token Type | Category Key | Display Name | Example Tokens |
+|------------|--------------|--------------|----------------|
+| `color` | `color` | **Color** | background, color, border.color |
+| `font` | `font` | **Text** | font.size, font.weight, font.family |
+| `space` | `space` | **Size** | padding, margin, gap, width, height |
+| All others | `others` | **Style** | opacity, border.radius, box.shadow |
+
+**Benefits:**
+- Simpler organization (4 categories vs 14 complex ones)
+- Consistent across all components
+- Easy to find tokens by purpose
+- No complex naming pattern detection needed
+
+### Hover-Based Help Icons & Tooltips
+
+#### Implementation (`DesignTokenPanel.tsx`)
+
+**Help Icon Visibility:**
+```typescript
+const TokenLabel = styled.label`
+  /* Show help icon on label hover */
+  &:hover [data-help-icon] {
+    opacity: 1;
+    visibility: visible;
+  }
+`;
+
+const HelpIconWrapper = styled.span`
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+`;
+```
+
+**White Tooltip Theme:**
+```typescript
+const HelpTooltip = styled.div<{ show: boolean; top?: number; left?: number; isAbove?: boolean }>`
+  position: fixed;
+  background-color: #ffffff;  // White background
+  color: #000000;  // Black text
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  padding: 0;
+  z-index: 10000;
+  max-width: 400px;
+
+  &::after {
+    ${props => props.isAbove ? `
+      border-top-color: #ffffff;  // White arrow
+    ` : `
+      border-bottom-color: #ffffff;  // White arrow
+    `}
+  }
+`;
+```
+
+**Tooltip Content with Variable Name:**
+```typescript
+<HelpTooltip show={true} top={...} left={...}>
+  <TooltipVariableName>
+    <TooltipVariableLabel>Variable name:</TooltipVariableLabel>
+    <TooltipVariableValue>{activeTooltip}</TooltipVariableValue>
+  </TooltipVariableName>
+  {token?.description && (
+    <TooltipDescription dangerouslySetInnerHTML={{ __html: token.description }} />
+  )}
+</HelpTooltip>
+```
+
+**Portal Rendering to Escape Overflow:**
+```typescript
+import { createPortal } from 'react-dom';
+
+{activeTooltip && tooltipPosition && createPortal(
+  <HelpTooltip ...>...</HelpTooltip>,
+  document.body  // Render at body level, not inside panel
+)}
+```
+
+#### UI Behavior
+
+1. **Hidden by default** - Help icons have `opacity: 0; visibility: hidden`
+2. **Appear on hover** - CSS transition fades in when hovering label
+3. **Click to show tooltip** - Click help icon to display detailed information
+4. **Variable name prefix** - Always shows "Variable name: --wm-btn-background"
+5. **Optional description** - Shows token description if available in JSON
+6. **Smart positioning** - Automatically positions above/below based on space
+7. **Portal rendering** - Renders at `document.body` to escape panel overflow
+8. **White theme** - Clean white background with black text for readability
+
+#### Example Tooltip
+
+```
+Hover "background" label → Help icon (?) appears
+Click help icon → Tooltip displays:
+
+  ┌───────────────────────────────────────────┐
+  │ Variable name: --wm-btn-background        │
+  │───────────────────────────────────────────│
+  │ Sets the background color of the button   │
+  └───────────────────────────────────────────┘
+```
+
+**Key Improvements:**
+- No visual clutter (icons hidden until needed)
+- Always accessible (hover any label)
+- Clear variable reference (shows exact CSS variable)
+- Better readability (white theme with proper contrast)
+- Works in any panel position (portal rendering)
 
 ---
 
@@ -246,13 +447,28 @@ No manual mapping needed! Works with ANY foundation token!
    - Dynamically resolves ALL token references using extracted CSS variables
    - Merges: base + appearance + variant (variant overrides base)
    ↓
-8. PANEL: Displays tokens grouped by category with default values from JSON
+8. LABEL GENERATION: For each token:
+   - Extract label from CSS variable: --wm-btn-border-color → "border.color"
+   - Remove "states-" prefix: --wm-btn-states-disabled-background → "disabled.background"
+   - Convert hyphens to dots for nested structure
    ↓
-9. USER ACTION: Changes background color from #1976d2 to #ff0000
+9. CATEGORIZATION: Group tokens by type:
+   - type: "color" → "Color" category
+   - type: "font" → "Text" category
+   - type: "space" → "Size" category
+   - Others → "Style" category
    ↓
-10. PANEL: Updates state and calls applyTokens()
+10. PANEL: Displays tokens in 4 organized categories with clean labels
+   ↓
+11. USER ACTION: Hovers "background" label → Help icon (?) appears
+   ↓
+12. USER ACTION: Clicks help icon → Tooltip shows "Variable name: --wm-btn-background"
+   ↓
+13. USER ACTION: Changes background color from #1976d2 to #ff0000
+   ↓
+14. PANEL: Updates state and calls applyTokens()
     ↓
-11. CSS GENERATOR: Creates scoped CSS rules:
+15. CSS GENERATOR: Creates scoped CSS rules:
     ```css
     button[data-design-token-target="true"].btn-filled.btn-primary {
       background-color: var(--wm-btn-background) !important;  /* #ff0000 */
@@ -271,23 +487,23 @@ No manual mapping needed! Works with ANY foundation token!
     }
     ```
     ↓
-12. INJECTOR: Injects <style id="design-tokens-btn"> into iframe's <head>
+16. INJECTOR: Injects <style id="design-tokens-btn"> into iframe's <head>
     ↓
-13. BROWSER: ONLY buttons in DesignToken story update to red background!
+17. BROWSER: ONLY buttons in DesignToken story update to red background!
     ↓
-14. SCOPING: Buttons in other stories are NOT affected (no data-design-token-target attribute)
+18. SCOPING: Buttons in other stories are NOT affected (no data-design-token-target attribute)
     ↓
-15. USER ACTION: Changes className to "btn-outlined btn-secondary" in Controls tab
+19. USER ACTION: Changes className to "btn-outlined btn-secondary" in Controls tab
     ↓
-16. POLLING: Detects className change within 300ms
+20. POLLING: Detects className change within 300ms
     ↓
-17. PANEL: Re-parses tokens for new variant, applies automatically
+21. PANEL: Re-parses tokens for new variant, regenerates labels, re-categorizes, applies automatically
     ↓
-18. USER ACTION: Switches to different story
+22. USER ACTION: Switches to different story
     ↓
-19. CLEANUP: Removes <style id="design-tokens-*">, clears state, resets cache
+23. CLEANUP: Removes <style id="design-tokens-*">, clears state, resets cache
     ↓
-20. RESULT: Clean slate for new story, Controls tab is default
+24. RESULT: Clean slate for new story, Controls tab is default
 ```
 
 ---
@@ -635,7 +851,17 @@ const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
 
 ## 🎨 Key Features
 
-### ✅ Dynamic Token Resolution (NEW!)
+### ✅ Smart UI/UX (Latest!)
+- **Label extraction from CSS variables** - `--wm-btn-border-color` → `border.color`
+- **Simplified categories** - Only 4 categories: Color, Text, Size, Style
+- **Hover-based help icons** - Icons appear only when hovering labels
+- **Clean white tooltips** - White background with black text for readability
+- **Variable name display** - Tooltips show "Variable name: --wm-btn-background"
+- **Text wrapping** - Long labels wrap properly (word-break support)
+- **Portal-based tooltips** - Render at document.body to escape overflow
+- **No state badges** - Clean UI without redundant DISABLED/HOVER/FOCUS badges
+
+### ✅ Dynamic Token Resolution
 - **Zero manual mapping** - Token references converted automatically
 - Works with **ANY foundation CSS variable** without code changes
 - `{any.new.token.value}` → `--wm-any-new-token` (automatic!)
@@ -703,10 +929,19 @@ const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
 
 3. **Interact with Design Tokens**:
    - Open **Controls** tab → Change `className` dropdown
-   - Open **Design Tokens** tab → See variant-specific tokens
-   - Modify any token (e.g., background color → red)
+   - Open **Design Tokens** tab → See tokens in 4 organized categories
+   - **Hover any label** → Help icon (?) appears
+   - **Click help icon** → Tooltip shows "Variable name: --wm-btn-background"
+   - Modify any token (e.g., background → red)
    - Watch buttons update in real-time!
    - Click **Reset to Defaults** to restore
+
+4. **Notice the UI Improvements**:
+   - Labels extracted from CSS variables (e.g., "border.color" not "Border Color")
+   - Only 4 categories: Color, Text, Size, Style
+   - Clean white tooltips with variable names
+   - Help icons only visible on hover
+   - Long labels wrap properly
 
 ### For Developers (Adding New Components):
 
@@ -753,14 +988,68 @@ const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
 
 ## 🔧 Technical Details
 
-### Token Name Convention
-- Format: `--wm-{component}-{property}`
+### Token Name Convention & Label Generation
+
+#### CSS Variable Format
+- Pattern: `--wm-{component}-{property}`
 - Examples:
-  - `--wm-btn-background`
-  - `--wm-btn-color`
-  - `--wm-btn-border-color`
-  - `--wm-btn-padding`
-  - `--wm-btn-states-hover-state-layer-opacity`
+  - `--wm-btn-background` → Label: `background`
+  - `--wm-btn-color` → Label: `color`
+  - `--wm-btn-border-color` → Label: `border.color`
+  - `--wm-btn-padding` → Label: `padding`
+  - `--wm-btn-states-hover-state-layer-opacity` → Label: `hover.state.layer.opacity`
+
+#### Label Extraction Logic (tokenParser.ts)
+```typescript
+function extractLabelFromCSSVariable(cssVarName: string, componentKey: string): string {
+  const prefix = `--wm-${componentKey}-`;
+  if (!cssVarName.startsWith(prefix)) {
+    return cssVarName.replace(/^--/, '');
+  }
+
+  // Extract the token path
+  let tokenPath = cssVarName.substring(prefix.length);
+
+  // Remove "states-" prefix if present
+  if (tokenPath.startsWith('states-')) {
+    tokenPath = tokenPath.substring(7);
+  }
+
+  // Convert hyphens to dots for nested properties
+  return tokenPath.replace(/-/g, '.');
+}
+```
+
+**Rules:**
+1. Remove component prefix (`--wm-btn-`)
+2. Remove "states-" prefix for cleaner labels
+3. Convert hyphens to dots for nested structure
+4. Result is intuitive, CSS-aligned label
+
+#### Categorization Logic (DesignTokenPanel.tsx)
+```typescript
+const getCategoryKey = (token: TokenDefinition): string => {
+  const type = token.type?.toLowerCase() || '';
+
+  if (type === 'color') return 'color';
+  else if (type === 'font') return 'font';
+  else if (type === 'space') return 'space';
+  else return 'others';
+};
+
+const categoryNames = {
+  'color': 'Color',
+  'font': 'Text',
+  'space': 'Size',
+  'others': 'Style'
+};
+```
+
+**Categories:**
+- `color` → "Color" (background, color, border.color)
+- `font` → "Text" (font.size, font.weight, font.family)
+- `space` → "Size" (padding, margin, gap)
+- `others` → "Style" (opacity, border.radius, box.shadow)
 
 ### CSS Generation Strategy
 - Uses data attribute selector for story scoping: `button[data-design-token-target="true"]`
@@ -797,17 +1086,26 @@ Every file includes comprehensive inline comments explaining:
 Total documentation: 1200+ lines of comments across all files.
 
 ### Key Files Updated (Latest):
-- **cssVariableExtractor.ts**: Added `tokenReferenceToCSSVariable()` for dynamic conversion
-- **tokenParser.ts**: Enhanced to support multiple JSON structure variations
-- **DesignTokenPanel.tsx**: Already fully generic, no changes needed
-- **README.md**: Updated with dynamic system documentation
-- **DESIGN_TOKENS_IMPLEMENTATION.md**: Updated with latest features
+- **tokenParser.ts**: Added `extractLabelFromCSSVariable()` for smart label generation from CSS variables
+- **DesignTokenPanel.tsx**:
+  - Simplified categorization to 4 type-based categories
+  - Added hover-based help icons with opacity transitions
+  - Implemented white tooltip theme (#fff background, #000 text)
+  - Added "Variable name:" prefix in tooltips
+  - Implemented React Portal for tooltip rendering
+  - Removed state badge components
+  - Added text wrapping support for long labels
+- **cssVariableExtractor.ts**: `tokenReferenceToCSSVariable()` for dynamic conversion (previous update)
+- **README.md**: Updated with UI improvements and label generation documentation
+- **DESIGN_TOKENS_IMPLEMENTATION.md**: Updated with comprehensive UI/UX documentation
 
 ---
 
 ## 🎉 Summary
 
-You now have a **production-ready, fully generic, zero-configuration Design Token system** that:
+You now have a **production-ready, fully generic, zero-configuration Design Token system** with **intuitive UI** that:
+
+### Core Features
 - ✅ Works with the existing button component
 - ✅ Shows 3 button variations (basic, icon, badge)
 - ✅ Has a dedicated "Design Tokens" tab in the panel
@@ -827,9 +1125,68 @@ You now have a **production-ready, fully generic, zero-configuration Design Toke
 - ✅ Is fully generic for ANY future component (regardless of prop pattern)
 - ✅ Has comprehensive comments and documentation
 
+### UI/UX Features
+- ✅ **Smart label generation** from CSS variable names (e.g., `border.color` from `--wm-btn-border-color`)
+- ✅ **Simplified 4 categories** based on token type: Color, Text, Size, Style
+- ✅ **Hover-based help icons** that appear only when needed
+- ✅ **Clean white tooltips** with proper contrast (#fff background, #000 text)
+- ✅ **Variable name display** in tooltips with "Variable name:" prefix
+- ✅ **Text wrapping** for long nested labels
+- ✅ **Portal-based tooltips** that work in any panel position
+- ✅ **No redundant state badges** - clean UI with state info in labels
+
 ## 🆕 What's New (Latest Updates)
 
-### Type Prop Component Support (Latest Release)
+### UI/UX Improvements (Current Release)
+
+#### Smart Label Generation from CSS Variables
+- **Before**: Labels were generic or based on JSON paths
+- **After**: Labels extracted directly from CSS variable names
+- **Impact**: More intuitive labels that match CSS mental model
+
+**Examples:**
+- `--wm-btn-background` → `background` (not "Background" or "Btn Background")
+- `--wm-btn-border-color` → `border.color` (not "Border Color")
+- `--wm-btn-states-disabled-background` → `disabled.background` (states prefix removed)
+
+#### Simplified Type-Based Categorization
+- **Before**: 14 complex categories based on naming patterns (Colors, Typography, Spacing, Border, States, etc.)
+- **After**: 4 simple categories based on token type: Color, Text, Size, Style
+- **Impact**: Easier navigation, consistent organization, no complex pattern detection
+
+#### Hover-Based Help Icons
+- **Before**: Help icons always visible or not present at all
+- **After**: Icons hidden by default, fade in on label hover with CSS transitions
+- **Impact**: Reduced visual clutter, help always accessible
+
+#### Clean White Tooltips
+- **Before**: Dark tooltips with black background and white text
+- **After**: White tooltips (#fff background) with black text (#000)
+- **Impact**: Better readability, cleaner aesthetic, proper contrast
+
+#### Variable Name Display in Tooltips
+- **Before**: Tooltips only showed description
+- **After**: Tooltips show "Variable name: --wm-btn-background" as prefix before description
+- **Impact**: Users can see exact CSS variable being modified
+
+#### Portal-Based Tooltip Rendering
+- **Before**: Tooltips rendered inside panel, could be clipped by overflow
+- **After**: Tooltips render at document.body level using React Portal
+- **Impact**: Tooltips work correctly in both bottom and right-aligned panels
+
+#### Text Wrapping for Long Labels
+- **Before**: Long labels could overflow or be cut off
+- **After**: Labels wrap with word-break, overflow-wrap, and max-width
+- **Impact**: Long nested labels (e.g., `blockquote.color.reset.background`) display properly
+
+#### Removed State Badges
+- **Before**: Labels had DISABLED, HOVER, FOCUS, ACTIVE badges next to them
+- **After**: Badges removed, state info in label itself (e.g., `disabled.background`)
+- **Impact**: Cleaner UI, less redundancy
+
+---
+
+### Type Prop Component Support (Previous Release)
 
 #### propToVariantMap Feature
 - **Before**: Only components with `className` prop were supported (button, anchor, label, etc.)

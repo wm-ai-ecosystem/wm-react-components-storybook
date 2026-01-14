@@ -11,20 +11,6 @@ const config: StorybookConfig = {
     // "@storybook/addon-a11y",
     "@storybook/addon-docs",
     // Note: Design Tokens addon is loaded via manager.ts import
-    // Explicitly configure essentials addon to disable Actions and Interactions
-    {
-      name: '@storybook/addon-essentials',
-      options: {
-        actions: false,      // Disable Actions tab
-        interactions: false, // Disable Interactions tab
-        backgrounds: true,   // Keep backgrounds
-        controls: true,      // Keep controls
-        viewport: true,      // Keep viewport
-        toolbars: true,      // Keep toolbars
-        measure: true,       // Keep measure
-        outline: true,       // Keep outline
-      },
-    },
   ],
   "framework": "@storybook/nextjs-vite",
   "staticDirs": [

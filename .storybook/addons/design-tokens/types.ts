@@ -83,6 +83,23 @@ export interface ComponentTokenConfig {
 }
 
 /**
+ * StateCategorizedTokens - Tokens categorized by state
+ * Used to filter tokens based on selected state (default, hover, focus, active, disabled)
+ *
+ * Structure:
+ * {
+ *   "default": [tokens without "states-" prefix],
+ *   "hover": [tokens with "states-hover-" prefix],
+ *   "focus": [tokens with "states-focus-" prefix],
+ *   "active": [tokens with "states-active-" prefix],
+ *   "disabled": [tokens with "states-disabled-" prefix]
+ * }
+ */
+export interface StateCategorizedTokens {
+  [state: string]: TokenDefinition[];
+}
+
+/**
  * DesignTokenParameters - Story-level configuration
  * This is passed in the story's parameters.designTokens object
  *

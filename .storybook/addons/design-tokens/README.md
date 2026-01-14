@@ -1,6 +1,11 @@
 # Design Tokens Addon
 
-A **fully generic, dynamic Design Token system** for Storybook that works with ANY component automatically. Uses dynamic token reference resolution and extracts values from foundation.css at runtime - no hardcoded mappings needed!
+A **fully generic, dynamic Design Token system** for Storybook that works with ANY component automatically. Features:
+- 🎨 **Clean white tooltips** with hover-based help icons
+- 🏷️ **Smart label generation** from CSS variable names (e.g., `border.color` from `--wm-btn-border-color`)
+- 📂 **Simplified categories** - Color, Text, Size, Style (type-based categorization)
+- 🔍 **Variable name tooltips** - Hover labels to see CSS variable names
+- 🎯 **No hardcoded mappings** - fully dynamic token resolution
 
 ---
 
@@ -61,7 +66,7 @@ export const Filled: Story = {
 ```
 
 ### 3. Done!
-Open story → **Controls tab is default** → Click Design Tokens tab → Modify tokens → See instant changes ✅
+Open story → **Controls tab is default** → Click Design Tokens tab → **Hover labels** to see help icon → Click help icon for CSS variable name → Modify tokens → See instant changes ✅
 
 ---
 
@@ -90,9 +95,15 @@ Looks up "--wm-color-primary" in extracted CSS variables → "rgb(255, 114, 80)"
   ↓
 parseDesignTokens() resolves ALL references dynamically (no hardcoded mappings!)
   ↓
-Design Tokens panel displays with real foundation.css values
+Label generation: --wm-btn-border-color → "border.color" (extracted from CSS variable name)
+  ↓
+Categorization: token.type → "color" → "Color" category (simplified 4-category system)
+  ↓
+Design Tokens panel displays with clean labels and organized categories
   ↓
 Polling monitors className changes every 300ms (when panel is active)
+  ↓
+User hovers label → Help icon appears → Click for tooltip with CSS variable name
   ↓
 User changes className in Controls → Detected by polling → Tokens refresh automatically
   ↓
@@ -131,14 +142,95 @@ User switches story → Previous tokens cleared → Clean slate for new story
 - `{color.primary.@.value}` → `"rgb(255, 114, 80)"` (computed from foundation.css)
 - `{opacity.hover.value}` → `"8%"` (from foundation.css)
 
-**Displayed in panel:**
-- Background: rgb(255, 114, 80) [color picker]
-- Hover opacity: 0.08 [number input] (auto-converted from 8%)
+**Label generation from CSS variables:**
+- `--wm-btn-background` → `"background"`
+- `--wm-btn-border-color` → `"border.color"`
+- `--wm-btn-states-disabled-background` → `"disabled.background"` (states prefix removed)
+- `--wm-btn-states-hover-state-layer-opacity` → `"hover.state.layer.opacity"`
+
+**Displayed in panel (organized by type-based categories):**
+- **Color** category: background: rgb(255, 114, 80) [color picker]
+- **Style** category: hover.state.layer.opacity: 0.08 [number input] (auto-converted from 8%)
+- Hover any label → See help icon (?) → Click for tooltip showing "Variable name: --wm-btn-background"
+
+---
+
+## Label Generation & Categorization
+
+### Smart Label Extraction from CSS Variables
+
+Labels are automatically extracted from CSS variable names, making them intuitive and directly related to the CSS:
+
+**Conversion Rules:**
+1. Remove component prefix (e.g., `--wm-btn-`)
+2. Remove "states-" prefix if present
+3. Convert hyphens to dots for nested properties
+
+**Examples:**
+```
+--wm-btn-background → "background"
+--wm-btn-border-color → "border.color"
+--wm-btn-border-width → "border.width"
+--wm-btn-states-disabled-background → "disabled.background"
+--wm-btn-states-hover-state-layer-opacity → "hover.state.layer.opacity"
+--wm-editor-blockquote-color-reset-background → "blockquote.color.reset.background"
+```
+
+### Type-Based Categorization
+
+Tokens are organized into 4 simple categories based on their `type` field:
+
+| Token Type | Category Name | Example Tokens |
+|------------|---------------|----------------|
+| `color` | **Color** | background, color, border-color |
+| `font` | **Text** | font-size, font-weight, font-family |
+| `space` | **Size** | padding, margin, gap, width, height |
+| `others` | **Style** | opacity, border-radius, box-shadow |
+
+**Benefits:**
+- Simpler organization (4 categories instead of 14)
+- Consistent across all components
+- Easy to find tokens by their purpose
+
+### Hover-Based Help Icons & Tooltips
+
+**Help Icon Behavior:**
+- Hidden by default to reduce visual clutter
+- Appears (fades in) when hovering over any label
+- Click to show tooltip with detailed information
+
+**Tooltip Content:**
+- **Variable name:** Displays the CSS variable (e.g., `--wm-btn-background`)
+- **Description:** Shows the token description if available
+- **White theme:** Clean white background (#fff) with black text (#000)
+- **Smart positioning:** Automatically positions above/below based on available space
+- **Portal rendering:** Renders at document.body level to escape overflow constraints
+
+**Example:**
+```
+Hover "background" label → Help icon (?) appears
+Click help icon → Tooltip shows:
+  ┌─────────────────────────────────────────┐
+  │ Variable name: --wm-btn-background      │
+  │ Sets the background color of the button │
+  └─────────────────────────────────────────┘
+```
 
 ---
 
 ## Key Features
 
+### UI/UX Features
+✅ **Smart label generation** - Labels extracted from CSS variable names (e.g., `border.color` from `--wm-btn-border-color`)
+✅ **Simplified categories** - Only 4 categories based on token type: Color, Text, Size, Style
+✅ **Hover-based help icons** - Help icons (?) only appear when hovering over labels
+✅ **Clean white tooltips** - White background (#fff) with black text for better readability
+✅ **Variable name display** - Tooltips show "Variable name: --wm-btn-background" as prefix
+✅ **Text wrapping** - Long labels wrap properly with word-break support
+✅ **Portal-based tooltips** - Tooltips render at document.body level to escape overflow constraints
+✅ **No state badges** - Clean UI without redundant DISABLED/HOVER/FOCUS badges
+
+### Core Features
 ✅ **Generic className parsing** - Automatically works with ANY component className pattern (button, label, pagination, etc.)
 ✅ **Type prop support (propToVariantMap)** - Works with components using type/variant props instead of className (message, progress-bar, accordion, etc.)
 ✅ **Dynamic selector lookup** - Reads selectors from JSON and matches variants automatically
@@ -647,13 +739,22 @@ Examples:
 ```
 JSON: btn → mapping → background
 CSS:  --wm-btn-background
+Label: "background"
 
 JSON: btn → mapping → border → color
 CSS:  --wm-btn-border-color
+Label: "border.color"
 
 JSON: btn → mapping → states → hover → state → layer → opacity
 CSS:  --wm-btn-states-hover-state-layer-opacity
+Label: "hover.state.layer.opacity" (states prefix removed)
 ```
+
+**Label Generation Logic:**
+- Extracts from CSS variable name (not JSON path)
+- Removes component prefix (`--wm-btn-`)
+- Removes "states-" prefix for cleaner labels
+- Converts hyphens to dots for nested structure
 
 ### Token References (Dynamic Conversion)
 **NO MANUAL MAPPING NEEDED!** The system automatically converts token references:
@@ -688,6 +789,7 @@ CSS:  --wm-btn-states-hover-state-layer-opacity
 
 ## Architecture Benefits
 
+### Technical Benefits
 1. **Zero manual mapping** - Token references converted dynamically, no hardcoded maps
 2. **Fully generic** - Works with ANY component and ANY JSON structure automatically
 3. **Future-proof** - New foundation CSS variables work without code changes
@@ -695,10 +797,19 @@ CSS:  --wm-btn-states-hover-state-layer-opacity
 5. **Single source of truth** - All design decisions in JSON
 6. **Type-safe** - Full TypeScript support
 7. **Scalable** - Add unlimited components without code changes
-8. **Designer-friendly** - Designers can edit JSON without touching code
-9. **Runtime sync** - Always uses actual foundation.css values
-10. **Graceful fallback** - Works even if extraction fails
-11. **Multiple structure support** - Handles variantGroups, meta.appearances, or no appearances
+8. **Runtime sync** - Always uses actual foundation.css values
+9. **Graceful fallback** - Works even if extraction fails
+10. **Multiple structure support** - Handles variantGroups, meta.appearances, or no appearances
+
+### UI/UX Benefits
+1. **Intuitive labels** - Extracted from CSS variables, directly reflect CSS structure
+2. **Simplified organization** - 4 categories instead of 14, easier navigation
+3. **Clean interface** - No redundant state badges, hover-based help icons
+4. **Better readability** - White tooltips with proper contrast ratios
+5. **Accessible help** - Always available on hover, never obtrusive
+6. **Designer-friendly** - Clear labels match CSS mental model
+7. **No clipping issues** - Portal-based tooltips work in any panel position
+8. **Text wrapping** - Long nested properties display properly
 
 ---
 
@@ -709,19 +820,26 @@ npm run storybook
 ```
 
 1. Navigate to "Basic/Button" → "Filled"
-2. Open "Design Tokens" tab (bottom panel)
-3. Scroll to see all token categories:
-   - Colors (Background, Text, Border)
-   - Typography (Font Size, Weight, Family)
-   - Spacing (Padding, Gap, Height)
-   - Border (Width, Style, Radius)
-   - States (Hover/Focus/Active/Disabled)
-   - Effects (Shadow, Cursor)
-4. Change "Background" to #FF0000
-5. Button instantly turns red ✅
-6. Scroll to "States" → Change "Hover opacity" to 0.5
-7. Hover button → See strong overlay ✅
-8. Click "Reset to Defaults" → Restores original values ✅
+2. Open "Design Tokens" tab (bottom or right panel)
+3. See tokens organized in 4 categories:
+   - **Color** (background, color, border.color)
+   - **Text** (font.size, font.weight, font.family)
+   - **Size** (padding, gap, height)
+   - **Style** (border.radius, hover.state.layer.opacity, box.shadow)
+4. **Hover over any label** → See help icon (?) appear
+5. **Click help icon** → Tooltip shows "Variable name: --wm-btn-background"
+6. Change "background" to #FF0000
+7. Button instantly turns red ✅
+8. Scroll to "Style" → Change "hover.state.layer.opacity" to 0.5
+9. Hover button → See strong overlay ✅
+10. Click "Reset to Defaults" → Restores original values ✅
+
+**UI Features to Notice:**
+- Clean white tooltips with black text
+- Labels extracted from CSS variables (e.g., "border.color" not "Border Color")
+- Help icons only appear on hover (reduced clutter)
+- Long labels wrap properly (e.g., "blockquote.color.reset.background")
+- Tooltips work correctly in both bottom and right-aligned panels
 
 ---
 

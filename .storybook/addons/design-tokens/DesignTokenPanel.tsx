@@ -24,7 +24,7 @@ import { createPortal } from "react-dom";
 import { useStorybookApi } from "storybook/manager-api";
 import { styled } from "storybook/theming";
 import { DesignTokenParameters, TokenDefinition, ComponentTokenConfig } from "./types";
-import { getTokensForClassName, parseDesignTokens } from "./tokenParser";
+import { getTokensForClassName, parseDesignTokens, detectAvailableStates, extractLabelFromCSSVariable } from "./tokenParser";
 import { extractCSSVariables, buildTokenReferenceMap, clearCache } from "./cssVariableExtractor";
 
 // ============================================================================
@@ -384,6 +384,59 @@ const EmptyState = styled.div`
   color: #757575;
 `;
 
+const StateDropdownContainer = styled.div`
+  background-color: white;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: visible;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  align-items: center;
+
+  /* Bottom panel: 3-column layout with empty third column */
+  @container (min-width: 800px) {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+`;
+
+const StateDropdownLabel = styled.label`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0;
+`;
+
+const StateDropdown = styled.select`
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 13px;
+  border: 1px solid #d0d0d0;
+  border-radius: 4px;
+  font-family: inherit;
+  background-color: #ffffff;
+  color: #1c1b1f;
+  cursor: pointer;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: #1ea7fd;
+    box-shadow: 0 0 0 2px rgba(30, 167, 253, 0.1);
+  }
+
+  option {
+    background-color: #ffffff;
+    color: #1c1b1f;
+  }
+`;
+
 // ============================================================================
 // COMPONENT
 // ============================================================================
@@ -405,6 +458,10 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
   const [cssVariableMap, setCssVariableMap] = useState<Map<string, string>>(new Map());
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
   const [tooltipPosition, setTooltipPosition] = useState<{ top: number; left: number; isAbove: boolean } | null>(null);
+
+  // State dropdown management
+  const [selectedState, setSelectedState] = useState<string>("default");
+  const [availableStates, setAvailableStates] = useState<string[]>(["default"]);
 
   // Track previous className to detect actual changes (not re-renders)
   const prevClassNameRef = useRef<string>("");
@@ -485,6 +542,10 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
       setCssVariableMap(new Map());
       setCurrentClassName("");
       setParameters({ enabled: false });
+
+      // Reset state dropdown to "default"
+      setSelectedState("default");
+      setAvailableStates(["default"]);
 
       // Reset CSS variable values from previous story
       const iframe = document.querySelector("#storybook-preview-iframe") as HTMLIFrameElement;
@@ -667,6 +728,19 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
     }
 
     if (tokenConfig) {
+      // Detect available states from JSON structure
+      if (parameters.tokenData && parameters.componentKey) {
+        const detectedStates = detectAvailableStates(parameters.tokenData, parameters.componentKey);
+        // Only update if states have changed to avoid unnecessary re-renders
+        if (JSON.stringify(detectedStates) !== JSON.stringify(availableStates)) {
+          setAvailableStates(detectedStates);
+          // Reset to default state if current state is not in the new list
+          if (!detectedStates.includes(selectedState)) {
+            setSelectedState("default");
+          }
+        }
+      }
+
       let tokensToUse = tokenConfig.tokens;
 
       // Get variant-specific tokens if className is provided
@@ -701,6 +775,11 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
         }
 
         prevClassNameRef.current = currentClassName;
+
+        // Reset state dropdown to "default" when className changes
+        if (classNameChanged && selectedState !== "default") {
+          setSelectedState("default");
+        }
 
         setDefaultTokens(initialTokens);
         setTokens(initialTokens);
@@ -1282,6 +1361,121 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
   }
 
   /**
+   * DYNAMIC STATE FILTERING SYSTEM
+   *
+   * Filters tokens based on the selected state from the dropdown.
+   * Works with ANY state (hover, focus, active, disabled, checked, selected, expanded, etc.)
+   *
+   * KEY BEHAVIOR:
+   * - "default": Shows base tokens only (no state-specific tokens)
+   * - Any other state: Shows base tokens (except those with state-specific versions) + state-specific tokens
+   *
+   * PREVENTS DUPLICATES:
+   * - If base "color" exists AND "hover.color" exists, only show "hover.color" in hover state
+   * - If base "background" exists AND "checked.background" exists, only show "checked.background" in checked state
+   *
+   * SPECIAL RULES:
+   * - Hover/focus/active: hide main background (uses state-layer overlay instead)
+   * - Other states (checked, disabled, etc.): show their state-specific background
+   *
+   * EXAMPLES:
+   * - Default: background, color, font-size
+   * - Hover (button): font-size, state.layer.opacity (NO background, NO duplicate color)
+   * - Checked (checkbox): checked.background, checked.border.color, font-size (NO base versions)
+   * - Disabled: disabled.background, disabled.color, font-size (NO base versions)
+   */
+  const filterTokensByState = (tokens: TokenDefinition[], state: string): TokenDefinition[] => {
+    const componentKey = tokenConfig.componentName;
+
+    // Helper: Get property name from token (e.g., "--wm-btn-background" -> "background")
+    const getPropertyName = (tokenName: string): string => {
+      const prefix = `--wm-${componentKey}-`;
+      if (tokenName.startsWith(prefix)) {
+        let propName = tokenName.substring(prefix.length);
+        // Remove "states-{state}-" prefix if present
+        propName = propName.replace(/^states-\w+-/, '');
+        return propName;
+      }
+      return tokenName;
+    };
+
+    // Helper: Check if there's a state-specific version of this base token
+    const hasStateSpecificVersion = (tokenName: string, targetState: string): boolean => {
+      // Only check for base tokens
+      if (tokenName.includes('-states-')) return false;
+
+      const propertyName = getPropertyName(tokenName);
+      const stateSpecificName = `--wm-${componentKey}-states-${targetState}-${propertyName}`;
+
+      // Check if any token in the list matches this state-specific name
+      return tokens.some(t => t.name === stateSpecificName);
+    };
+
+    // Helper: Extract state name from token (e.g., "--wm-btn-states-hover-color" -> "hover")
+    const getTokenState = (tokenName: string): string | null => {
+      const match = tokenName.match(/-states-(\w+)-/);
+      return match ? match[1] : null;
+    };
+
+    // Helper: Check if this state uses overlay (hover, focus, active should hide main background)
+    const isOverlayState = (stateName: string): boolean => {
+      return ['hover', 'focus', 'active'].includes(stateName);
+    };
+
+    return tokens.filter((token) => {
+      const tokenName = token.name;
+
+      // Classify token types
+      const isBase = !tokenName.includes('-states-');
+      const isStateLayerBase = tokenName.includes('-state-layer-') && !tokenName.includes('-states-');
+      const isMainBackground = tokenName === `--wm-${componentKey}-background`;
+
+      // Get the state this token belongs to (null for base tokens)
+      const tokenState = getTokenState(tokenName);
+
+      if (state === 'default') {
+        // Default: show base + state-layer base, hide all state-specific tokens
+        return (isBase || isStateLayerBase) && tokenState === null;
+      }
+
+      // For any other state (hover, focus, active, disabled, checked, selected, expanded, etc.)
+
+      // Show state-specific tokens that match the selected state
+      if (tokenState === state) {
+        return true;
+      }
+
+      // For base tokens: apply duplicate prevention logic
+      if (isBase || isStateLayerBase) {
+        // Special rule for overlay states (hover, focus, active): always hide main background
+        if (isMainBackground && isOverlayState(state)) {
+          return false;
+        }
+
+        // General rule: hide base if state-specific version exists (prevents duplicates)
+        if (hasStateSpecificVersion(tokenName, state)) {
+          return false;
+        }
+
+        // Show base token (no state-specific version exists)
+        return true;
+      }
+
+      // Hide tokens from other states
+      return false;
+    });
+  };
+
+  // Apply state filtering
+  tokensToDisplay = filterTokensByState(tokensToDisplay, selectedState);
+
+  // Update labels based on selected state (remove state name prefix for cleaner labels)
+  tokensToDisplay = tokensToDisplay.map((token) => ({
+    ...token,
+    label: extractLabelFromCSSVariable(token.name, tokenConfig.componentName, selectedState)
+  }));
+
+  /**
    * SMART CATEGORIZATION SYSTEM
    *
    * This function intelligently categorizes 1000+ CSS variables across ALL 50+ component JSON files
@@ -1308,100 +1502,18 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
    * The system supports 14 categories covering all design token patterns.
    */
   const getCategoryKey = (token: TokenDefinition): string => {
-    const tokenName = token.name;
+    const type = token.type?.toLowerCase() || '';
 
-    // 1. STATE LAYER - All state layer properties (base + hover + focus + active)
-    // Includes both "-state-layer-" and "-layer-" patterns (e.g., --wm-btn-state-layer-opacity, --wm-chips-item-layer-opacity)
-    if (tokenName.includes('-state-layer-') ||
-        (tokenName.includes('-layer-') && (tokenName.includes('-layer-color') || tokenName.includes('-layer-opacity')))) {
-      return 'state-layer';
+    // Categorize based on token type
+    if (type === 'color') {
+      return 'color';
+    } else if (type === 'font') {
+      return 'font';
+    } else if (type === 'space') {
+      return 'space';
+    } else {
+      return 'others';
     }
-
-    // 2. DISABLED STATE - All disabled state properties together
-    if (tokenName.includes('-states-disabled-')) {
-      return 'disabled-state';
-    }
-
-    // 3. OVERLAY - All overlay-related properties (background, color, opacity)
-    // Example: --wm-data-table-overlay-background, --wm-data-table-overlay-opacity
-    if (tokenName.includes('-overlay-')) {
-      return 'overlay';
-    }
-
-    // 4. ICONS - All icon-related properties (size, width, height, color)
-    // Example: --wm-btn-icon-size, --wm-checkbox-icon-color, --wm-btn-image-radius
-    if (tokenName.includes('-icon-') || tokenName.includes('-image-size') || tokenName.includes('-image-radius')) {
-      return 'icons';
-    }
-
-    // 5. COLORS - Background, text color (excluding border-color, icon-color, overlay)
-    // Includes colors from ANY component part: container, heading, caption, item, nav, etc.
-    // Example: --wm-btn-background, --wm-message-container-background, --wm-accordion-heading-color
-    if ((tokenName.includes('-background') || (tokenName.includes('-color') && !tokenName.includes('-border-color') && !tokenName.includes('-icon-') && !tokenName.includes('-overlay-'))) &&
-        !tokenName.includes('-states-disabled-')) {
-      return 'colors';
-    }
-
-    // 6. TYPOGRAPHY - All font properties (size, family, weight, line-height, letter-spacing)
-    // Includes typography from ANY component part: caption, heading, description, item, nav, etc.
-    // Example: --wm-btn-font-size, --wm-checkbox-caption-font-family, --wm-accordion-heading-font-weight
-    if (tokenName.includes('-font-') || tokenName.includes('-line-height') || tokenName.includes('-letter-spacing')) {
-      return 'typography';
-    }
-
-    // 7. BORDERS - border-width, border-style, border-radius, border-color, border-collapse, border-spacing, connector-style
-    // Includes borders from ANY component part: container, nav, item, connector, etc.
-    // Example: --wm-btn-border-width, --wm-tabs-nav-border-color, --wm-data-table-border-collapse, --wm-wizard-step-connector-style
-    if (tokenName.includes('-border-') || (tokenName.includes('-radius') && !tokenName.includes('-image-radius')) ||
-        tokenName.includes('-connector-style')) {
-      return 'borders';
-    }
-
-    // 8. SPACING & DIMENSIONS - padding, gap, margin, height, width, size, min-*, max-*, space
-    // Includes spacing from ANY component part: container, heading, group, list, item, nav, etc.
-    // Example: --wm-btn-padding, --wm-accordion-heading-gap, --wm-card-list-gap, --wm-tabs-item-heading-height
-    if (tokenName.includes('-padding') || tokenName.includes('-gap') || tokenName.includes('-margin') ||
-        tokenName.includes('-height') || tokenName.includes('-width') || tokenName.includes('-size') ||
-        tokenName.includes('-min-') || tokenName.includes('-max-') || tokenName.includes('-space')) {
-      return 'spacing';
-    }
-
-    // 9. LAYOUT & POSITIONING - flexbox/grid alignment, position, display, overflow, z-index, transitions
-    // Example: --wm-modal-align-items, --wm-modal-justify-content, --wm-modal-z-index, --wm-toast-position-top
-    if (tokenName.includes('-align-') || tokenName.includes('-justify-') ||
-        tokenName.includes('-position') || tokenName.includes('-display') ||
-        tokenName.includes('-overflow') || tokenName.includes('-z-index') ||
-        tokenName.includes('-transition') || tokenName.includes('-animation') ||
-        tokenName.includes('-transform') && !tokenName.includes('-text-transform')) {
-      return 'layout';
-    }
-
-    // 10. SHADOWS & EFFECTS - shadow, elevation (excluding disabled state shadows)
-    // Example: --wm-btn-shadow, --wm-card-elevation, --wm-accordion-shadow
-    if ((tokenName.includes('-shadow') || tokenName.includes('-elevation')) && !tokenName.includes('-states-disabled-')) {
-      return 'shadows';
-    }
-
-    // 11. OPACITY - opacity properties (excluding state-layer-opacity, overlay-opacity, disabled opacity)
-    // Example: --wm-btn-opacity (general opacity controls)
-    if (tokenName.includes('-opacity') && !tokenName.includes('-state-layer-') && !tokenName.includes('-overlay-') && !tokenName.includes('-states-disabled-')) {
-      return 'opacity';
-    }
-
-    // 12. TEXT STYLING - text-decoration, text-transform
-    // Example: --wm-anchor-text-decoration, --wm-label-text-transform
-    if (tokenName.includes('-text-decoration') || tokenName.includes('-text-transform')) {
-      return 'text-styling';
-    }
-
-    // 13. INTERACTION - cursor, pointer-events properties
-    // Example: --wm-btn-cursor, --wm-anchor-cursor, --wm-chips-pointer-events
-    if (tokenName.includes('-cursor') || tokenName.includes('-pointer-events')) {
-      return 'interaction';
-    }
-
-    // 14. OTHER - anything else that doesn't fit the above categories
-    return 'other';
   };
 
   // Group tokens by category (considering subtype and state)
@@ -1416,38 +1528,18 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
 
   // Map category keys to friendly display names
   const categoryNames: Record<string, string> = {
-    'state-layer': 'State Layer',
-    'disabled-state': 'Disabled',
-    'colors': 'Colors',
-    'typography': 'Typography',
-    'borders': 'Borders & Lines',
-    'spacing': 'Spacing & Dimensions',
-    'layout': 'Layout & Positioning',
-    'shadows': 'Shadows & Effects',
-    'opacity': 'Opacity',
-    'text-styling': 'Text Styling',
-    'icons': 'Icons',
-    'overlay': 'Overlay',
-    'interaction': 'Interaction',
-    'other': 'Other Properties'
+    'color': 'Color',
+    'font': 'Text',
+    'space': 'Size',
+    'others': 'Style'
   };
 
   // Define custom sort order for categories
   const categoryOrder = [
-    'colors',
-    'typography',
-    'borders',
-    'spacing',
-    'layout',
-    'shadows',
-    'opacity',
-    'text-styling',
-    'icons',
-    'overlay',
-    'state-layer',
-    'disabled-state',
-    'interaction',
-    'other'
+    'color',
+    'font',
+    'space',
+    'others'
   ];
 
   // Helper function to determine state priority for sorting within categories
@@ -1817,6 +1909,26 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
           Modify any token below to see real-time changes in the component above.
         </InfoText>
       </InfoBox>
+
+      {/* State Dropdown - Only shown if component has multiple states */}
+      {availableStates.length > 1 && (
+        <StateDropdownContainer>
+          <StateDropdownLabel htmlFor="state-dropdown">
+            State
+          </StateDropdownLabel>
+          <StateDropdown
+            id="state-dropdown"
+            value={selectedState}
+            onChange={(e) => setSelectedState(e.target.value)}
+          >
+            {availableStates.map((state) => (
+              <option key={state} value={state}>
+                {state.charAt(0).toUpperCase() + state.slice(1)}
+              </option>
+            ))}
+          </StateDropdown>
+        </StateDropdownContainer>
+      )}
 
       {Object.entries(sortedGroupedTokens).map(([typeKey, categoryTokens]) => (
         <TokenSection key={typeKey}>

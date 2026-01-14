@@ -122,18 +122,35 @@ function getCSSVariableName(componentKey: string, path: string[]): string {
 /**
  * Extracts a label from CSS variable name
  *
- * Examples:
+ * Label generation rules by state:
+ * - "default": Shows property name only (e.g., "background")
+ * - "hover/focus/active": Removes state prefix for cleaner labels (e.g., "state.layer.opacity")
+ * - "disabled": KEEPS "disabled." prefix for clarity (e.g., "disabled.background")
+ *
+ * Examples when selectedState = "default":
  * - "--wm-btn-background" → "background"
  * - "--wm-btn-border-color" → "border.color"
- * - "--wm-btn-states-disabled-background" → "disabled.background"
- * - "--wm-btn-states-hover-state-layer-opacity" → "hover.state.layer.opacity"
  * - "--wm-btn-font-size" → "font.size"
+ *
+ * Examples when selectedState = "hover":
+ * - "--wm-btn-states-hover-state-layer-opacity" → "state.layer.opacity"
+ * - "--wm-btn-state-layer-color" → "state.layer.color"
+ *
+ * Examples when selectedState = "disabled":
+ * - "--wm-btn-states-disabled-background" → "disabled.background" (prefix kept for clarity)
+ * - "--wm-btn-states-disabled-color" → "disabled.color"
+ * - "--wm-btn-states-disabled-border-color" → "disabled.border.color"
  *
  * @param cssVarName - CSS variable name (e.g., "--wm-btn-background")
  * @param componentKey - Component key (e.g., "btn")
+ * @param selectedState - Currently selected state from dropdown (e.g., "hover", "disabled", "default")
  * @returns Label string with dots for nested properties
  */
-function extractLabelFromCSSVariable(cssVarName: string, componentKey: string): string {
+export function extractLabelFromCSSVariable(
+  cssVarName: string,
+  componentKey: string,
+  selectedState: string = "default"
+): string {
   // Remove the CSS variable prefix: --wm-{component}-
   const prefix = `--wm-${componentKey}-`;
   if (!cssVarName.startsWith(prefix)) {
@@ -144,9 +161,20 @@ function extractLabelFromCSSVariable(cssVarName: string, componentKey: string): 
   // Extract the token path (everything after the prefix)
   let tokenPath = cssVarName.substring(prefix.length);
 
-  // Remove "states-" prefix if present
-  if (tokenPath.startsWith('states-')) {
-    tokenPath = tokenPath.substring(7); // Remove "states-"
+  // Handle state-specific tokens
+  // When a state is selected, remove the state prefix from labels to avoid redundancy
+  // The dropdown already shows which state is selected, so repeating it in every label is unnecessary
+  if (selectedState !== "default" && tokenPath.startsWith('states-')) {
+    const statePrefix = `states-${selectedState}-`;
+    if (tokenPath.startsWith(statePrefix)) {
+      // Remove state prefix for ALL states when that state is selected
+      // Examples:
+      // - State "checked": "states-checked-background" → "background"
+      // - State "disabled": "states-disabled-border-color" → "border.color"
+      // - State "hover": "states-hover-state-layer-opacity" → "state.layer.opacity"
+      // - State "error": "states-error-color" → "color"
+      tokenPath = tokenPath.substring(statePrefix.length);
+    }
   }
 
   // Convert hyphens to dots for nested properties
@@ -382,6 +410,50 @@ function parseTokenObject(
   }
 
   return tokens;
+}
+
+/**
+ * Detects available states from JSON structure
+ *
+ * This function dynamically discovers which states are available for a component
+ * by analyzing the JSON structure. It looks for the "states" object in mapping.
+ *
+ * @param tokenData - Complete JSON object (e.g., contents of wm-button.json)
+ * @param componentKey - Component identifier (e.g., "btn")
+ * @returns Array of available state names, always includes "default"
+ *
+ * Examples:
+ * - Button with states: ["default", "hover", "focus", "active", "disabled"]
+ * - Anchor without states: ["default"]
+ * - Component with custom states: ["default", "loading", "error", "success"]
+ *
+ * The "default" state always represents base tokens (without "states-" prefix).
+ */
+export function detectAvailableStates(
+  tokenData: any,
+  componentKey: string
+): string[] {
+  const componentData = tokenData[componentKey];
+
+  if (!componentData) {
+    return ["default"];
+  }
+
+  const states: string[] = ["default"]; // Always include default state
+
+  // Look for states in mapping.states
+  if (componentData.mapping && componentData.mapping.states) {
+    const statesObj = componentData.mapping.states;
+
+    // Extract state names from the states object
+    for (const stateName of Object.keys(statesObj)) {
+      if (stateName !== "attributes" && !states.includes(stateName)) {
+        states.push(stateName);
+      }
+    }
+  }
+
+  return states;
 }
 
 /**
