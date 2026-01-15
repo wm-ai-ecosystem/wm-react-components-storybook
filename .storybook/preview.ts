@@ -65,6 +65,30 @@ const preview: Preview = {
         date: /Date$/i,
       },
     },
+    // Disable Actions addon panel
+    actions: {
+      disable: true,
+    },
+    // Disable Interactions addon panel
+    interactions: {
+      disable: true,
+    },
+    // Disable Backgrounds addon panel (if you don't need it)
+    backgrounds: {
+      disable: true,
+    },
+    // Disable Viewport addon panel (if you don't need it)
+    viewport: {
+      disable: true,
+    },
+    // Disable Measure addon panel
+    measure: {
+      disable: true,
+    },
+    // Disable Outline addon panel
+    outline: {
+      disable: true,
+    },
 
     // a11y: {
     //   // 'todo' - show a11y violations in the test UI only
