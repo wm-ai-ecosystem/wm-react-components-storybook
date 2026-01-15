@@ -21,17 +21,17 @@ const mockListener = {
 const meta = {
   title: "Dialogs/Dialog",
   component: DialogDefaultExport,
-  argTypes: {
-    title: { control: "text" },
-    iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
-    dialogtype: {
-      control: { type: "select" },
-      options: ["design-dialog", "custom"],
-    },
-    showheader: { control: "boolean" },
-    closable: { control: "boolean" },
-    modal: { control: "boolean" },
-  },
+  // argTypes: {
+  //   title: { control: "text" },
+  //   iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
+  //   dialogtype: {
+  //     control: { type: "select" },
+  //     options: ["design-dialog", "custom"],
+  //   },
+  //   showheader: { control: "boolean" },
+  //   closable: { control: "boolean" },
+  //   modal: { control: "boolean" },
+  // },
 } satisfies Meta<typeof DialogDefaultExport>;
 
 export default meta;
@@ -311,6 +311,17 @@ export const Basic: Story = {
     modal: true,
     iconclass: "fa fa-file",
     listener: mockListener,
+  },
+  argTypes: {
+    title: { control: "text" },
+    iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
+    dialogtype: {
+      control: { type: "select" },
+      options: ["design-dialog", "custom"],
+    },
+    showheader: { control: "boolean" },
+    closable: { control: "boolean" },
+    modal: { control: "boolean" },
   },
 };
 

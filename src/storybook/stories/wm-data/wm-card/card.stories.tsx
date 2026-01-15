@@ -24,25 +24,25 @@ const mockListener = {
 const meta = {
   title: "Data/Card",
   component: WmCard,
-  argTypes: {
-    title: { control: "text" },
-    subheading: { control: "text" },
-    iconclass:{
-      control:{
-        type:"select"
-      },
-      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
-        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user", "wi wi-dashboard"],
-    },
-    iconurl: { control: "text" },
-    picturesource: { control: "text" },
-    picturetitle: { control: "text" },
-    imageheight: { control: "text" },
-    width: { control: "text" },
-    height: { control: "text" },
-    animation: { control: "select", options: animationNames },
-    actions: { control: "text" },
-  },
+  // argTypes: {
+  //   title: { control: "text" },
+  //   subheading: { control: "text" },
+  //   iconclass:{
+  //     control:{
+  //       type:"select"
+  //     },
+  //     options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+  //       "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user", "wi wi-dashboard"],
+  //   },
+  //   iconurl: { control: "text" },
+  //   picturesource: { control: "text" },
+  //   picturetitle: { control: "text" },
+  //   imageheight: { control: "text" },
+  //   width: { control: "text" },
+  //   height: { control: "text" },
+  //   animation: { control: "select", options: animationNames },
+  //   actions: { control: "text" },
+  // },
   parameters: {
     layout: "fullscreen",
   },
@@ -294,6 +294,25 @@ export const Basic: Story = {
         </Box>
       </WmCardContent>
     ),
+  },
+  argTypes: {
+    title: { control: "text" },
+    subheading: { control: "text" },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user", "wi wi-dashboard"],
+    },
+    iconurl: { control: "text" },
+    picturesource: { control: "text" },
+    picturetitle: { control: "text" },
+    imageheight: { control: "text" },
+    width: { control: "text" },
+    height: { control: "text" },
+    animation: { control: "select", options: animationNames },
+    actions: { control: "text" },
   },
 };
 

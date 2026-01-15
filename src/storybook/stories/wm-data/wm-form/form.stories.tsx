@@ -27,29 +27,29 @@ const mockListener = {
 const meta = {
   title: "Data/Form",
   component: WmForm,
-  argTypes: {
-    title: { control: "text" },
-    subheading: { control: "text" },
-    iconclass:{
-      control:{
-        type:"select"
-      },
-      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
-        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
-    },
-    collapsible: { control: "boolean" },
-    expanded: { control: "boolean" },
-    captionposition: {
-      control: "select",
-      options: ["left", "top", "floating"]
-    },
-    captionalign: {
-      control: "select",
-      options: ["left", "center", "right"]
-    },
-  },
+  // argTypes: {
+  //   title: { control: "text" },
+  //   subheading: { control: "text" },
+  //   iconclass:{
+  //     control:{
+  //       type:"select"
+  //     },
+  //     options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+  //       "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
+  //   },
+  //   collapsible: { control: "boolean" },
+  //   expanded: { control: "boolean" },
+  //   captionposition: {
+  //     control: "select",
+  //     options: ["left", "top", "floating"]
+  //   },
+  //   captionalign: {
+  //     control: "select",
+  //     options: ["left", "center", "right"]
+  //   },
+  // },
   parameters: {
-    layout: "padded",
+    layout: "fullscreen",
   },
 } satisfies Meta<typeof WmForm>;
 
@@ -487,6 +487,27 @@ export const Basic: Story = {
     collapsible: false,
     expanded: true,
   } as any,
+  argTypes: {
+    title: { control: "text" },
+    subheading: { control: "text" },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
+    },
+    collapsible: { control: "boolean" },
+    expanded: { control: "boolean" },
+    captionposition: {
+      control: "select",
+      options: ["left", "top", "floating"]
+    },
+    captionalign: {
+      control: "select",
+      options: ["left", "center", "right"]
+    },
+  },
 };
 
 

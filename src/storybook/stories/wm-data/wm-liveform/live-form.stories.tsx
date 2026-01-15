@@ -56,33 +56,33 @@ const mockListener = {
 const meta = {
   title: "Data/LiveForm",
   component: WmLiveForm,
-  argTypes: {
-    title: { control: "text" },
-    subheading: { control: "text" },
-    iconclass:{
-      control:{
-        type:"select"
-      },
-      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart",
-        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
-    },
-    defaultmode: {
-      control: "select",
-      options: ["view", "edit", "create"]
-    },
-    formlayout: {
-      control: "select",
-      options: ["inline", "dialog"]
-    },
-    messagelayout: {
-      control: "select",
-      options: ["Toaster", "Inline"]
-    },
-    insertmessage: { control: "text" },
-    updatemessage: { control: "text" },
-    deletemessage: { control: "text" },
-    errormessage: { control: "text" },
-  },
+  // argTypes: {
+  //   title: { control: "text" },
+  //   subheading: { control: "text" },
+  //   iconclass:{
+  //     control:{
+  //       type:"select"
+  //     },
+  //     options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart",
+  //       "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
+  //   },
+  //   defaultmode: {
+  //     control: "select",
+  //     options: ["view", "edit", "create"]
+  //   },
+  //   formlayout: {
+  //     control: "select",
+  //     options: ["inline", "dialog"]
+  //   },
+  //   messagelayout: {
+  //     control: "select",
+  //     options: ["Toaster", "Inline"]
+  //   },
+  //   insertmessage: { control: "text" },
+  //   updatemessage: { control: "text" },
+  //   deletemessage: { control: "text" },
+  //   errormessage: { control: "text" },
+  // },
   parameters: {
     layout: "fullscreen",
   },
@@ -506,6 +506,33 @@ export const Basic: Story = {
     deletemessage: "Record deleted successfully",
     errormessage: "An error occurred",
   } as any,
+  argTypes: {
+    title: { control: "text" },
+    subheading: { control: "text" },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart",
+        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
+    },
+    defaultmode: {
+      control: "select",
+      options: ["view", "edit", "create"]
+    },
+    formlayout: {
+      control: "select",
+      options: ["inline", "dialog"]
+    },
+    messagelayout: {
+      control: "select",
+      options: ["Toaster", "Inline"]
+    },
+    insertmessage: { control: "text" },
+    updatemessage: { control: "text" },
+    deletemessage: { control: "text" },
+    errormessage: { control: "text" },
+  },
 };
 
 // export const ViewMode: Story = {

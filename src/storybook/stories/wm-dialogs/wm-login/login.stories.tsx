@@ -23,13 +23,13 @@ const mockListener = {
 const meta = {
   title: "Dialogs/Login Dialog",
   component: LoginDialogDefaultExport,
-  argTypes: {
-    title: { control: "text" },
-    iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
-    logintext: { control: "text" },
-    canceltext: { control: "text" },
-    errormessage: { control: "text" },
-  },
+  // argTypes: {
+  //   title: { control: "text" },
+  //   iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
+  //   logintext: { control: "text" },
+  //   canceltext: { control: "text" },
+  //   errormessage: { control: "text" },
+  // },
 } satisfies Meta<typeof LoginDialogDefaultExport>;
 
 export default meta;
@@ -183,6 +183,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsLoginForm",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -199,6 +203,13 @@ export const Basic: Story = {
     canceltext: "Cancel",
     eventsource: createMockEventSource(true, 1000),
     listener: mockListener,
+  },
+  argTypes: {
+    title: { control: "text" },
+    iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
+    logintext: { control: "text" },
+    canceltext: { control: "text" },
+    errormessage: { control: "text" },
   },
 };
 

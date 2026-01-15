@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Typography, Stack } from "@mui/material";
 import WmPopover from "../../../../components/navigation/popover";
-import WmButton from "../../../../components/form/button";
-import WmLabel from "../../../../components/basic/label"
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
 import { animationNames } from "../../constants/animationsConstants";
@@ -13,35 +11,37 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import popoverTokensData from "../../../../designTokens/components/popover/popover.json";
+
 
 
 const meta = {
   title: "Navigation/Popover",
   component: WmPopover,
-  argTypes: {
-    content: { control: "text" },
-    title: { control: "text" },
-    popoverwidth: { control: "text" },
-    popoverheight: { control: "text" },
-    popoverplacement: {
-      control: { type: "select" },
-      options: ["top", "bottom", "left", "right"],
-    },
-    popoverarrow: { control: "boolean" },
-    interaction: {
-      control: { type: "select" },
-      options: ["click", "hover", "click and hover"],
-    },
-    contentsource: {
-      control: { type: "select" },
-      options: ["partial", "inline"],
-    },
-    autoclose: {
-      control: { type: "select" },
-      options: ["outsideClick", "always", "disabled"],
-    },
-    contentanimation: { control: "select", options: animationNames },
-  },
+  // argTypes: {
+  //   content: { control: "text" },
+  //   title: { control: "text" },
+  //   popoverwidth: { control: "text" },
+  //   popoverheight: { control: "text" },
+  //   popoverplacement: {
+  //     control: { type: "select" },
+  //     options: ["top", "bottom", "left", "right"],
+  //   },
+  //   popoverarrow: { control: "boolean" },
+  //   interaction: {
+  //     control: { type: "select" },
+  //     options: ["click", "hover", "click and hover"],
+  //   },
+  //   contentsource: {
+  //     control: { type: "select" },
+  //     options: ["partial", "inline"],
+  //   },
+  //   autoclose: {
+  //     control: { type: "select" },
+  //     options: ["outsideClick", "always", "disabled"],
+  //   },
+  //   contentanimation: { control: "select", options: animationNames },
+  // },
   parameters: {
     layout: "fullscreen",
   },
@@ -50,14 +50,13 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const PopoverContent = () => (
-  <div style={{ padding: "10px" }}>
-    <WmLabel
-      name="popoverContent"
-      caption="This is popover content. Click outside to close."
-    />
-  </div>
-);
+// Mock listener object for the component
+const mockListener = {
+  appLocale: {
+    LABEL_ICON: "Icon",
+  },
+  Widgets: {},
+};
 
 // Rich UI component for partial content source
 const UserProfileCard = () => (
@@ -189,29 +188,6 @@ const NotificationCard = () => (
   </Box>
 );
 
-const style = {
-  buttonStyle: {
-    backgroundColor: "#1976d2",
-    color: "#ffffff",
-    padding: "10px 20px",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  },
-  buttonTextStyle: {
-    fontSize: "16px",
-    fontWeight: "bold",
-  },
-};
-
-// Mock listener object for the component
-const mockListener = {
-  appLocale: {
-    LABEL_ICON: "Icon",
-  },
-  Widgets: {},
-};
-
 export const Docs: Story = {
   render: () => (
     <ComponentDocumentation
@@ -222,6 +198,13 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsPopover",
+    listener:mockListener,
+    popoverarrow: true,
+    popoverheight: "auto",
+    popoverwidth: "240px",
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -467,14 +450,14 @@ export const Basic: Story = {
   render: (args) => (
     <WmPopover
       {...args}
-      styles={{
-        backgroundColor: "#1976d2",
-        color: "#ffffff",
-        padding: "10px 20px",
-        border: "none",
-        borderRadius: "4px",
-        cursor: "pointer",
-      }}
+      // styles={{
+      //   backgroundColor: "#1976d2",
+      //   color: "#ffffff",
+      //   padding: "10px 20px",
+      //   border: "none",
+      //   borderRadius: "4px",
+      //   cursor: "pointer",
+      // }}
     >
       <Box sx={{ p: 2.5 }}>
         <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
@@ -483,40 +466,156 @@ export const Basic: Story = {
       </Box>
     </WmPopover>
   ),
+  argTypes: {
+    content: { control: "text" },
+    title: { control: "text" },
+    popoverwidth: { control: "text" },
+    popoverheight: { control: "text" },
+    popoverplacement: {
+      control: { type: "select" },
+      options: ["top", "bottom", "left", "right"],
+    },
+    popoverarrow: { control: "boolean" },
+    interaction: {
+      control: { type: "select" },
+      options: ["click", "hover", "click and hover"],
+    },
+    contentsource: {
+      control: { type: "select" },
+      options: ["partial", "inline"],
+    },
+    autoclose: {
+      control: { type: "select" },
+      options: ["outsideClick", "always", "disabled"],
+    },
+    contentanimation: { control: "select", options: animationNames },
+  },
 };
 
-export const Animations: Story = {
+// export const Animations: Story = {
+//   tags: ['show-panel'],
+//   args: {
+//     name: "animationPopover",
+//     caption: "Click for Info",
+//     popoverwidth: "240px",
+//     popoverheight: "auto",
+//     popoverplacement: "bottom",
+//     popoverarrow: true,
+//     interaction: "click",
+//     contentsource: "inline",
+//     autoclose: "outsideClick",
+//     listener: mockListener,
+//     contentanimation: "fadeIn"
+//   },
+//   render: (args) => (
+//     <WmPopover
+//       {...args}
+//       styles={{
+//         backgroundColor: "#1976d2",
+//         color: "#ffffff",
+//         padding: "10px 20px",
+//         border: "none",
+//         borderRadius: "4px",
+//         cursor: "pointer",
+//       }}
+//     >
+//       <Box sx={{ p: 2.5 }}>
+//         <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
+//           This is popover content with inline source. You can add any content here.
+//         </Typography>
+//       </Box>
+//     </WmPopover>
+//   ),
+//   argTypes: {
+//     content: { control: "text" },
+//     title: { control: "text" },
+//     popoverwidth: { control: "text" },
+//     popoverheight: { control: "text" },
+//     popoverplacement: {
+//       control: { type: "select" },
+//       options: ["top", "bottom", "left", "right"],
+//     },
+//     popoverarrow: { control: "boolean" },
+//     interaction: {
+//       control: { type: "select" },
+//       options: ["click", "hover", "click and hover"],
+//     },
+//     contentsource: {
+//       control: { type: "select" },
+//       options: ["partial", "inline"],
+//     },
+//     autoclose: {
+//       control: { type: "select" },
+//       options: ["outsideClick", "always", "disabled"],
+//     },
+//     contentanimation: { control: "select", options: animationNames },
+//   },
+// };
+
+export const Standard: Story = {
   tags: ['show-panel'],
+  render: (args) => {
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+
+    return (
+      // <div style={{ padding: 16 }} data-design-token-target={dataAttr}>
+      //   <WmPopover
+      //     {...componentArgs}
+      //     styles={{
+      //       backgroundColor: "#1976d2",
+      //       color: "#fff",
+      //       padding: "10px 16px",
+      //       border: "none",
+      //       borderRadius: "4px",
+      //       cursor: "pointer",
+      //     }}
+      //   />
+      // </div>
+      <WmPopover
+      {...componentArgs}
+      data-design-token-target={dataAttr}
+    >
+      <Box sx={{ p: 2.5 }}>
+        <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
+          This is popover content with inline source. You can add any content here.
+        </Typography>
+      </Box>
+      </WmPopover>
+    );
+  },
   args: {
-    name: "animationPopover",
-    caption: "Click for Info",
-    popoverwidth: "240px",
+    name: "standardPopover",
+    caption: "Popover",
+    title: "Popover Header",
+    popoverwidth: "280px",
     popoverheight: "auto",
     popoverplacement: "bottom",
     popoverarrow: true,
     interaction: "click",
-    contentsource: "inline",
-    autoclose: "outsideClick",
+    autoclose: "disabled",
+    content: "Body content text",
     listener: mockListener,
-    contentanimation: "fadeIn"
+    "data-design-token-target": "true"
   },
-  render: (args) => (
-    <WmPopover
-      {...args}
-      styles={{
-        backgroundColor: "#1976d2",
-        color: "#ffffff",
-        padding: "10px 20px",
-        border: "none",
-        borderRadius: "4px",
-        cursor: "pointer",
-      }}
-    >
-      <Box sx={{ p: 2.5 }}>
-        <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
-          This is popover content with inline source. You can add any content here.
-        </Typography>
-      </Box>
-    </WmPopover>
-  ),
+  argTypes: {
+    caption: { control: false },
+    title: { control: false },
+    content: { control: false },
+    popoverwidth: { control: false },
+    popoverheight: { control: false },
+    popoverplacement: { control: false },
+    popoverarrow: { control: false },
+    interaction: { control: false },
+    autoclose: { control: false },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: popoverTokensData,
+      componentKey: "popover",
+      extractCSSVariablesAtRuntime: true,
+    },
+    layout: 'fullscreen',
+  },
 };

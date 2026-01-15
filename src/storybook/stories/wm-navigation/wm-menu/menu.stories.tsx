@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { Box, Typography, Stack } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import WmMenu from "../../../../components/navigation/menu";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
@@ -10,32 +10,34 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import dropdownMenuTokensData from "../../../../designTokens/components/dropdown-menu/dropdown-menu.json";
+
 
 const meta = {
   title: "Navigation/Menu",
   component: WmMenu,
-  argTypes: {
-    caption: { control: "text" },
-    height: { control: "text" },
-    width: { control: "text" },
-    iconposition: { control: "select", options: ["left", "center", "right"] },
-    iconclass: { control: "text" },
-    disableMenuContext: { control: "boolean" },
-    menulayout: { control: "select", options: ["vertical", "horizontal"] },
-    menuposition: { control: "select", options: ["down,left", "down,right", "up,left", "up,right"] },
-    menualign: { control: "select", options: ["left", "center", "right"] },
-    showonhover: { control: "boolean" },
-    // autoclose: { control: "boolean" },
-    autoclose: {
-      control: { type: "select" },
-      options: ["always", "outsideClick", "disabled"],
-    },
-    // autoopen: { control: "boolean" } 
-    autoopen: {
-      control: { type: "select" },
-      options: ["never", "always", "activePage"],
-    }
-  },
+  // argTypes: {
+  //   caption: { control: "text" },
+  //   height: { control: "text" },
+  //   width: { control: "text" },
+  //   iconposition: { control: "select", options: ["left", "center", "right"] },
+  //   iconclass: { control: "text" },
+  //   disableMenuContext: { control: "boolean" },
+  //   menulayout: { control: "select", options: ["vertical", "horizontal"] },
+  //   menuposition: { control: "select", options: ["down,left", "down,right", "up,left", "up,right"] },
+  //   menualign: { control: "select", options: ["left", "center", "right"] },
+  //   showonhover: { control: "boolean" },
+  //   // autoclose: { control: "boolean" },
+  //   autoclose: {
+  //     control: { type: "select" },
+  //     options: ["always", "outsideClick", "disabled"],
+  //   },
+  //   // autoopen: { control: "boolean" } 
+  //   autoopen: {
+  //     control: { type: "select" },
+  //     options: ["never", "always", "activePage"],
+  //   }
+  // },
   parameters: {
     layout: "fullscreen",
   },
@@ -69,6 +71,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsMenu",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -172,7 +178,68 @@ export const Basic: Story = {
     autoopen: "never",
     dataset: menuItems,
     listener: mockListener,
-  }
+  },
+  argTypes: {
+    caption: { control: "text" },
+    height: { control: "text" },
+    width: { control: "text" },
+    iconposition: { control: "select", options: ["left", "center", "right"] },
+    iconclass: { control: "text" },
+    disableMenuContext: { control: "boolean" },
+    menulayout: { control: "select", options: ["vertical", "horizontal"] },
+    menuposition: { control: "select", options: ["down,left", "down,right", "up,left", "up,right"] },
+    menualign: { control: "select", options: ["left", "center", "right"] },
+    showonhover: { control: "boolean" },
+    // autoclose: { control: "boolean" },
+    autoclose: {
+      control: { type: "select" },
+      options: ["always", "outsideClick", "disabled"],
+    },
+    // autoopen: { control: "boolean" } 
+    autoopen: {
+      control: { type: "select" },
+      options: ["never", "always", "activePage"],
+    }
+  },
+};
+
+export const Standard: Story = {
+  tags: ['show-panel'],
+  render: (args) => {
+    // Component can't spread data-design-token-target, so we apply it to a wrapper
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+
+    return (
+      <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
+        <WmMenu {...componentArgs} listener={mockListener} />
+      </Box>
+    );
+  },
+  args: {
+    name:"standardMenu",
+    caption: "Menu",
+    width: "200px",
+    height: "auto",
+    dataset: menuItems,
+    listener: mockListener,
+    "data-design-token-target":"true"
+  },
+  argTypes: {
+    caption: { control: false },
+    height: { control: false },
+    width: { control: false },
+    dataset:{control:false},
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: dropdownMenuTokensData,
+      componentKey: "dropdown",
+      extractCSSVariablesAtRuntime: true,
+    },
+    layout: 'fullscreen',
+  },
 };
 
 

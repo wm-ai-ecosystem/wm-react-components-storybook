@@ -19,14 +19,14 @@ const mockListener = {
 const meta = {
   title: "Dialogs/Page Dialog",
   component: PageDialogDefaultExport,
-  argTypes: {
-    title: { control: "text" },
-    iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
-    oktext: { control: "text" },
-    showactions: { control: "boolean" },
-    closable: { control: "boolean" },
-    content: { control: "text" },
-  },
+  // argTypes: {
+  //   title: { control: "text" },
+  //   iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
+  //   oktext: { control: "text" },
+  //   showactions: { control: "boolean" },
+  //   closable: { control: "boolean" },
+  //   content: { control: "text" },
+  // },
 } satisfies Meta<typeof PageDialogDefaultExport>;
 
 export default meta;
@@ -75,6 +75,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsPageDialog",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -93,6 +97,14 @@ export const Basic: Story = {
     content: "Main",
     listener: mockListener
   },
+  argTypes: {
+    title: { control: "text" },
+    iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
+    oktext: { control: "text" },
+    showactions: { control: "boolean" },
+    closable: { control: "boolean" },
+    content: { control: "text" },
+  }
 };
 
 // export const WithCustomTitle: Story = {

@@ -48,33 +48,33 @@ const tasksData = [
 const meta = {
   title: "Data/List",
   component: WmList,
-  argTypes: {
-    title: { control: "text" },
-    subheading: { control: "text" },
-    iconclass:{
-      control:{
-        type:"select"
-      },
-      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
-        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
-    },
-    navigation: {
-      control: "select",
-      options: ["None", "Basic", "Pager", "Classic", "Advanced", "Inline", "On-Demand", "Scroll"]
-    },
-    direction: {
-      control: "select",
-      options: ["vertical", "horizontal"]
-    },
-    pagesize: { control: "number" },
-    multiselect: { control: "boolean" },
-    collapsible: { control: "boolean" },
-    selectfirstitem: { control: "boolean" },
-    showrecordcount: { control: "boolean" },
-    enablereorder: { control: "boolean" },
-  },
+  // argTypes: {
+  //   title: { control: "text" },
+  //   subheading: { control: "text" },
+  //   iconclass:{
+  //     control:{
+  //       type:"select"
+  //     },
+  //     options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+  //       "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
+  //   },
+  //   navigation: {
+  //     control: "select",
+  //     options: ["None", "Basic", "Pager", "Classic", "Advanced", "Inline", "On-Demand", "Scroll"]
+  //   },
+  //   direction: {
+  //     control: "select",
+  //     options: ["vertical", "horizontal"]
+  //   },
+  //   pagesize: { control: "number" },
+  //   multiselect: { control: "boolean" },
+  //   collapsible: { control: "boolean" },
+  //   selectfirstitem: { control: "boolean" },
+  //   showrecordcount: { control: "boolean" },
+  //   enablereorder: { control: "boolean" },
+  // },
   parameters: {
-    layout: "padded",
+    layout: "fullscreen",
   },
 } satisfies Meta<typeof WmList>;
 
@@ -424,6 +424,31 @@ export const Basic: Story = {
       </Box>
     ),
   },
+  argTypes: {
+    title: { control: "text" },
+    subheading: { control: "text" },
+    iconclass:{
+      control:{
+        type:"select"
+      },
+      options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
+        "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
+    },
+    navigation: {
+      control: "select",
+      options: ["None", "Basic", "Pager", "Classic", "Advanced", "Inline", "On-Demand", "Scroll"]
+    },
+    direction: {
+      control: "select",
+      options: ["vertical", "horizontal"]
+    },
+    pagesize: { control: "number" },
+    multiselect: { control: "boolean" },
+    collapsible: { control: "boolean" },
+    selectfirstitem: { control: "boolean" },
+    showrecordcount: { control: "boolean" },
+    enablereorder: { control: "boolean" },
+  }
 };
 
 // export const WithPagination: Story = {

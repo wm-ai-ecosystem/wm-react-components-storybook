@@ -11,6 +11,8 @@ import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 
+import modalDialogTokensData from "../../../../designTokens/components/modal-dialog/modal-dialog.json";
+
 const mockListener = {
   appLocale: {},
   Widgets: {},
@@ -19,16 +21,16 @@ const mockListener = {
 const meta = {
   title: "Dialogs/Alert Dialog",
   component: AlertDialogDefaultExport,
-  argTypes: {
-    title: { control: "text" },
-    text: { control: "text" },
-    oktext: { control: "text" },
-    alerttype: {
-      control: { type: "select" },
-      options: ["error", "warning", "info", "success"],
-    },
-    iconclass: { control: "select", options: ["fa fa-warning", "fa fa-check-circle"] },
-  },
+  // argTypes: {
+  //   title: { control: "text" },
+  //   text: { control: "text" },
+  //   oktext: { control: "text" },
+  //   alerttype: {
+  //     control: { type: "select" },
+  //     options: ["error", "warning", "info", "success"],
+  //   },
+  //   iconclass: { control: "select", options: ["fa fa-warning", "fa fa-check-circle"] },
+  // },
 } satisfies Meta<typeof AlertDialogDefaultExport>;
 
 export default meta;
@@ -77,6 +79,10 @@ export const Docs: Story = {
       styling={styling}
     />
   ),
+  args:{
+    name:"docsAlertDialog",
+    listener:mockListener
+  },
   parameters: {
     layout: 'fullscreen',
   },
@@ -216,7 +222,87 @@ export const Basic: Story = {
     iconclass: "fa fa-warning",
     listener: mockListener,
   },
+  argTypes: {
+    title: { control: "text" },
+    text: { control: "text" },
+    oktext: { control: "text" },
+    alerttype: {
+      control: { type: "select" },
+      options: ["error", "warning", "info", "success"],
+    },
+    iconclass: { control: "select", options: ["fa fa-warning", "fa fa-check-circle"] },
+  },
 };
+
+// export const Standard: Story = {
+//   tags: ['show-panel'],
+//   render: (args) => {
+//       //component can't spread data-design-token-target, so we apply it to a wrapper
+//       const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+//       const [isOpen, setIsOpen] = useState(false);
+  
+//       return (
+//         <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
+//           <Box style={{ padding: 16 }}>
+//       <WmButton
+//         name="openAlertBtn"
+//         caption="Open Alert Dialog"
+//         onClick={() => setIsOpen(true)}
+//         listener={mockListener}
+//         styles={{
+//           backgroundColor: "#007bff",
+//           color: "white",
+//           padding: "8px 16px",
+//           border: "none",
+//           borderRadius: "4px",
+//           cursor: "pointer",
+//           fontSize: "14px",
+//           fontWeight: "500",
+//         }}
+//       />
+//       <AlertDialogDefaultExport
+//         {...args}
+//         isopen={isOpen}
+//         onClose={() => setIsOpen(false)}
+//         close={() => setIsOpen(false)}
+//         onOkClick={() => setIsOpen(false)}
+//         listener={mockListener}
+//       />
+//     </Box>
+//         </Box>
+//       );
+//     },
+//   args: {
+//     name: "standardAlert",
+//     title: "Alert",
+//     text: "I am Alert Box!",
+//     oktext: "OK",
+//     alerttype: "warning",
+//     iconclass: "fa fa-warning",
+//     listener: mockListener,
+//     "data-design-token-target":"true"
+//   },
+//   argTypes: {
+//     title: { control: "text" },
+//     text: { control: "text" },
+//     oktext: { control: "text" },
+//     alerttype: {
+//       control: { type: "select" },
+//       options: ["error", "warning", "info", "success"],
+//     },
+//     iconclass: { control: "select", options: ["fa fa-warning", "fa fa-check-circle"] },
+//     "data-design-token-target": { control: false }
+//   },
+//   parameters: {
+//     designTokens: {
+//       enabled: true,
+//       tokenData: modalDialogTokensData,  // Pass raw JSON data instead of pre-parsed config
+//       componentKey: "modal",  // Component identifier for parsing
+//       extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+//     },
+//     layout: 'fullscreen',
+//   }, 
+// };
 
 // export const ErrorAlert: Story = {
 //   render: Template,
