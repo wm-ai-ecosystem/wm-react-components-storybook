@@ -568,13 +568,6 @@ export const Standard: Story = {
     return (
       <Box sx={{ p: 3 }}>
         <Stack spacing={2}>
-          <Typography variant="h5" fontWeight={600}>
-            Form Controls Design Tokens
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Demonstrates all form input types with design token customization
-          </Typography>
-
           <div data-design-token-target="true">
             <WmForm {...({
                 name: "standardForm",

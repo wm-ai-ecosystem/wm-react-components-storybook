@@ -597,13 +597,6 @@ export const Standard: Story = {
     return (
       <Box sx={{ p: 3 }}>
         <Stack spacing={2}>
-          <Typography variant="h5" fontWeight={600}>
-            LiveForm Controls Design Tokens
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Demonstrates all form input types in LiveForm with design token customization
-          </Typography>
-
           <div data-design-token-target="true">
             <WmLiveForm {...({
               name: "standardLiveForm",
