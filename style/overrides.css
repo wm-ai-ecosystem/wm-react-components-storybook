@@ -106,3 +106,8 @@ body.sb-show-main {
 .app-dialog .app-dialog-header .app-dialog-title i.fa + .dialog-heading, .app-dialog .app-dialog-header .app-dialog-title i.wi + .dialog-heading{
   margin-left: 16px;
 }
+
+/* Anchor Showcase story */
+.wm-app .app-anchor[name='anchorWithIconRight']{
+  justify-content: left !important;
+}

@@ -238,11 +238,8 @@ export const Standard: Story = {
   }, 
   argTypes: {
     caption: { control: "text" },
-    type: {
-      control: { type: "select" },
-      options: ["h1", "h2", "h3", "h4", "h5", "h6", "p"],
-    },
-     className: {
+    type:{control: false},
+    className: {
       control: {
         type: "select",
       },

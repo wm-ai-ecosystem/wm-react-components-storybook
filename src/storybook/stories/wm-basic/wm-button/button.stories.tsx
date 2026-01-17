@@ -223,6 +223,13 @@ export const Showcase: Story = {
                 listener={mockListener}
               />
               <ButtonDefaultExport
+                name="filledTertiary"
+                caption="Tertiary"
+                type="button"
+                className="btn-filled btn-tertiary"
+                listener={mockListener}
+              />
+              {/* <ButtonDefaultExport
                 name="filledSuccess"
                 caption="Success"
                 type="button"
@@ -249,7 +256,7 @@ export const Showcase: Story = {
                 type="button"
                 className="btn-filled btn-info"
                 listener={mockListener}
-              />
+              /> */}
             </Box>
           </Stack>
 
@@ -282,6 +289,13 @@ export const Showcase: Story = {
                 listener={mockListener}
               />
               <ButtonDefaultExport
+                name="outlinedTertiary"
+                caption="Tertiary"
+                type="button"
+                className="btn-outlined btn-tertiary"
+                listener={mockListener}
+              />
+              {/* <ButtonDefaultExport
                 name="outlinedSuccess"
                 caption="Success"
                 type="button"
@@ -308,12 +322,102 @@ export const Showcase: Story = {
                 type="button"
                 className="btn-outlined btn-info"
                 listener={mockListener}
+              /> */}
+            </Box>
+          </Stack>
+
+          {/* Row 3: Text Variants */}
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2" color="text.secondary">
+              Text Variants
+            </Typography>
+
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: 3,
+                maxWidth: 900,
+              }}
+            >
+              <ButtonDefaultExport
+                name="textPrimary"
+                caption="Primary"
+                type="button"
+                className="btn-text btn-primary"
+                listener={mockListener}
+              />
+              <ButtonDefaultExport
+                name="textSecondary"
+                caption="Secondary"
+                type="button"
+                className="btn-text btn-secondary"
+                listener={mockListener}
+              />
+              <ButtonDefaultExport
+                name="textTertiary"
+                caption="Tertiary"
+                type="button"
+                className="btn-text btn-tertiary"
+                listener={mockListener}
+              />
+              {/* <ButtonDefaultExport
+                name="textSuccess"
+                caption="Success"
+                type="button"
+                className="btn-text btn-success"
+                listener={mockListener}
+              />
+              <ButtonDefaultExport
+                name="textDanger"
+                caption="Danger"
+                type="button"
+                className="btn-text btn-danger"
+                listener={mockListener}
+              />
+              <ButtonDefaultExport
+                name="textWarning"
+                caption="Warning"
+                type="button"
+                className="btn-text btn-warning"
+                listener={mockListener}
+              />
+              <ButtonDefaultExport
+                name="textInfo"
+                caption="Info"
+                type="button"
+                className="btn-text btn-info"
+                listener={mockListener}
+              /> */}
+            </Box>
+          </Stack>
+
+          {/* Row 3: Outlined Variants */}
+          <Stack spacing={1.5}>
+            <Typography variant="subtitle2" color="text.secondary">
+              Transparent Variants
+            </Typography>
+
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                gap: 3,
+                maxWidth: 900,
+              }}
+            >
+              <ButtonDefaultExport
+                name="buttonTransparent"
+                caption="Button"
+                type="button"
+                className="btn-transparent"
+                listener={mockListener}
               />
             </Box>
           </Stack>
 
           {/* Row 4: Size Variants */}
-          <Stack spacing={1.5}>
+          {/* <Stack spacing={1.5}>
             <Typography variant="subtitle2" color="text.secondary">
               Size Variants
             </Typography>
@@ -341,7 +445,7 @@ export const Showcase: Story = {
                 listener={mockListener}
               />
             </Stack>
-          </Stack>
+          </Stack> */}
         </Stack>
       </Box>
     );
@@ -354,7 +458,20 @@ export const Showcase: Story = {
 
 export const Basic: Story = {
   tags: ['show-panel'],
-  render: Template,
+  render: (args) => {
+    const { className } = args;
+
+    return (
+      <Box style={{ padding: 16 }} key={className}>
+        <ButtonDefaultExport
+          key={className}
+          className={className}
+          {...args}
+          listener={mockListener}
+        />
+      </Box>
+    );
+  },
   args: {
     name: "basicButton",
     caption: "Click Me",
@@ -391,30 +508,28 @@ export const Basic: Story = {
     // Filled
     "btn-filled btn-primary",
     "btn-filled btn-secondary",
-    "btn-filled btn-success",
-    "btn-filled btn-danger",
-    "btn-filled btn-warning",
-    "btn-filled btn-info",
+    "btn-filled btn-tertiary",
     "btn-filled btn-default",
 
     // Outlined
     "btn-outlined btn-primary",
     "btn-outlined btn-secondary",
-    "btn-outlined btn-success",
-    "btn-outlined btn-danger",
-    "btn-outlined btn-warning",
-    "btn-outlined btn-info",
+    "btn-outlined btn-tertiary",
     "btn-outlined btn-default",
 
+    //text
+    "btn-text btn-primary",
+    "btn-text btn-secondary",
+    "btn-text btn-tertiary",
+    "btn-text btn-default",
+
     // Special
-    "btn-link",
     "btn-transparent",
-    "no-border",
 
     // Sizes (example with primary)
-    "btn-filled btn-primary btn-sm",
-    "btn-filled btn-primary btn-lg",
-    "btn-filled btn-primary btn-xs",
+    // "btn-filled btn-primary btn-sm",
+    // "btn-filled btn-primary btn-lg",
+    // "btn-filled btn-primary btn-xs",
       ]
     }
   }

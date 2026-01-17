@@ -108,22 +108,24 @@ export const Showcase: Story = {
               Common Variants
             </Typography>
 
-            <Stack
-              direction="row"
-              spacing={4}
-              sx={{ flexWrap: "wrap", alignItems: "center" }}
-            >
+            <Box
+              sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+              gap: 3,
+              maxWidth: 900,
+              }}
+              >
               <Stack spacing={1}>
                 <Typography variant="caption" color="text.secondary">
                   Basic
                 </Typography>
                 <AnchorDefaultExport
                   name="basic"
-                  caption="Click Me"
-                  hyperlink="https://www.wavemaker.com"
-                  target="_blank"
+                  caption="Link"
+                  hyperlink=""
+                  target="_self"
                   listener={mockListener}
-                  className="link-primary"
                 />
               </Stack>
 
@@ -133,16 +135,12 @@ export const Showcase: Story = {
                 </Typography>
                 <AnchorDefaultExport
                   name="withIcon"
-                  caption="Github Url"
-                  hyperlink="https://www.wavemaker.com"
-                  target="_blank"
+                  caption="Link"
+                  hyperlink=""
+                  target="_self"
                   listener={mockListener}
-                  className="link-info"
                   iconclass="fa fa-github"
                   iconposition="left"
-                  iconwidth="16px"
-                  iconheight="16px"
-                  iconmargin="0 8px 0 0"
                 />
               </Stack>
 
@@ -152,26 +150,39 @@ export const Showcase: Story = {
                 </Typography>
                 <AnchorDefaultExport
                   name="withBadge"
-                  caption="Notifications"
-                  hyperlink="https://www.wavemaker.com"
-                  target="_blank"
+                  caption="Link"
+                  hyperlink=""
+                  target="_self"
                   listener={mockListener}
-                  className="link-warning"
-                  iconclass="fa fa-bell"
+                  badgevalue="5"
+                  iconurl=""
+                />
+              </Stack>
+
+              <Stack spacing={1}>
+                <Typography variant="caption" color="text.secondary">
+                  With Icon Image
+                </Typography>
+                <AnchorDefaultExport
+                  name="withIconAsImage"
+                  caption="Link"
+                  hyperlink=""
+                  target="_self"
+                  listener={mockListener}
+                  iconurl="https://picsum.photos/200"
                   iconposition="left"
                   iconwidth="16px"
                   iconheight="16px"
                   iconmargin="0 8px 0 0"
-                  badgevalue="5"
                 />
               </Stack>
-            </Stack>
+            </Box>
           </Stack>
 
           {/* Row 2: Variants Grid */}
           <Stack spacing={1.5}>
             <Typography variant="subtitle2" color="text.secondary">
-              Style Variants
+              Icon Positions
             </Typography>
 
             <Box
@@ -182,54 +193,49 @@ export const Showcase: Story = {
                 maxWidth: 900,
               }}
             >
+              <Stack spacing={1}>
+                <Typography variant="caption" color="text.secondary">
+                  Caption + Icon Left
+                </Typography>
               <AnchorDefaultExport
-                name="primary"
-                caption="Primary Link"
-                hyperlink="https://www.wavemaker.com"
-                target="_blank"
+                name="anchorWithIconLeft"
+                caption="Link"
+                hyperlink=""
+                target="_self"
                 listener={mockListener}
-                className="link-primary"
+                iconclass="fa fa-github"
+                iconposition="left"
               />
+              </Stack>
+              <Stack spacing={1}>
+                <Typography variant="caption" color="text.secondary">
+                  Caption + Icon Right
+                </Typography>
+             <AnchorDefaultExport
+                name="anchorWithIconRight"
+                caption="Link"
+                hyperlink=""
+                target="_self"
+                listener={mockListener}
+                iconclass="fa fa-github"
+                iconposition="right"
+                iconurl=""
+              />
+              </Stack>
+              <Stack spacing={1}>
+                <Typography variant="caption" color="text.secondary">
+                  Caption + Icon Top
+                </Typography>
               <AnchorDefaultExport
-                name="secondary"
-                caption="Secondary Link"
-                hyperlink="https://www.wavemaker.com"
-                target="_blank"
+                name="anchorWithIconTop"
+                caption="Link"
+                hyperlink=""
+                target="_self"
                 listener={mockListener}
-                className="link-secondary"
+                iconclass="fa fa-github"
+                iconposition="top"
               />
-              <AnchorDefaultExport
-                name="danger"
-                caption="Danger Link"
-                hyperlink="https://www.wavemaker.com"
-                target="_blank"
-                listener={mockListener}
-                className="link-danger"
-              />
-              <AnchorDefaultExport
-                name="muted"
-                caption="Muted Link"
-                hyperlink="https://www.wavemaker.com"
-                target="_blank"
-                listener={mockListener}
-                className="link-muted"
-              />
-              <AnchorDefaultExport
-                name="warning"
-                caption="Warning Link"
-                hyperlink="https://www.wavemaker.com"
-                target="_blank"
-                listener={mockListener}
-                className="link-warning"
-              />
-              <AnchorDefaultExport
-                name="info"
-                caption="Info Link"
-                hyperlink="https://www.wavemaker.com"
-                target="_blank"
-                listener={mockListener}
-                className="link-info"
-              />
+              </Stack>
             </Box>
           </Stack>
         </Stack>
@@ -251,7 +257,7 @@ export const Basic: Story = {
     caption: "Click Me",
     hyperlink: "https://www.wavemaker.com",
     target: "_blank",
-    className:"link-default"
+    // className:"link-default"
   },
   argTypes: {
     caption: { control: "text" },
@@ -260,12 +266,12 @@ export const Basic: Story = {
       control: { type: "select" },
       options: ["_self", "_blank", "_parent", "_top"],
     },
-    className: {
-      control: {
-        type: "select",
-      },
-      options: ["link-primary", "link-secondary", "link-success", "link-danger", "link-warning", "link-info","link-muted","link-default"],
-    },
+    // className: {
+    //   control: {
+    //     type: "select",
+    //   },
+    //   options: ["link-primary", "link-secondary", "link-success", "link-danger", "link-warning", "link-info","link-muted","link-default"],
+    // },
     iconclass:{
       control:{
         type:"select"
@@ -351,25 +357,6 @@ export const Standard: Story = {
   },
   argTypes: {
     // caption: { control: "text" },
-    className: {
-      control: {
-        type: "select",
-      },
-      options: ["link-primary", "link-secondary", "link-success", "link-danger", "link-warning", "link-info","link-muted","link-default"],
-    },
-    // iconclass:{
-    //   control:{
-    //     type:"select"
-    //   },
-    //   options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
-    //     "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-github"],
-    // },
-    // iconposition: {
-    //   control: { type: "select" },
-    //   options: ["left", "right", "top"],
-    // },
-    // iconurl: {control: "text"},
-    // badgevalue: { control: "text" },
     "data-design-token-target": { control: false }
   },
   parameters: {
