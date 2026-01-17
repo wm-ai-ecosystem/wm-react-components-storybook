@@ -121,7 +121,7 @@ export const Docs: Story = {
 export const Showcase: Story = {
   render: () => {
     return (
-      <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 3, width: "100%" }}>
         <Box sx={{ mb: 3 }}>
           <Typography variant="h6" fontWeight={600}>
             Live Forms Showcase
@@ -173,7 +173,7 @@ export const Showcase: Story = {
                       readonly={true}
                     />
                   </WmComposite>
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                     <Box sx={{ flex: 1 }}>
                       <WmComposite captionposition="top" listener={mockListener} name="viewFirstName_composite">
                         <WmLabel caption="First Name" listener={mockListener} name="viewFirstName_label" className="control-label"/>
@@ -261,7 +261,7 @@ export const Showcase: Story = {
             } as any)}>
               <Box sx={{ padding: 3 }}>
                 <Stack spacing={3}>
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                     <Box sx={{ flex: 1 }}>
                       <WmComposite captionposition="top" required={true} listener={mockListener} name="editFirstName_composite">
                         <WmLabel caption="First Name" required={true} listener={mockListener} name="editFirstName_label" className="control-label"/>
@@ -386,7 +386,7 @@ export const Showcase: Story = {
                     />
                   </WmComposite>
 
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                     <Box sx={{ flex: 1 }}>
                       <WmComposite captionposition="top" listener={mockListener} name="createPrice_composite">
                         <WmLabel caption="Price ($)" listener={mockListener} name="createPrice_label" className="control-label"/>
@@ -460,7 +460,7 @@ export const Basic: Story = {
     };
 
     return (
-      <Box sx={{ p: 3, maxWidth: 600, mx: 'auto' }}>
+      <Box sx={{ p: 3, width: "100%", mx: 'auto' }}>
         <WmLiveForm {...({
           name: "basicLiveForm",
           title: args.title,
@@ -591,7 +591,7 @@ export const Standard: Story = {
     };
 
     return (
-      <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 3, width: "100%" }}>
         <Stack spacing={2}>
           <div data-design-token-target="true">
             <WmLiveForm {...({

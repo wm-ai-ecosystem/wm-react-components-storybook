@@ -97,6 +97,7 @@ export const Showcase: Story = {
             spacing={3}
             justifyContent="space-between"
             flexWrap="wrap"
+            gap="24px"
           >
             {tilesHorizontal.map((tile, index) => (
               <TileDefaultExport
@@ -111,6 +112,7 @@ export const Showcase: Story = {
                   borderRadius: "12px",
                   boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                   textAlign: "center",
+                  margin: "0",
                 }}
               >
                 <Typography variant="h4" fontWeight="bold">

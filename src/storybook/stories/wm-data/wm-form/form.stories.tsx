@@ -85,7 +85,7 @@ export const Docs: Story = {
 export const Showcase: Story = {
   render: () => {
     return (
-      <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 3, width: "100%" }}>
         <Box sx={{ mb: 3 }}>
           <Typography variant="h6" fontWeight={600}>
             Forms Showcase
@@ -114,7 +114,7 @@ export const Showcase: Story = {
               <Box sx={{ padding: 3 }}>
                 <Stack spacing={3}>
                   {/* Two-column layout for form fields */}
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                     <Box sx={{ flex: 1 }}>
                       <WmComposite captionposition="top" listener={mockListener} name="firstName_composite">
                         <WmLabel caption="First Name" listener={mockListener} name="firstName_label" className="control-label" />
@@ -139,7 +139,7 @@ export const Showcase: Story = {
                     </Box>
                   </Stack>
 
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                     <Box sx={{ flex: 1 }}>
                       <WmComposite captionposition="top" listener={mockListener} name="email_composite">
                         <WmLabel caption="Email" listener={mockListener} name="email_label" className="control-label" />
@@ -168,7 +168,7 @@ export const Showcase: Story = {
                     </Box>
                   </Stack>
 
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                     <Box sx={{ flex: 1 }}>
                       <WmComposite captionposition="top" listener={mockListener} name="birthdate_composite">
                         <WmLabel caption="Date of Birth" listener={mockListener} name="birthdate_label" className="control-label" />
@@ -192,7 +192,7 @@ export const Showcase: Story = {
                     </Box>
                   </Stack>
 
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                     <Box sx={{ flex: 1 }}>
                       <WmComposite captionposition="top" listener={mockListener} name="country_composite">
                         <WmLabel caption="Country" listener={mockListener} name="country_label" className="control-label" />
@@ -245,7 +245,7 @@ export const Showcase: Story = {
               Registration Form
             </Typography>
             <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }} style={{marginBottom: 12}} fontWeight={300}>
-              Three-column layout
+              Enter the Details
             </Typography>
 
             <WmForm {...({
@@ -260,7 +260,7 @@ export const Showcase: Story = {
               <Box sx={{ padding: 3 }}>
                 <Stack spacing={3}>
                   {/* Three-column layout for name fields */}
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                     <Box sx={{ flex: 1 }}>
                       <WmComposite captionposition="top" required={true} listener={mockListener} name="regFirstName_composite">
                         <WmLabel caption="First Name" required={true} listener={mockListener} name="regFirstName_label" className="control-label"/>
@@ -298,7 +298,7 @@ export const Showcase: Story = {
                     </Box>
                   </Stack>
 
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                     <Box sx={{ flex: 1 }}>
                       <WmComposite captionposition="top" required={true} listener={mockListener} name="username_composite">
                         <WmLabel caption="Username" required={true} listener={mockListener} name="username_label" className="control-label"/>
@@ -340,7 +340,7 @@ export const Showcase: Story = {
                     </Box>
                   </Stack>
 
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                     <Box sx={{ flex: 1 }}>
                       <WmComposite captionposition="top" required={true} listener={mockListener} name="password_composite">
                         <WmLabel caption="Password" required={true} listener={mockListener} name="password_label" className="control-label"/>
@@ -380,7 +380,7 @@ export const Showcase: Story = {
                     </Box>
                   </Stack>
 
-                  <Stack direction="row" spacing={2}>
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
                     <Box sx={{ flex: 1 }}>
                       <WmComposite captionposition="top" listener={mockListener} name="regGender_composite">
                         <WmLabel caption="Gender" listener={mockListener} name="regGender_label" className="control-label"/>
@@ -448,7 +448,7 @@ export const Basic: Story = {
   tags: ['show-panel'],
   render: (args) => {
     return (
-      <Box sx={{ p: 3, maxWidth: 600, mx: 'auto' }}>
+      <Box sx={{ p: 3, width: "100%", mx: 'auto' }}>
           <WmForm {...({
             name: "basicContactForm",
             title: args.title,
@@ -555,14 +555,14 @@ export const Basic: Story = {
       control: "select",
       options: ["left", "center", "right"]
     },
-  },
+  }
 };
 
 export const Standard: Story = {
   tags: ['show-panel'],
   render: (args) => {
     return (
-      <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 3, width: "100%", }}>
         <Stack spacing={2}>
           <div data-design-token-target="true">
             <WmForm {...({
