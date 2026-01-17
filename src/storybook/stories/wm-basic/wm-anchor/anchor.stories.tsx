@@ -13,6 +13,7 @@ import styling from "./docs/styling.md?raw";
 
 import anchorTokensData from "../../../../designTokens/components/anchor/anchor.json";
 
+
 const meta = {
   title: "Basic/Anchor",
   component: AnchorDefaultExport,
@@ -169,7 +170,7 @@ export const Showcase: Story = {
                   hyperlink=""
                   target="_self"
                   listener={mockListener}
-                  iconurl="https://picsum.photos/200"
+                  iconurl="/showcaseImage.png"
                   iconposition="left"
                   iconwidth="16px"
                   iconheight="16px"

@@ -111,3 +111,20 @@ body.sb-show-main {
 .wm-app .app-anchor[name='anchorWithIconRight']{
   justify-content: left !important;
 }
+
+/* custom - foundation css not getting reflected for alert dialog */
+.app-dialog-message.text-info{
+  color: var(--wm-color-info) !important;
+}
+
+.app-dialog-message.text-error{
+  color: var(--wm-color-error) !important;
+}
+
+.app-dialog-message.text-warning{
+  color: var(--wm-color-warning) !important;
+}
+
+.app-dialog-message.text-success{
+  color: var(--wm-color-success) !important;
+}

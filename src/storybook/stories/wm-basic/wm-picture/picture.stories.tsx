@@ -89,7 +89,7 @@ export const Showcase: Story = {
               </Typography>
               <PictureDefaultExport
                 name="shapeDefault"
-                picturesource="https://picsum.photos/200"
+                picturesource="/showcaseImage.png"
                 alttext="Default shape"
                 width="150px"
                 height="150px"
@@ -102,7 +102,7 @@ export const Showcase: Story = {
               </Typography>
               <PictureDefaultExport
                 name="shapeCircle"
-                picturesource="https://picsum.photos/200"
+                picturesource="/showcaseImage.png"
                 alttext="Circle shape"
                 width="150px"
                 height="150px"
@@ -116,7 +116,7 @@ export const Showcase: Story = {
               </Typography>
               <PictureDefaultExport
                 name="shapeRounded"
-                picturesource="https://picsum.photos/200"
+                picturesource="/showcaseImage.png"
                 alttext="Rounded shape"
                 width="150px"
                 height="150px"
@@ -131,7 +131,7 @@ export const Showcase: Story = {
               </Typography>
               <PictureDefaultExport
                 name="shapeThumbnail"
-                picturesource="https://picsum.photos/200"
+                picturesource="/showcaseImage.png"
                 alttext="Thumbnail shape"
                 width="150px"
                 height="150px"
@@ -152,11 +152,24 @@ export const Showcase: Story = {
 
 export const Basic: Story = {
   tags: ['show-panel'],
-  render: Template,
+  render: (args) => {
+      const { resizemode, shape, pictureaspect } = args;
+      const renderKey = `${shape}-${resizemode}-${pictureaspect}`;
+  
+      return (
+        <Box style={{ padding: 16 }} key={renderKey}>
+          <PictureDefaultExport
+            key={renderKey}
+            {...args}
+            listener={mockListener}
+          />
+        </Box>
+      );
+    },
   args: {
     name: "basicPicture",
     listener: mockListener,
-    picturesource: "https://picsum.photos/200",
+    picturesource: "/showcaseImage.png",
     alttext: "Placeholder image",
     width: "200px",
     height: "200px",
@@ -190,7 +203,7 @@ export const Standard: Story = {
   args: {
     name: "standardPicture",
     listener: mockListener,
-    picturesource: "https://picsum.photos/200",
+    picturesource: "/showcaseImage.png",
     alttext: "Placeholder image",
     "data-design-token-target":"true"
   },

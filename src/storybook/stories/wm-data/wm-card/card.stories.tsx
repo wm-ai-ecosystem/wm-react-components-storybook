@@ -82,7 +82,7 @@ export const Showcase: Story = {
         team: "Engineering",
         location: "San Francisco",
         phone: "+1 923-33-56",
-        avatar: "https://i.pravatar.cc/150?img=32",
+        avatar: "/personIcon.svg",
       },
       {
         id: 2,
@@ -91,7 +91,7 @@ export const Showcase: Story = {
         team: "Marketing",
         location: "New York",
         phone: "+1 821-44-90",
-        avatar: "https://i.pravatar.cc/150?img=47",
+        avatar: "/personIcon.svg",
       },
     ];
 
@@ -101,7 +101,7 @@ export const Showcase: Story = {
         author: "Brad Tucker",
         published: "May 13 · 4 mins read",
         headline: "Design systems at scale",
-        image: "https://picsum.photos/600/300?random=21",
+        image: "/showcaseImage.png",
         description:
           "Design systems help teams build consistent experiences faster across products.",
         likes: 75,
@@ -112,7 +112,7 @@ export const Showcase: Story = {
         author: "Olivia Martin",
         published: "Jun 02 · 6 mins read",
         headline: "Why component reuse matters",
-        image: "https://picsum.photos/600/300?random=22",
+        image: "showcaseImage.png",
         description:
           "Reusable components reduce development time and improve maintainability.",
         likes: 112,

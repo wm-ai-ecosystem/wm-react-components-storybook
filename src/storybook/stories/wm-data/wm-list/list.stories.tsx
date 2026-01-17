@@ -20,14 +20,14 @@ const mockListener = {
 
 // Sample datasets
 const usersData = [
-  { id: 1, name: "John Doe", email: "john@example.com", role: "Admin", avatar: "https://i.pravatar.cc/150?img=1" },
-  { id: 2, name: "Jane Smith", email: "jane@example.com", role: "User", avatar: "https://i.pravatar.cc/150?img=2" },
-  { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Manager", avatar: "https://i.pravatar.cc/150?img=3" },
-  { id: 4, name: "Alice Williams", email: "alice@example.com", role: "User", avatar: "https://i.pravatar.cc/150?img=4" },
-  { id: 5, name: "Charlie Brown", email: "charlie@example.com", role: "Developer", avatar: "https://i.pravatar.cc/150?img=5" },
-  { id: 6, name: "Diana Prince", email: "diana@example.com", role: "Admin", avatar: "https://i.pravatar.cc/150?img=6" },
-  { id: 7, name: "Ethan Hunt", email: "ethan@example.com", role: "User", avatar: "https://i.pravatar.cc/150?img=7" },
-  { id: 8, name: "Fiona Gallagher", email: "fiona@example.com", role: "Manager", avatar: "https://i.pravatar.cc/150?img=8" },
+  { id: 1, name: "John Doe", email: "john@example.com", role: "Admin", avatar: "/personIcon.svg" },
+  { id: 2, name: "Jane Smith", email: "jane@example.com", role: "User", avatar: "/personIcon.svg" },
+  { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "Manager", avatar: "/personIcon.svg" },
+  { id: 4, name: "Alice Williams", email: "alice@example.com", role: "User", avatar: "/personIcon.svg" },
+  { id: 5, name: "Charlie Brown", email: "charlie@example.com", role: "Developer", avatar: "/personIcon.svg" },
+  { id: 6, name: "Diana Prince", email: "diana@example.com", role: "Admin", avatar: "/personIcon.svg" },
+  { id: 7, name: "Ethan Hunt", email: "ethan@example.com", role: "User", avatar: "/personIcon.svg" },
+  { id: 8, name: "Fiona Gallagher", email: "fiona@example.com", role: "Manager", avatar: "/personIcon.svg" },
 ];
 
 const productsData = [
