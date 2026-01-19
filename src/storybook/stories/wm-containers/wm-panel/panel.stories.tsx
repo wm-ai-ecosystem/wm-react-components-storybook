@@ -112,7 +112,7 @@ export const Showcase: Story = {
             <WmPanel
               name="badgeShowcasePanel"
               title="Notifications"
-              className="panel panel-info"
+              className="panel panel-secondary"
               iconclass="fa fa-bell"
               badgevalue="12"
               badgetype="danger"
@@ -143,7 +143,7 @@ export const Showcase: Story = {
               name="collapsibleShowcasePanel"
               title="Advanced Settings"
               subheading="Configure application preferences"
-              className="panel panel-success"
+              className="panel panel-tertiary"
               iconclass="fa fa-cog"
               collapsible={true}
               expanded={true}
@@ -280,7 +280,7 @@ export const Showcase: Story = {
               name="fullFeaturedShowcasePanel"
               title="Dashboard Statistics"
               subheading="Real-time analytics overview"
-              className="panel panel-success"
+              className="panel panel-default"
               iconclass="fa fa-chart-line"
               badgevalue="Live"
               badgetype="success"
@@ -404,11 +404,9 @@ export const Basic: Story = {
       control: { type: "select" },
       options: [
         "panel panel-default",
-        "panel panel-success",
+        "panel panel-secondary",
         "panel panel-primary",
-        "panel panel-info",
-        "panel panel-warning",
-        "panel panel-danger",
+        "panel panel-tertiary",
       ],
     },
     badgetype: {
@@ -537,11 +535,9 @@ export const Standard: Story = {
       control: { type: "select" },
       options: [
         "panel panel-default",
-        "panel panel-success",
+        "panel panel-secondary",
         "panel panel-primary",
-        "panel panel-info",
-        "panel panel-warning",
-        "panel panel-danger",
+        "panel panel-tertiary",
       ],
     },
     badgetype: {

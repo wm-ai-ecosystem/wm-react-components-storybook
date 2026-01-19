@@ -211,7 +211,7 @@ export const Showcase: Story = {
               closeothers={true}
               defaultpaneindex={0}
               listener={mockListener}
-              className="app-accordion panel panel-default"
+              className="app-accordion panel panel-secondary"
             >
               <WmAccordionPane
                 name="features"
@@ -267,7 +267,7 @@ export const Showcase: Story = {
               closeothers={true}
               defaultpaneindex={0}
               listener={mockListener}
-              className="app-accordion panel panel-primary"
+              className="app-accordion panel panel-tertiary"
             >
               <WmAccordionPane
                 name="form"
@@ -410,11 +410,9 @@ export const Basic: Story = {
       control: { type: "select" },
       options: [
         "app-accordion panel panel-default",
-        "app-accordion panel panel-success",
+        "app-accordion panel panel-secondary",
         "app-accordion panel panel-primary",
-        "app-accordion panel panel-info",
-        "app-accordion panel panel-warning",
-        "app-accordion panel panel-danger",
+        "app-accordion panel panel-tertiary",
       ],
     }
   }
@@ -510,11 +508,9 @@ export const DynamicAccordion: Story = {
       control: { type: "select" },
       options: [
         "app-accordion panel panel-default",
-        "app-accordion panel panel-success",
+        "app-accordion panel panel-secondary",
         "app-accordion panel panel-primary",
-        "app-accordion panel panel-info",
-        "app-accordion panel panel-warning",
-        "app-accordion panel panel-danger",
+        "app-accordion panel panel-tertiary",
       ],
     }
   }
@@ -576,11 +572,9 @@ export const Standard: Story = {
       control: { type: "select" },
       options: [
         "app-accordion panel panel-default",
-        "app-accordion panel panel-success",
+        "app-accordion panel panel-secondary",
         "app-accordion panel panel-primary",
-        "app-accordion panel panel-info",
-        "app-accordion panel panel-warning",
-        "app-accordion panel panel-danger",
+        "app-accordion panel panel-tertiary",
       ],
     },
     "data-design-token-target": { control: false }
