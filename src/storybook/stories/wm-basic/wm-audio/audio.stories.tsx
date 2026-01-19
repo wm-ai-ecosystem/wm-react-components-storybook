@@ -10,6 +10,7 @@ import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
+import token from "./docs/token.md?raw";
 
 import audioTokensData from "../../../../designTokens/components/audio/audio.json";
 
@@ -62,6 +63,7 @@ export const Docs: Story = {
       events={events}
       methods={methods}
       styling={styling}
+      token={token}
     />
   ),
   args:{
