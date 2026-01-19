@@ -12,6 +12,8 @@ import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
 import token from "./docs/token.md?raw";
 
+import timeTokensData from "../../../../designTokens/components/time/time.json";
+
 const meta: Meta<typeof TimeDefaultExport> = {
   title: "Input/Time",
   component: TimeDefaultExport,
@@ -307,6 +309,54 @@ export const Basic: Story = {
       control: { type: "select" },
       options: ["default", "picker"],
     },
+  },
+};
+
+export const Standard: Story = {
+  tags: ['show-panel'],
+  render: Template,
+  args: {
+    name: "basicTime",
+    placeholder: "Select time",
+    listener: mockListener,
+    timepattern: "h:mm a",
+    dataentrymode: "default",
+    showdropdownon: "default",
+    datavalue: "CURRENT_TIME",
+    "data-design-token-target":"true"
+  },
+  argTypes: {
+    // placeholder: { control: "text" },
+    // datavalue: { control: "text" },
+    timepattern: { control: "select", options: ["h:mm a", "HH:mm", "h:mm:ss a", "HH:mm:ss"] },
+    hourstep: { control: "number" },
+    minutestep: { control: "number" },
+    secondsstep: { control: "number" },
+    outputformat: { control: "text" },
+    // mintime: { control: "text" },
+    // maxtime: { control: "text" },
+    // required: { control: "boolean" },
+    // autofocus: { control: "boolean" },
+    // readonly: { control: "boolean" },
+    // disabled: { control: "boolean" },
+    showdropdownon: {
+      control: { type: "select" },
+      options: ["default", "button"],
+    },
+    dataentrymode: {
+      control: { type: "select" },
+      options: ["default", "picker"],
+    },
+    "data-design-token-target": { control: false }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: timeTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "timepicker",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
   },
 };
 
