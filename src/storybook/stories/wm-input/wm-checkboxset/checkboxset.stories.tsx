@@ -9,7 +9,7 @@ import overview from "./docs/overview.md?raw";
 import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
-import styling from "./docs/styling.md?raw";
+// import styling from "./docs/styling.md?raw";
 import token from "./docs/token.md?raw";
 
 import checkboxsetTokensData from "../../../../designTokens/components/checkboxset/checkboxset.json";
@@ -18,35 +18,6 @@ import checkboxsetTokensData from "../../../../designTokens/components/checkboxs
 const meta: Meta<typeof CheckboxsetDefaultExport> = {
   title: "Input/CheckboxSet",
   component: CheckboxsetDefaultExport,
-  // argTypes: {
-  //   layout: {
-  //     control: { type: "select" },
-  //     options: ["inline", "stacked"],
-  //   },
-  //   itemsperrow: { control: "select", options: ["xs-1 sm-1 md-1 lg-1","xs-1 sm-2 md-2 lg-2","xs-1 sm-2 md-3 lg-3","xs-1 sm-2 md-3 lg-4","xs-1 sm-2 md-4 lg-6"] },
-  //   // itemclass: { control: "text" },
-  //   // listclass: { control: "text" },
-  //   // showcount: { control: "boolean" },
-  //   disabled: { control: "boolean" },
-  //   readonly: { control: "boolean" },
-  //   // required: { control: "boolean" },
-  //   dataset: { control: "object" },
-  //   datafield: { control: "text" },
-  //   displayfield: { control: "text" },
-  //   datavalue: { control: "object" },
-  //   // usekeys: { control: "boolean" },
-  //   groupby: { control: "text" },
-  //   // match: { control: "text" },
-  //   orderby: { control: "text" },
-  //   label: { control: "text" },
-  //   // collapsible: { control: "boolean" },
-  //   // collapsed: { control: "boolean" },
-  //   // tabIndex: { control: "number" },
-  //   // className: { control: "text" },
-  //   // compareby: { control: "object" },
-  //   // height: { control: "text" },
-  //   // width: { control: "text" },
-  // },
 };
 
 export default meta;
@@ -67,6 +38,17 @@ const Template = (args: any) => (
   </Box>
 );
 
+const DesignTokenTemplate = (args: any) => {
+      //component can't spread data-design-token-target, so we apply it to a wrapper
+      const { "data-design-token-target": dataAttr, ...componentArgs } = args;
+  
+      return (
+        <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
+          <CheckboxsetDefaultExport {...componentArgs} listener={mockListener} />
+        </Box>
+      );
+    };
+
 export const Docs: Story = {
   render: () => (
     <ComponentDocumentation
@@ -81,6 +63,10 @@ export const Docs: Story = {
   args:{
     name:"docsCheckboxset",
     listener:mockListener
+  },
+  argTypes:{
+    name: { table: { disable: true } },
+    listener: { table: { disable: true } },
   },
   parameters: {
     layout: 'fullscreen',
@@ -224,18 +210,24 @@ export const Showcase: Story = {
     name: "showcaseCheckboxset",
     listener: mockListener
   },
+  argTypes:{
+    name: { table: { disable: true } },
+    listener: { table: { disable: true } },
+  },
 };
 
-export const Basic: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
-  render: Template,
+  render: DesignTokenTemplate,
   args: {
-    name: "basicCheckboxset",
+    name: "standardCheckboxset",
     dataset: "Option 1, Option 2, Option 3",
     listener: mockListener,
     disabled: false,
     readonly: false,
-    layout: "inline"
+    layout: "inline",
+    datavalue: "Option 1",
+    "data-design-token-target":true
   },
   argTypes: {
     layout: {
@@ -265,6 +257,18 @@ export const Basic: Story = {
     // compareby: { control: "object" },
     // height: { control: "text" },
     // width: { control: "text" },
+    name: { table: { disable: true } },
+    listener: { table: { disable: true } },
+    "data-design-token-target": { table: { disable: true } }
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: checkboxsetTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "checkboxset",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
   },
 };
 
@@ -284,6 +288,7 @@ export const ObjectDataset: Story = {
     datafield: "id",
     displayfield: "name",
     listener: mockListener,
+    datavalue:[1,3],
     layout:"inline"
   },
   argTypes: {
@@ -314,51 +319,9 @@ export const ObjectDataset: Story = {
     // compareby: { control: "object" },
     // height: { control: "text" },
     // width: { control: "text" },
+    name: { table: { disable: true } },
+    listener: { table: { disable: true } },
   },
-};
-
-export const Standard: Story = {
-  tags: ['show-panel'],
-  render: (args) => {
-      //component can't spread data-design-token-target, so we apply it to a wrapper
-      const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
-  
-      return (
-        <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
-          <CheckboxsetDefaultExport {...componentArgs} listener={mockListener} />
-        </Box>
-      );
-    },
-  args: {
-    name: "standardCheckboxset",
-    dataset: "Option 1, Option 2, Option 3",
-    listener: mockListener,
-    disabled: false,
-    readonly: false,
-    layout: "inline",
-    datavalue:"Option 1",
-    "data-design-token-target":"true"
-  },
-  argTypes: {
-    layout: {
-      control: { type: "select" },
-      options: ["inline", "stacked"],
-    },
-    disabled: { control: "boolean" },
-    readonly: { control: "boolean" },
-    dataset: { control: "object" },
-    datavalue: { control: "object" },
-    "data-design-token-target": { control: false }
-  },
-  parameters: {
-    designTokens: {
-      enabled: true,
-      tokenData: checkboxsetTokensData,  // Pass raw JSON data instead of pre-parsed config
-      componentKey: "checkboxset",  // Component identifier for parsing
-      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
-    },
-    layout: 'fullscreen',
-  }, 
 };
 
 

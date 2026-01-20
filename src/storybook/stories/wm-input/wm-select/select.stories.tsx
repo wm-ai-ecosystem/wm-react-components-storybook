@@ -14,29 +14,6 @@ import styling from "./docs/styling.md?raw";
 const meta: Meta<typeof SelectDefaultExport> = {
   title: "Input/Select",
   component: SelectDefaultExport,
-  // argTypes: {
-  //   autofocus: { control: "boolean" },
-  //   datafield: { control: "text" },
-  //   dataset: { control: "object" },
-  //   // dataPath: { control: "text" },
-  //   datavalue: { control: "text" },
-  //   displayExpression: { control: "text" },
-  //   displayfield: { control: "text" },
-  //   groupby: { control: "text" },
-  //   // match: { control: "text" },
-  //   // arialabel: { control: "text" },
-  //   multiple: { control: "boolean" },
-  //   orderby: { control: "text" },
-  //   placeholder: { control: "text" },
-  //   readonly: { control: "boolean" },
-  //   // required: { control: "boolean" },
-  //   // shortcutkey: { control: "text" },
-  //   // hint: { control: "text" },
-  //   disabled: { control: "boolean" },
-  //   // width: { control: "text" },
-  //   // height: { control: "text" },
-  //   // className: { control: "text" },
-  // },
 };
 
 export default meta;
@@ -70,6 +47,10 @@ export const Docs: Story = {
   args:{
     name:"docsSelect",
     listener:mockListener
+  },
+  argTypes:{
+    name: { table: { disable: true } },
+    listener: { table: { disable: true } },
   },
   parameters: {
     layout: 'fullscreen',
@@ -150,15 +131,19 @@ export const Showcase: Story = {
   args:{
     name:"showcaseSelect",
     listener:mockListener
+  },
+  argTypes:{
+    name: { table: { disable: true } },
+    listener: { table: { disable: true } },
   }
 };
 
 // Basic Examples
-export const Basic: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: Template,
   args: {
-    name: "basicSelect",
+    name: "standardSelect",
     placeholder: "Select an option",
     dataset: "Option 1, Option 2, Option 3, Option 4",
     listener: mockListener,
@@ -178,6 +163,8 @@ export const Basic: Story = {
     placeholder: { control: "text" },
     readonly: { control: "boolean" },
     disabled: { control: "boolean" },
+    name: { table: { disable: true } },
+    listener: { table: { disable: true } },
   },
 };
 
@@ -210,6 +197,8 @@ export const ObjectDataset: Story = {
     placeholder: { control: "text" },
     readonly: { control: "boolean" },
     disabled: { control: "boolean" },
+    name: { table: { disable: true } },
+    listener: { table: { disable: true } },
   },
 };
 

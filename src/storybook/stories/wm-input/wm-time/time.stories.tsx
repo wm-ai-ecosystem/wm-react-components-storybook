@@ -9,7 +9,7 @@ import overview from "./docs/overview.md?raw";
 import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
-import styling from "./docs/styling.md?raw";
+// import styling from "./docs/styling.md?raw";
 import token from "./docs/token.md?raw";
 
 import timeTokensData from "../../../../designTokens/components/time/time.json";
@@ -17,34 +17,6 @@ import timeTokensData from "../../../../designTokens/components/time/time.json";
 const meta: Meta<typeof TimeDefaultExport> = {
   title: "Input/Time",
   component: TimeDefaultExport,
-  // argTypes: {
-  //   placeholder: { control: "text" },
-  //   // hint: { control: "text" },
-  //   // arialabel: { control: "text" },
-  //   // tabindex: { control: "number" },
-  //   // shortcutkey: { control: "text" },
-  //   datavalue: { control: "text" },
-  //   timepattern: { control: "select", options: ["h:mm a", "HH:mm", "h:mm:ss a", "HH:mm:ss"] },
-  //   hourstep: { control: "number" },
-  //   minutestep: { control: "number" },
-  //   secondsstep: { control: "number" },
-  //   outputformat: { control: "text" },
-  //   mintime: { control: "text" },
-  //   maxtime: { control: "text" },
-  //   required: { control: "boolean" },
-  //   autofocus: { control: "boolean" },
-  //   readonly: { control: "boolean" },
-  //   disabled: { control: "boolean" },
-  //   showdropdownon: {
-  //     control: { type: "select" },
-  //     options: ["default", "button"],
-  //   },
-  //   dataentrymode: {
-  //     control: { type: "select" },
-  //     options: ["default", "picker"],
-  //   },
-  //   // className: { control: "text" },
-  // },
 };
 
 export default meta;
@@ -65,6 +37,18 @@ const Template = (args: any) => (
   </Box>
 );
 
+
+const DesignTokenTemplate = (args: any) => {
+    //component can't spread data-design-token-target, so we apply it to a wrapper
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args;
+
+    return (
+      <Box className="wm-app" style={{ padding: 16,}} data-design-token-target={dataAttr}>
+        <TimeDefaultExport {...componentArgs} listener={mockListener} />
+      </Box>
+    );
+  };
+
 export const Docs: Story = {
   render: () => (
     <ComponentDocumentation
@@ -74,11 +58,19 @@ export const Docs: Story = {
       methods={methods}
       // styling={styling}
       token={token}
+      externalLink={{
+        href: "https://www.figma.com/design/F6S1sF5vM38mn6aLNnGGon/WaveMaker-UI-Kit--Community-?node-id=55141-14260&p=f&t=rE8HvDMpyMdtByDG-0",
+        label: "",
+      }}
     />
   ),
   args:{
     name:"docsTime",
     listener:mockListener
+  },
+  argTypes:{
+    name: { table: { disable: true } },
+    listener: { table: { disable: true } },
   },
   parameters: {
     layout: 'fullscreen',
@@ -270,13 +262,17 @@ export const Showcase: Story = {
     name: "timeShowcase",
     listener: mockListener,
   },
+  argTypes:{
+    name: { table: { disable: true } },
+    listener: { table: { disable: true } },
+  }
 };
 
-export const Basic: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
-  render: Template,
+  render: DesignTokenTemplate,
   args: {
-    name: "basicTime",
+    name: "standardTime",
     placeholder: "Select time",
     listener: mockListener,
     disabled: false,
@@ -286,6 +282,7 @@ export const Basic: Story = {
     dataentrymode: "default",
     showdropdownon: "default",
     datavalue: "CURRENT_TIME",
+    "data-design-token-target":true
   },
   argTypes: {
     placeholder: { control: "text" },
@@ -309,45 +306,9 @@ export const Basic: Story = {
       control: { type: "select" },
       options: ["default", "picker"],
     },
-  },
-};
-
-export const Standard: Story = {
-  tags: ['show-panel'],
-  render: Template,
-  args: {
-    name: "basicTime",
-    placeholder: "Select time",
-    listener: mockListener,
-    timepattern: "h:mm a",
-    dataentrymode: "default",
-    showdropdownon: "default",
-    datavalue: "CURRENT_TIME",
-    "data-design-token-target":"true"
-  },
-  argTypes: {
-    // placeholder: { control: "text" },
-    // datavalue: { control: "text" },
-    timepattern: { control: "select", options: ["h:mm a", "HH:mm", "h:mm:ss a", "HH:mm:ss"] },
-    hourstep: { control: "number" },
-    minutestep: { control: "number" },
-    secondsstep: { control: "number" },
-    outputformat: { control: "text" },
-    // mintime: { control: "text" },
-    // maxtime: { control: "text" },
-    // required: { control: "boolean" },
-    // autofocus: { control: "boolean" },
-    // readonly: { control: "boolean" },
-    // disabled: { control: "boolean" },
-    showdropdownon: {
-      control: { type: "select" },
-      options: ["default", "button"],
-    },
-    dataentrymode: {
-      control: { type: "select" },
-      options: ["default", "picker"],
-    },
-    "data-design-token-target": { control: false }
+    name: { table: { disable: true } },
+    listener: { table: { disable: true } },
+    "data-design-token-target": { table: { disable: true } }  
   },
   parameters: {
     designTokens: {
