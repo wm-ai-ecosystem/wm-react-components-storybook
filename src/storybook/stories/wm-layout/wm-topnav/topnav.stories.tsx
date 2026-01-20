@@ -17,6 +17,7 @@ import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
+import token from "./docs/token.md?raw";
 
 import topnavTokensData from "../../../../designTokens/components/page-top-nav/page-top-nav.json";
 
@@ -47,7 +48,8 @@ export const Docs: Story = {
       properties={props}
       events={events}
       methods={methods}
-      styling={styling}
+      // styling={styling}
+      token={token}
     />
   ),
   args:{
