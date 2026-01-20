@@ -10,6 +10,8 @@ import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
+import style from "./docs/style.md?raw";
+import token from "./docs/token.md?raw";
 
 import { iconClassNames } from "../../constants/iconClassConstants";
 
@@ -75,7 +77,9 @@ export const Docs: Story = {
       properties={props}
       events={events}
       methods={methods}
-      styling={styling}
+      // styling={styling}
+      style={style}
+      token={token}
     />
   ),
   args:{
@@ -222,6 +226,7 @@ export const Basic: Story = {
     canceltext: "CANCEL",
     iconclass: "fa fa-circle-check",
     listener: mockListener,
+    sheetposition: undefined,
   },
   argTypes: {
     title: { control: "text" },
@@ -229,6 +234,7 @@ export const Basic: Story = {
     oktext: { control: "text" },
     canceltext: { control: "text" },
     iconclass:{ control:{ type:"select"}, options: iconClassNames },
+    sheetposition:{control:{ type:"select"}, options: [undefined, 'top', 'bottom', 'left', 'right']},
   },
 };
 

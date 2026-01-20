@@ -12,6 +12,8 @@ import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
+import style from "./docs/style.md?raw";
+import token from "./docs/token.md?raw";
 
 const mockListener = {
   appLocale: {},
@@ -83,7 +85,9 @@ export const Docs: Story = {
       properties={props}
       events={events}
       methods={methods}
-      styling={styling}
+      // styling={styling}
+      style={style}
+      token={token}
     />
   ),
   args:{
@@ -239,7 +243,8 @@ export const Basic: Story = {
     showactions: true,
     closable: true,
     listener: mockListener,
-    headinglevel:"h4"
+    headinglevel:"h4",
+    sheetposition:undefined,
   },
   argTypes: {
     title: { control: "text" },
@@ -256,7 +261,8 @@ export const Basic: Story = {
     iconurl: { control: "text" },
     iconwidth: { control: "text" },
     iconheight: { control: "text" },
-    iconmargin: { control: "text" }
+    iconmargin: { control: "text" },
+    sheetposition:{control:{ type:"select"}, options: [undefined, 'top', 'bottom', 'left', 'right']},
   },
 };
 

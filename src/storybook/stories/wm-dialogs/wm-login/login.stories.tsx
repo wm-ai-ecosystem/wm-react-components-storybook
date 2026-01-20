@@ -12,6 +12,8 @@ import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
 import styling from "./docs/styling.md?raw";
+import style from "./docs/style.md?raw";
+import token from "./docs/token.md?raw";
 
 const mockListener = {
   appLocale: {
@@ -182,7 +184,9 @@ export const Docs: Story = {
       properties={props}
       events={events}
       methods={methods}
-      styling={styling}
+      // styling={styling}
+      style={style}
+      token={token}
     />
   ),
   args:{
@@ -205,6 +209,7 @@ export const Basic: Story = {
     canceltext: "Cancel",
     eventsource: createMockEventSource(true, 1000),
     listener: mockListener,
+    // sheetposition:undefined
   },
   argTypes: {
     title: { control: "text" },
@@ -212,6 +217,7 @@ export const Basic: Story = {
     logintext: { control: "text" },
     canceltext: { control: "text" },
     errormessage: { control: "text" },
+    // sheetposition:{control:{ type:"select"}, options: [undefined, 'top', 'bottom', 'left', 'right']},
   },
 };
 
