@@ -11,7 +11,7 @@ import overview from "./docs/overview.md?raw";
 import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
-import styling from "./docs/styling.md?raw";
+// import styling from "./docs/styling.md?raw";
 import style from "./docs/style.md?raw";
 import token from "./docs/token.md?raw";
 
@@ -23,23 +23,6 @@ const mockListener = {
 const meta = {
   title: "Dialogs/Iframe Dialog",
   component: IframeDialogDefaultExport,
-  // argTypes: {
-  //   title: { control: "text" },
-  //   url: { control: "text" },
-  //   iconclass: { control: "select", options: ["fa fa-circle-check", "fa fa-trash", "fa fa-save", "fa fa-file", "fa-fa-user"] },
-  //   oktext: { control: "text" },
-  //   showheader: { control: "boolean" },
-  //   showactions: { control: "boolean" },
-  //   closable: { control: "boolean" },
-  //   encodeurl: { control: "boolean" },
-  //   width: { control: "text" },
-  //   height: { control: "text" },
-  //   headinglevel: {control: "select", options:["h1", "h2", "h4"]},
-  //   iconurl: { control: "text" },
-  //   iconwidth: { control: "text" },
-  //   iconheight: { control: "text" },
-  //   iconmargin: { control: "text" }
-  // },
 } satisfies Meta<typeof IframeDialogDefaultExport>;
 
 export default meta;
@@ -93,6 +76,10 @@ export const Docs: Story = {
   args:{
     name:"docsIframeDialog",
     listener:mockListener
+  },
+  argTypes:{
+    name: {table: {disable: true}},
+    listener:{table: {disable: true}},
   },
   parameters: {
     layout: 'fullscreen',
@@ -226,15 +213,19 @@ export const Showcase: Story = {
   args:{
     name: "showcaseIframeDialog",
     listener:mockListener
+  },
+  argTypes:{
+    name: {table: {disable: true}},
+    listener:{table: {disable: true}},
   }
 };
 
 
-export const Basic: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
   render: Template,
   args: {
-    name: "basicIframe",
+    name: "standardIframe",
     title: "External Content",
     url: "https://www.wavemaker.com",
     iconclass: "wi wi-globe",
@@ -244,7 +235,7 @@ export const Basic: Story = {
     closable: true,
     listener: mockListener,
     headinglevel:"h4",
-    sheetposition:undefined,
+    // sheetposition:undefined,
   },
   argTypes: {
     title: { control: "text" },
@@ -262,7 +253,9 @@ export const Basic: Story = {
     iconwidth: { control: "text" },
     iconheight: { control: "text" },
     iconmargin: { control: "text" },
-    sheetposition:{control:{ type:"select"}, options: [undefined, 'top', 'bottom', 'left', 'right']},
+    sheetposition:{control:{ type:"select"}, options: ['top', 'bottom', 'left', 'right']},
+    name: {table: {disable: true}},
+    listener:{table: {disable: true}},
   },
 };
 
