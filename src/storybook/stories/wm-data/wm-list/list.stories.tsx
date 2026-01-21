@@ -10,7 +10,7 @@ import overview from "./docs/overview.md?raw";
 import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
-import styling from "./docs/styling.md?raw";
+// import styling from "./docs/styling.md?raw";
 import token from "./docs/token.md?raw";
 
 import listTokensData from "../../../../designTokens/components/list/list.json";
@@ -53,31 +53,6 @@ const tasksData = [
 const meta = {
   title: "Data/List",
   component: WmList,
-  // argTypes: {
-  //   title: { control: "text" },
-  //   subheading: { control: "text" },
-  //   iconclass:{
-  //     control:{
-  //       type:"select"
-  //     },
-  //     options:["fa fa-adjust", "fa fa-anchor", "fa fa-archive", "fa fa-area-chart", 
-  //       "fa fa-asterisk", "fa fa-at", "fa fa-automobile", "fa fa-balance-scale", "fa fa-bank", "fa fa-bar-chart", "fa fa-user"],
-  //   },
-  //   navigation: {
-  //     control: "select",
-  //     options: ["None", "Basic", "Pager", "Classic", "Advanced", "Inline", "On-Demand", "Scroll"]
-  //   },
-  //   direction: {
-  //     control: "select",
-  //     options: ["vertical", "horizontal"]
-  //   },
-  //   pagesize: { control: "number" },
-  //   multiselect: { control: "boolean" },
-  //   collapsible: { control: "boolean" },
-  //   selectfirstitem: { control: "boolean" },
-  //   showrecordcount: { control: "boolean" },
-  //   enablereorder: { control: "boolean" },
-  // },
   parameters: {
     layout: "fullscreen",
   },
@@ -85,6 +60,17 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+const DesignTokenTemplate = (args: any) => {
+    //component can't spread data-design-token-target, so we apply it to a wrapper
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args;
+  
+    return (
+      <Box style={{ padding: 16, width:"100%" }} data-design-token-target={dataAttr}>
+        <WmList {...componentArgs} listener={mockListener} />
+      </Box>
+    );
+  };
 
 export const Docs: Story = {
   render: () => (
@@ -95,6 +81,10 @@ export const Docs: Story = {
       methods={methods}
       // styling={styling}
       token={token}
+      externalLink={{
+        href: "https://www.figma.com/design/F6S1sF5vM38mn6aLNnGGon/WaveMaker-UI-Kit--Community-?node-id=55141-14249&p=f&t=TmoXZ4j5uVxcseDO-0",
+        label: "",
+      }}
     />
   ),
   parameters: {
@@ -103,6 +93,10 @@ export const Docs: Story = {
   args:{
     name:"showcaseList",
     listener:mockListener
+  },
+  argTypes:{
+    name:{table:{disable:true}},
+    listener:{table:{disable:true}}
   }
 };
 
@@ -397,16 +391,19 @@ export const Showcase: Story = {
   args:{
     name:"showcaseList",
     listener:mockListener
+  },
+  argTypes:{
+    name:{table:{disable:true}},
+    listener:{table:{disable:true}}
   }
 };
 
 
-
-
-export const Basic: Story = {
+export const Standard: Story = {
   tags: ['show-panel'],
+  render: DesignTokenTemplate,
   args: {
-    name: "basicList",
+    name: "standardList",
     title: "User List",
     subheading: "All registered users",
     iconclass: "fa fa-user",
@@ -425,6 +422,7 @@ export const Basic: Story = {
     pagesizeoptions: "3,5,8",
     navigationalign: "left",
     listener: mockListener,
+    "data-design-token-target": true,
     renderItem: (item: any) => (
       <Box sx={{ padding: 2, display: "flex", alignItems: "center", gap: 2 }}>
         <Avatar src={item.avatar} alt={item.name} />
@@ -462,72 +460,10 @@ export const Basic: Story = {
       control: "select",
       options: ["left", "center", "right"]
     },
-  }
-};
-
-export const Standard: Story = {
-  tags: ['show-panel'],
-  render: (args) => {
-    return (
-      <Box sx={{ p: 4, width: "100%" }}>
-        <div data-design-token-target="true">
-          <WmList {...args} />
-        </div>
-      </Box>
-    );
-  },
-  args: {
-    name: "standardList",
-    title: "User List",
-    subheading: "All registered users",
-    iconclass: "fa fa-user",
-    dataset: usersData,
-    navigation: "Advanced",
-    pagesize: 3,
-    maxsize: 5,
-    boundarylinks: true,
-    direction: "vertical",
-    multiselect: false,
-    showrecordcount: true,
-    collapsible: false,
-    selectfirstitem: false,
-    enablereorder: false,
-    allowpagesizechange: true,
-    pagesizeoptions: "3,5,8",
-    navigationalign: "left",
-    listener: mockListener,
-    renderItem: (item: any) => (
-      <Box sx={{ padding: 2, display: "flex", alignItems: "center", gap: 2 }}>
-        <Avatar src={item.avatar} alt={item.name} />
-        <Box sx={{ flex: 1 }}>
-          <Typography variant="h6">{item.name}</Typography>
-          <Typography variant="body2" color="text.secondary">{item.email}</Typography>
-        </Box>
-        <Chip label={item.role} size="small" color="primary" />
-      </Box>
-    ),
-  },
-  argTypes: {
-    title: { control: "text" },
-    subheading: { control: "text" },
-    iconclass:{control: false},
-    navigation: {
-      control: "select",
-      options: ["None", "Basic", "Pager", "Classic", "Advanced", "Inline", "On-Demand", "Scroll"]
-    },
-    direction: {control: false},
-    pagesize: { control: false },
-    maxsize: { control: false },
-    boundarylinks: { control: false },
-    multiselect: { control: false },
-    collapsible: { control: false },
-    selectfirstitem: { control: false },
-    showrecordcount: { control: false },
-    enablereorder: { control: false },
-    allowpagesizechange: { control: false },
-    pagesizeoptions: { control: false },
-    navigationalign: {control:false},
-    dataset:{control: false}
+    name: { table: { disable: true } },
+    listener: { table: { disable: true } },
+    renderItem: { table: { disable: true } },
+    "data-design-token-target": { table: { disable: true } },
   },
   parameters: {
     designTokens: {
@@ -540,383 +476,64 @@ export const Standard: Story = {
   },
 };
 
-// export const WithPagination: Story = {
+// export const Basic: Story = {
 //   tags: ['show-panel'],
 //   args: {
-//     name: "paginatedList",
-//     title: "Users",
-//     subheading: "Paginated user list",
-//     iconclass: "",
-//     dataset: usersData,
-//     navigation: "Basic",
-//     pagesize: 3,
-//     showrecordcount: true,
-//     listener: mockListener,
-//     renderItem: (item: any) => (
-//       <Box sx={{ padding: 2 }}>
-//         <Stack direction="row" spacing={2} alignItems="center">
-//           <Avatar src={item.avatar} />
-//           <Box sx={{ flex: 1 }}>
-//             <Typography variant="subtitle1">{item.name}</Typography>
-//             <Typography variant="body2" color="text.secondary">{item.email}</Typography>
-//           </Box>
-//           <Typography variant="caption" sx={{ bgcolor: "primary.light", px: 1, py: 0.5, borderRadius: 1 }}>
-//             {item.role}
-//           </Typography>
-//         </Stack>
-//       </Box>
-//     ),
-//   },
-// };
-
-// export const ReorderableList: Story = {
-//   tags: ['show-panel'],
-//   args: {
-//     name: "reorderableList",
-//     title: "Task Priority",
-//     subheading: "Drag to reorder",
-//     iconclass: "",
-//     dataset: tasksData.slice(0, 4),
-//     enablereorder: true,
-//     listener: mockListener,
-//     onReorder: (event, data, changedItem) => {
-//       console.log("List reordered:", data, changedItem);
-//     },
-//     renderItem: (item: any) => (
-//       <Box sx={{ padding: 2, cursor: "grab", "&:active": { cursor: "grabbing" } }}>
-//         <Stack direction="row" alignItems="center" spacing={2}>
-//           <Typography variant="h4" sx={{ opacity: 0.3 }}>☰</Typography>
-//           <Box sx={{ flex: 1 }}>
-//             <Typography variant="subtitle1">{item.title}</Typography>
-//             <Typography variant="body2" color="text.secondary">{item.status}</Typography>
-//           </Box>
-//           <Chip label={item.priority} size="small" color={item.priority === "High" ? "error" : "default"} />
-//         </Stack>
-//       </Box>
-//     ),
-//   },
-// };
-
-// export const ProductList: Story = {
-//   args: {
-//     name: "productList",
-//     title: "Products",
-//     subheading: "Available products",
-//     iconclass: "wi wi-shopping-cart",
-//     dataset: productsData,
-//     listener: mockListener,
-//     renderItem: (item: any) => (
-//       <Box sx={{ padding: 2 }}>
-//         <Stack direction="row" justifyContent="space-between" alignItems="center">
-//           <Box sx={{ flex: 1 }}>
-//             <Typography variant="h6">{item.name}</Typography>
-//             <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5 }}>
-//               <Typography variant="body2" color="text.secondary">{item.category}</Typography>
-//               <Chip
-//                 label={item.inStock ? "In Stock" : "Out of Stock"}
-//                 size="small"
-//                 color={item.inStock ? "success" : "error"}
-//                 variant="outlined"
-//               />
-//             </Stack>
-//           </Box>
-//           <Typography variant="h5" color="primary.main">${item.price}</Typography>
-//         </Stack>
-//       </Box>
-//     ),
-//   },
-// };
-
-// export const MultiSelect: Story = {
-//   args: {
-//     name: "multiSelectList",
-//     title: "Tasks",
-//     subheading: "Select multiple tasks",
-//     iconclass: "wi wi-check-square",
-//     dataset: tasksData,
-//     multiselect: true,
-//     navigation: "None",
-//     listener: mockListener,
-//     renderItem: (item: any) => (
-//       <Box sx={{ padding: 2 }}>
-//         <Stack spacing={1}>
-//           <Stack direction="row" justifyContent="space-between" alignItems="center">
-//             <Typography variant="subtitle1">{item.title}</Typography>
-//             <Chip
-//               label={item.priority}
-//               size="small"
-//               color={item.priority === "High" ? "error" : item.priority === "Medium" ? "warning" : "default"}
-//             />
-//           </Stack>
-//           <Stack direction="row" spacing={2}>
-//             <Typography variant="body2" color="text.secondary">Status: {item.status}</Typography>
-//             <Typography variant="body2" color="text.secondary">Due: {item.dueDate}</Typography>
-//           </Stack>
-//         </Stack>
-//       </Box>
-//     ),
-//   },
-// };
-
-// export const GroupedList: Story = {
-//   args: {
-//     name: "groupedList",
-//     title: "Grouped Users",
-//     subheading: "Users grouped by role",
-//     iconclass: "wi wi-folder",
-//     dataset: usersData,
-//     groupby: "role",
-//     collapsible: true,
-//     showcount: true,
-//     listener: mockListener,
-//     renderItem: (item: any) => (
-//       <Box sx={{ padding: 2, display: "flex", alignItems: "center", gap: 2 }}>
-//         <Avatar src={item.avatar} />
-//         <Box>
-//           <Typography variant="subtitle1">{item.name}</Typography>
-//           <Typography variant="body2" color="text.secondary">{item.email}</Typography>
-//         </Box>
-//       </Box>
-//     ),
-//   },
-// };
-
-// export const HorizontalList: Story = {
-//   args: {
-//     name: "horizontalList",
-//     title: "Product Gallery",
-//     subheading: "Scroll horizontally",
-//     iconclass: "wi wi-grid",
-//     dataset: productsData.slice(0, 4),
-//     direction: "horizontal",
-//     itemsperrow: "4",
-//     listener: mockListener,
-//     renderItem: (item: any) => (
-//       <Box
-//         sx={{
-//           padding: 2,
-//           minWidth: 200,
-//           border: "1px solid #e0e0e0",
-//           borderRadius: 1,
-//           textAlign: "center"
-//         }}
-//       >
-//         <Box
-//           sx={{
-//             width: "100%",
-//             height: 120,
-//             bgcolor: "grey.200",
-//             borderRadius: 1,
-//             mb: 1,
-//             display: "flex",
-//             alignItems: "center",
-//             justifyContent: "center"
-//           }}
-//         >
-//           <Typography variant="h3" color="text.secondary">📦</Typography>
-//         </Box>
-//         <Typography variant="subtitle1" gutterBottom>{item.name}</Typography>
-//         <Typography variant="h6" color="primary">${item.price}</Typography>
-//         <Button size="small" variant="contained" sx={{ mt: 1 }} fullWidth>
-//           Add to Cart
-//         </Button>
-//       </Box>
-//     ),
-//   },
-// };
-
-// export const OnDemandLoading: Story = {
-//   args: {
-//     name: "onDemandList",
-//     title: "Users",
-//     subheading: "Load more on demand",
-//     iconclass: "wi wi-refresh",
-//     dataset: usersData,
-//     navigation: "On-Demand",
-//     pagesize: 3,
-//     ondemandmessage: "Load More Users",
-//     listener: mockListener,
-//     renderItem: (item: any) => (
-//       <Box sx={{ padding: 2, display: "flex", alignItems: "center", gap: 2 }}>
-//         <Avatar src={item.avatar} />
-//         <Box sx={{ flex: 1 }}>
-//           <Typography variant="subtitle1">{item.name}</Typography>
-//           <Typography variant="body2" color="text.secondary">{item.email}</Typography>
-//         </Box>
-//         <Chip label={item.role} size="small" />
-//       </Box>
-//     ),
-//   },
-// };
-
-// export const CardLayout: Story = {
-//   args: {
-//     name: "cardList",
-//     title: "User Cards",
-//     subheading: "Grid layout with cards",
-//     iconclass: "wi wi-grid",
-//     dataset: usersData.slice(0, 6),
-//     itemsperrow: "3",
-//     navigation: "None",
-//     listener: mockListener,
-//     renderItem: (item: any) => (
-//       <Box
-//         sx={{
-//           padding: 2,
-//           border: "1px solid #e0e0e0",
-//           borderRadius: 2,
-//           textAlign: "center",
-//           "&:hover": {
-//             boxShadow: 2,
-//             transform: "translateY(-2px)",
-//             transition: "all 0.3s"
-//           }
-//         }}
-//       >
-//         <Avatar
-//           src={item.avatar}
-//           sx={{ width: 80, height: 80, margin: "0 auto 16px" }}
-//         />
-//         <Typography variant="h6" gutterBottom>{item.name}</Typography>
-//         <Typography variant="body2" color="text.secondary" gutterBottom>
-//           {item.email}
-//         </Typography>
-//         <Chip label={item.role} size="small" color="primary" sx={{ mt: 1 }} />
-//       </Box>
-//     ),
-//   },
-// };
-
-// export const InteractiveList: Story = {
-//   render: () => {
-//     const [selectedItems, setSelectedItems] = useState<any[]>([]);
-//     const [eventLog, setEventLog] = useState<string[]>([]);
-
-//     const addLog = (message: string) => {
-//       const timestamp = new Date().toLocaleTimeString();
-//       setEventLog((prev) => [...prev.slice(-4), `[${timestamp}] ${message}`]);
-//     };
-
-//     return (
-//       <Box sx={{ padding: 2 }}>
-//         <Stack spacing={3}>
-//           <WmList
-//             name="interactiveList"
-//             title="Interactive List"
-//             subheading="Click items to see events"
-//             iconclass="wi wi-pointer"
-//             dataset={usersData.slice(0, 5)}
-//             multiselect={true}
-//             listener={mockListener}
-//             onClick={(event, widget) => addLog("List item clicked")}
-//             onDblclick={(event, widget) => addLog("List item double-clicked")}
-//             onSelect={(widget, selectedItem) => {
-//               addLog(`Item selected: ${selectedItem?.name || "None"}`);
-//               setSelectedItems(widget.selectedItems || []);
-//             }}
-//             renderItem={(item: any) => (
-//               <Box sx={{ padding: 2, display: "flex", alignItems: "center", gap: 2 }}>
-//                 <Avatar src={item.avatar} />
-//                 <Box sx={{ flex: 1 }}>
-//                   <Typography variant="subtitle1">{item.name}</Typography>
-//                   <Typography variant="body2" color="text.secondary">{item.email}</Typography>
-//                 </Box>
-//               </Box>
-//             )}
-//           />
-
-//           <Box sx={{ padding: 2, backgroundColor: "#f5f5f5", borderRadius: 1 }}>
-//             <Typography variant="subtitle2" gutterBottom>
-//               Selected Items: {selectedItems.length}
-//             </Typography>
-//             {selectedItems.length > 0 && (
-//               <Stack spacing={0.5}>
-//                 {selectedItems.map((item: any, index: number) => (
-//                   <Typography key={index} variant="body2">
-//                     • {item.name}
-//                   </Typography>
-//                 ))}
-//               </Stack>
-//             )}
-//           </Box>
-
-//           {eventLog.length > 0 && (
-//             <Box sx={{ padding: 2, backgroundColor: "#e3f2fd", borderRadius: 1 }}>
-//               <Typography variant="subtitle2" gutterBottom>
-//                 Event Log:
-//               </Typography>
-//               <Stack spacing={0.5}>
-//                 {eventLog.map((log, index) => (
-//                   <Typography key={index} variant="body2" sx={{ fontFamily: "monospace", fontSize: "11px" }}>
-//                     {log}
-//                   </Typography>
-//                 ))}
-//               </Stack>
-//             </Box>
-//           )}
-//         </Stack>
-//       </Box>
-//     );
-//   },
-// };
-
-// export const CompactList: Story = {
-//   args: {
-//     name: "compactList",
-//     title: "Recent Activity",
-//     subheading: "Latest updates",
-//     iconclass: "wi wi-bell",
-//     dataset: tasksData,
-//     navigation: "None",
-//     listener: mockListener,
-//     renderItem: (item: any) => (
-//       <Box sx={{ padding: 1.5, borderBottom: "1px solid #e0e0e0" }}>
-//         <Stack direction="row" justifyContent="space-between" alignItems="center">
-//           <Typography variant="body2">{item.title}</Typography>
-//           <Typography variant="caption" color="text.secondary">{item.status}</Typography>
-//         </Stack>
-//       </Box>
-//     ),
-//   },
-// };
-
-// export const EmptyList: Story = {
-//   args: {
-//     name: "emptyList",
-//     title: "No Data",
-//     subheading: "This list is empty",
-//     iconclass: "wi wi-inbox",
-//     dataset: [],
-//     nodatamessage: "No items found. Try adding some data.",
-//     listener: mockListener,
-//   },
-// };
-
-// export const AdvancedPagination: Story = {
-//   args: {
-//     name: "advancedList",
-//     title: "Users with Advanced Pagination",
-//     subheading: "Full pagination controls",
-//     iconclass: "wi wi-users",
+//     name: "basicList",
+//     title: "User List",
+//     subheading: "All registered users",
+//     iconclass: "fa fa-user",
 //     dataset: usersData,
 //     navigation: "Advanced",
-//     pagesize: 2,
+//     pagesize: 3,
 //     maxsize: 5,
 //     boundarylinks: true,
+//     direction: "vertical",
+//     multiselect: false,
 //     showrecordcount: true,
+//     collapsible: false,
+//     selectfirstitem: false,
+//     enablereorder: false,
 //     allowpagesizechange: true,
-//     pagesizeoptions: "2,4,6,8",
-//     navigationalign: "center",
+//     pagesizeoptions: "3,5,8",
+//     navigationalign: "left",
 //     listener: mockListener,
 //     renderItem: (item: any) => (
 //       <Box sx={{ padding: 2, display: "flex", alignItems: "center", gap: 2 }}>
-//         <Avatar src={item.avatar} />
+//         <Avatar src={item.avatar} alt={item.name} />
 //         <Box sx={{ flex: 1 }}>
-//           <Typography variant="subtitle1">{item.name}</Typography>
+//           <Typography variant="h6">{item.name}</Typography>
 //           <Typography variant="body2" color="text.secondary">{item.email}</Typography>
 //         </Box>
 //         <Chip label={item.role} size="small" color="primary" />
 //       </Box>
 //     ),
 //   },
+//   argTypes: {
+//     title: { control: "text" },
+//     subheading: { control: "text" },
+//     iconclass:{ control:{ type:"select"}, options: iconClassNames },
+//     navigation: {
+//       control: "select",
+//       options: ["None", "Basic", "Pager", "Classic", "Advanced", "Inline", "On-Demand", "Scroll"]
+//     },
+//     direction: {
+//       control: "select",
+//       options: ["vertical", "horizontal"]
+//     },
+//     pagesize: { control: "number" },
+//     maxsize: { control: "number" },
+//     boundarylinks: { control: "boolean" },
+//     multiselect: { control: "boolean" },
+//     collapsible: { control: "boolean" },
+//     selectfirstitem: { control: "boolean" },
+//     showrecordcount: { control: "boolean" },
+//     enablereorder: { control: "boolean" },
+//     allowpagesizechange: { control: "boolean" },
+//     pagesizeoptions: { control: "text" },
+//     navigationalign: {
+//       control: "select",
+//       options: ["left", "center", "right"]
+//     },
+//   }
 // };
