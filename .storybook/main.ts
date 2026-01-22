@@ -14,7 +14,8 @@ const config: StorybookConfig = {
   ],
   "framework": "@storybook/nextjs-vite",
   "staticDirs": [
-    "../public"
+    "../public",
+    "../style"
   ],
   async viteFinal(config) {
     // Mock @wavemaker/variables for Storybook
