@@ -628,8 +628,8 @@ export const Standard: Story = {
     iconclass: "fa fa-briefcase",
     captionposition: "top",
     captionalign: "left",
-    defaultmode: "create",
-    formlayout: "inline",
+    // defaultmode: "create",
+    // formlayout: "inline",
     messagelayout: "Toaster",
     insertmessage: "Application submitted successfully",
     updatemessage: "Application updated successfully",
@@ -642,14 +642,14 @@ export const Standard: Story = {
     iconclass:{ control:{ type:"select"}, options: iconClassNames },
     captionposition:{ control:{ type:"select"}, options: ["left", "top", "floating"]},
     captionalign:{ control:{ type:"select"}, options: ["left", "center", "right"]},
-    defaultmode: {
-      control: "select",
-      options: ["view", "edit", "create"]
-    },
-    formlayout: {
-      control: "select",
-      options: ["inline", "dialog"]
-    },
+    // defaultmode: {
+    //   control: "select",
+    //   options: ["view", "edit", "create"]
+    // },
+    // formlayout: {
+    //   control: "select",
+    //   options: ["inline", "dialog"]
+    // },
     messagelayout: {
       control: "select",
       options: ["Toaster", "Inline"]

@@ -257,7 +257,7 @@ export const Standard: Story = {
     groupby: { control: "text" },
     // match: { control: "text" },
     orderby: { control: "text" },
-    label: { control: "text" },
+    // label: { control: "text" },
     // collapsible: { control: "boolean" },
     // collapsed: { control: "boolean" },
     // tabIndex: { control: "number" },

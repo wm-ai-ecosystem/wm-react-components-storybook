@@ -30,7 +30,7 @@ const Template = (args: any) => (
 
 const DesignTokenTemplate = (args: any) => {
     //component can't spread data-design-token-target, so we apply it to a wrapper
-    const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;
+    const { "data-design-token-target": dataAttr, extensions, ...componentArgs } = args as any;
   
     return (
       <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
@@ -162,8 +162,9 @@ export const Standard: Story = {
     disabled: false,
     readonly: false,
     required: false,
-    showprogressbar: false,
-    showprogressbarpercentage: false,
+    maxfilesize: "5",
+    // showprogressbar: false,
+    // showprogressbarpercentage: false,
     "data-design-token-target":true
   },
   argTypes: {
@@ -182,14 +183,14 @@ export const Standard: Story = {
     // cleariconclass: { control: "text" },
     // cleariconhint: { control: "text" },
     // deleteiconhint: { control: "text" },
-    displayname: { control: "text" },
+    // displayname: { control: "text" },
     hint: { control: "text" },
-    width: { control: "text" },
-    height: { control: "text" },
+    // width: { control: "text" },
+    // height: { control: "text" },
     // filelistheight: { control: "number" },
-    showprogressbar: { control: "boolean" },
-    showprogressbarpercentage: { control: "boolean" },
-    uploadpath: { control: "text" },
+    // showprogressbar: { control: "boolean" },
+    // showprogressbarpercentage: { control: "boolean" },
+    // uploadpath: { control: "text" },
     name: { table: { disable: true } },
     listener: { table: { disable: true } },
     "data-design-token-target": { table: { disable: true } }

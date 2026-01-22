@@ -149,6 +149,7 @@ export const Standard: Story = {
     name: {table: {disable: true}},
     listener: {table: {disable:true}},
     children: {table: {disable: true}},
-    eventSource: {table: {disable: true}}
+    eventSource: {table: {disable: true}},
+    show:{table:{disable:true}}
   }
 };

@@ -147,7 +147,7 @@ export const Standard: Story = {
     datavalue: { control: "boolean" },
     disabled: { control: "boolean" },
     readonly: { control: "boolean" },
-    required: { control: "boolean" },
+    // required: { control: "boolean" },
     type: {
       control: { type: "select" },
       options: ["checkbox", "toggle"],

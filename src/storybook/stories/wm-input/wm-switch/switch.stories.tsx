@@ -182,7 +182,7 @@ export const Standard: Story = {
     listener: mockListener,
     disabled: false,
     multiple: false,
-    displaylabel: "Basic Switch",
+    // displaylabel: "Basic Switch",
     "data-design-token-target":true
   },
   argTypes: {
@@ -190,7 +190,7 @@ export const Standard: Story = {
     datafield: { control: "text" },
     datavalue: { control: "text" },
     displayfield: { control: "text" },
-    displaylabel: { control: "text" },
+    // displaylabel: { control: "text" },
     multiple: { control: "boolean" },
     disabled: { control: "boolean" },
     checkediconclass: { control: "select", options:["fa fa-check", "fa fa-circle-check", "wi wi-check", "wi wi-check-box"] },

@@ -354,8 +354,15 @@ export const Standard: Story = {
       control: { type: "select" },
       options: ["key", "value", "percent", "key-value"],
     },
-    donutratio: { control: "number" },
+    donutratio: { control: "select", options:["small", "medium", "large"] },
     tooltips: { control: "boolean" },
     showLegend: { control: "boolean" },
+    onChartClick: {table: {disable : true}},
+    dataKeys: {table: {disable:true}},
+    selectedRegions: {table: {disable: true}},
+    availableRegions: {table: {disable: true}},
+    shouldShowLegend: {table: {disable: true}},
+    onLegendClick: {table: {disable:true}},
+    centerlabel:{table: {disable: true}}
   }
 };

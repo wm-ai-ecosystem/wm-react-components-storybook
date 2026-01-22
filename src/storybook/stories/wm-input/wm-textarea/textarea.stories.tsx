@@ -29,8 +29,8 @@ const mockListener = {
 };
 
 const Template = (args: any) => {
-  const { maxchars, limitdisplaytext, autocapitalize } = args;
-  const renderkey = `${maxchars}-${limitdisplaytext}`;
+  const { maxchars, limitdisplaytext, autocapitalize, autofocus } = args;
+  const renderkey = `${autocapitalize}-${autofocus}`;
   return (
     <Box style={{ padding: 16 }}>
       <TextareaDefaultExport {...args} listener={mockListener} key={renderkey} />
@@ -158,23 +158,23 @@ export const Standard: Story = {
     readonly: false,
     autofocus: false,
     autocapitalize: false,
-    required: false,
+    // required: false,
   },
   argTypes: {
     datavalue: { control: "text" },
     placeholder: { control: "text" },
     readonly: { control: "boolean" },
-    required: { control: "boolean" },
+    // required: { control: "boolean" },
     disabled: { control: "boolean" },
     maxchars: { control: "number" },
     autofocus: { control: "boolean" },
     limitdisplaytext: { control: "text" },
     regexp: { control: "text" },
-    updatedelay: { control: "text" },
-    updateon: {
-      control: { type: "select" },
-      options: ["keypress", "blur"]
-    },
+    // updatedelay: { control: "text" },
+    // updateon: {
+    //   control: { type: "select" },
+    //   options: ["keypress", "blur"]
+    // },
     autocapitalize: { control: "boolean" },
     name: { table: { disable: true } },
     listener: { table: { disable: true } },

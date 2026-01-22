@@ -157,6 +157,7 @@ export const Standard: Story = {
       control: { type: "select" },
       options: ["left", "right", "top", "floating"],
     },
+    children:{table:{disable:true}},
     // required: { control: "boolean" },
     // className: { control: "text" },
     // id: { control: "text" },

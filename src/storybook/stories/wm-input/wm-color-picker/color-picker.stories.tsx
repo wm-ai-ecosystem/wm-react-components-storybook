@@ -151,7 +151,7 @@ export const Standard: Story = {
       control: { type: "select" },
       options: ["always", "outsideClick", "disabled"],
     },
-    datavalue: { control: "text" },
+    datavalue: { control: "color" },
     placeholder: { control: "text" },
     readonly: { control: "boolean" },
     disabled: { control: "boolean" },

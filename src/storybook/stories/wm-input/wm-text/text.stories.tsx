@@ -29,8 +29,9 @@ const mockListener = {
 };
 
 const Template = (args: any) => {
-  const { type, maxchars, minvalue, maxvalue, step, autocomplete } = args;
-  const renderkey = `${type}-${maxchars || ""}-${minvalue || ""}-${maxvalue || ""}-${step || "" || ""}-${autocomplete ? "a" : "na"}`;
+  const { type, maxchars, minvalue, maxvalue, step, autocomplete, autotrim, autocapitalize } = args;
+  const renderkey = `${type}-${maxchars || ""}-${minvalue || ""}-${maxvalue || ""}-${step || ""}-${autocomplete ? "a" : "na"}-${autotrim ? "t" : "nt"}-${autocapitalize || "none"}`;
+
   return ( 
     <Box style={{ padding: 16 }}>
       <TextDefaultExport {...args} listener={mockListener} key={renderkey} />
@@ -213,11 +214,11 @@ export const Standard: Story = {
     minvalue: { control: "number" },
     maxvalue: { control: "number" },
     step: { control: "number" },
-    displayformat: { control: "text" },
-    showdisplayformaton: {
-      control: { type: "select" },
-      options: ["keypress", "blur"]
-    },
+    // displayformat: { control: "text" },
+    // showdisplayformaton: {
+    //   control: { type: "select" },
+    //   options: ["keypress", "blur"]
+    // },
     regexp: { control: "text" },
     autocapitalize: {
       control: { type: "select" },

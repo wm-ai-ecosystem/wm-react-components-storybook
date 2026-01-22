@@ -180,7 +180,6 @@ export const Standard: Story = {
     datavalue: null,
     disabled : false,
     readonly: false,
-    required: false,
     decimalplaces: 2,
     trailingzero: false,
     "data-design-token-target": true
@@ -194,11 +193,11 @@ export const Standard: Story = {
     datavalue: { control: "number" },
     disabled: { control: "boolean" },
     readonly: { control: "boolean" },
-    required: { control: "boolean" },
+    // required: { control: "boolean" },
     placeholder: { control: "text" },
     maxvalue: { control: "number" },
     minvalue: { control: "number" },
-    step: { control: "number" },
+    // step: { control: "number" },
     // textAlign: { control: "text" },
     trailingzero: { control: "boolean" },
     inputmode: {
@@ -206,7 +205,7 @@ export const Standard: Story = {
       options: ["natural", "positive", "negative"],
     },
     decimalplaces: { control: "number" },
-    autofocus: { control: "boolean" },
+    // autofocus: { control: "boolean" },
     name: { table: { disable: true } },
     listener: { table: { disable: true } },
     "data-design-token-target": { table: { disable: true } }
