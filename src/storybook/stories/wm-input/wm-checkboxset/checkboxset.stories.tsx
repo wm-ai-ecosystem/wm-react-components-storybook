@@ -104,7 +104,7 @@ export const Showcase: Story = {
         </Box>
 
         {/* Stacked layout */}
-        <Box>
+        {/* <Box>
           <Typography variant="subtitle2" color="text.secondary" mb={2}>
             Stacked Layout
           </Typography>
@@ -120,7 +120,7 @@ export const Showcase: Story = {
             displayfield="label"
             listener={mockListener}
           />
-        </Box>
+        </Box> */}
 
         {/* Preselected values */}
         <Box>
@@ -182,7 +182,7 @@ export const Showcase: Story = {
         </Box>
 
         {/* Items per row */}
-        <Box>
+        {/* <Box>
           <Typography variant="subtitle2" color="text.secondary" mb={2}>
             Items Per Row
           </Typography>
@@ -202,7 +202,7 @@ export const Showcase: Story = {
             displayfield="label"
             listener={mockListener}
           />
-        </Box>
+        </Box> */}
       </Stack>
     </Box>
   ),
@@ -234,15 +234,15 @@ export const Standard: Story = {
     datavalue:[1,3],
     disabled: false,
     readonly: false,
-    layout: "inline",
+    // layout: "inline",
     "data-design-token-target":true
   },
   argTypes: {
-    layout: {
-      control: { type: "select" },
-      options: ["inline", "stacked"],
-    },
-    itemsperrow: { control: "select", options: ["xs-1 sm-1 md-1 lg-1","xs-1 sm-2 md-2 lg-2","xs-1 sm-2 md-3 lg-3","xs-1 sm-2 md-3 lg-4","xs-1 sm-2 md-4 lg-6"] },
+    // layout: {
+    //   control: { type: "select" },
+    //   options: ["inline", "stacked"],
+    // },
+    // itemsperrow: { control: "select", options: ["xs-1 sm-1 md-1 lg-1","xs-1 sm-2 md-2 lg-2","xs-1 sm-2 md-3 lg-3","xs-1 sm-2 md-3 lg-4","xs-1 sm-2 md-4 lg-6"] },
     // itemclass: { control: "text" },
     // listclass: { control: "text" },
     // showcount: { control: "boolean" },

@@ -146,7 +146,7 @@ export const Standard: Story = {
       options: ["success", "error", "warning", "info", "loading"],
     },
     hideclose: { control: "boolean" },
-    animation: { control: "select", options: animationNames },
+    // animation: { control: "select", options: animationNames },
     "data-design-token-target": { table: { disable: true } },
     name: { table: { disable: true } },
     listener: { table: { disable: true } },

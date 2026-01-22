@@ -38,10 +38,12 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 const Template = (args: any) => {
-  const { className } = args;
+  const { className, iconposition } = args;
+  const renderkey = `${iconposition}-${className}`;
+
   return (
   <Box style={{ padding: 16 }}>
-    <ButtonDefaultExport {...args} key={className} listener={mockListener} />
+    <ButtonDefaultExport {...args} key={renderkey} listener={mockListener} />
   </Box>
 )};
 
@@ -338,17 +340,18 @@ export const Filled: Story = {
     name: "filledButton",
     caption: "Button",
     disabled: false,
-    type: "button",
+    // type: "button",
     className: "btn-filled btn-primary",
-    "data-design-token-target": "true"
+    "data-design-token-target": "true",
+    iconposition: "left",
   },
   argTypes: {
     caption: { control: "text" },
     disabled: { control: "boolean" },
-    type: {
-      control: { type: "select" },
-      options: ["button", "submit", "reset"],
-    },
+    // type: {
+    //   control: { type: "select" },
+    //   options: ["button", "submit", "reset"],
+    // },
     iconclass:{ control:{ type:"select"}, options: iconClassNames },
     iconposition: {
       control: { type: "select" },
@@ -391,17 +394,18 @@ export const Outlined: Story = {
     name: "outlinedButton",
     caption: "Button",
     disabled: false,
-    type: "button",
+    // type: "button",
     className: "btn-outlined btn-primary",
-    "data-design-token-target": "true"
+    "data-design-token-target": "true",
+    iconposition: "left",
   },
   argTypes: {
     caption: { control: "text" },
     disabled: { control: "boolean" },
-    type: {
-      control: { type: "select" },
-      options: ["button", "submit", "reset"],
-    },
+    // type: {
+    //   control: { type: "select" },
+    //   options: ["button", "submit", "reset"],
+    // },
     iconclass:{ control:{ type:"select"}, options: iconClassNames },
     iconposition: {
       control: { type: "select" },
@@ -444,17 +448,18 @@ export const Text: Story = {
     name: "textButton",
     caption: "Button",
     disabled: false,
-    type: "button",
+    // type: "button",
     className: "btn-text btn-primary",
-    "data-design-token-target": "true"
+    "data-design-token-target": "true",
+    iconposition: "left",
   },
   argTypes: {
     caption: { control: "text" },
     disabled: { control: "boolean" },
-    type: {
-      control: { type: "select" },
-      options: ["button", "submit", "reset"],
-    },
+    // type: {
+    //   control: { type: "select" },
+    //   options: ["button", "submit", "reset"],
+    // },
     iconclass:{ control:{ type:"select"}, options: iconClassNames },
     iconposition: {
       control: { type: "select" },
@@ -497,17 +502,18 @@ export const Transparent: Story = {
     name: "transparentButton",
     caption: "Button",
     disabled: false,
-    type: "button",
+    // type: "button",
     className: "btn-transparent",
-    "data-design-token-target": "true"
+    "data-design-token-target": "true",
+    iconposition: "left",
   },
   argTypes: {
     caption: { control: "text" },
     disabled: { control: "boolean" },
-    type: {
-      control: { type: "select" },
-      options: ["button", "submit", "reset"],
-    },
+    // type: {
+    //   control: { type: "select" },
+    //   options: ["button", "submit", "reset"],
+    // },
     iconclass:{ control:{ type:"select"}, options: iconClassNames },
     iconposition: {
       control: { type: "select" },

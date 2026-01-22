@@ -177,7 +177,7 @@ export const Default: Story = {
     name: "defaultLabel",
     listener: mockListener,
     caption: "Label",
-    type: "p",
+    // type: "p",
     className:"p",
     hint:"This is a basic label",
     textalign: "left",
@@ -185,10 +185,10 @@ export const Default: Story = {
   }, 
   argTypes: {
     caption: { control: "text" },
-    type: {
-      control: { type: "select" },
-      options: ["h1", "h2", "h3", "h4", "h5", "h6", "p"],
-    },
+    // type: {
+    //   control: { type: "select" },
+    //   options: ["h1", "h2", "h3", "h4", "h5", "h6", "p"],
+    // },
      className: {
       control: {
         type: "select",
@@ -223,7 +223,7 @@ export const Text: Story = {
     name: "textLabel",
     listener: mockListener,
     caption: "Label",
-    type: "p",
+    // type: "p",
     className:"text-primary",
     hint:"This is a basic label",
     textalign: "left",
@@ -231,10 +231,10 @@ export const Text: Story = {
   }, 
   argTypes: {
     caption: { control: "text" },
-    type: {
-      control: { type: "select" },
-      options: ["h1", "h2", "h3", "h4", "h5", "h6", "p"],
-    },
+    // type: {
+    //   control: { type: "select" },
+    //   options: ["h1", "h2", "h3", "h4", "h5", "h6", "p"],
+    // },
      className: {
       control: {
         type: "select",
@@ -269,7 +269,7 @@ export const Label: Story = {
     name: "labelLabel",
     listener: mockListener,
     caption: "Label",
-    type: "p",
+    // type: "p",
     className:"label-primary",
     hint:"This is a basic label",
     textalign: "left",
@@ -277,10 +277,10 @@ export const Label: Story = {
   }, 
   argTypes: {
     caption: { control: "text" },
-    type: {
-      control: { type: "select" },
-      options: ["h1", "h2", "h3", "h4", "h5", "h6", "p"],
-    },
+    // type: {
+    //   control: { type: "select" },
+    //   options: ["h1", "h2", "h3", "h4", "h5", "h6", "p"],
+    // },
      className: {
       control: {
         type: "select",

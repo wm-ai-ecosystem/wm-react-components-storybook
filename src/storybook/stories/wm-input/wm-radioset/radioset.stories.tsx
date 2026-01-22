@@ -149,7 +149,7 @@ export const Showcase: Story = {
         </Box>
 
         {/* Items per row */}
-        <Box>
+        {/* <Box>
           <Typography variant="subtitle2" color="text.secondary" mb={2}>
             Items Per Row
           </Typography>
@@ -168,7 +168,7 @@ export const Showcase: Story = {
             itemsperrow="xs-1 sm-2 md-3 lg-4"
             listener={mockListener}
           />
-        </Box>
+        </Box> */}
       </Stack>
     </Box>
   ),
@@ -209,7 +209,7 @@ export const Standard: Story = {
     displayfield: { control: "text" },
     displayValue: { control: "text" },
     groupby: { control: "text" },
-    itemsperrow: { control: "select", options: ["xs-1 sm-1 md-1 lg-1","xs-1 sm-2 md-2 lg-2","xs-1 sm-2 md-3 lg-3","xs-1 sm-2 md-3 lg-4","xs-1 sm-2 md-4 lg-6"] },
+    // itemsperrow: { control: "select", options: ["xs-1 sm-1 md-1 lg-1","xs-1 sm-2 md-2 lg-2","xs-1 sm-2 md-3 lg-3","xs-1 sm-2 md-3 lg-4","xs-1 sm-2 md-4 lg-6"] },
     orderby: { control: "text" },
     readonly: { control: "boolean" },
     name: { table: { disable: true } },
