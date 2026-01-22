@@ -89,6 +89,9 @@ export const Showcase: Story = {
                   mp3format={sampleAudioUrl}
                   controls={true}
                   listener={mockListener}
+                  autoplay={false}
+                  muted={false}
+                  lopp={false}
                 />
               </Box>
               <Box>
@@ -101,6 +104,7 @@ export const Showcase: Story = {
                   controls={true}
                   autoplay={true}
                   muted={true}
+                  loop={false}
                   listener={mockListener}
                 />
               </Box>
@@ -113,6 +117,8 @@ export const Showcase: Story = {
                   mp3format={sampleAudioUrl}
                   controls={true}
                   loop={true}
+                  autoplay={false}
+                  muted={true}
                   listener={mockListener}
                 />
               </Box>

@@ -31,13 +31,17 @@ const mockListener = {
   Widgets: {},
 };
 
-const Template = (args: any) => (
+const Template = (args: any) => {
+  const {captionplacement} = args;
+
+  return(
   <Box style={{ padding: 16, width: '100%', maxWidth: 200 }}>
     <Box style={{ width: '100%' }}>
-      <ProgressBarDefaultExport {...args} listener={mockListener} />
+      <ProgressBarDefaultExport {...args} listener={mockListener} key={captionplacement} />
     </Box>
   </Box>
-);
+  )
+};
 
 // const DesignTokenTemplate = (args: any) => {
 //   const { "data-design-token-target": dataAttr, ...componentArgs } = args as any;

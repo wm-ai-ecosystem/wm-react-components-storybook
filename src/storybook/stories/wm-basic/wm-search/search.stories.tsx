@@ -181,7 +181,7 @@ export const Standard: Story = {
     displayfield: "name",
     searchon: "onsearchiconclick",
     searchkey: "name",
-    showclear: true,
+    // showclear: false,
     showsearchicon: true,
     showbackbutton:false,
     disabled: false,
@@ -207,7 +207,7 @@ export const Standard: Story = {
      table:{ disable:false, }
     },
     placeholder: { control: "text" },
-    showclear: { control: "boolean" },
+    // showclear: { control: "boolean" },
     showsearchicon: { control: "boolean" },
     showbackbutton: { control: "boolean" },
     // dropup: { control: "boolean" },
