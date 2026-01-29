@@ -278,28 +278,28 @@ wrote custom styles as per current DOM, once fixed in index.tsx file below to be
 
 /* Define type-specific CSS variables that component expects */
 .app-progress.circle.progress-circle-success,
-[data-design-token-target] .app-progress.circle.progress-circle-success {
+[data-design-token-target="true"] .app-progress.circle.progress-circle-success {
     --wm-progress-circle-success-stroke-active: var(--wm-progress-circle-stroke-active);
     --wm-progress-circle-success-stroke-inactive: var(--wm-progress-circle-stroke-inactive);
     --wm-progress-circle-success-label-color: var(--wm-progress-circle-label-color);
 }
 
 .app-progress.circle.progress-circle-info,
-[data-design-token-target] .app-progress.circle.progress-circle-info {
+[data-design-token-target="true"] .app-progress.circle.progress-circle-info {
     --wm-progress-circle-info-stroke-active: var(--wm-progress-circle-stroke-active);
     --wm-progress-circle-info-stroke-inactive: var(--wm-progress-circle-stroke-inactive);
     --wm-progress-circle-info-label-color: var(--wm-progress-circle-label-color);
 }
 
 .app-progress.circle.progress-circle-warning,
-[data-design-token-target] .app-progress.circle.progress-circle-warning {
+[data-design-token-target="true"] .app-progress.circle.progress-circle-warning {
     --wm-progress-circle-warning-stroke-active: var(--wm-progress-circle-stroke-active);
     --wm-progress-circle-warning-stroke-inactive: var(--wm-progress-circle-stroke-inactive);
     --wm-progress-circle-warning-label-color: var(--wm-progress-circle-label-color);
 }
 
 .app-progress.circle.progress-circle-danger,
-[data-design-token-target] .app-progress.circle.progress-circle-danger {
+[data-design-token-target="true"] .app-progress.circle.progress-circle-danger {
     --wm-progress-circle-danger-stroke-active: var(--wm-progress-circle-stroke-active);
     --wm-progress-circle-danger-stroke-inactive: var(--wm-progress-circle-stroke-inactive);
     --wm-progress-circle-danger-label-color: var(--wm-progress-circle-label-color);
@@ -312,34 +312,34 @@ wrote custom styles as per current DOM, once fixed in index.tsx file below to be
    ============================================================================ */
 
 /* CHECKBOX - Checked State */
-[data-design-token-target] .app-checkbox.checkbox > label > input[type="checkbox"]:checked + .caption:before {
+[data-design-token-target="true"] .app-checkbox.checkbox > label > input[type="checkbox"]:checked + .caption:before {
     background: var(--wm-color-primary) !important;
     border-color: var(--wm-color-primary) !important;
 }
 
-[data-design-token-target] .app-checkbox.checkbox > label > input[type="checkbox"]:checked + .caption:after {
+[data-design-token-target="true"] .app-checkbox.checkbox > label > input[type="checkbox"]:checked + .caption:after {
     border-color: var(--wm-color-on-primary) !important;
     transform: translate(3px, 4px) rotate(-45deg) scale(1) !important;
 }
 
-[data-design-token-target] .app-checkbox.checkbox > label > input[type="checkbox"]:checked {
+[data-design-token-target="true"] .app-checkbox.checkbox > label > input[type="checkbox"]:checked {
     background: var(--wm-color-primary) !important;
 }
 
 /* CHECKBOXSET - Checked State (inherits from checkbox) */
-[data-design-token-target] .app-checkboxset .app-checkbox.checkbox > label > input[type="checkbox"]:checked + .caption:before {
+[data-design-token-target="true"] .app-checkboxset .app-checkbox.checkbox > label > input[type="checkbox"]:checked + .caption:before {
     background: var(--wm-color-primary) !important;
     border-color: var(--wm-color-primary) !important;
 }
 
-[data-design-token-target] .app-checkboxset .app-checkbox.checkbox > label > input[type="checkbox"]:checked + .caption:after {
+[data-design-token-target="true"] .app-checkboxset .app-checkbox.checkbox > label > input[type="checkbox"]:checked + .caption:after {
     border-color: var(--wm-color-on-primary) !important;
     transform: translate(3px, 4px) rotate(-45deg) scale(1) !important;
 }
 
 /* TOGGLE/SWITCH - Checked State */
 /* Override CSS variables for checked state */
-[data-design-token-target] .app-checkbox.checkbox.app-toggle:has(input[type='checkbox']:checked) {
+[data-design-token-target="true"] .app-checkbox.checkbox.app-toggle:has(input[type='checkbox']:checked) {
     --wm-toggle-handle-size: 16px !important;
     --wm-toggle-handle-color: var(--wm-color-on-secondary) !important;
     --wm-toggle-background: var(--wm-color-secondary) !important;
@@ -348,67 +348,67 @@ wrote custom styles as per current DOM, once fixed in index.tsx file below to be
 }
 
 /* Label background and border when checked */
-[data-design-token-target] .app-checkbox.checkbox.app-toggle:has(input[type='checkbox']:checked) > label {
+[data-design-token-target="true"] .app-checkbox.checkbox.app-toggle:has(input[type='checkbox']:checked) > label {
     background: var(--wm-color-secondary) !important;
     border: var(--wm-toggle-border-width) var(--wm-toggle-border-style) var(--wm-color-secondary) !important;
 }
 
 /* State layer (input element) moves right and gets secondary color */
-[data-design-token-target] .app-checkbox.checkbox.app-toggle label > input[type="checkbox"]:checked {
+[data-design-token-target="true"] .app-checkbox.checkbox.app-toggle label > input[type="checkbox"]:checked {
     background: var(--wm-color-secondary) !important;
     left: calc(100% - var(--wm-space-2) - 16px - var(--wm-toggle-border-width)) !important;
 }
 
 /* Handle (caption) moves right and changes to on-secondary color */
-[data-design-token-target] .app-checkbox.checkbox.app-toggle label > input[type="checkbox"]:checked + .caption {
+[data-design-token-target="true"] .app-checkbox.checkbox.app-toggle label > input[type="checkbox"]:checked + .caption {
     background: var(--wm-color-on-secondary) !important;
     left: calc(100% - var(--wm-space-1) - 16px + var(--wm-toggle-border-width)) !important;
 }
 
 /* RADIO/RADIOSET - Checked State */
-[data-design-token-target] .app-radio.radio > label > input[type="radio"]:checked + .caption:before {
+[data-design-token-target="true"] .app-radio.radio > label > input[type="radio"]:checked + .caption:before {
     border-color: var(--wm-color-secondary) !important;
 }
 
-[data-design-token-target] .app-radio.radio > label > input[type="radio"]:checked + .caption:after {
+[data-design-token-target="true"] .app-radio.radio > label > input[type="radio"]:checked + .caption:after {
     background: var(--wm-color-secondary) !important;
     transform: scale(1) !important;
 }
 
-[data-design-token-target] .app-radio.radio > label > input[type="radio"]:checked {
+[data-design-token-target="true"] .app-radio.radio > label > input[type="radio"]:checked {
     background: var(--wm-color-secondary) !important;
 }
 
-[data-design-token-target] .app-radioset .app-radio.radio > label > input[type="radio"]:checked + .caption:before {
+[data-design-token-target="true"] .app-radioset .app-radio.radio > label > input[type="radio"]:checked + .caption:before {
     border-color: var(--wm-color-secondary) !important;
 }
 
-[data-design-token-target] .app-radioset .app-radio.radio > label > input[type="radio"]:checked + .caption:after {
+[data-design-token-target="true"] .app-radioset .app-radio.radio > label > input[type="radio"]:checked + .caption:after {
     background: var(--wm-color-secondary) !important;
     transform: scale(1) !important;
 }
 
 /* RATING - Active/Selected State */
-[data-design-token-target] .app-ratings .ratings-wrapper .rating-style label:hover,
-[data-design-token-target] .app-ratings .ratings-wrapper .rating-style label:hover ~ label,
-[data-design-token-target] .app-ratings .ratings-wrapper .rating-style label.active {
+[data-design-token-target="true"] .app-ratings .ratings-wrapper .rating-style label:hover,
+[data-design-token-target="true"] .app-ratings .ratings-wrapper .rating-style label:hover ~ label,
+[data-design-token-target="true"] .app-ratings .ratings-wrapper .rating-style label.active {
     opacity: 1 !important;
 }
 
-[data-design-token-target] .app-ratings .ratings-wrapper .rating-style label:hover .app-icon,
-[data-design-token-target] .app-ratings .ratings-wrapper .rating-style label:hover ~ label .app-icon,
-[data-design-token-target] .app-ratings .ratings-wrapper .rating-style label.active .app-icon {
+[data-design-token-target="true"] .app-ratings .ratings-wrapper .rating-style label:hover .app-icon,
+[data-design-token-target="true"] .app-ratings .ratings-wrapper .rating-style label:hover ~ label .app-icon,
+[data-design-token-target="true"] .app-ratings .ratings-wrapper .rating-style label.active .app-icon {
     color: var(--wm-color-warning) !important;
 }
 
 /* SWITCH (Segmented Control) - Selected State */
-[data-design-token-target] .app-switch > .btn-group > .btn.selected {
+[data-design-token-target="true"] .app-switch > .btn-group > .btn.selected {
     background: var(--wm-color-secondary-container) !important;
     color: var(--wm-color-on-secondary-container) !important;
     border-color: var(--wm-color-outline) !important;
 }
 
-[data-design-token-target] .app-switch > .btn-group > .btn.selected:before {
+[data-design-token-target="true"] .app-switch > .btn-group > .btn.selected:before {
     --wm-btn-state-layer-color: var(--wm-color-on-secondary-container) !important;
 }
 
@@ -419,7 +419,7 @@ wrote custom styles as per current DOM, once fixed in index.tsx file below to be
    ============================================================================ */
 
 /* Controllable Properties */
-[data-design-token-target] .app-tabs > .nav-tabs > .tab-header .tab-heading span {
+[data-design-token-target="true"] .app-tabs > .nav-tabs > .tab-header .tab-heading span {
     font-size: var(--wm-tabs-item-heading-font-size) !important;
     font-family: var(--wm-tabs-item-heading-font-family) !important;
     font-weight: var(--wm-tabs-item-heading-font-weight) !important;
@@ -427,27 +427,27 @@ wrote custom styles as per current DOM, once fixed in index.tsx file below to be
 }
 
 /* Active State */
-[data-design-token-target] .app-tabs > .nav-tabs > .tab-header.active .tab-heading:after {
+[data-design-token-target="true"] .app-tabs > .nav-tabs > .tab-header.active .tab-heading:after {
     background: var(--wm-color-primary) !important;
     transform: scale(1) !important;
 }
 
-[data-design-token-target] .app-tabs > .nav-tabs > .tab-header.active .tab-heading span {
+[data-design-token-target="true"] .app-tabs > .nav-tabs > .tab-header.active .tab-heading span {
     color: var(--wm-color-primary) !important;
 }
 
-[data-design-token-target] .app-tabs[tabsposition="bottom"] > .nav-tabs > .tab-header.active .tab-heading:after {
+[data-design-token-target="true"] .app-tabs[tabsposition="bottom"] > .nav-tabs > .tab-header.active .tab-heading:after {
     transform: scale(1) rotateX(180deg) !important;
 }
 
 /* Hover State */
-[data-design-token-target] .app-tabs > .nav-tabs > .tab-header:not(.active):hover .tab-heading span {
+[data-design-token-target="true"] .app-tabs > .nav-tabs > .tab-header:not(.active):hover .tab-heading span {
     color: color-mix(in srgb, var(--wm-color-primary), var(--wm-color-black) var(--wm-opacity-hover, 10%)) !important;
 }
 
 /* Focus State */
-[data-design-token-target] .app-tabs > .nav-tabs > .tab-header .tab-heading:focus,
-[data-design-token-target] .app-tabs > .nav-tabs > .tab-header .tab-heading:focus-visible {
+[data-design-token-target="true"] .app-tabs > .nav-tabs > .tab-header .tab-heading:focus,
+[data-design-token-target="true"] .app-tabs > .nav-tabs > .tab-header .tab-heading:focus-visible {
     outline: 2px solid var(--wm-color-primary) !important;
     outline-offset: 2px !important;
 }
@@ -460,93 +460,93 @@ wrote custom styles as per current DOM, once fixed in index.tsx file below to be
    ============================================================================ */
 
 /* Controllable Properties */
-[data-design-token-target] .app-wizard .MuiStepLabel-label {
+[data-design-token-target="true"] .app-wizard .MuiStepLabel-label {
     font-family: var(--wm-wizard-step-title-font-family) !important;
     font-size: var(--wm-wizard-step-title-font-size) !important;
     color: var(--wm-wizard-step-title-color) !important;
 }
 
-[data-design-token-target] .app-wizard .MuiStepIcon-root {
+[data-design-token-target="true"] .app-wizard .MuiStepIcon-root {
     width: var(--wm-wizard-step-indicator-size) !important;
     height: var(--wm-wizard-step-indicator-size) !important;
 }
 
 /* Active State */
-[data-design-token-target] .app-wizard .MuiStep-root.Mui-active .MuiStepLabel-root .MuiStepIcon-root {
+[data-design-token-target="true"] .app-wizard .MuiStep-root.Mui-active .MuiStepLabel-root .MuiStepIcon-root {
     color: var(--wm-wizard-step-indicator-background, var(--wm-color-secondary)) !important;
     border: 2px solid var(--wm-wizard-step-indicator-background, var(--wm-color-secondary)) !important;
 }
 
-[data-design-token-target] .app-wizard .MuiStep-root.Mui-active .MuiStepIcon-root circle {
+[data-design-token-target="true"] .app-wizard .MuiStep-root.Mui-active .MuiStepIcon-root circle {
     fill: var(--wm-wizard-step-indicator-background, var(--wm-color-secondary)) !important;
 }
 
-[data-design-token-target] .app-wizard .MuiStep-root.Mui-active .MuiStepIcon-text {
+[data-design-token-target="true"] .app-wizard .MuiStep-root.Mui-active .MuiStepIcon-text {
     fill: var(--wm-wizard-step-count-color, var(--wm-color-on-secondary)) !important;
 }
 
-[data-design-token-target] .app-wizard .MuiStep-root.Mui-active .MuiStepLabel-label {
+[data-design-token-target="true"] .app-wizard .MuiStep-root.Mui-active .MuiStepLabel-label {
     font-weight: var(--wm-wizard-step-title-font-weight, var(--wm-font-weight-600)) !important;
 }
 
 /* WIZARD - Completed State */
-[data-design-token-target] .app-wizard .MuiStep-root.Mui-completed .MuiStepLabel-root .MuiStepIcon-root {
+[data-design-token-target="true"] .app-wizard .MuiStep-root.Mui-completed .MuiStepLabel-root .MuiStepIcon-root {
     color: var(--wm-color-success, #5AC588) !important;
 }
 
-[data-design-token-target] .app-wizard .MuiStep-root.Mui-completed .MuiStepIcon-root circle {
+[data-design-token-target="true"] .app-wizard .MuiStep-root.Mui-completed .MuiStepIcon-root circle {
     fill: var(--wm-color-success, #5AC588) !important;
 }
 
-[data-design-token-target] .app-wizard .MuiStep-root.Mui-completed .MuiStepIcon-text {
+[data-design-token-target="true"] .app-wizard .MuiStep-root.Mui-completed .MuiStepIcon-text {
     fill: var(--wm-color-on-secondary, #FFFFFF) !important;
 }
 
 /* WIZARD - Icon Stepper Active State */
-[data-design-token-target] .app-wizard.iconstepper .MuiStep-root.Mui-active .MuiSvgIcon-root,
-[data-design-token-target] .app-wizard.iconstepper .MuiStep-root.Mui-active .app-icon {
+[data-design-token-target="true"] .app-wizard.iconstepper .MuiStep-root.Mui-active .MuiSvgIcon-root,
+[data-design-token-target="true"] .app-wizard.iconstepper .MuiStep-root.Mui-active .app-icon {
     color: var(--wm-wizard-step-icon-color, var(--wm-color-on-secondary)) !important;
 }
 
 /* WIZARD - Classic Style Active States */
-[data-design-token-target] .app-wizard.classic .app-wizard-step.current {
+[data-design-token-target="true"] .app-wizard.classic .app-wizard-step.current {
     background: var(--wm-wizard-step-title-background, var(--wm-color-info)) !important;
     color: var(--wm-wizard-step-title-color, var(--wm-color-on-info)) !important;
 }
 
-[data-design-token-target] .app-wizard.classic .app-wizard-step.active {
+[data-design-token-target="true"] .app-wizard.classic .app-wizard-step.active {
     background: var(--wm-wizard-step-title-background, var(--wm-color-white)) !important;
     color: var(--wm-wizard-step-title-color, var(--wm-color-success)) !important;
 }
 
 /* WIZARD - Connector Active/Completed States */
-[data-design-token-target] .app-wizard .MuiStepConnector-root.Mui-active .MuiStepConnector-line {
+[data-design-token-target="true"] .app-wizard .MuiStepConnector-root.Mui-active .MuiStepConnector-line {
     border-color: var(--wm-wizard-step-indicator-background, var(--wm-color-secondary)) !important;
 }
 
-[data-design-token-target] .app-wizard .MuiStepConnector-root.Mui-completed .MuiStepConnector-line {
+[data-design-token-target="true"] .app-wizard .MuiStepConnector-root.Mui-completed .MuiStepConnector-line {
     border-color: var(--wm-wizard-step-indicator-background, var(--wm-color-success)) !important;
 }
 
 /* WIZARD - Disabled State */
-[data-design-token-target] .app-wizard .MuiStepLabel-root.Mui-disabled {
+[data-design-token-target="true"] .app-wizard .MuiStepLabel-root.Mui-disabled {
     cursor: not-allowed !important;
     opacity: 0.5 !important;
 }
 
 /* WIZARD - Hover State (clickable, non-active, non-completed steps) */
-[data-design-token-target] .app-wizard .MuiStep-root:not(.Mui-active):not(.Mui-completed):not(.Mui-disabled):hover .MuiStepIcon-root {
+[data-design-token-target="true"] .app-wizard .MuiStep-root:not(.Mui-active):not(.Mui-completed):not(.Mui-disabled):hover .MuiStepIcon-root {
     color: color-mix(in srgb, var(--wm-wizard-step-indicator-border-color), var(--wm-color-black) var(--wm-opacity-hover, 10%)) !important;
     border-color: color-mix(in srgb, var(--wm-wizard-step-indicator-border-color), var(--wm-color-black) var(--wm-opacity-hover, 10%)) !important;
 }
 
-[data-design-token-target] .app-wizard .MuiStep-root:not(.Mui-active):not(.Mui-completed):not(.Mui-disabled):hover .MuiStepLabel-label {
+[data-design-token-target="true"] .app-wizard .MuiStep-root:not(.Mui-active):not(.Mui-completed):not(.Mui-disabled):hover .MuiStepLabel-label {
     color: color-mix(in srgb, var(--wm-wizard-step-title-color), var(--wm-color-black) var(--wm-opacity-hover, 10%)) !important;
 }
 
 /* WIZARD - Focus State */
-[data-design-token-target] .app-wizard .MuiStepLabel-root:focus,
-[data-design-token-target] .app-wizard .MuiStepLabel-root:focus-visible {
+[data-design-token-target="true"] .app-wizard .MuiStepLabel-root:focus,
+[data-design-token-target="true"] .app-wizard .MuiStepLabel-root:focus-visible {
     outline: 2px solid var(--wm-color-primary) !important;
     outline-offset: 2px !important;
 }
@@ -564,56 +564,253 @@ wrote custom styles as per current DOM, once fixed in index.tsx file below to be
    ============================================================================ */
 
 /* Controllable Properties */
-[data-design-token-target] .app-breadcrumb > li > a,
-[data-design-token-target] .app-breadcrumb > li > label {
+[data-design-token-target="true"] .app-breadcrumb > li > a,
+[data-design-token-target="true"] .app-breadcrumb > li > label {
     font-size: var(--wm-breadcrumb-item-font-size) !important;
     font-family: var(--wm-breadcrumb-item-font-family) !important;
     font-weight: var(--wm-breadcrumb-item-font-weight) !important;
     color: var(--wm-breadcrumb-item-color) !important;
 }
 
-[data-design-token-target] .app-breadcrumb > li > i {
+[data-design-token-target="true"] .app-breadcrumb > li > i {
     font-size: var(--wm-breadcrumb-item-icon-size) !important;
     color: var(--wm-breadcrumb-item-icon-color) !important;
 }
 
-[data-design-token-target] .app-breadcrumb > li + li i:before {
+[data-design-token-target="true"] .app-breadcrumb > li + li i:before {
     font-size: var(--wm-breadcrumb-item-separator-size) !important;
     color: var(--wm-breadcrumb-item-separator-color) !important;
 }
 
 /* Active State */
-[data-design-token-target] .app-breadcrumb li.active a,
-[data-design-token-target] .app-breadcrumb li.active a.text-muted {
+[data-design-token-target="true"] .app-breadcrumb li.active a,
+[data-design-token-target="true"] .app-breadcrumb li.active a.text-muted {
     color: color-mix(in srgb, var(--wm-color-primary), var(--wm-color-black) 20%) !important;
     text-decoration: none !important;
 }
 
 /* Hover State */
-[data-design-token-target] .app-breadcrumb li:not(.active) a:hover {
+[data-design-token-target="true"] .app-breadcrumb li:not(.active) a:hover {
     color: color-mix(in srgb, var(--wm-color-primary), var(--wm-color-black) 10%) !important;
     text-decoration: underline !important;
 }
 
 /* Focus State */
-[data-design-token-target] .app-breadcrumb a:focus {
+[data-design-token-target="true"] .app-breadcrumb a:focus {
     color: color-mix(in srgb, var(--wm-color-primary), var(--wm-color-black) 15%) !important;
     outline: 2px solid var(--wm-color-primary) !important;
     outline-offset: 2px !important;
 }
 
 /* Path-based Active State */
-[data-design-token-target] .app-breadcrumb.path-based li.active {
+[data-design-token-target="true"] .app-breadcrumb.path-based li.active {
     background-color: var(--wm-color-info) !important;
 }
 
-[data-design-token-target] .app-breadcrumb.path-based li.active a,
-[data-design-token-target] .app-breadcrumb.path-based li.active a.text-muted {
+[data-design-token-target="true"] .app-breadcrumb.path-based li.active a,
+[data-design-token-target="true"] .app-breadcrumb.path-based li.active a.text-muted {
     color: var(--wm-color-on-info) !important;
     font-weight: 500 !important;
 }
 
-[data-design-token-target] .app-breadcrumb.path-based li.active a::after,
-[data-design-token-target] .app-breadcrumb.path-based li.active a::before {
+[data-design-token-target="true"] .app-breadcrumb.path-based li.active a::after,
+[data-design-token-target="true"] .app-breadcrumb.path-based li.active a::before {
     border-left-color: var(--wm-color-info) !important;
+}
+
+/* ============================================================================
+   DATA TABLE - Layout Fixes
+   ============================================================================ */
+
+/* Fix title/subtitle alignment - ensure left alignment */
+.wm-app .app-grid .panel-heading .panel-title {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+}
+
+/* ============================================================================
+   DATA TABLE - Design Token Property Overrides
+   ============================================================================
+   Force CSS variables to be applied to actual properties with !important
+   This ensures design token panel changes are reflected immediately
+   ============================================================================ */
+
+/* Header Row Properties */
+[data-design-token-target="true"] .app-grid .table > thead tr {
+    background: var(--wm-data-table-header-row-background) !important;
+}
+
+/* Header Cell (th) Properties - Font, padding, and border */
+[data-design-token-target="true"] .app-grid .table > thead tr th {
+    /* Font properties applied to th */
+    font-family: var(--wm-data-table-header-row-font-family) !important;
+    font-weight: var(--wm-data-table-header-row-font-weight) !important;
+    font-size: var(--wm-data-table-header-row-font-size) !important;
+    line-height: var(--wm-data-table-header-row-line-height) !important;
+    letter-spacing: var(--wm-data-table-header-row-letterspacing) !important;
+    color: var(--wm-data-table-header-row-color) !important;
+    /* Spacing and border properties */
+    padding: var(--wm-data-table-header-cell-padding) !important;
+    border-width: var(--wm-data-table-header-cell-border-width) !important;
+    border-style: var(--wm-data-table-header-cell-border-style) !important;
+    border-color: var(--wm-data-table-header-cell-border-color) !important;
+}
+
+/* Header Text Span - Ensure span inherits and doesn't override */
+[data-design-token-target="true"] .app-grid .table > thead tr th .header-data,
+[data-design-token-target="true"] .app-grid .table > thead tr th span {
+    font-family: inherit !important;
+    font-weight: inherit !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    letter-spacing: inherit !important;
+    color: inherit !important;
+}
+
+/* Body Cell Text Properties - Target the actual text container (app-label) */
+/* Note: Row background colors are handled by state overrides below */
+[data-design-token-target="true"] .app-grid .table > tbody > tr td .app-label {
+    font-family: var(--wm-data-table-body-row-font-family) !important;
+    font-weight: var(--wm-data-table-body-row-font-weight) !important;
+    font-size: var(--wm-data-table-body-row-font-size) !important;
+    letter-spacing: var(--wm-data-table-body-row-letter-spacing) !important;
+    line-height: var(--wm-data-table-body-row-line-height) !important;
+    color: var(--wm-data-table-body-row-color) !important;
+}
+
+/* Body Cell Properties */
+[data-design-token-target="true"] .app-grid .table > tbody > tr td {
+    padding: var(--wm-data-table-body-cell-padding) !important;
+    border-width: var(--wm-data-table-body-cell-border-width) !important;
+    border-style: var(--wm-data-table-body-cell-border-style) !important;
+    border-color: var(--wm-data-table-body-cell-border-color) !important;
+}
+
+/* Row Action Button Properties */
+[data-design-token-target="true"] .app-grid .table > tbody > tr td .actions-column .row-action,
+[data-design-token-target="true"] .app-grid .table > tbody > tr td .actions-column .row-action-button {
+    padding: var(--wm-data-table-body-action-padding) !important;
+    margin: var(--wm-data-table-body-action-margin) !important;
+}
+
+[data-design-token-target="true"] .app-grid .table > tbody > tr td .actions-column .row-action .app-icon,
+[data-design-token-target="true"] .app-grid .table > tbody > tr td .actions-column .row-action-button .app-icon {
+    font-size: var(--wm-data-table-body-action-icon-size) !important;
+}
+
+/* Sort Icon Properties */
+[data-design-token-target="true"] .app-grid .table > thead tr th .sort-buttons-container .sort-icon {
+    font-size: var(--wm-data-table-sort-icon-size) !important;
+    color: var(--wm-data-table-sort-icon-color) !important;
+}
+
+/* ============================================================================
+   DATA TABLE - Design Token State Overrides
+   ============================================================================
+   State-specific overrides for design token panel
+   ============================================================================ */
+
+/* Hover State - Table Rows */
+[data-design-token-target="true"] .app-grid .table tbody tr:hover {
+    background-color: var(--wm-data-table-body-row-background-even) !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease-in-out !important;
+}
+
+/* Hover State - Striped Tables Override */
+[data-design-token-target="true"] .app-grid.striped-even .table tbody tr:hover,
+[data-design-token-target="true"] .app-grid.striped-odd .table tbody tr:hover {
+    background-color: color-mix(in srgb, var(--wm-data-table-body-row-background-even), var(--wm-color-black) 5%) !important;
+}
+
+/* Active/Selected State - Table Rows */
+[data-design-token-target="true"] .app-grid .table tbody tr.active,
+[data-design-token-target="true"] .app-grid .table tbody tr[aria-selected="true"],
+[data-design-token-target="true"] .app-grid .table tbody tr.selected {
+    background-color: var(--wm-data-table-body-row-background-odd) !important;
+}
+
+/* Active/Selected State - Striped Tables Override */
+[data-design-token-target="true"] .app-grid.striped-even .table tbody tr.active,
+[data-design-token-target="true"] .app-grid.striped-even .table tbody tr[aria-selected="true"],
+[data-design-token-target="true"] .app-grid.striped-odd .table tbody tr.active,
+[data-design-token-target="true"] .app-grid.striped-odd .table tbody tr[aria-selected="true"] {
+    background-color: color-mix(in srgb, var(--wm-color-primary), transparent 85%) !important;
+}
+
+/* Focus State - Table Cells and Interactive Elements */
+[data-design-token-target="true"] .app-grid .table tbody td:focus,
+[data-design-token-target="true"] .app-grid .table tbody td:focus-within {
+    outline: 2px solid var(--wm-color-primary) !important;
+    outline-offset: -2px !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Hover State - Header Cells (Sortable) */
+[data-design-token-target="true"] .app-grid .table thead th.sortable:hover,
+[data-design-token-target="true"] .app-grid .table thead th[aria-sort]:hover {
+    background-color: color-mix(in srgb, var(--wm-data-table-header-row-background), var(--wm-color-black) 8%) !important;
+    cursor: pointer !important;
+    transition: background-color 0.2s ease-in-out !important;
+}
+
+/* Hover State - Sort Icons */
+[data-design-token-target="true"] .app-grid .table thead th:hover .sort-icon,
+[data-design-token-target="true"] .app-grid .table thead th:hover [class*="sort"] {
+    color: var(--wm-color-primary) !important;
+    transform: scale(1.1) !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+/* Active State - Sort Icons (Currently Sorted Column) */
+[data-design-token-target="true"] .app-grid .table thead th[aria-sort="ascending"] .sort-icon,
+[data-design-token-target="true"] .app-grid .table thead th[aria-sort="descending"] .sort-icon,
+[data-design-token-target="true"] .app-grid .table thead th.sorted .sort-icon {
+    color: var(--wm-color-primary) !important;
+    font-weight: bold !important;
+}
+
+/* Hover State - Row Action Buttons */
+[data-design-token-target="true"] .app-grid .table tbody tr:hover .table-action,
+[data-design-token-target="true"] .app-grid .table tbody tr:hover .app-button {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Focus State - Row Action Buttons */
+[data-design-token-target="true"] .app-grid .table tbody .table-action:focus,
+[data-design-token-target="true"] .app-grid .table tbody .app-button:focus {
+    outline: 2px solid var(--wm-color-primary) !important;
+    outline-offset: 2px !important;
+    z-index: 2 !important;
+}
+
+/* Hover State - Row Action Buttons */
+[data-design-token-target="true"] .app-grid .table tbody .table-action:hover,
+[data-design-token-target="true"] .app-grid .table tbody .app-button:hover {
+    background-color: color-mix(in srgb, var(--wm-color-primary), transparent 90%) !important;
+    transform: scale(1.05) !important;
+    transition: all 0.2s ease-in-out !important;
+}
+
+/* Focus State - Checkboxes and Radio Buttons in Table */
+[data-design-token-target="true"] .app-grid .table input[type="checkbox"]:focus,
+[data-design-token-target="true"] .app-grid .table input[type="radio"]:focus {
+    outline: 2px solid var(--wm-color-primary) !important;
+    outline-offset: 2px !important;
+}
+
+/* Hover State - Editable Cells */
+[data-design-token-target="true"] .app-grid .table tbody td.editable:hover {
+    background-color: color-mix(in srgb, var(--wm-color-primary), transparent 95%) !important;
+    cursor: text !important;
+}
+
+/* Focus State - Editable Cells */
+[data-design-token-target="true"] .app-grid .table tbody td.editable:focus,
+[data-design-token-target="true"] .app-grid .table tbody td.editing {
+    background-color: color-mix(in srgb, var(--wm-color-primary), transparent 92%) !important;
+    border: 1px solid var(--wm-color-primary) !important;
 }

@@ -66,7 +66,7 @@ const mockListener = {
 };
 
 const meta = {
-  title: "Data/LiveForm",
+  title: "Data/Live Form",
   component: WmLiveForm,
   parameters: {
     layout: "fullscreen",

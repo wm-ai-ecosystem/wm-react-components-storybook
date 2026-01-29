@@ -109,10 +109,10 @@ export const Showcase: Story = {
             <Typography variant="subtitle2" color="text.secondary">
               Classic Breadcrumb (3 levels)
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            {/* <Typography variant="body2" color="text.secondary">
               Traditional breadcrumb with forward slash separator
-            </Typography>
-            <Box sx={{ border: "1px solid #e0e0e0", borderRadius: 1, overflow: "hidden", display: "inline-block" }}>
+            </Typography> */}
+            <Box>
               <BreadCrumb
                 name="classicShowcase"
                 className="classic"
@@ -127,10 +127,10 @@ export const Showcase: Story = {
             <Typography variant="subtitle2" color="text.secondary">
               Attribute-based Breadcrumb (3 levels)
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            {/* <Typography variant="body2" color="text.secondary">
               Breadcrumb with chevron icon separator
-            </Typography>
-            <Box sx={{ border: "1px solid #e0e0e0", borderRadius: 1, overflow: "hidden", display: "inline-block" }}>
+            </Typography> */}
+            <Box>
               <BreadCrumb
                 name="attributeBasedShowcase"
                 className="attribute-based"
@@ -145,10 +145,10 @@ export const Showcase: Story = {
             <Typography variant="subtitle2" color="text.secondary">
               Path-based Breadcrumb (3 levels)
             </Typography>
-            <Typography variant="body2" color="text.secondary">
+            {/* <Typography variant="body2" color="text.secondary">
               Modern breadcrumb with background highlighting for active item
-            </Typography>
-            <Box sx={{ border: "1px solid #e0e0e0", borderRadius: 1, overflow: "hidden", display: "inline-block" }}>
+            </Typography> */}
+            <Box>
               <BreadCrumb
                 name="pathBasedShowcase"
                 className="path-based"
@@ -164,13 +164,13 @@ export const Showcase: Story = {
               Different Navigation Depths
             </Typography>
 
-            <Stack direction="row" spacing={3} sx={{ flexWrap: "wrap" }}>
+            <Stack spacing={3}>
               {/* 2 levels */}
               <Box sx={{ flex: "1 1 45%", minWidth: "400px" }}>
                 <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: "block" }}>
                   2 Levels
                 </Typography>
-                <Box sx={{ border: "1px solid #e0e0e0", borderRadius: 1, overflow: "hidden", display: "inline-block" }}>
+                <Box>
                   <BreadCrumb
                     name="shortNav"
                     className="classic"
@@ -181,11 +181,11 @@ export const Showcase: Story = {
               </Box>
 
               {/* 6 levels */}
-              <Box sx={{ flex: "1 1 45%", minWidth: "400px" }}>
+              <Box sx={{ flex: "1 1 45%", minWidth: "400px", marginLeft: "0" }}>
                 <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: "block" }}>
                   6 Levels (Deep Navigation)
                 </Typography>
-                <Box sx={{ border: "1px solid #e0e0e0", borderRadius: 1, overflow: "hidden", display: "inline-block" }}>
+                <Box>
                   <BreadCrumb
                     name="longNav"
                     className="classic"
