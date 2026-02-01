@@ -281,7 +281,6 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
         }
 
         .component-documentation-container details[open] {
-          border-color: var(--primary-blue);
           box-shadow: 0 10px 15px -3px rgba(41, 109, 246, 0.1), 0 4px 6px -2px rgba(41, 109, 246, 0.05);
         }
 
@@ -345,8 +344,6 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
         /* Ensure table inside details takes full width and looks good */
         .component-documentation-container details table {
           width: 100%;
-          border: none;
-          box-shadow: none;
           margin: 0;
         }
 
@@ -356,7 +353,8 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
           border-collapse: separate;
           border-spacing: 0;
           margin: 20px 0 30px;
-          border: 1px solid var(--border-color);
+          // border: 1px solid var(--border-color);
+          border:none !important;
           border-radius: 8px;
           overflow: hidden;
           font-size: 14px;
@@ -375,7 +373,7 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
 
         .component-documentation-container td {
           padding: 14px 16px;
-          border-bottom: 1px solid var(--border-color);
+          border:none !important;
           color: #475569;
           background: #fff;
         }
@@ -394,7 +392,7 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
         }
         
         .component-documentation-container tr:hover td {
-          background-color: #eff6ff; /* Light blue hover */
+          background-color: #eff6ff; 
         }
 
         /* Inline Code Styling */

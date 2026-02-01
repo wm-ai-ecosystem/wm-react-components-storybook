@@ -2,34 +2,72 @@
 
 Calendar methods can be accessed through script using the widget reference: `Page.Widgets.calendarName`.
 
-| Method | Parameters | Return Type | Description |
-| --- | --- | --- | --- |
-| selectDate() | none | void | Highlights the date(s) set in datavalue property |
-| gotoDate() | none | void | Shows the calendar view at the date specified in datavalue |
-| gotoMonth(month) | month (integer, 1-12) | void | Renders the calendar for the specified month |
-| gotoNextMonth() | none | void | Renders the next month view |
-| gotoPrevMonth() | none | void | Renders the previous month view |
-| gotoNextYear() | none | void | Renders the calendar for the next year |
-| gotoPrevYear() | none | void | Renders the calendar for the previous year |
-| rerenderEvents() | none | void | Rerenders all events from the dataset |
-| applyCalendarOptions(option, name, value) | option (string), name (string), value (any) | void | Sets calendar options, including locale |
-
-## Common Method Examples
-
-```javascript
-// Select a specific date
-Page.Widgets.calendar.datavalue = '01/06/2023';
-Page.Widgets.calendar.selectDate();
-
-// Select a date range
-Page.Widgets.calendar.datavalue = {start:'01/01/2023', end:'10/01/2023'};
-Page.Widgets.calendar.selectDate();
-
-// Navigate to a specific date
-Page.Widgets.calendar.datavalue = '01/01/2023';
-Page.Widgets.calendar.gotoDate();
-
-// Change calendar language to Spanish
-Page.Widgets.calendar.applyCalendarOptions('option', 'locale', 'es');
-Page.Widgets.calendar.applyCalendarOptions('render');
-```
+<table>
+  <thead>
+    <tr>
+      <th>Methods</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>gotoDate()</td>
+      <td>
+        It shows the calendar view to default date given for the calendar. For
+        example, to go to a specific date - 1st Jan 2107.
+      </td>
+    </tr>
+    <tr>
+      <td>gotoMonth(int)</td>
+      <td>
+        This method renders the present view (i.e. year view will be the same)
+        for the specified month. For example: To view the February month.
+        <code>Page.Widgets.calendar.gotoMonth(2);</code>
+      </td>
+    </tr>
+    <tr>
+      <td>gotoNextMonth()</td>
+      <td>
+        This method renders the present view (i.e. year view will be the same)
+        for the next month. For example: To view the next month.
+        <code>Page.Widgets.calendar.gotoNextMonth();</code>
+      </td>
+    </tr>
+    <tr>
+      <td>gotoPrevMonth()</td>
+      <td>
+        This method renders the present view (i.e. year view will be the same)
+        for the prev month. For example: To view the prev month.
+        <code>Page.Widgets.calendar.gotoPrevMonth();</code>
+      </td>
+    </tr>
+    <tr>
+      <td>gotoNextYear()</td>
+      <td>
+        This method renders the present view (i.e. month/week view will be the
+        same) for the next year. For example: To view the next year.
+        <code>Page.Widgets.calendar.gotoNextYear();</code>
+      </td>
+    </tr>
+    <tr>
+      <td>gotoPrevYear()</td>
+      <td>
+        &nbsp;It renders the present view (i.e. month/week view will be the same
+        ) for the previous year. For example: To view the previous year
+        <code>Page.Widgets.calendar.gotoPrevYear();</code>
+      </td>
+    </tr>
+    <tr>
+      <td>selectDate()</td>
+      <td>It highlights the default date given for the calendar.</td>
+    </tr>
+    <tr>
+      <td>rerenderEvents()</td>
+      <td>
+        &nbsp;It rerenders the events from the dataset. For example, to get
+        events on the calendar, we use:
+        <code>Page.Widgets.calendar.rerenderEvents();</code>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -7,7 +7,7 @@ import "./addons/design-tokens/register";
 const customTheme = create({
   base: "light", // or 'dark'
   brandUrl: "https://wavemaker.com",
-  brandImage: "./react-logo-new.svg", // Replace with your logo URL
+  brandImage: "./wm-comp-logo.png", // Replace with your logo URL
   brandTarget: "_blank", // Open brandUrl in a new tab
 
   fontBase: "neurial-grotesk-regular",
