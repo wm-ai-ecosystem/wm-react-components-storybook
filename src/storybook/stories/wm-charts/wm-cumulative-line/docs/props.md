@@ -5,9 +5,9 @@
     <div>
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
-        | `title` | string | "Line Chart / Area Chart" | Set the title of the component. |
+        | `title` | string | "Cumulative Line Chart" | Set the title of the component. |
         | `subheading` | string | - | Set the sub heading of the component. |
-        | `name` | string | - | A unique identifier for the line or area chart component. Special characters and spaces are not allowed. |
+        | `name` | string | - | A unique identifier for the cumulative line chart component. Special characters and spaces are not allowed. |
     </div>
 </details>
 
@@ -36,10 +36,9 @@
               | **Behavior** |  |  |  |
               | `tooltips` | boolean | true | This property controls whether to show the tooltip on hover. |
               | `highlightpoints` | boolean | false | This property controls whether to highlight data points in the chart or not. |
-              | `linethickness` | string | - | This property controls the thickness of the line in chart. It accepts value likes "5px", "0.85em" (**Note**: This option is available only for the **Line** Chart).|
+              | `linethickness` | string | - | This property controls the thickness of the line in chart. It accepts value likes "5px", "0.85em" |
               | **Data Rendering** |  |  |  |
               | `interpolation` | string | "linear" | This (Data Interpolation) property determines how datapoints are joined and rendered in the chart. |
-              | `areaviewtype` | string | "stack" | This (Data Arrangement) property controls whether to show in stack, stream, expand (**Note**: This option is available only for the **Area** Chart).|
             </div>
         </details>
         <details>
@@ -50,7 +49,6 @@
               | `showxaxis` | boolean | true | This property controls whether to show x-axis or not. |
               | `xaxislabel` | string | - | Caption of x-axis on the chart. |
               | `xunits` | string | - | Specifies the units of x-axis. |
-              | `xdomain` | string | "Default" | This (Origin) property by default axis scale starts from 0. Choosing 'Min' option makes the scale starting value to minimun of all values. (**Note**: This option is available only for the **Area** Chart).|
               | `staggerlabels` | boolean | false | This property controls whether to stagger the labels which distributes labels into multiple lines. |
             </div>
         </details>
@@ -63,7 +61,6 @@
               | `yaxislabel` | string | - | Caption of y-axis on the chart. |
               | `yunits` | string | - | Specifies the units of y-axis. |
               | `yaxislabeldistance` | number | - | This (Caption Distance) property controls the distance between the y-axis and it's label. |
-              | `ydomain` | string | "Default" | This (Origin) property by default axis scale starts from 0. Choosing 'Min' option makes the scale starting value to minimun of all values. (**Note**: This option is available only for the **Area** Chart).|
               | **Data Format** |  |  |  |
               | `ynumberformat` | string | - | This (Display Format )shows the options to format the number type in y-axis. |
             </div>
@@ -99,7 +96,7 @@
     <div>
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
-        | `xaxisdatakey` | string | - | X‑axis represents the category or label for each line/area. |
+        | `xaxisdatakey` | string | - | X‑axis represents the category or label for chart. |
     </div>
 </details>
 
@@ -108,7 +105,7 @@
     <div>
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
-        | `yaxisdatakey` | string[] | - | Y‑axis represents the numeric value for each line/area. |
+        | `yaxisdatakey` | string[] | - | Y‑axis represents the numeric value for chart. |
     </div>
 </details>
 
@@ -127,20 +124,20 @@
     <div>
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
-        | `iconclass` | string | - | Defines the class of the icon that is applied to the line/area chart component. |
+        | `iconclass` | string | - | Defines the class of the icon that is applied to the chart component. |
     </div>
 </details>
 
 ### Use Cases
 
-- Sets the visual theme for the line in the chart
+- Sets the visual theme for the chart
 
 ```javascript
-Page.Widgets.lineChart.theme = "Retro";
+Page.Widgets.cumulativeLineChart.theme = "Retro";
 ```
 
-- Sets the visual colors for the area in the chart
+- Sets the visual colors for the  the chart
 
 ```javascript
-Page.Widgets.areaChart.customcolors = "#4CAF50, #2196F3, #FFC107";
+Page.Widgets.cumulativeLineChart.customcolors = "#4CAF50, #2196F3, #FFC107";
 ```

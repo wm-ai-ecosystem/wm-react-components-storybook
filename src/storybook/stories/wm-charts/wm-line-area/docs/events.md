@@ -34,6 +34,6 @@
 
 ```javascript
     Page.lineChartTransform = function ($event, widget) {
-    ////Example: Modify incoming data before display (format values, apply calculations)
+    //Example: Modify incoming data before display (format values, apply calculations)
 };
 ```
