@@ -1,44 +1,110 @@
-# Props
+# Properties
 
-The Tree component accepts the following properties for configuration:
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `name` | string | - | A unique identifier for the tree component. Special characters and spaces are not allowed. |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| data | Array | [] | The hierarchical data structure to display in the tree |
-| selectable | Boolean | true | Whether tree nodes can be selected |
-| multiSelect | Boolean | false | Allows selection of multiple nodes when true |
-| showIcons | Boolean | true | Displays default folder/item icons for nodes |
-| expandAll | Boolean | false | Expands all nodes by default when true |
-| nodeIndent | Number | 24 | The indentation in pixels for each level |
-| loadingState | String | "ready" | Indicates loading state ("ready", "loading", "error") |
-| keyField | String | "id" | Field name to use as unique identifier for nodes |
-| labelField | String | "label" | Field name to use as display text for nodes |
-| childrenField | String | "children" | Field name that contains child nodes |
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `tabindex` | number | 0 | The tab index attribute specifies the tab order of an element. You can use this property to change the default tabbing order for component access using the tab key. The value can range from 0 to 32767. The default is 0 and -1 makes the element non-focusable. NOTE: In Safari browsers, by default, Tab highlights only text fields. To enable Tab functionality, in Safari Browser from Preferences -> Advanced -> Accessibility set the option "Press Tab to highlight each item on a webpage". |
+    </div>
+</details>
 
-## Common Use Cases
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | - | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `treeicons` | string | - | This property sets expand-collapse icons on the tree. One can choose from: - folder, - plus-minus, - circle-plus-minus, - chevron, - menu, - triangle (default selection) or - expand-collapse. |
+        | `levels` | number | - | This property sets levels of the tree to be expanded by default. |
+    </div>
+</details>
 
-#### Basic Tree Configuration
+<details>
+  <summary>Dataset</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `dataset` | array | - | Set this property (Value) to a variable to populate the list of values to display. |
+        | `orderby` | string | - | Set the order of the content. (available only when the above dataset value is bound to a variable). |
+        | `nodelabel` | string | - | Property of the object (bound to the value property above) for node label binding, default value is label. (available only when the above dataset value is bound to a variable). |
+        | `nodeicon` | string | - | Property of the object (bound to the value property above) for node icon binding, default value is icon. (available only when the above dataset value is bound to a variable). |
+        | `nodechildren` | string | - | Property of the object (bound to the value property above) for node children binding, the default value is children. The property where the nested object is present. (available only when the above dataset value is bound to a variable). |
+        | `nodeid` | string | - | Property of the object (bound to the value property above) used to identify a node. The default value property can be set to a value of the node id for initial selection. (available only when the above dataset value is bound to a variable). |
+        | `nodeaction` | string | - | This property sets the actions for the component. (available only when the above dataset value is bound to a variable) |
+        | `nodeclick` | string | - | Set this property to expand the node when it is clicked options being Do Nothing or Expand Node. (available only when the above dataset value is bound to a variable) |
+    </div>
+</details>
+
+<details>
+  <summary>Default Value</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `datavalue` | string | - | The default value to be set at runtime. Can be: - none, - FirstNode or SecondNode, - value for the Node Id property. When datavalue is FirstNode, the First Node of the tree will be selected. When datavalue is LastNode, the Last Node of the tree will be selected. When datavalue is bound to a condition (eg, datavalue="role === 'admin'"), The condition is evaluated for each node of the tree until the condition is satisfied. The first node which satisfies the given condition will be selected. |
+    </div>
+</details>
+
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
+        | `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+    </div>
+</details>
+
+<details>
+  <summary>Format</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `horizontalalign` | string | "left" | This property specifies how the elements should be aligned horizontally. |
+    </div>
+</details>
+
+
+### Use Cases
+
+- Set levels of the tree to be expanded by default.
+
 ```javascript
-// Set up basic tree with data
-Page.Widgets.myTree.data = [
+Page.Widgets.tree.levels = 3;
+```
+
+- Simple tree dataset.
+
+```javascript
+[
   {
-    id: 1,
-    label: "Root",
-    children: [
-      { id: 2, label: "Child 1" },
-      { id: 3, label: "Child 2" }
+    "id": 1,
+    "label": "Item 1",
+    "icon": "fa fa-align-left",
+    "children": []
+  },
+  {
+    "id": 2,
+    "label": "Item 2",
+    "icon": "glyphicon glyphicon-music",
+    "children": [
+      {
+        "id": 2.1,
+        "label": "Item 2.1",
+        "icon": "glyphicon glyphicon-bookmark",
+        "children": []
+      }
     ]
   }
 ];
-
-// Configure tree to expand all nodes on load
-Page.Widgets.myTree.expandAll = true;
-```
-
-#### Custom Field Mapping
-```javascript
-// Use custom field names for your data structure
-Page.Widgets.myTree.keyField = "nodeId";
-Page.Widgets.myTree.labelField = "displayName";
-Page.Widgets.myTree.childrenField = "subItems";
 ```

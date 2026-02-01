@@ -1,5 +1,9 @@
 # Methods
 
+The Button component does not expose any specific methods.
+
+<!-- # Methods
+
 <details open>
   <summary>Methods</summary>
     <div>
@@ -13,14 +17,14 @@
 
 ### Use Cases
 
-- Change button properties from script to o hide button use the following code snippet:
+- Change button properties from script to hide button use the following code snippet:
 
 ```javascript
-Page.Widgets.button1.setWidgetProperty('show', false);
+Page.Widgets.button.setWidgetProperty('show', false);
 ```
 
 - Programmatically retrieve all properties and metadata applied to the button component.
 
 ```javascript
-Page.Widgets.button1.getAttributes();
-```
+Page.Widgets.button.getAttributes();
+``` -->

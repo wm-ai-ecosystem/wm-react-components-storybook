@@ -1,34 +1,38 @@
 # Callback Events
 
-The Rich Text Editor provides several events that you can hook into to extend its functionality:
+<details open>
+  <summary>Basic Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onChange` | This event handler is called each time your component's value changes. |
+    </div>
+</details>
 
-| Event | Description |
-|-------|-------------|
-| onChange | Triggered when the editor content changes |
-| onFocus | Triggered when the editor receives focus |
-| onBlur | Triggered when the editor loses focus |
-| onInit | Triggered when the editor is fully initialized |
-| onKeyDown | Triggered when a key is pressed down in the editor |
-| onKeyUp | Triggered when a key is released in the editor |
-| onPaste | Triggered when content is pasted into the editor |
-| onImageUpload | Triggered when an image is being uploaded |
-| onImageUploadError | Triggered when an image upload fails |
-| onToolbarClick | Triggered when a toolbar button is clicked |
+<details>
+  <summary>Callback Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onBeforerender` | This event handler is called on before update of the progress. |
+    </div>
+</details>
 
-## Example Event Usage
+### Use Cases
+
+- Triggered on change whenever the value of the richtext editor is updated.
 
 ```javascript
-// Content change event
-Page.Widgets.myRichTextEditor.onchange = function(newContent) {
-  console.log("Editor content changed to:", newContent);
+    Page.richtexteditorChange = function ($event, widget, newVal, oldVal) {
+      console.log("Old Value:", oldVal);
+      console.log("New Value:", newVal);
 };
+```
 
-// Focus and blur events
-Page.Widgets.myRichTextEditor.onfocus = function() {
-  console.log("Editor is now focused");
-};
+- Triggered before the richtext editor is rendered on the page.
 
-Page.Widgets.myRichTextEditor.onblur = function() {
-  console.log("Editor lost focus");
+```javascript
+    Page.richtexteditorBeforerender = function ($event, widget) {
+    console.log("Rich Text Editor is about to render.");
 };
 ```

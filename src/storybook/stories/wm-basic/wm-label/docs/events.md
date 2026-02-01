@@ -1,28 +1,33 @@
 # Callback Events
 
-| Event | Description |
-|-------|-------------|
-| **Touch Events** |
-| onTap | Triggered when the user taps on the label. Useful for interactive labels. |
-| onDoubleTap | Triggered when the user double taps on the label. |
-| onLongTap | Triggered when the user performs a long press on the label. |
+<details open>
+  <summary>Mouse Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onClick` | This event handler is called whenever the click event is triggered on a component. |
+        | `onDoubleClick` | This event handler is called whenever the double click event is triggered on a component. |
+        | `onMouseEnter` | This event handler is called whenever the mouse enters the component. |
+        | `onMouseLeave` | This event handler is called whenever the mouse leaves the component. |
+    </div>
+</details>
 
-## Event Usage Examples
+<details>
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onTap` | This event handler is called whenever the component is tapped. |
+        | `onDoubleTap` | This event handler is called whenever the component is double tapped. |
+    </div>
+</details>
+
+### Use Cases
+
+- Triggered on label mouse enter to apply hover styling and improve user interaction feedback.
 
 ```javascript
-// Open a URL when label is tapped
-Page.onTapMyLabel = function(widget, $event) {
-    window.open("https://www.example.com", "_blank");
-};
-
-// Toggle visibility of another component on double tap
-Page.onDoubleTapMyLabel = function(widget, $event) {
-    Page.Widgets.otherComponent.show = !Page.Widgets.otherComponent.show;
-};
-
-// Display additional information on long tap
-Page.onLongTapMyLabel = function(widget, $event) {
-    // Show additional details or context menu
-    App.Actions.showDetailDialog.invoke();
+    Page.labelMouseenter = function ($event, widget) {
+    widget.class = "text-primary";
 };
 ```

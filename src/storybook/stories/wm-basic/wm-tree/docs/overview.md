@@ -1,11 +1,15 @@
 # Overview
 
-The Tree component is a hierarchical UI element that represents data in a tree-like structure, allowing users to navigate through parent-child relationships. It provides an intuitive way to display and interact with nested data structures, folders, or categorized information.
+The **Tree** component displays data in a hierarchical structure, allowing you to represent parent-child relationships and nested information in a clear, organized format.
 
-## Features
-- Hierarchical data representation
-- Expandable and collapsible nodes
-- Customizable node appearance
-- Support for selection of nodes
-- Navigation through keyboard shortcuts
-- Support for icons and custom node rendering
+### Markup
+
+```javascript
+<wm-tree name="tree" dataset="bind:Variables.svTreeData.dataSet" nodechildren="children" nodelabel="label" nodeicon="icon"></wm-tree>
+```
+
+### Use Cases
+
+- File System Explorer.
+- Organizational Chart.
+- Taxonomy or Classification Data.

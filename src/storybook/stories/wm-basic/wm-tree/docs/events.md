@@ -1,28 +1,38 @@
 # Callback Events
 
-The Tree component emits the following events that you can handle in your application:
+<details open>
+  <summary>Callback Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onExpand` | This event handler is called each time your component is expanded. |
+        | `onCollapse` | This event handler is called each time your component is collapsed. |
+        | `onSelect` | This event handler is called when the tab is selected. |
+    </div>
+</details>
 
-| Event | Description |
-|-------|-------------|
-| onSelect | Triggered when a node is selected |
-| onExpand | Triggered when a node is expanded |
-| onCollapse | Triggered when a node is collapsed |
-| onNodeClick | Triggered when any node is clicked |
-| onNodeDoubleClick | Triggered when a node is double-clicked |
-| onNodeRightClick | Triggered when a node is right-clicked |
-| onLoad | Triggered when the tree data is loaded |
-| onError | Triggered when an error occurs while loading data |
+### Use Cases
 
-## Example Event Handlers
+- Triggered when a tree node is selected.
 
 ```javascript
-Page.onNodeClickEvent = function(event, node) {
-  console.log("Node clicked:", node.label);
-  // Take action based on the selected node
+    Page.treeSelect = function ($event, widget, $item, $path) {
+    console.log("Selected node", $item);
 };
+```
 
-Page.onExpandEvent = function(event, node) {
-  console.log("Node expanded:", node.label);
-  // Potentially load additional data for this node
+- Triggered when a tree node is expanded.
+
+```javascript
+    Page.treeExpand = function ($event, widget, $item, $path) {
+    console.log("Expanded node", $item);
+};
+```
+
+- Triggered when a tree node is collapsed.
+
+```javascript
+    Page.treeCollapse = function ($event, widget, $item, $path) {
+    console.log("Collapsed node", $item);
 };
 ```

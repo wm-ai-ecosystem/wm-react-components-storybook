@@ -1,33 +1,42 @@
 # Callback Events
 
-## Progress Events
+<details open>
+  <summary>Mouse Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onClick` | This event handler is called whenever the click event is triggered on a component. |
+        | `onDoubleClick` | This event handler is called whenever the double click event is triggered on a component. |
+        | `onMouseEnter` | This event handler is called whenever the mouse enters the component. |
+        | `onMouseLeave` | This event handler is called whenever the mouse leaves the component. |
+    </div>
+</details>
 
-| Event | Description |
-|-------|-------------|
-| onStart | Triggered when the progress begins its animation or update process |
-| onComplete | Triggered when the progress reaches completion or its maximum value |
-| onBeforeUpdate | Triggered just before the progress value is updated |
+<details>
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onTap` | This event handler is called whenever the component is tapped. |
+        | `onDoubleTap` | This event handler is called whenever the component is double tapped. |
+    </div>
+</details>
 
-## Interaction Events
+<details>
+  <summary>Callback Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onBeforerender` | This event handler is called on before update of the progress. |
+    </div>
+</details>
 
-| Event | Description |
-|-------|-------------|
-| onClick | Triggered when the user clicks/taps on the progress circle |
-| onDoubleTap | Triggered when the user double-taps on the progress circle |
-| onLongTap | Triggered when the user performs a long tap on the progress circle |
-| onMouseEnter | Triggered when the mouse pointer enters the widget area |
-| onMouseLeave | Triggered when the mouse pointer leaves the widget area |
+### Use Cases
 
-## Example Usage
+- Triggered before the progress circle is rendered to track or log the current progress value.
 
 ```javascript
-// Show notification when progress is complete
-Page.onProgressComplete = function() {
-  App.notify('Process completed successfully!', 'success');
-};
-
-// Track progress updates for analytics
-Page.onBeforeUpdate = function() {
-  console.log('Progress updating to: ' + Page.Widgets.progressCircle1.value);
+    Page.progress_circleBeforerender = function ($event, widget) {
+    console.log('Progress updating to: ' + Page.Widgets.progressCircle.datavalue);
 };
 ```

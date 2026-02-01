@@ -5,8 +5,8 @@
     <div>
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
-        | `name` | string | - | A unique identifier for the anchor component. Special characters and spaces are not allowed. |
         | `caption` | string | - | The caption is the text that the end user sees on your anchor. It can be bound to a variable or another component |
+        | `name` | string | - | A unique identifier for the anchor component. Special characters and spaces are not allowed. |
         | `badgevalue` | string | - | Value to be displayed in the badge span for the anchor. |
     </div>
 </details>
@@ -51,7 +51,7 @@
         | `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
         | `target` | string | "_self" | Defines behavior on click of the link: _blank: Opens the linked document in a new window or tab _self: Opens the linked document in the same frame as it was clicked (this is default) _parent: Opens the linked document in the parent frame _top: Opens the linked document in the full body of the window. |
         | `animation` | string | - | Controls the animation of the component. |
-        | `encodeURL` | boolean | false | Check this if you want the provided URL to be encoded at the run time. Enabling this property will encode the special characters in the URL and enable rendering of the page which otherwise might fail. By default, it is set to false. |
+        | `encodeurl` | boolean | false | Check this if you want the provided URL to be encoded at the run time. Enabling this property will encode the special characters in the URL and enable rendering of the page which otherwise might fail. By default, it is set to false. |
     </div>
 </details>
 
@@ -74,19 +74,19 @@
 - Configure the anchor’s hyperlink and caption.
 
 ```javascript
-Page.Widgets.anchor1.hyperlink = "/https://www.wavemaker.com";
-Page.Widgets.anchor1.caption = "WaveMaker";
+Page.Widgets.anchor.hyperlink = "/https://www.wavemaker.com";
+Page.Widgets.anchor.caption = "WaveMaker";
 ```
 
 - Display a small badge value to indicate counts or alerts.
 
 ```javascript
-Page.Widgets.anchor1.badgevalue = "3";
+Page.Widgets.anchor.badgevalue = "3";
 ```
 
 - Enhance the anchor with an icon, and position it as needed.
 
 ```javascript
-Page.Widgets.anchor1.iconclass = "wi wi-user";
-Page.Widgets.anchor1.iconposition = "left";
+Page.Widgets.anchor.iconclass = "wi wi-user";
+Page.Widgets.anchor.iconposition = "left";
 ```

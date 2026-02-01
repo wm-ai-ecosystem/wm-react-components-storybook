@@ -1,14 +1,14 @@
 # Overview
 
-The Rich Text Editor component provides an intuitive WYSIWYG (What You See Is What You Get) interface for content editing within your application. It allows users to format text, insert media, create lists, and perform other text formatting operations similar to word processing applications.
+A **Richtext Editor** component allows users to create formatted/styled text similar to entering text into a word processor. The richtext editor is used to generate HTML text codes for your website or blog. The toolbar includes text-specific buttons. This makes it easy to create headers, bold text, italic, lists, set text alignment, embed images, audio, video, and more. Users can also add tables, change fonts, apply changes to font size and color.
 
-## Features
+### Markup
 
-* Text formatting (bold, italic, underline, strikethrough)
-* Paragraph styling (alignment, indentation, headings)
-* List creation (ordered and unordered)
-* Media insertion (images, tables, links)
-* HTML source code editing
-* Customizable toolbar with various formatting options
-* Cross-browser compatibility
-* Content validation and sanitization
+```javascript
+<wm-richtexteditor name="richtexteditor"></wm-richtexteditor>
+```
+
+### Use Cases
+
+- Create and edit blog posts, articles, announcements, or landing page content without writing HTML manually.
+- Create formatted reports, meeting notes, policy documents, or project descriptions inside enterprise apps.

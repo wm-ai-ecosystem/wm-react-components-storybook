@@ -1,12 +1,16 @@
 # Overview
 
-The Search component in WaveMaker provides advanced search capabilities for your application. It offers flexible search functionality with autocomplete features, allowing users to quickly find and select items from a dataset. The component can be configured to search through datasets with customizable filtering logic.
+The **Search** component provides advanced search capabilities to quickly find and select items from datasets. It supports autocomplete and standard search modes, allowing users to filter and display results dynamically as they type. The component can be bound to datasets from Databases or Web Services, giving full flexibility and control over search behavior and result handling.
 
-## Features
-- Support for both autocomplete and standard search modes
-- Configurable search criteria with multiple match modes
-- Customizable display format with image support
-- Limit search results for better performance
-- Configurable minimum character threshold and delay timing
-- Real-time filtering with customizable match patterns
-- Event handling for search submission and selection
+### Markup
+
+```javascript
+<wm-search name="search" type="search" dataset="bind:Variables.svGetEmployeesList.dataSet" searchkey="name" displaylabel="name" datafield="All Fields" searchon="typing" searchiconclass="wm-sl-l sl-search"></wm-search>
+```
+
+### Use Cases
+
+- Filter tables or lists in real-time as you type.
+- Quickly find employees by name, department, or role.
+- Look up products or stock items in e-commerce or inventory apps.
+- Find files, reports, or media in a portal or knowledge base.

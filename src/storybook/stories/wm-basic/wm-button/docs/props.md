@@ -66,20 +66,20 @@
 - Configure the button caption.
 
 ```javascript
-Page.Widgets.button1.caption = "WaveMaker";
+Page.Widgets.button.caption = "WaveMaker";
 ```
 
 - Disable/enable button based on a condition.
 
 ```javascript
-Page.Widgets.button1.disabled = !formIsValid;
+Page.Widgets.button.disabled = !formIsValid;
 ```
 
 - Set an icon using image URL.
 
 ```javascript
-Page.Widgets.button1.iconurl = "resources/images/download.png";
-Page.Widgets.button1.iconwidth = "20px";
-Page.Widgets.button1.iconheight = "20px";
-Page.Widgets.button1.iconmargin = "0px 8px 0px 0px";
+Page.Widgets.button.iconurl = "resources/images/download.png";
+Page.Widgets.button.iconwidth = "20px";
+Page.Widgets.button.iconheight = "20px";
+Page.Widgets.button.iconmargin = "0px 8px 0px 0px";
 ```

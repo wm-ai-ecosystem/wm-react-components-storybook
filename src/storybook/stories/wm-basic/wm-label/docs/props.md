@@ -1,43 +1,64 @@
-# Props
+# Properties
 
-| Property | Type | Default | Description |
-|---------|------|---------|-------------|
-| **Basic** |
-| name | string | "" | A unique identifier for the label component. |
-| caption | string | "Label" | The text content displayed by the label. Can be bound to variables or other widgets. |
-| **Layout** |
-| width | string | "" | The width of the label specified in px or % (e.g., "100px" or "50%"). |
-| height | string | "" | The height of the label specified in px or % (e.g., "30px" or "10%"). |
-| horizontalAlign | string | "left" | Horizontal alignment of text content ("left", "center", "right"). |
-| **Behavior** |
-| show | boolean | true | Controls the visibility of the label. Bindable to variables for conditional display. |
-| loadOnDemand | boolean | false | When set to true and the show property is bound, initialization is deferred until the component becomes visible. |
-| animation | string | "none" | Controls the CSS-based animation effect applied to the label. |
-| **Text Animation** |
-| textAnimation | boolean | false | Enables word-by-word text animation effects (React Native only). |
-| animationSpeed | number | 500 | Controls the timing delay in milliseconds between words in text animation. Higher values create slower transitions. |
-| **Accessibility** |
-| hint | string | "" | Text shown as a tooltip when a user hovers over the label. Enhances accessibility. |
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `caption` | string | - | The caption is the text that the end user sees on your label. It can be bound to a variable or another component |
+        | `name` | string | - | A unique identifier for the label component. Special characters and spaces are not allowed. |
+    </div>
+</details>
 
-## Rich Text Formatting Examples
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `hint` | string | - | Any text you enter for this property will be shown as a tooltip if the mouse hovers over this component for 1.5 seconds. |
+    </div>
+</details>
+
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | - | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
+
+<details>
+  <summary>Validation</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `required` | boolean | false | A required editor in wm.LiveForm may refuse to save without a required field. |
+    </div>
+</details>
+
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
+        | `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+        | `animation` | string | - | Controls the animation of the component. |
+    </div>
+</details>
+
+### Use Cases
+
+- Show label only when a condition is met.
 
 ```javascript
-// Bold text
-Page.Widgets.myLabel.caption = "This is **bold** text";
-
-// Clickable link
-Page.Widgets.myLabel.caption = "Visit [WaveMaker](https://www.wavemaker.com)";
-
-// Combined formatting
-Page.Widgets.myLabel.caption = "**Check out our [documentation](https://docs.wavemaker.com)**";
+Page.Widgets.label.show = Page.Variables.svGetUsersData.dataSet.length > 0;
 ```
 
-## Conditional Display
+- Use bold (rich text) formatting to highlight important information.
 
 ```javascript
-// Show label only when a condition is met
-Page.Widgets.myLabel.show = Page.Variables.myVariable.dataSet.length > 0;
-
-// Toggle label visibility based on user input
-Page.Widgets.myLabel.show = Page.Widgets.checkbox1.datavalue;
+Page.Widgets.label.caption = "Payment Status: <b>Completed</b>";
 ```

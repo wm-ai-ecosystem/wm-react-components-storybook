@@ -1,11 +1,15 @@
 # Overview
 
-The Picture widget is a fundamental UI component that allows displaying images in your application. It provides a simple way to incorporate static images or dynamically loaded images from URLs or resources. The widget supports various display options including aspect ratio control and shape customization.
+The **Picture** component is a fundamental UI component that allows displaying images in your application. It provides a simple way to incorporate static images or dynamically loaded images from URLs or resources. 
 
-## Features
-- Display images from file resources or URLs
-- Support for placeholder images when the main source is unavailable
-- Automatic image sizing with aspect ratio control
-- Shape customization (rounded, circle, or thumbnail)
-- Touch event handling for user interaction
-- Support for accessibility features including tab indexing and hints
+### Markup
+
+```javascript
+<wm-picture picturesource="resources/images/logos/wavemaker_logo.png" name="picture" resizemode="cover" class="img-rounded" variant="default:rounded"></wm-picture>
+```
+
+### Use Cases
+
+- Display system architecture, network diagrams, or cloud infrastructure visuals for dashboards or documentation pages.
+- Use a logo or icon as a clickable element to navigate to dashboards or key pages.
+- Display thumbnails of documents, forms, or product images that open a modal or popup.

@@ -1,37 +1,51 @@
-# Props
+# Properties
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| **Content Configuration** |
-| iframesrc | string | undefined | The URL of the content to be displayed in the iframe. This is the source URL that will be loaded. |
-| encodeurl | boolean | false | When set to true, the URL specified in iframesrc will be URL-encoded before being used. This helps prevent issues with special characters in URLs. |
-| **Identification & Accessibility** |
-| name | string | undefined | Specifies a name for the iframe, which can be used for targeting by forms or for scripting access. |
-| hint | string | undefined | Tooltip text that appears when a user hovers over the iframe. Provides additional context about the embedded content. |
-| arialabel | string | undefined | Provides an accessible label for screen readers, improving accessibility for users with disabilities. |
-| **Dimensions & Appearance** |
-| width | string \| number | "100%" | Sets the width of the iframe. Can be specified as a pixel value (number) or as a percentage/CSS value (string). |
-| height | string \| number | "300px" | Sets the height of the iframe. Can be specified as a pixel value (number) or as a percentage/CSS value (string). |
-| className | string | undefined | Additional CSS class names to apply to the iframe for custom styling. |
-| styles | React.CSSProperties | {} | Inline CSS styles to apply directly to the iframe element. |
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `name` | string | - | A unique identifier for the iframe component. Special characters and spaces are not allowed. |
+        | `iframesrc` | string | - | This property can be used to define the source attribute of the iframe. Example Source: '//bing.com' Note: The implementation of iFrame requires the source to be of http:// type and also the run Url of your app should be http:// and NOT https:// |
+    </div>
+</details>
 
-## Common Use Cases
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `arialabel` | string | - | Accessibility label for screen readers |
+        | `hint` | string | - | Any text you enter for this property will be shown as a tooltip if the mouse hovers over this component for 1.5 seconds. |
+    </div>
+</details>
+
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | "300px" | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | "150px" | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
+
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
+        | `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+        | `encodeurl` | boolean | false | Check this if you want the provided URL to be encoded at the run time. Enabling this property will encode the special characters in the URL and enable rendering of the page which otherwise might fail. By default, it is set to false. |
+    </div>
+</details>
+
+### Use Cases
+
+- Embedding a iframesrc with encoded URL parameters.
 
 ```javascript
-// Basic iframe embedding a website
-Page.Widgets.myIframe.iframesrc = "https://example.com";
-Page.Widgets.myIframe.height = 500;
-
-// Embedding a PDF document
-Page.Widgets.documentViewer.iframesrc = "https://myapp.com/documents/report.pdf";
-Page.Widgets.documentViewer.width = "100%";
-Page.Widgets.documentViewer.height = 800;
-
-// Embedding a map with encoded URL parameters
-Page.Widgets.mapFrame.iframesrc = "https://maps.example.com/embed?location=New York,NY&zoom=12";
-Page.Widgets.mapFrame.encodeurl = true;
-
-// Setting up an accessible iframe
-Page.Widgets.contentFrame.arialabel = "Product documentation viewer";
-Page.Widgets.contentFrame.hint = "View product documentation in this frame";
+Page.Widgets.iframe.iframesrc = "https://www.wavemaker.com";
+Page.Widgets.iframe.encodeurl = true;
 ```

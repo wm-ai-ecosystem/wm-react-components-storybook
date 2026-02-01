@@ -5,7 +5,7 @@ The **Anchor** component serves as a clickable text link to navigate between scr
 ### Markup
 
 ```javascript
-<wm-anchor name="anchor1" hyperlink="https://www.wavemaker.com/">
+<wm-anchor name="anchor" hyperlink="https://www.wavemaker.com/">
 ```
 
 ### Use Cases

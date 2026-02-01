@@ -1,30 +1,31 @@
 # Methods
 
-Label components can be accessed and manipulated through JavaScript using the Page.Widgets namespace.
+The Label component does not expose any specific methods.
 
-The basic syntax for accessing a label is:
+
+<!-- # Methods
+
+<details open>
+  <summary>Methods</summary>
+    <div>
+        | Method | Parameters | Return Type | Description |
+        | --- | --- | --- | --- |
+        | `getAttributes` | None | `Array<string>` | Returns a list of all attributes currently applied to the component. Useful for checking what properties and metadata are set on the component at runtime. |
+        | `setWidgetProperty` | `prop:string`,`value:any` | None | Updates a specific property of the component at runtime. |
+        | `getDisplayType` | None | `string` | Returns the current CSS display type of the label (for example, inline, block, or inline-block). |
+    </div>
+</details>
+
+### Use Cases
+
+- Change label properties from script to hide label use the following code snippet:
 
 ```javascript
-Page.Widgets.labelName
+Page.Widgets.label.setWidgetProperty('show', false);
 ```
 
-| Method | Parameters | Return Type | Description |
-|--------|------------|------------|-------------|
-| getProperty | property (string) | any | Gets the specified property's value for the label widget. |
-| setProperty | property (string), value (any) | void | Sets the specified property's value for the label widget. |
-
-## Common Method Usage
+- Get the current display type of a component to check how it is rendered on the page.
 
 ```javascript
-// Get the current caption
-var labelText = Page.Widgets.myLabel.getProperty("caption");
-
-// Set a new caption
-Page.Widgets.myLabel.setProperty("caption", "New label text");
-
-// Check if label is visible
-var isVisible = Page.Widgets.myLabel.getProperty("show");
-
-// Change text alignment
-Page.Widgets.myLabel.setProperty("horizontalAlign", "center");
+Page.Widgets.label.getDisplayType(); -->
 ```

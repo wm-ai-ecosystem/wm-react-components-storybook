@@ -1,10 +1,15 @@
 # Overview
 
-The Message widget displays custom notifications to users with appropriate styling based on the message type. It provides visual feedback through different styling and icons for error, warning, success, info, and loading messages.
+The **Message** component helps to display a custom message on the page. Based on the message type - error, warning, success, info, loading- the message look and feel changes.
 
-## Features
-* Different message types (error, warning, success, info, loading) with appropriate visual styling
-* Customizable text content
-* Optional close button to dismiss messages
-* Animation support
-* Programmatic control to show/hide messages
+### Markup
+
+```javascript
+<wm-message type="success" class="app-message alert-success" caption="Your profile has been updated successfully" name="message" variant="filled:success"></wm-message>
+```
+
+### Use Cases
+
+- Display a confirmation when a user completes an action.
+- Notify users about issues or invalid actions.
+- Provide guidance or status updates to users.

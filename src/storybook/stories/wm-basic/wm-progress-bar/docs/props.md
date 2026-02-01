@@ -1,59 +1,87 @@
-# Props
+# Properties
 
-## General
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `name` | string | - | A unique identifier for the progress bar component. Special characters and spaces are not allowed. |
+        | `type` | string | - | Indicates the format you want to use to display the progress bar. Choose from - default, - default-striped, - success, - success-striped, - info, - info-striped, - warning, - warning-striped, - danger, - danger-striped. |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| name | string | - | Unique identifier for the progress bar widget |
-| type | string | "default" | Visual style of the progress bar. Options: default, default-striped, success, success-striped, info, info-striped, warning, warning-striped, danger, danger-striped |
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `tabindex` | number | 0 | The tab index attribute specifies the tab order of an element. You can use this property to change the default tabbing order for component access using the tab key. The value can range from 0 to 32767. The default is 0 and -1 makes the element non-focusable. NOTE: In Safari browsers, by default, Tab highlights only text fields. To enable Tab functionality, in Safari Browser from Preferences -> Advanced -> Accessibility set the option "Press Tab to highlight each item on a webpage". |
+        | `arialabel` | string | - | Accessibility label for screen readers |
+        | `hint` | string | - | Any text you enter for this property will be shown as a tooltip if the mouse hovers over this component for 1.5 seconds. |
+    </div>
+</details>
 
-## Accessibility
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | - | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| hint | string | - | Text displayed as tooltip when hovering over the widget |
-| tabindex | number | 0 | Controls tab order for keyboard navigation. -1 makes the element non-focusable |
+<details>
+  <summary>Dataset</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `dataset` | string | - | Set this property to a variable to populate the list of values to display. |
+    </div>
+</details>
 
-## Layout
+<details>
+  <summary>Default Value</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `datavalue` | string | "30" | This is the default value to display value for an component. Note that the display value is just what the user sees initially, and is not always the datavalue returned by the component. |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| width | string | - | Width of the widget specified in px or % |
-| height | string | - | Height of the widget specified in px or % |
+<details>
+  <summary>Validation</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `minvalue` | number | 0 | Enter minimum number for the progress bar. |
+        | `maxvalue` | number | 100 | Enter maximum number for the progress bar. |
+    </div>
+</details>
 
-## Data
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
+        | `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+        | `displayformat` | string | - | Format in which the progress needs to be displayed. You can choose from a list of decimal options like 9, 9.9, 9.99 etc. If the progress bar's data value is 30.7056 and the selected display format is: -  9.9 then label will be rounded as 30.7 -  9.999% then label will be rounded to 30.706% |
+        | `captionplacement` | string | - | Placement of progress bar value can be - inside or - hidden. |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| datavalue | number | - | The current progress value |
-| minvalue | number | 0 | Minimum value for the progress bar |
-| maxvalue | number | 100 | Maximum value for the progress bar |
-| displayformat | string | - | Format for displaying the progress value (e.g., 9, 9.9, 9.99%) |
+### Use Cases
 
-## Behavior
-
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| pollinterval | number | - | Time interval in milliseconds to poll the service |
-| show | boolean | true | Determines if the component is visible |
-| loadondemand | boolean | false | Defers initialization until widget becomes visible (only when show property is bound to a variable) |
-| captionplacement | string | "inside" | Placement of progress bar value. Options: inside, hidden |
-| showtooltip | boolean | false | Determines whether to display a tooltip over the progress bar |
-| tooltipposition | string | "up" | Position of the tooltip. Options: up, down, left, right |
-
-## Configure Progress Bar Behavior
+- Set the progress bar’s current value dynamically.
 
 ```javascript
-// Set progress value
-Page.Widgets.myProgressBar.datavalue = 65;
+Page.Widgets.progress_bar.datavalue = "50";
+```
 
-// Change progress bar type
-Page.Widgets.myProgressBar.type = "success-striped";
+- Update minimum and maximum values for progress bar.
 
-// Change tooltip position
-Page.Widgets.myProgressBar.tooltipposition = "right";
-
-// Update minimum and maximum values
-Page.Widgets.myProgressBar.minvalue = 10;
-Page.Widgets.myProgressBar.maxvalue = 200;
+```javascript
+Page.Widgets.progress_bar.minvalue = 0;
+Page.Widgets.progress_bar.maxvalue = 100;
 ```

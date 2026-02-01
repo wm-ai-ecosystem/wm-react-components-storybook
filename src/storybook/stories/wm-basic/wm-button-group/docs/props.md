@@ -44,5 +44,5 @@
 - Set the Button Group to vertical alignment.
 
 ```javascript
-Page.Widgets.buttongroup1.vertical = true;
+Page.Widgets.buttongroup.vertical = true;
 ```

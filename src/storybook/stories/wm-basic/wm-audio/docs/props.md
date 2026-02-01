@@ -62,23 +62,23 @@
 - Enable autoplay.
 
 ```javascript
-Page.Widgets.audio1.autoplay = true;
+Page.Widgets.audio.autoplay = true;
 ```
 
 - Enable looping.
 
 ```javascript
-Page.Widgets.audio1.loop = true;
+Page.Widgets.audio.loop = true;
 ```
 
 - Mute audio.
 
 ```javascript
-Page.Widgets.audio1.muted = true;
+Page.Widgets.audio.muted = true;
 ```
 
 - Show controls.
 
 ```javascript
-Page.Widgets.audio1.controls = true;
+Page.Widgets.audio.controls = true;
 ```

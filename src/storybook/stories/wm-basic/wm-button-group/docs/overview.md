@@ -5,12 +5,12 @@ Button Group component organizes a set of buttons that can be managed and styled
 ### Markup
 
 ```javascript
-<wm-buttongroup name="buttongroup1">
-    <wm-button class="btn-filled btn-default" type="button" caption="left" name="button1"
+<wm-buttongroup name="buttongroup">
+    <wm-button class="btn-filled btn-default" type="button" caption="left" name="buttonLeft"
         variant="filled:default"></wm-button>
-    <wm-button class="btn-filled btn-default" type="button" caption="center" name="button2"
+    <wm-button class="btn-filled btn-default" type="button" caption="center" name="buttonCenter"
         variant="filled:default"></wm-button>
-    <wm-button class="btn-filled btn-default" type="button" caption="right" name="button3"
+    <wm-button class="btn-filled btn-default" type="button" caption="right" name="buttonRight"
         variant="filled:default"></wm-button>
 </wm-buttongroup>
 ```

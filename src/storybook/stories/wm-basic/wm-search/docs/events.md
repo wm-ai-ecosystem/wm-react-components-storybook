@@ -1,32 +1,54 @@
 # Callback Events
 
-| Event | Description |
-|-------|-------------|
-| onChange | Triggered when the search value changes |
-| onFocus | Triggered when the search input receives focus |
-| onBlur | Triggered when focus leaves the search input |
-| onSubmit | Triggered when a search is submitted (e.g., pressing Enter) |
-| onSelect | Triggered when an item is selected from the search results |
-| onBeforeServiceCall | Triggered before sending the service call for fetching search results. The inputData can be modified in this event handler |
+<details open>
+  <summary>Basic Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onChange` | This event handler is called each time your component's value changes. |
+        | `onFocus` | This event handler is called each time your component is focused. |
+        | `onBlur` | This event handler is called each time your focus leaves your component. |
+    </div>
+</details>
 
-## Example Event Usage
+<details>
+  <summary>Callback Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onSubmit` | This event handler is called whenever a submit event is triggered. |
+        | `onSelect` | This event handler is called when the search item is selected |
+        | `onBeforeServiceCall` | This event is triggered before sending the service call for fetching the search results. inputData can be modified in the event. |
+        | `onDatasetReady` | Triggered when a dataset has been fully loaded and is ready for use in a component |
+        | `onClear` | This event is called when user clears the search text entered. |
+    </div>
+</details>
+
+### Use Cases
+
+- Triggered when the search component dataset is fully loaded.
 
 ```javascript
-// Handle item selection
-Page.onSearchItemSelect = function(event) {
-    // Access the selected item
-    const selectedItem = event.data.item;
-    console.log("Selected item:", selectedItem);
-    
-    // Perform actions with the selected item
-    Page.Variables.selectedEmployeeData.setValue(selectedItem);
+    Page.searchDatasetready = function (widget, data) {
+    // Filter only active employees
+    return data.filter(emp => emp.status === true);
 };
+```
 
-// Customize search request before it's sent
-Page.onBeforeSearchServiceCall = function(event) {
-    // Add additional filters to search
-    event.inputData.additionalFilters = {
-        department: Page.Variables.departmentFilter.dataValue
-    };
+- Triggered when a user selects a value from the search component.
+
+```javascript
+    Page.searchSelect = function ($event, widget, selectedValue) {
+    //Allows to perform actions based on the selected item.
+    console.log("Selected Value", selectedValue);
+};
+```
+
+- Triggered on change whenever the value of the search is updated.
+
+```javascript
+    Page.searchChange = function ($event, widget, newVal, oldVal) {
+    console.log("Old Value:", oldVal);
+    console.log("New Value:", newVal);
 };
 ```

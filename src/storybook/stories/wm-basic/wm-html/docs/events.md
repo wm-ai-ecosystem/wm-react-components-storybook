@@ -27,7 +27,7 @@
 - Triggered when the mouse enters the HTML component.
 
 ```javascript
-    Page.html1Mouseenter = function ($event, widget) {
+    Page.htmlMouseenter = function ($event, widget) {
     console.log("Mouse entered");
 };
 ```

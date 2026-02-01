@@ -5,7 +5,7 @@ The HTML component is a basic UI element that allows you to render custom HTML c
 ### Markup
 
 ```javascript
-<wm-html name="html1">
+<wm-html name="html">
   <pre>
     <code>{`function greet(name) {
             return "Hello, " + name;

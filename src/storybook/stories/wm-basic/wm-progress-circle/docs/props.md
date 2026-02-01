@@ -1,47 +1,80 @@
-# Props
+# Properties
 
-## Basic Configuration
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `title` | string | - | Title of the progress cirle.. |
+        | `subtitle` | string | - | Subtitle of the progress circle. |
+        | `name` | string | - | A unique identifier for the progress circle component. Special characters and spaces are not allowed. |
+        | `type` | string | - | Indicates the format you want to use to display the progress circle. Choose from - default, - success, - info, - warning, - danger |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| name | string | undefined | Unique identifier for the progress circle widget |
-| title | string | undefined | Main title displayed with the progress circle |
-| subtitle | string | undefined | Secondary text displayed below the title |
-| hint | string | undefined | Text shown as a tooltip when hovering over the widget |
-| show | boolean | true | Determines the visibility of the component; can be bound to a variable |
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `tabindex` | number | 0 | The tab index attribute specifies the tab order of an element. You can use this property to change the default tabbing order for component access using the tab key. The value can range from 0 to 32767. The default is 0 and -1 makes the element non-focusable. NOTE: In Safari browsers, by default, Tab highlights only text fields. To enable Tab functionality, in Safari Browser from Preferences -> Advanced -> Accessibility set the option "Press Tab to highlight each item on a webpage". |
+        | `arialabel` | string | - | Accessibility label for screen readers |
+        | `hint` | string | - | Any text you enter for this property will be shown as a tooltip if the mouse hovers over this component for 1.5 seconds. |
+    </div>
+</details>
 
-## Progress Configuration
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | "150px" | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | "150px" | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| value | number | 0 | The current progress value to display |
-| minimumValue | number | 0 | The minimum value for the progress scale |
-| maximumValue | number | 100 | The maximum value for the progress scale |
-| displayFormat | string | '9' | Format for displaying the progress value (e.g., '9', '9.9', '9.99', '9%') |
-| captionPlacement | string | 'inside' | Position of the progress value label ('inside' or 'hidden') |
-| type | string | 'default' | Visual style of the progress circle ('default', 'success', 'info', 'warning', 'danger') |
+<details>
+  <summary>Default Value</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `datavalue` | string | "30" | This is the default value to display value for an component. Note that the display value is just what the user sees initially, and is not always the datavalue returned by the component. |
+    </div>
+</details>
 
-## Layout
+<details>
+  <summary>Validation</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `minvalue` | number | 0 | Enter minimum number for the progress circle. |
+        | `maxvalue` | number | 100 | Enter maximum number for the progress circle. |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| width | string | '100%' | Width of the widget, specified in px or % |
-| height | string | '100%' | Height of the widget, specified in px or % |
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
+        | `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+        | `displayformat` | string | - | Format in which the progress needs to be displayed. You can choose from a list of decimal options like 9, 9.9, 9.99 etc. If the progress circle's data value is 30.7056 and the selected display format is: -  9.9 then label will be rounded as 30.7 -  9.999% then label will be rounded to 30.706% |
+        | `captionplacement` | string | - | Placement of progress circle value can be - inside or - hidden. |
+    </div>
+</details>
 
-## Common Use Cases
+### Use Cases
+
+- Set the progress circle’s current value dynamically.
 
 ```javascript
-// Set current progress value
-Page.Widgets.progressCircle1.value = 75;
+Page.Widgets.progress_circle.datavalue = "50";
+```
 
-// Update progress circle type based on value
-if (Page.Widgets.progressCircle1.value > 80) {
-  Page.Widgets.progressCircle1.type = 'success';
-} else if (Page.Widgets.progressCircle1.value > 50) {
-  Page.Widgets.progressCircle1.type = 'info';
-} else if (Page.Widgets.progressCircle1.value > 30) {
-  Page.Widgets.progressCircle1.type = 'warning';
-} else {
-  Page.Widgets.progressCircle1.type = 'danger';
-}
+- Update minimum and maximum values for progress circle.
+
+```javascript
+Page.Widgets.progress_circle.minvalue = 0;
+Page.Widgets.progress_circle.maxvalue = 100;
 ```

@@ -1,15 +1,15 @@
 # Overview
 
-The Video widget in WaveMaker allows you to embed and play video content within your mobile application. It supports multiple video formats including MP4, WebM, and Ogg, with varying levels of browser compatibility.
+The **Video** component enables video playback within the application and provides consistent playback controls across supported platforms. It supports formats such as MP4, WebM, and Ogg, depending on browser compatibility.
 
-## Features
+### Markup
 
-- Supports multiple video formats (MP4, WebM, Ogg)
-- Customizable controls for playback (play, pause, stop, volume)
-- Auto-play functionality
-- Loop video playback
-- Mute option
-- Poster frame display before playback begins
-- Subtitle support
-- Preloading options for buffering control
-- Customizable dimensions
+```javascript
+    <wm-video controls="controls" videopreload="none" name="video" mp4format="https://videos.pexels.com/video-files/5155396/5155396-uhd_2560_1440_30fps.mp4"></wm-video>
+```
+
+### Use Cases
+ 
+- Embed instructional videos for employee onboarding or e-learning.
+- Play recorded webinars, live streams, or presentations.
+- Include videos as part of a gallery or portfolio display.

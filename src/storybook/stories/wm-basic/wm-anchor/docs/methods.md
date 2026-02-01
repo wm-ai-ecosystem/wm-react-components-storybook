@@ -1,5 +1,9 @@
 # Methods
 
+The Anchor component does not expose any specific methods.
+
+<!-- # Methods
+
 <details open>
   <summary>Methods</summary>
     <div>
@@ -16,11 +20,11 @@
 - Programmatically set focus on the anchor component.
 
 ```javascript
-Page.Widgets.anchor1.focus();
+Page.Widgets.anchor.focus();
 ```
 
-- Change anchor properties from script to o hide anchor use the following code snippet:
+- Change anchor properties from script to hide anchor use the following code snippet:
 
 ```javascript
-Page.Widgets.anchor1.setWidgetProperty('disabled', true);
-```
+Page.Widgets.anchor.setWidgetProperty('disabled', true);
+``` -->

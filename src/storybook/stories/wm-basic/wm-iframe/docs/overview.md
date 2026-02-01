@@ -1,11 +1,14 @@
 # Overview
 
-The iframe component allows embedding external web content directly within your application. It creates an inline frame that loads a specified URL, enabling you to integrate external websites, documents, or applications seamlessly. This component is particularly useful for displaying third-party content, embedding documents, or creating composite applications that leverage existing web resources.
+An inline frame (**Iframe**) is used to embed another document within the current HTML document. Frames allow a visual HTML Browser window to be split into segments, each of which can show a different document. The iframe element represents a nested browsing context.
 
-## Features
-- Load external web content directly within your application
-- Control iframe dimensions with configurable width and height
-- Option to encode URLs for safer embedding
-- Accessibility support with ARIA labels
-- Customizable appearance through CSS styles
-- Naming capability for form targeting and scripting access
+### Markup
+
+```javascript
+<wm-iframe name="iframe" iframesrc="https://www.wavemaker.com/"></wm-iframe>
+```
+
+### Use Cases
+
+- Embed external websites or pages such as documentation, marketing pages, or partner portals without leaving the app.
+- Integrate third-party tools like payment gateways, maps, analytics dashboards, or support systems.

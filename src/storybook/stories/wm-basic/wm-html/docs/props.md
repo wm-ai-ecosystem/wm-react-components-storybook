@@ -62,12 +62,12 @@
 - Basic HTML content rendering
 
 ```javascript
-Page.Widgets.html1.content = "<p>This is a <strong>formatted</strong> paragraph.</p>";
+Page.Widgets.html.content = "<p>This is a <strong>formatted</strong> paragraph.</p>";
 ```
 
 - Set custom dimensions
 
 ```javascript
-Page.Widgets.html1.width = "500px";
-Page.Widgets.html1.height = "300px";
+Page.Widgets.html.width = "500px";
+Page.Widgets.html.height = "300px";
 ```

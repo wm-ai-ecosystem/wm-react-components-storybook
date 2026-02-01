@@ -48,7 +48,7 @@
 - Triggered on button click to submit a form.
 
 ```javascript
-Page.button1Click = function ($event, widget) {
+Page.buttonClick = function ($event, widget) {
   Page.Widgets.formCreate.submit();
 };
 ```
@@ -56,7 +56,7 @@ Page.button1Click = function ($event, widget) {
 - Triggered on button click to invoke a variable for actions such as fetching or submitting data.
 
 ```javascript
-Page.button1Click = function ($event, widget) {
+Page.buttonClick = function ($event, widget) {
   Page.Variables.svGetUsersData.invoke();
 };
 ```

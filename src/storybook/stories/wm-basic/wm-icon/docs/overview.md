@@ -5,7 +5,7 @@ The Icon component is a versatile UI element that allows you to display graphica
 ### Markup
 
 ```javascript
-<wm-icon name="icon1" iconclass="wi wi-save" class="fa-xs" variant="default:xs"></wm-icon>
+<wm-icon name="icon" iconclass="wi wi-save" class="fa-xs" variant="default:xs"></wm-icon>
 ```
 
 ### Use Cases

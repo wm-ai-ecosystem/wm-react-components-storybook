@@ -1,13 +1,15 @@
 # Overview
 
-The Spinner component provides visual feedback to users during time-consuming operations or background processes. It displays an animated loading indicator with optional text to inform users that content is loading or an action is being processed.
+The **Spinner** component controls the user interaction while the browser is performing some work in the background. It gives a feedback if the page is processing or, frozen, or just not working. This component displays a loading icon with text.
 
-The Spinner is especially useful in mobile applications to indicate network requests, data processing, or any background task that requires users to wait, helping to improve the user experience by communicating that the application is working rather than frozen.
+### Markup
 
-## Features
+```javascript
+<wm-spinner show="true" name="spinner"></wm-spinner>
+```
 
-* Customizable loading indicator with various icon options
-* Optional caption text to describe what's happening
-* Ability to track specific variables and automatically show/hide based on their loading state
-* Configurable animation styles
-* Customizable icon size for different visual requirements
+### Use Cases
+
+- Data Fetching / API Calls.
+- Form Submission.
+- Page or Component Loading.

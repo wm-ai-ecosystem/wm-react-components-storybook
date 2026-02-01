@@ -1,27 +1,18 @@
 # Methods
 
-The Search widget can be accessed in script via `Page.Widgets.widgetName`. However, this component doesn't have any specific public methods documented for direct invocation.
+<details open>
+  <summary>Methods</summary>
+    <div>
+        | Method | Parameters | Return Type | Description |
+        |--------|------------|------------|-------------|
+        | `clearSearch` | None | void | clears the search text. |
+    </div>
+</details>
 
-For interacting with the Search component, you would typically:
+### Use Cases
 
-1. Set properties programmatically
-2. Bind to events
-3. Access the current state through bound variables
-
-## Example Script Access
+- Clears the entered/selected search text.
 
 ```javascript
-// Clear the search
-Page.Widgets.employeeSearch.datavalue = "";
-
-// Disable search during certain operations
-Page.Widgets.employeeSearch.disabled = true;
-
-// Access current search value
-const searchQuery = Page.Widgets.employeeSearch.query;
-console.log("Current search:", searchQuery);
-
-// Access selected result
-const selectedValue = Page.Widgets.employeeSearch.datavalue;
-console.log("Selected value:", selectedValue);
+    Page.Widgets.search.clearSearch();
 ```

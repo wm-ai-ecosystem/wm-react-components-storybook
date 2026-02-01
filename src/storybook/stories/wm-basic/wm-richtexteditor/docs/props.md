@@ -1,51 +1,67 @@
-# Props
+# Properties
 
-The Rich Text Editor component can be configured with the following properties:
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `name` | string | - | A unique identifier for the richtext editor component. Special characters and spaces are not allowed. |
+        | `placeholder` | string | - | A placeholder is text to show in the editor when there is no value.|
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| value | string | "" | The initial HTML content to display in the editor |
-| placeholder | string | "Enter text here..." | Placeholder text when editor is empty |
-| readonly | boolean | false | When true, makes the editor content non-editable |
-| toolbar | string/array | "full" | Configures which toolbar buttons to display ("full", "basic", or custom array) |
-| height | string | "300px" | Sets the height of the editor |
-| minHeight | string | "200px" | Sets the minimum height of the editor |
-| maxHeight | string | null | Sets the maximum height of the editor |
-| enableResize | boolean | true | Allows users to resize the editor vertically |
-| sanitize | boolean | true | When true, sanitizes HTML to prevent XSS attacks |
-| plugins | array | [] | Additional plugins to enhance editor functionality |
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `tabindex` | number | 0 | The tab index attribute specifies the tab order of an element. You can use this property to change the default tabbing order for component access using the tab key. The value can range from 0 to 32767. The default is 0 and -1 makes the element non-focusable. NOTE: In Safari browsers, by default, Tab highlights only text fields. To enable Tab functionality, in Safari Browser from Preferences -> Advanced -> Accessibility set the option "Press Tab to highlight each item on a webpage". |
+        | `arialabel` | string | - | Accessibility label for screen readers |
+        | `hint` | string | - | Any text you enter for this property will be shown as a tooltip if the mouse hovers over this component for 1.5 seconds. |
+    </div>
+</details>
 
-## Basic Configuration
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | - | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
+
+<details>
+  <summary>Default Value</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `datavalue` | string | - | This is the default value to display value for an editor component. Note that the display value is just what the user sees initially, and is not always the dataValue returned by the component. |
+    </div>
+</details>
+
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `readonly` | boolean | false | This property prevents the user from being able to change the data value of a component. It is a bindable property. |
+        | `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
+        | `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+        | `showpreview` | boolean | false | This property enable's the preview section of the editor. It is a bindable property. |
+    </div>
+</details>
+
+### Use Cases
+
+- Enable preview mode to display the formatted HTML content created in the richtext editor.
 
 ```javascript
-// Set initial content
-Page.Widgets.myRichTextEditor.value = "<p>Hello <strong>World</strong></p>";
-
-// Make editor read-only
-Page.Widgets.myRichTextEditor.readonly = true;
+Page.Widgets.richtexteditor.showpreview = true;
 ```
 
-## Toolbar Configuration
+- Set the richtext editor to read-only mode to prevent editing while allowing content to be viewed.
 
 ```javascript
-// Use basic toolbar preset
-Page.Widgets.myRichTextEditor.toolbar = "basic";
-
-// Custom toolbar configuration
-Page.Widgets.myRichTextEditor.toolbar = [
-  ['bold', 'italic', 'underline'],
-  ['h1', 'h2', 'h3'],
-  ['ul', 'ol'],
-  ['undo', 'redo']
-];
-```
-
-## Size Configuration
-
-```javascript
-// Set editor height
-Page.Widgets.myRichTextEditor.height = "400px";
-
-// Disable resize functionality
-Page.Widgets.myRichTextEditor.enableResize = false;
+Page.Widgets.richtexteditor.readonly = true;
 ```

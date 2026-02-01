@@ -6,7 +6,7 @@
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
         | `caption` | string | - | The caption is the text that the end user sees on your icon. |
-        | `name` | string | - | A unique identifier for the anchor component. Special characters and spaces are not allowed. |
+        | `name` | string | - | A unique identifier for the icon component. Special characters and spaces are not allowed. |
     </div>
 </details>
 
@@ -47,11 +47,11 @@
 - Setting a Font Awesome icon.
 
 ```javascript
-Page.Widgets.icon1.iconclass = "fa fa-star";
+Page.Widgets.icon.iconclass = "fa fa-star";
 ```
 
 - Positioning icon to the right of text.
 
 ```javascript
-Page.Widgets.icon1.iconposition = "right";
+Page.Widgets.icon.iconposition = "right";
 ```

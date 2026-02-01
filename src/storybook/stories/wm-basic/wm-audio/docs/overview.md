@@ -5,7 +5,7 @@ The **Audio** component supports audio playback using the MP3 format only, offer
 ### Markup
 
 ```javascript
-<wm-audio controls="controls" audiopreload="none" name="audio1" mp3format="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></wm-audio>
+<wm-audio controls="controls" audiopreload="none" name="audio" mp3format="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></wm-audio>
 ```
 
 ### Use Cases
