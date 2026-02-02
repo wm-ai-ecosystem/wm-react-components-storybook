@@ -47,7 +47,7 @@ Page.progress_circleMouseenter = function ($event, widget) {
 - Triggered when the mouse pointer leaves the progress circle.
 
 ```javascript
-Page.progress_circle1Mouseleave = function ($event, widget) {
+Page.progress_circleMouseleave = function ($event, widget) {
     // Hide detailed progress when not hovering
     widget.title = "";
     widget.subtitle = "";
