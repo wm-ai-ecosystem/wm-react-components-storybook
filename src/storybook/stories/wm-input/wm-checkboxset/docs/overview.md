@@ -19,7 +19,7 @@
 
 #### Properties
 
-- Sets the checkboxset’s selected values using the bound datafield.
+- Sets the checkboxset’s default values using the bound datafield.
 
 ```javascript
 Page.Widgets.checkboxset.datavalue = ['US', 'AU'];

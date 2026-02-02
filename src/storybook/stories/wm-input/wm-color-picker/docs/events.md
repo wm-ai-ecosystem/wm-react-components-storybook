@@ -1,23 +1,32 @@
 # Callback Events
 
-The color-picker component does not have any documented events. However, typical color picker components would typically support the following events:
+<details open>
+  <summary>Basic Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `change` | This event handler is called each time your component's value changes. |
+        | `onFocus` | This event handler is called each time your component is focused. |
+        | `onBlur` | This event handler is called each time your focus leaves your component. |
+    </div>
+</details>
 
-| Event | Description |
-|-------|-------------|
-| `onChange` | Triggered when the selected color changes |
-| `onOpen` | Triggered when the color picker dropdown/panel opens |
-| `onClose` | Triggered when the color picker dropdown/panel closes |
-| `onBlur` | Triggered when the color picker loses focus |
-| `onFocus` | Triggered when the color picker receives focus |
+<details>
+  <summary>Mouse Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onClick` | This event handler is called whenever the click event is triggered on a component. |
+        | `onMouseEnter` | This event handler is called whenever the mouse enters the component. |
+        | `onMouseLeave` | This event handler is called whenever the mouse leaves the component. |
+    </div>
+</details>
 
-## Example Event Usage
-
-To handle color selection changes, you might use code similar to:
-
-```javascript
-Page.Widgets.myColorPicker.onChange = function(newValue, oldValue) {
-    console.log("Color changed from " + oldValue + " to " + newValue);
-    // Update dependent UI elements
-    Page.Widgets.colorPreview.backgroundColor = newValue;
-};
-```
+<details>
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onTap` | This event handler is called whenever the component is tapped. |
+    </div>
+</details>
