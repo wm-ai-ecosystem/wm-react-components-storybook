@@ -31,12 +31,5 @@
     </div>
 </details>
 
-### Use Cases
 
-- Triggered before the progress circle is rendered to track or log the current progress value.
 
-```javascript
-    Page.progress_circleBeforerender = function ($event, widget) {
-    console.log('Progress updating to: ' + Page.Widgets.progressCircle.datavalue);
-};
-```

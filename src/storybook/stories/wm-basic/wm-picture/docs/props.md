@@ -55,16 +55,3 @@
     </div>
 </details>
 
-### Use Cases
-
-- Set the image source dynamically for the picture component.
-
-```javascript
-Page.Widgets.picture.picturesource = "./resources/images/logos/wavemaker_logo.png";
-```
-
-- Apply animation to the picture component.
-
-```javascript
-Page.Widgets.picture.animation = "bounceIn";
-```

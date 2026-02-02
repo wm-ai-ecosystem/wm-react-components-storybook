@@ -41,11 +41,5 @@
     </div>
 </details>
 
-### Use Cases
 
-- Embedding a iframesrc with encoded URL parameters.
 
-```javascript
-Page.Widgets.iframe.iframesrc = "https://www.wavemaker.com";
-Page.Widgets.iframe.encodeurl = true;
-```

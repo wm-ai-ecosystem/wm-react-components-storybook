@@ -22,12 +22,4 @@
     </div>
 </details>
 
-### Use Cases
 
-- Triggered on label mouse enter to apply hover styling and improve user interaction feedback.
-
-```javascript
-    Page.labelMouseenter = function ($event, widget) {
-    widget.class = "text-primary";
-};
-```

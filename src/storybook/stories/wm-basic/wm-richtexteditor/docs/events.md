@@ -18,21 +18,3 @@
     </div>
 </details>
 
-### Use Cases
-
-- Triggered on change whenever the value of the richtext editor is updated.
-
-```javascript
-    Page.richtexteditorChange = function ($event, widget, newVal, oldVal) {
-      console.log("Old Value:", oldVal);
-      console.log("New Value:", newVal);
-};
-```
-
-- Triggered before the richtext editor is rendered on the page.
-
-```javascript
-    Page.richtexteditorBeforerender = function ($event, widget) {
-    console.log("Rich Text Editor is about to render.");
-};
-```

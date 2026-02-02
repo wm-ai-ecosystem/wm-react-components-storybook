@@ -9,16 +9,4 @@
     </div>
 </details>
 
-### Use Cases
 
-- Triggered on message close.
-
-```javascript
-    Page.messageClose = function ($event, widget) {
-    if(widget.type === "success") {
-        //Reset the feedback form input after user closes the message
-        Page.Widgets.feedbackInput.value = undefined;
-        console.log("Feedback message closed, form input cleared.");
-    }
-};
-```

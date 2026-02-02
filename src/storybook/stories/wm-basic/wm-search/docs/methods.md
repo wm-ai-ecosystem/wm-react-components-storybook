@@ -9,10 +9,5 @@
     </div>
 </details>
 
-### Use Cases
 
-- Clears the entered/selected search text.
 
-```javascript
-    Page.Widgets.search.clearSearch();
-```

@@ -49,16 +49,4 @@
     </div>
 </details>
 
-### Use Cases
 
-- Show label only when a condition is met.
-
-```javascript
-Page.Widgets.label.show = Page.Variables.svGetUsersData.dataSet.length > 0;
-```
-
-- Use bold (rich text) formatting to highlight important information.
-
-```javascript
-Page.Widgets.label.caption = "Payment Status: <b>Completed</b>";
-```

@@ -56,29 +56,3 @@
     </div>
 </details>
 
-### Use Cases
-
-
-- Enable autoplay.
-
-```javascript
-Page.Widgets.audio.autoplay = true;
-```
-
-- Enable looping.
-
-```javascript
-Page.Widgets.audio.loop = true;
-```
-
-- Mute audio.
-
-```javascript
-Page.Widgets.audio.muted = true;
-```
-
-- Show controls.
-
-```javascript
-Page.Widgets.audio.controls = true;
-```

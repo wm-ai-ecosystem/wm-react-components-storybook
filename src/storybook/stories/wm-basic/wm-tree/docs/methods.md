@@ -10,16 +10,4 @@
     </div>
 </details>
 
-### Use Cases
 
-- Clear the current tree selection.
-
-```javascript
-    Page.Widgets.tree.deselectById();
-```
-
-- Use this method to select a specific node in the tree.
-
-```javascript
-    Page.Widgets.tree.selectById(1);
-```

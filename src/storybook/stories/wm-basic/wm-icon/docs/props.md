@@ -42,16 +42,4 @@
     </div>
 </details>
 
-### Use Cases
 
-- Setting a Font Awesome icon.
-
-```javascript
-Page.Widgets.icon.iconclass = "fa fa-star";
-```
-
-- Positioning icon to the right of text.
-
-```javascript
-Page.Widgets.icon.iconposition = "right";
-```

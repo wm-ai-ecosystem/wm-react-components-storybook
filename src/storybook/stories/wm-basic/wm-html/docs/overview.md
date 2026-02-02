@@ -7,17 +7,41 @@ The HTML component is a basic UI element that allows you to render custom HTML c
 ```javascript
 <wm-html name="html">
   <pre>
-    <code>{`function greet(name) {
-            return "Hello, " + name;
-            }`
-        }
+    <code>
+      {`
+      function greet(name) {
+        return "Hello, " + name;
+      }
+      `}
     </code>
   </pre>
-</wm-html>;
-
+</wm-html>
 ```
 
-### Use Cases
+### Examples
 
-- Embed custom HTML content such as formatted text, tables, or code snippets.
-- Create interactive banners or notices with custom layouts, links, and styles.
+#### Properties
+
+- Basic HTML content rendering
+
+```javascript
+Page.Widgets.html.content =
+  "<p>This is a <strong>formatted</strong> paragraph.</p>";
+```
+
+- Set custom dimensions
+
+```javascript
+Page.Widgets.html.width = "500px";
+Page.Widgets.html.height = "300px";
+```
+
+#### Events
+
+- Triggered when the mouse enters the HTML component.
+
+```javascript
+Page.htmlMouseenter = function ($event, widget) {
+  console.log("Mouse entered");
+};
+```

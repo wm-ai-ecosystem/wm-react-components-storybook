@@ -64,17 +64,4 @@
     </div>
 </details>
 
-### Use Cases
 
-- Set the progress circle’s current value dynamically.
-
-```javascript
-Page.Widgets.progress_circle.datavalue = "50";
-```
-
-- Update minimum and maximum values for progress circle.
-
-```javascript
-Page.Widgets.progress_circle.minvalue = 0;
-Page.Widgets.progress_circle.maxvalue = 100;
-```

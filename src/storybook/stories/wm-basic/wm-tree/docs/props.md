@@ -74,37 +74,3 @@
     </div>
 </details>
 
-
-### Use Cases
-
-- Set levels of the tree to be expanded by default.
-
-```javascript
-Page.Widgets.tree.levels = 3;
-```
-
-- Simple tree dataset.
-
-```javascript
-[
-  {
-    "id": 1,
-    "label": "Item 1",
-    "icon": "fa fa-align-left",
-    "children": []
-  },
-  {
-    "id": 2,
-    "label": "Item 2",
-    "icon": "glyphicon glyphicon-music",
-    "children": [
-      {
-        "id": 2.1,
-        "label": "Item 2.1",
-        "icon": "glyphicon glyphicon-bookmark",
-        "children": []
-      }
-    ]
-  }
-];
-```

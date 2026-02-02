@@ -57,17 +57,4 @@
     </div>
 </details>
 
-### Use Cases
 
-- Basic HTML content rendering
-
-```javascript
-Page.Widgets.html.content = "<p>This is a <strong>formatted</strong> paragraph.</p>";
-```
-
-- Set custom dimensions
-
-```javascript
-Page.Widgets.html.width = "500px";
-Page.Widgets.html.height = "300px";
-```

@@ -13,3 +13,35 @@ The **Video** component enables video playback within the application and provid
 - Embed instructional videos for employee onboarding or e-learning.
 - Play recorded webinars, live streams, or presentations.
 - Include videos as part of a gallery or portfolio display.
+
+
+### Examples
+
+#### Properties 
+
+
+
+- Enable autoplay.
+
+```javascript
+Page.Widgets.video.autoplay = true;
+```
+
+- Enable looping.
+
+```javascript
+Page.Widgets.video.loop = true;
+```
+
+- Mute video.
+
+```javascript
+Page.Widgets.video.muted = true;
+```
+
+- Show controls.
+
+```javascript
+Page.Widgets.video.controls = true;
+```
+

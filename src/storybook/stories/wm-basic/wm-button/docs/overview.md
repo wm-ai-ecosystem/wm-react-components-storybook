@@ -8,10 +8,45 @@ A **Button** indicates a possible user action. The button provides a styled clic
 <wm-button class="btn-filled btn-default" caption="Notifications" type="button" name="button" variant="filled:default" iconclass="wi wi-notifications-none" badgevalue="5"></wm-button>
 ```
 
-### Use Cases
+### Examples
 
-- Navigate to another page.
-- Submit forms, such as login, registration, or checkout.
-- Show or hide a modal/dialog.
-- Call a JavaScript function.
-- Call a web service or Java method.
+#### Properties
+
+- Configure the button caption.
+
+```javascript
+Page.Widgets.button.caption = "WaveMaker";
+```
+
+- Disable/enable button based on a condition.
+
+```javascript
+Page.Widgets.button.disabled = !formIsValid;
+```
+
+- Set an icon using image URL.
+
+```javascript
+Page.Widgets.button.iconurl = "resources/images/download.png";
+Page.Widgets.button.iconwidth = "20px";
+Page.Widgets.button.iconheight = "20px";
+Page.Widgets.button.iconmargin = "0px 8px 0px 0px";
+```
+
+#### Events
+
+- Triggered on button click to submit a form.
+
+```javascript
+Page.buttonClick = function ($event, widget) {
+  Page.Widgets.formCreate.submit();
+};
+```
+
+- Triggered on button click to invoke a variable for actions such as fetching or submitting data.
+
+```javascript
+Page.buttonClick = function ($event, widget) {
+  Page.Variables.svGetUsersData.invoke();
+};
+```

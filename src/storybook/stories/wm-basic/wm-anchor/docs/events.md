@@ -31,29 +31,3 @@
         | `onDoubleTap` | This event handler is called whenever the component is double tapped. |
     </div>
 </details>
-
-### Use Cases
-
-- Triggered on anchor click to navigate to dashboard page within the application.
-
-```javascript
-    Page.anchorClick = function ($event, widget) {
-    App.Actions.goToPage_Dashboard.invoke();
-};
-```
-
-- Triggered on anchor click to update the caption text dynamically.
-
-```javascript
-    Page.anchorClick = function ($event, widget) {
-    widget.caption = "Clicked";
-};
-```
-
-- Triggered when the anchor receives keyboard focus (i.e via the Tab key)
-
-```javascript
-    Page.anchorFocus = function ($event, widget) {
-        console.log("Anchor is focused");
-};
-```

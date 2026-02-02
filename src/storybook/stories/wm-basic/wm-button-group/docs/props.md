@@ -39,10 +39,3 @@
     </div>
 </details>
 
-### Use Cases
-
-- Set the Button Group to vertical alignment.
-
-```javascript
-Page.Widgets.buttongroup.vertical = true;
-```

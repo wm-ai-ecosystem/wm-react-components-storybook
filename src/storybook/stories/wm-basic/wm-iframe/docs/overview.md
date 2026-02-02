@@ -12,3 +12,14 @@ An inline frame (**Iframe**) is used to embed another document within the curren
 
 - Embed external websites or pages such as documentation, marketing pages, or partner portals without leaving the app.
 - Integrate third-party tools like payment gateways, maps, analytics dashboards, or support systems.
+
+### Examples
+
+#### Properties
+
+- Embedding a iframesrc with encoded URL parameters.
+
+```javascript
+Page.Widgets.iframe.iframesrc = "https://www.wavemaker.com";
+Page.Widgets.iframe.encodeurl = true;
+```

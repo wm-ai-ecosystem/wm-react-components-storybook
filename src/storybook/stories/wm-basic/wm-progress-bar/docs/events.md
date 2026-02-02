@@ -22,20 +22,4 @@
     </div>
 </details>
 
-### Use Cases
 
-- Triggered on hover to display the caption inside the progress bar.
-
-```javascript
-    Page.progress_barMouseenter = function ($response, widget) {
-        widget.captionplacement = "inside";
-};
-```
-
-- Triggered when the cursor leaves to hide the caption for the progress bar.
-
-```javascript
-    Page.progress_barMouseleave = function ($response, widget) {
-        widget.captionplacement = "hidden";
-};
-```

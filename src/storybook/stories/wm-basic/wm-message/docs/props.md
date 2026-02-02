@@ -33,16 +33,3 @@
     </div>
 </details>
 
-### Use Cases
-
-- Set message type programmatically.
-
-```javascript
-Page.Widgets.message.type = "error";
-```
-
-- Hide the close option.
-
-```javascript
-Page.Widgets.message.hideclose = true;
-```

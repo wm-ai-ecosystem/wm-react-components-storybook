@@ -22,12 +22,3 @@
     </div>
 </details>
 
-### Use Cases
-
-- Triggered on picture click to navigate to a dashboard page in the app.
-
-```javascript
-    Page.pictureClick = function ($event, widget) {
-    App.Actions.goToPage_Dashboard.invoke();
-};
-```

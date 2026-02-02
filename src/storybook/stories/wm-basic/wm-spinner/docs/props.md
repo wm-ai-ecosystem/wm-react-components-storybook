@@ -54,13 +54,3 @@
     </div>
 </details>
 
-### Use Cases
-
-- Set image as spinner icon.
-
-```javascript
-    Page.Widgets.spinner.type = "image";
-Page.Widgets.spinner.image = "resources/images/imagelists/loader.gif";
-Page.Widgets.spinner.imagewidth = "16px";
-Page.Widgets.spinner.imageheight = "16px";
-```

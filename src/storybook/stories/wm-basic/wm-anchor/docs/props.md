@@ -69,24 +69,3 @@
     </div>
 </details>
 
-### Use Cases
-
-- Configure the anchor’s hyperlink and caption.
-
-```javascript
-Page.Widgets.anchor.hyperlink = "/https://www.wavemaker.com";
-Page.Widgets.anchor.caption = "WaveMaker";
-```
-
-- Display a small badge value to indicate counts or alerts.
-
-```javascript
-Page.Widgets.anchor.badgevalue = "3";
-```
-
-- Enhance the anchor with an icon, and position it as needed.
-
-```javascript
-Page.Widgets.anchor.iconclass = "wi wi-user";
-Page.Widgets.anchor.iconposition = "left";
-```

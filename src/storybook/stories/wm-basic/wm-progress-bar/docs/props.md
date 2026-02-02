@@ -71,17 +71,3 @@
     </div>
 </details>
 
-### Use Cases
-
-- Set the progress bar’s current value dynamically.
-
-```javascript
-Page.Widgets.progress_bar.datavalue = "50";
-```
-
-- Update minimum and maximum values for progress bar.
-
-```javascript
-Page.Widgets.progress_bar.minvalue = 0;
-Page.Widgets.progress_bar.maxvalue = 100;
-```

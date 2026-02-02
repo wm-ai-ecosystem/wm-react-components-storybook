@@ -10,16 +10,4 @@
     </div>
 </details>
 
-### Use Cases
 
-- Display a message.
-
-```javascript
-    Page.Widgets.message.showMessage();
-```
-
-- Hide the currently displayed message.
-
-```javascript
-    Page.Widgets.message.hideMessage();
-```

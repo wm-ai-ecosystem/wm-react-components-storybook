@@ -52,16 +52,4 @@
     </div>
 </details>
 
-### Use Cases
 
-- Enable preview mode to display the formatted HTML content created in the richtext editor.
-
-```javascript
-Page.Widgets.richtexteditor.showpreview = true;
-```
-
-- Set the richtext editor to read-only mode to prevent editing while allowing content to be viewed.
-
-```javascript
-Page.Widgets.richtexteditor.readonly = true;
-```

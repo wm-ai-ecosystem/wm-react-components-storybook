@@ -20,3 +20,13 @@ Button Group component organizes a set of buttons that can be managed and styled
 - Control media playback with buttons like “Play”, “Pause”, and “Stop”.
 - Offer quick navigation between related sections or tabs in a page.
 - Switch between time ranges or data views in charts, e.g., “Today”, “Week”, “Month”.
+
+### Examples
+
+#### Properties 
+
+- Set the Button Group to vertical alignment.
+
+```javascript
+Page.Widgets.buttongroup.vertical = true;
+```

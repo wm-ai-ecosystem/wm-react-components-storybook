@@ -60,29 +60,3 @@
     </div>
 </details>
 
-### Use Cases
-
-
-- Enable autoplay.
-
-```javascript
-Page.Widgets.video.autoplay = true;
-```
-
-- Enable looping.
-
-```javascript
-Page.Widgets.video.loop = true;
-```
-
-- Mute video.
-
-```javascript
-Page.Widgets.video.muted = true;
-```
-
-- Show controls.
-
-```javascript
-Page.Widgets.video.controls = true;
-```

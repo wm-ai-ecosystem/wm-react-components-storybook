@@ -115,18 +115,4 @@
     </div>
 </details>
 
-### Use Cases
 
-- Configure basic search.
-
-```javascript
-Page.Widgets.search.type = "search";
-Page.Widgets.search.placeholder = "Search employees...";
-```
-
-- Configure search behavior.
-
-```javascript
-Page.Widgets.search.minchars = 3;
-Page.Widgets.search.debouncetime = 500;
-```

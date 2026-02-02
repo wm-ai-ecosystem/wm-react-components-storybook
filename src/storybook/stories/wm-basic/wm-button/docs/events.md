@@ -43,20 +43,5 @@
     </div>
 </details>
 
-### Use Cases
 
-- Triggered on button click to submit a form.
 
-```javascript
-Page.buttonClick = function ($event, widget) {
-  Page.Widgets.formCreate.submit();
-};
-```
-
-- Triggered on button click to invoke a variable for actions such as fetching or submitting data.
-
-```javascript
-Page.buttonClick = function ($event, widget) {
-  Page.Variables.svGetUsersData.invoke();
-};
-```
