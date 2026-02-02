@@ -5,12 +5,18 @@ The **Label** component represents a caption in a user interface. The label disp
 ### Markup
 
 ```javascript
-<wm-label caption="label" name="label" class="p" type="p" variant="default:p"></wm-label>
+<wm-label
+  caption="label"
+  name="label"
+  class="p"
+  type="p"
+  variant="default:p"
+></wm-label>
 ```
 
 ### Examples
 
-#### Properties 
+#### Properties
 
 - Show label only when a condition is met.
 
@@ -24,12 +30,12 @@ Page.Widgets.label.show = Page.Variables.svGetUsersData.dataSet.length > 0;
 Page.Widgets.label.caption = "Payment Status: <b>Completed</b>";
 ```
 
-#### Events 
+#### Events
 
 - Triggered on label mouse enter to apply hover styling and improve user interaction feedback.
 
 ```javascript
-    Page.labelMouseenter = function ($event, widget) {
-    widget.class = "text-primary";
+Page.labelMouseenter = function ($event, widget) {
+  widget.class = "text-primary";
 };
 ```

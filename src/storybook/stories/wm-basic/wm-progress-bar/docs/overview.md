@@ -5,13 +5,17 @@ The **Progress Bar** component visually represents the completion status of a ta
 ### Markup
 
 ```javascript
-<wm-progress-bar datavalue="30" name="progress_bar" class="app-progress progress-bar-default" variant="filled:default"></wm-progress-bar>
+<wm-progress-bar
+  datavalue="30"
+  name="progress_bar"
+  class="app-progress progress-bar-default"
+  variant="filled:default"
+></wm-progress-bar>
 ```
-
 
 ### Examples
 
-#### Properties 
+#### Properties
 
 - Set the progress bar’s current value dynamically.
 
@@ -26,21 +30,20 @@ Page.Widgets.progress_bar.minvalue = 0;
 Page.Widgets.progress_bar.maxvalue = 100;
 ```
 
-#### Events 
+#### Events
 
 - Triggered on hover to display the caption inside the progress bar.
 
 ```javascript
-    Page.progress_barMouseenter = function ($response, widget) {
-        widget.captionplacement = "inside";
+Page.progress_barMouseenter = function ($response, widget) {
+  widget.captionplacement = "inside";
 };
 ```
 
 - Triggered when the cursor leaves to hide the caption for the progress bar.
 
 ```javascript
-    Page.progress_barMouseleave = function ($response, widget) {
-        widget.captionplacement = "hidden";
+Page.progress_barMouseleave = function ($response, widget) {
+  widget.captionplacement = "hidden";
 };
 ```
-

@@ -8,12 +8,6 @@ The **Spinner** component controls the user interaction while the browser is per
 <wm-spinner show="true" name="spinner"></wm-spinner>
 ```
 
-### Use Cases
-
-- Data Fetching / API Calls.
-- Form Submission.
-- Page or Component Loading.
-
 ### Examples
 
 #### Properties 

@@ -8,10 +8,6 @@ An inline frame (**Iframe**) is used to embed another document within the curren
 <wm-iframe name="iframe" iframesrc="https://www.wavemaker.com/"></wm-iframe>
 ```
 
-### Use Cases
-
-- Embed external websites or pages such as documentation, marketing pages, or partner portals without leaving the app.
-- Integrate third-party tools like payment gateways, maps, analytics dashboards, or support systems.
 
 ### Examples
 

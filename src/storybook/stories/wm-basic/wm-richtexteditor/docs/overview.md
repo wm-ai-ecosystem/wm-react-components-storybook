@@ -8,7 +8,6 @@ A **Richtext Editor** component allows users to create formatted/styled text sim
 <wm-richtexteditor name="richtexteditor"></wm-richtexteditor>
 ```
 
-
 ### Examples
 
 #### Properties 
