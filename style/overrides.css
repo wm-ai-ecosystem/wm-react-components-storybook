@@ -142,6 +142,29 @@ body.sb-show-main {
   color: var(--wm-color-success) !important;
 }
 
+/* form control */
+.wm-app .form-control:active, .wm-app .form-control:focus {
+    --wm-form-control-border-width: 2px !important;
+    --wm-form-control-border-color: var(--wm-color-secondary) !important;
+    --wm-form-caption-color: var(--wm-color-on-surface-variant) !important;
+    --wm-form-caption-font-weight: var(--wm-body-large-font-weight) !important;
+}
+
+.wm-app .app-composite-widget:not(.caption-top, .caption-floating):has(.app-textarea) {
+    align-items: center !important;
+}
+
+.wm-app .app-composite-widget:has(.form-control.ng-touched.ng-invalid) .control-label {
+    color: var(--wm-form-caption-color) !important;
+}
+
+ .wm-app .form-control.ng-invalid, .wm-app .form-group .ng-invalid .form-control {
+    --wm-form-control-border-color: var(--wm-color-error) !important;
+    --wm-form-caption-color: var(--wm-color-error) !important;
+    --wm-form-caption-font-weight: var(--wm-body-large-font-weight) !important;
+    --wm-form-help-block-color: var(--wm-color-error) !important;
+}
+
 /* progress-bar index.tsx file class append is done to child instead of parent and it is not working,
 wrote custom styles as per current DOM, once fixed in index.tsx file below to be removed, it is temp
 */

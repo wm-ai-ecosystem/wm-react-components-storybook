@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography, Button } from "@mui/material";
 
 import ColorPickerDefaultExport from "../../../../components/input/color-picker/index";
+import WmComposite from "../../../../components/input/composite";
+import WmLabel from "../../../../components/basic/label";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
 import overview from "./docs/overview.md?raw";
@@ -43,7 +45,10 @@ const DesignTokenTemplate = (args: any) => {
 
     return (
       <Box className="wm-app" style={{ padding: 16 }} data-design-token-target={dataAttr}>
-        <ColorPickerDefaultExport {...componentArgs} listener={mockListener} />
+        <WmComposite captionposition="left" listener={mockListener} name="colorComposite">
+          <WmLabel caption="Color" listener={mockListener} name="colorLabel" className="control-label"/>
+          <ColorPickerDefaultExport {...componentArgs} listener={mockListener} />
+        </WmComposite>
       </Box>
     );
   };

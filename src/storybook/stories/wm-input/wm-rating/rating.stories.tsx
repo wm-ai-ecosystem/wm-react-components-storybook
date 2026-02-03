@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography } from "@mui/material";
 
 import RatingDefaultExport from "../../../../components/input/rating/index";
+import WmComposite from "../../../../components/input/composite";
+import WmLabel from "../../../../components/basic/label";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
 import overview from "./docs/overview.md?raw";
@@ -43,7 +45,10 @@ const DesignTokensTemplate = (args: any) => {
   
   return (
     <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
-      <RatingDefaultExport {...componentArgs} listener={mockListener} />
+      <WmComposite captionposition="left" listener={mockListener} name="ratingComposite">
+        <WmLabel caption="Rating" listener={mockListener} name="ratingLabel" className="control-label"/>
+        <RatingDefaultExport {...componentArgs} listener={mockListener} />
+      </WmComposite>
     </Box>
   );
 };

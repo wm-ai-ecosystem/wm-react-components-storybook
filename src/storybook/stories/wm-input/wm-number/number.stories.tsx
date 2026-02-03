@@ -3,13 +3,18 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography } from "@mui/material";
 
 import NumberDefaultExport from "../../../../components/input/number/index";
+import WmComposite from "../../../../components/input/composite";
+import WmLabel from "../../../../components/basic/label";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
 import overview from "./docs/overview.md?raw";
 import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
-import styling from "./docs/styling.md?raw";
+// import styling from "./docs/styling.md?raw";
+import token from "./docs/token.md?raw";
+
+import formTokensData from "../../../../designTokens/components/form-controls/form-controls.json";
 
 const meta: Meta<typeof NumberDefaultExport> = {
   title: "Input/Number",
@@ -38,6 +43,20 @@ const Template = (args: any) => {
   );
 };
 
+const DesignTokenTemplate = (args: any) => {
+  //component can't spread data-design-token-target, so we apply it to a wrapper
+  const { "data-design-token-target": dataAttr, ...componentArgs } = args;
+
+  return (
+    <Box className="wm-app" style={{ padding: 16 }} data-design-token-target={dataAttr}>
+       <WmComposite captionposition="left" listener={mockListener} name="numberComposite">
+        <WmLabel caption="Number" listener={mockListener} name="numberLabel" className="control-label"/>
+        <NumberDefaultExport {...componentArgs} listener={mockListener} />
+      </WmComposite>
+    </Box>
+  );
+};
+
 export const Docs: Story = {
   render: () => (
     <ComponentDocumentation
@@ -45,7 +64,8 @@ export const Docs: Story = {
       properties={props}
       events={events}
       methods={methods}
-      styling={styling}
+      // styling={styling}
+      token={token}
     />
   ),
   args:{
@@ -156,7 +176,7 @@ export const Showcase: Story = {
 
 export const Standard: Story = {
   tags: ['show-panel'],
-  render: Template,
+  render: DesignTokenTemplate,
   args: {
     name: "standardNumber",
     placeholder: "Enter number",
@@ -164,6 +184,8 @@ export const Standard: Story = {
     disabled: false,
     readonly: false,
     inputmode: "natural",
+    "data-design-token-target":true,
+    required: false,
   },
   argTypes: {
     placeholder: { control: "text" },
@@ -176,12 +198,23 @@ export const Standard: Story = {
     readonly: { control: "boolean" },
     autofocus: { control: "boolean" },
     trailingzero: { control: "boolean" },
+    required: { control: "boolean" },
     regexp: { control: "text" },
     inputmode: {
       control: { type: "select" },
       options: ["natural", "financial"],
     },
     name: { table: { disable: true } },
-    listener: { table: { disable: true } }
+    listener: { table: { disable: true } },
+    "data-design-token-target": { table: { disable: true } },
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: formTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "form",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
   },
 };

@@ -4,6 +4,8 @@ import { Box, Stack, Typography } from "@mui/material";
 
 import CurrencyDefaultExport from "../../../../components/input/currency/index";
 import { CURRENCY_INFO } from "../../../../core/constants/currency-constant";
+import WmComposite from "../../../../components/input/composite";
+import WmLabel from "../../../../components/basic/label";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
 import overview from "./docs/overview.md?raw";
@@ -47,7 +49,10 @@ const DesignTokenTemplate = (args: any) => {
 
   return (
     <Box className="wm-app" style={{ padding: 16 }} data-design-token-target={dataAttr}>
-      <CurrencyDefaultExport {...componentArgs} listener={mockListener} />
+      <WmComposite captionposition="left" listener={mockListener} name="currencyComposite">
+        <WmLabel caption="Currency" listener={mockListener} name="currencyLabel" className="control-label"/>
+        <CurrencyDefaultExport {...componentArgs} listener={mockListener} />
+      </WmComposite>
     </Box>
   );
 };

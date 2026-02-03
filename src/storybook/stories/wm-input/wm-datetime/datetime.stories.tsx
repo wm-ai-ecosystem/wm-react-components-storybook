@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography } from "@mui/material";
 
 import DateTimeDefaultExport from "../../../../components/input/epoch/datetime/index";
+import WmComposite from "../../../../components/input/composite";
+import WmLabel from "../../../../components/basic/label";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
 import overview from "./docs/overview.md?raw";
@@ -33,6 +35,20 @@ const Template = (args: any) => (
     <DateTimeDefaultExport {...args} listener={mockListener} />
   </Box>
 );
+
+const DesignTokenTemplate = (args: any) => {
+  //component can't spread data-design-token-target, so we apply it to a wrapper
+  const { "data-design-token-target": dataAttr, ...componentArgs } = args;
+
+  return (
+    <Box className="wm-app" style={{ padding: 16 }} data-design-token-target={dataAttr}>
+       <WmComposite captionposition="left" listener={mockListener} name="datetimeComposite">
+        <WmLabel caption="Datetime" listener={mockListener} name="datetimeLabel" className="control-label"/>
+        <DateTimeDefaultExport {...componentArgs} listener={mockListener} />
+      </WmComposite>
+    </Box>
+  );
+};
 
 export const Docs: Story = {
   render: () => (
@@ -171,7 +187,7 @@ export const Showcase: Story = {
 
 export const Standard: Story = {
   tags: ['show-panel'],
-  render: Template,
+  render: DesignTokenTemplate,
   args: {
     name: "standardDateTime",
     placeholder: "Select Date Time",

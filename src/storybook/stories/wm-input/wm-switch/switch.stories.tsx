@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography, Button, TextField } from "@mui/material";
 
 import SwitchDefaultExport from "../../../../components/input/default/switch/index";
+import WmComposite from "../../../../components/input/composite";
+import WmLabel from "../../../../components/basic/label";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
 import overview from "./docs/overview.md?raw";
@@ -43,7 +45,10 @@ const DesignTokenTemplate = (args: any) => {
   
   return (
     <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
-      <SwitchDefaultExport {...componentArgs} listener={mockListener} />
+      <WmComposite captionposition="left" listener={mockListener} name="switchComposite">
+        <WmLabel caption="Switch" listener={mockListener} name="switchLabel" className="control-label"/>
+        <SwitchDefaultExport {...componentArgs} listener={mockListener} />
+      </WmComposite>
     </Box>
   );
 };

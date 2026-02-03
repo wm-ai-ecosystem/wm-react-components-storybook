@@ -1,6 +1,8 @@
 # Styling
 
-The Slider component can be styled using the following classes and properties:
+The Slider component does not expose any design tokens.
+
+<!-- The Slider component can be styled using the following classes and properties:
 
 ## Slider Track
 
@@ -29,4 +31,4 @@ The Slider component can be styled using the following classes and properties:
 Page.Widgets.mySlider.trackActiveColor = "#007bff";
 Page.Widgets.mySlider.thumbSize = 24;
 Page.Widgets.mySlider.thumbColor = "#0056b3";
-```
+``` -->
