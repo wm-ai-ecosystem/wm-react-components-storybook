@@ -35,7 +35,7 @@
         | --- | --- | --- | --- |
         | `dataset` | array | - | Set this property to a variable to populate the list of values to display. |
         | `usekeys` | boolean | false | Use the keys of the live variable object as checkbox set options. |
-        | `datafield` | string | "All Fields" | This property sets the datavalue to be returned by a select editor when the list is populated using the dataSet property. |
+        | `datafield` | string | - | This property sets the datavalue to be returned by a select editor when the list is populated using the dataSet property. |
         | `displayfield` | string | - | This property sets the displayvalue to show in the select editor when the list is populated using the dataSet property. |
         | `displayexpression` | string | - | This is an advanced property that gives more control over what is displayed in the drop-down select list. A Display Expression uses a Javascript expression to format exactly what is shown. |
         | `groupby` | string | - | This property allows for grouping the list of rows in the variable bound to a dataset by selecting one of the field names from the drop-down list. |
@@ -48,7 +48,7 @@
     <div>
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
-        | `datavalue` | array | - | This is the default value to display value for an editor component. Note that the display value is just what the user sees initially, and is not always the datavalue returned by the component. |
+        | `datavalue` | - | - | This is the default value to display value for an editor component. Note that the display value is just what the user sees initially, and is not always the datavalue returned by the component. Its type depends on the selected data field for example, if the data field is bound to "name," the display value will be a string. |
     </div>
 </details>
 

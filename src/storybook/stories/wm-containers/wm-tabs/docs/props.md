@@ -1,67 +1,51 @@
-# Props
+# Properties
 
-## Basic Configuration
+<details open>
+  <summary>Basic Configuration</summary>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | string | | Unique identifier for the tabs component |
-| `type` | "static" \| "dynamic" | "static" | Determines whether tab panes are predefined (static) or generated from a dataset (dynamic) |
-| `dataset` | any[] | | Data source for generating dynamic tab panes |
-| `defaultpaneindex` | number | 0 | Sets the default active tab pane on load based on index (0-based) |
-| `selectedindex` | number | | Controls the currently selected tab programmatically |
+| Name               | Type                        | Description                                                              |
+| ------------------ | --------------------------- | ------------------------------------------------------------------------ |
+| `name`             | string                      | Unique identifier for the tabs component                                 |
+| `type`             | `"static"` <br> `"dynamic"` | Defines whether tab panes are manually created or generated from dataset |
+| `dataset`          | any[]                       | Data source used when tabs are dynamic                                   |
+| `defaultpaneindex` | number                      | Specifies which tab opens by default                                     |
+| `selectedindex`    | number                      | Programmatically controls currently selected tab                         |
 
-## Layout Configuration
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `tabsposition` | "top" \| "bottom" \| "left" \| "right" | "top" | Determines the position of tab headers relative to content |
-| `justified` | boolean | false | When true, tabs will have equal width across the container |
-| `iconposition` | "top" \| "start" \| "end" \| "bottom" \| any | "start" | Position of icons within tab headers |
 
-## Behavior Configuration
+<details>
+  <summary>Layout Configuration</summary>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `statehandler` | "none" \| "URL" \| "localStorage" \| "sessionStorage" | "URL" | Determines how tab state is retained across page refreshes |
-| `autotabactivation` | boolean | true | When true, tabs are automatically activated on click |
-| `transition` | "none" \| "slide" \| "fade" | "none" | Animation effect when switching between tabs |
-| `nodatamessage` | string | "No Data Found" | Message displayed when no data is available for dynamic tabs |
+| Name           | Type                                                 | Description                                   |
+| -------------- | ---------------------------------------------------- | --------------------------------------------- |
+| `tabsposition` | `"top"` <br> `"bottom"` <br> `"left"` <br> `"right"` | Defines position of tab headers               |
+| `justified`    | boolean                                              | Makes all tabs equal width inside container   |
+| `iconposition` | `"top"` <br> `"start"` <br> `"end"` <br> `"bottom"`  | Controls position of icons inside tab headers |
 
-## Dynamic Tabs Specific Props
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `render` | ($item: any, $index: number, dataset: any[]) => React.ReactNode | | Custom renderer function for dynamic tab content |
+</details>
 
-### Common Use Cases
 
-#### Configure Tab Position and Behavior
 
-```javascript
-// Set tabs to appear on the left side
-Page.Widgets.myTabs.tabsposition = "left";
+<details>
+  <summary>Behavior Configuration</summary>
 
-// Set the second tab to be active by default
-Page.Widgets.myTabs.defaultpaneindex = 1;
+| Name                | Type                                                                | Description                                            |
+| ------------------- | ------------------------------------------------------------------- | ------------------------------------------------------ |
+| `statehandler`      | `"none"` <br> `"URL"` <br> `"localStorage"` <br> `"sessionStorage"` | Maintains selected tab state across refresh/navigation |
+| `autotabactivation` | boolean                                                             | Automatically activates tab when clicked               |
+| `transition`        | `"none"` <br> `"slide"` <br> `"fade"`                               | Defines animation while switching tabs                 |
+| `nodatamessage`     | string                                                              | Message shown when dynamic tabs dataset is empty       |
 
-// Enable justified tabs (equal width)
-Page.Widgets.myTabs.justified = true;
-```
+</details>
 
-#### Configure State Management
 
-```javascript
-// Store tab state in localStorage instead of URL
-Page.Widgets.myTabs.statehandler = "localStorage";
+<details>
+  <summary>Dynamic Tabs Specific Props</summary>
 
-// Disable state retention
-Page.Widgets.myTabs.statehandler = "none";
-```
+| Name     | Type                                          | Description                                      |
+| -------- | --------------------------------------------- | ------------------------------------------------ |
+| `render` | `($item, $index, dataset) => React.ReactNode` | Custom renderer function for dynamic tab content |
 
-#### Configure Dynamic Tabs
-
-```javascript
-// Set up dynamic tabs with department data
-Page.Widgets.departmentTabs.type = "dynamic";
-Page.Widgets.departmentTabs.dataset = Page.Variables.DepartmentsData.dataSet;
-```
+</details>

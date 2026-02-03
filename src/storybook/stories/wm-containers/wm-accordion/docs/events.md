@@ -1,21 +1,16 @@
 # Callback Events
 
-| Event | Description |
-|-------|-------------|
-| `onChange` | Triggered when a pane is expanded or collapsed with the following parameters: `{ newPaneIndex: number, oldPaneIndex: number }` |
-| `onLoad` | Called when the accordion component is loaded with the following parameters: `(props: any, onLoadCallback?: any)` |
+| Event      | Parameters                                   | Description                        |
+| ---------- | -------------------------------------------- | ---------------------------------- |
+| `onChange` | `$event, widget, newPaneIndex, oldPaneIndex` | Triggered when user switches panes |
 
-## Example: Responding to Pane Changes
+<details>
+  <summary>Accordion Pane Events</summary>
 
-```javascript
-// Set up an onChange handler
-Page.Widgets.myAccordion.onChange = function(event) {
-  console.log("Expanded pane changed from", event.oldPaneIndex, "to", event.newPaneIndex);
-  
-  // Perform actions based on the newly opened pane
-  if (event.newPaneIndex === 1) {
-    // Do something when the second pane is opened
-    loadSalesData();
-  }
-};
-```
+| Event        | Parameters       | Description                   |
+| ------------ | ---------------- | ----------------------------- |
+| `onLoad`     | `widget`         | Triggered when pane loads     |
+| `onExpand`   | `$event, widget` | Triggered when pane expands   |
+| `onCollapse` | `$event, widget` | Triggered when pane collapses |
+
+</details>

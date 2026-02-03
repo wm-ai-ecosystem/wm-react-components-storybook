@@ -6,15 +6,27 @@ The HTML component is a basic UI element that allows you to render custom HTML c
 
 ```javascript
 <wm-html name="html">
-  <pre>
-    <code>
-      {`
-      function greet(name) {
-        return "Hello, " + name;
-      }
-      `}
-    </code>
-  </pre>
+  <blockquote
+    style="
+    font-style: italic;
+    border-left: 4px solid #ccc;
+    padding-left: 12px;
+    color: #555;
+    margin: 16px 0;
+"
+  >
+    This quote emphasizes the value of **building applications that are both
+    visually appealing and highly functional**, a principle at the core of
+    developing fast, scalable apps with
+    <a
+      href="https://www.wavemaker.com/"
+      target="_blank"
+      style="text-decoration: underline; color: #0073e6;"
+    >
+      WaveMaker
+    </a>
+    .
+  </blockquote>
 </wm-html>
 ```
 
@@ -36,7 +48,7 @@ Page.Widgets.html.width = "500px";
 Page.Widgets.html.height = "300px";
 ```
 
-#### Events
+<!-- #### Events
 
 - Triggered when the mouse enters the HTML component.
 
@@ -44,4 +56,4 @@ Page.Widgets.html.height = "300px";
 Page.htmlMouseenter = function ($event, widget) {
   console.log("Mouse entered");
 };
-```
+``` -->

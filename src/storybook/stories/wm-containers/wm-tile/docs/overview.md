@@ -1,14 +1,107 @@
 # Overview
 
-The Tile is a container widget used to present a set of objects in a limited, stylized box format. Unlike other containers, Tile comes with default styling that makes it suitable for dashboard-like interfaces where you need to display analytical data or content in a grid-like arrangement.
+The **Tile** to highlight key metrics, summaries, or quick navigation items. Tiles provide built-in styling and layout structure that helps present content in a visually organized and easy-to-scan format.
 
-Tiles are particularly effective for creating dashboard UIs that display analytics data, key metrics, or content summaries in a visually organized manner.
+### Markup
 
-## Features
+```javascript
+<wm-tile class="bg-default" name="tile1" variant="default:default">
+  <wm-container
+    height="100%"
+    direction="row"
+    width="fill"
+    alignment="top-left"
+    padding="8"
+    name="container1"
+    class="app-container-default"
+    variant="default"
+  >
+    <wm-container
+      direction="row"
+      alignment="top-center"
+      padding="8px"
+      width="25%"
+      height="fill"
+      name="container2"
+      class="app-container-default"
+      variant="default"
+    >
+      <wm-icon
+        name="tileIcon"
+        iconclass="wi wi-bar-chart fa-3x"
+        class="fa-xs"
+        variant="default:xs"
+      ></wm-icon>
+    </wm-container>
+    <wm-container
+      direction="column"
+      alignment="top-center"
+      padding="8px"
+      width="75%"
+      height="fill"
+      name="container3"
+      class="app-container-default"
+      variant="default"
+    >
+      <wm-label
+        name="tileTitle"
+        caption="title"
+        class="p"
+        fontunit="em"
+        variant="default:p"
+      ></wm-label>
+      <wm-label
+        name="tileStatLabel"
+        caption="00"
+        fontunit="em"
+        class="h1 p"
+        variant="default:p"
+      ></wm-label>
+    </wm-container>
+  </wm-container>
+</wm-tile>
+```
 
-- Pre-styled container with defined boundaries for presenting content
-- Ideal for dashboard layouts and data visualization grouping
-- Can contain images, text, or other simple widgets
-- Supports various mouse and touch events for interactive experiences
-- Configurable alignment and layout options
-- Animation capabilities for enhanced user experience
+### Examples
+
+#### Properties
+
+```javascript
+// Update tile size
+Page.Widgets.myTile.width = "300px";
+Page.Widgets.myTile.height = "200px";
+
+// Update alignment
+Page.Widgets.myTile.horizontalAlign = "center";
+
+// Update tile content dynamically
+Page.Widgets.labelTitle.caption = "Active Users";
+Page.Widgets.labelValue.caption = "1,240";
+```
+
+#### Events
+
+```javascript
+// Navigate to detailed report when tile is clicked
+Page.myTileClick = function ($event, widget) {
+  App.Actions.goToPage_DetailedReport.invoke();
+};
+
+// Highlight tile on mouse hover
+Page.myTileMouseenter = function ($event, widget) {
+  widget.class = "tile tile-highlight";
+};
+
+// Remove highlight when mouse leaves
+Page.myTileMouseleave = function ($event, widget) {
+  widget.class = "tile-default";
+};
+```
+
+#### Methods
+
+```javascript
+// Show tile
+Page.Widgets.myTile.show = true;
+
+```

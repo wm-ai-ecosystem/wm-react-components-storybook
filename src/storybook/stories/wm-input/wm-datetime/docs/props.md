@@ -80,8 +80,8 @@
     <div>
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
-        | `showdropdownon` | string | - | Using this property you can control the visibility of the Date Picker. You can choose to open it on: - input click and button click (default setting), or - only on button click. |
-        | `dataentrymode` | string | - | This property defines how the user can enter a date—either by selecting it from the date picker only or by both selecting from the picker and entering it manually. |
+        | `showdropdownon` | string | "default" | Using this property you can control the visibility of the Datetime Picker. You can choose to open it on: - input click and button click (default setting), or - only on button click. |
+        | `dataentrymode` | string | "default" | This property defines how the user can enter a date—either by selecting it from the datetime picker only or by both selecting from the picker and entering it manually. |
         | `showweeks` | boolean | false | When set, week number will be displayed in the date picker UI. |
         | `autofocus` | boolean | false | This property makes the element get focused automatically when the page loads. |
         | `readonly` | boolean | false | This property prevents the user from being able to change the data value of a component. It is a bindable property. |

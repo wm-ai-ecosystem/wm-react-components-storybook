@@ -1,26 +1,32 @@
 # Callback Events
 
-| Event | Description |
-| --- | --- |
-| **Value Events** |
-| Change | Triggered when the selected option in the switch changes. Note: Can be configured to only trigger on user interactions with the skipOnChangeEventFromScript property |
-| **Interaction Events** |
-| onClick | Triggered when the switch widget is clicked |
-| onMouseenter | Triggered when the pointer moves onto the switch widget |
-| onMouseleave | Triggered when the pointer leaves the switch widget |
-| onTap | Triggered when the switch widget is tapped (mobile-specific) |
+<details open>
+  <summary>Basic Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `change` | This event handler is called each time your component's value changes. |
+        | `onFocus` | This event handler is called each time your component is focused. |
+        | `onBlur` | This event handler is called each time your focus leaves your component. |
+    </div>
+</details>
 
-## Example Usage
+<details>
+  <summary>Mouse Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onClick` | This event handler is called whenever the click event is triggered on a component. |
+        | `onMouseEnter` | This event handler is called whenever the mouse enters the component. |
+        | `onMouseLeave` | This event handler is called whenever the mouse leaves the component. |
+    </div>
+</details>
 
-```javascript
-// Handling switch value changes
-Page.mySwitch_change = function($event, widget) {
-    // Access the current value
-    console.log("New value selected:", widget.value);
-    
-    // Perform conditional actions based on selection
-    if (widget.value === "high") {
-        // Handle high priority selection
-    }
-};
-```
+<details>
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onTap` | This event handler is called whenever the component is tapped. |
+    </div>
+</details>

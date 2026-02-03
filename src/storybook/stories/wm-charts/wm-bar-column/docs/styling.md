@@ -1,20 +1,6 @@
 # Styling
 
-Although the component handles most of the styling internally, you can apply additional styles by targeting the chart container directly.
-
-```css
-.wm-app .app-chart {
-    /* custom styles */
-}
-
-.wm-app .app-chart.panel .panel-heading {
-    /* custom styles */   
-}
-
-.wm-app .app-chart.panel .app-chart-inner {
-    /* custom styles */
-}
-```
+The **Bar** or **Column** charts component does not expose any design tokens. Most of the styling is handled internally by the component.
 
 
 <!-- # Styling

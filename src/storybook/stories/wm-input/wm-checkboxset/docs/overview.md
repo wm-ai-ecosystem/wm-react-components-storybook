@@ -12,7 +12,7 @@
   datafield="code"
   displayfield="name"
   orderby="name:asc"
-></wm-checkboxset>;
+></wm-checkboxset>
 ```
 
 ### Examples
@@ -38,9 +38,30 @@ Page.Widgets.checkboxset.disabled =
 
 ```javascript
 Page.checkboxsetChange = function ($event, widget, newVal, oldVal) {
-    console.log("Current selection:", newVal);
-    console.log("Previous selection:", oldVal);
-
     // Enable the Save button only if at least one option is selected
     Page.Widgets.saveBtn.disabled = !newVal || newVal.length === 0;
 };
+```
+
+<!-- #### Sample checkboxset dataset
+
+```json
+[
+  {
+    "name": "United States",
+    "code": "US"
+  },
+  {
+    "name": "United Kingdom",
+    "code": "UK"
+  },
+  {
+    "name": "Canada",
+    "code": "CA"
+  },
+  {
+    "name": "Australia",
+    "code": "AU"
+  },
+]
+``` -->

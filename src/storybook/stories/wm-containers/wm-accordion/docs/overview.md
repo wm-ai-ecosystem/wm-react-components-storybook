@@ -1,14 +1,83 @@
 # Overview
 
-The Accordion component is a vertically stacked list of items, each of which can be expanded to reveal their content. Only one item can be expanded at a time by default, though this behavior can be configured. It provides an efficient way to display multiple sections of content within a limited space.
+The **Accordion** component contains multiple panes where developers can add internal content or partial pages. It allows users to expand or collapse sections for better content organization and supports features like setting a default pane, allowing multiple panes to open, and dynamically controlling pane content.
 
-## Features
+### Markup
 
-- **Multiple Panes**: Collection of accordion panes that can be expanded and collapsed
-- **Configurable Behavior**: Option to allow multiple panes to be open simultaneously
-- **Default Pane**: Ability to set which pane is expanded by default
-- **Static or Dynamic**: Support for both static content and data-driven dynamic content
-- **Customizable Headers**: Each pane can have a title, subtitle, and icon
-- **Badge Support**: Optional badge display with configurable appearance
-- **Programmatic Control**: API methods to expand, collapse, or toggle panes
-- **Event Callbacks**: Functions triggered on pane state changes
+```javascript
+<wm-accordion type="static" statehandler="URL" name="myAccordion" 
+  class="app-accordion panel panel-default"
+  variant="default:default"
+>
+  <wm-accordionpane name="accordionpane1" class="panel panel-default"
+    variant="default:default"
+  ></wm-accordionpane>
+  <wm-accordionpane name="accordionpane2" class="panel panel-default"
+    variant="default:default"
+  ></wm-accordionpane>
+  <wm-accordionpane name="accordionpane3" class="panel panel-default"
+    variant="default:default"
+  ></wm-accordionpane>
+</wm-accordion>
+```
+
+### Examples
+
+#### Properties
+
+- Set the title of accordion panel
+
+```Javascript
+Page.Widgets.accordionpane.title = "Panel title"
+```
+
+- Set the type of accordion
+
+```Javascript
+Page.Widgets.myAccordion.type = "dynamic";
+```
+
+- Set the badge values and type
+
+```Javascript
+Page.Widgets.accordionpane.badgevalue = "10";
+Page.Widgets.accordionpane.badgetype = "success";
+```
+
+#### Events
+
+```javascript
+
+//Event on load of accordion pane
+Page.accordionpaneLoad = function (widget) {
+  Page.Widgets.editProfileForm.show = false;
+};
+
+//Event on expand of accordion pane
+Page.accordionpaneExpand = function ($event, widget) {
+  if (widget.name === "orderDetailsPane") {
+    Page.Variables.svOrderDetails.invoke(); // Call service
+  }
+};
+
+//Event on collapse of accordion pane
+
+Page.accordionpaneCollapse = function ($event, widget) {
+  if (widget.name === "accountBalancePane") {
+    Page.Widgets.txtBalance.show = false;
+  }
+};
+```
+
+#### Methods
+
+```javascript
+// Expand a specific pane
+Page.Widgets.engineeringEmpPane.expand();
+
+// Collapse a specific pane
+Page.Widgets.salesEmpPane.collapse();
+
+// Toggle a pane (open if closed, close if opened)
+Page.Widgets.marketingEmpPane.toggle();
+```

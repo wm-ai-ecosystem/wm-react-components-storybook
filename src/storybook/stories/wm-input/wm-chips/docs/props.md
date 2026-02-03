@@ -38,7 +38,7 @@
         | `dataset` | array | - | Set this property to a variable to populate the list of values to display. Can be bound to a Variable. |
         | `searchkey` | string | - | The field from the above value dataset is based on which the search needs to be performed for fetching chip elements for the selection. |
         | `displayimagesrc` | string | - | (Picture Source) This property sets the image to be displayed in the search results. Pick from the fields from the above Dataset Value. |
-        | `datafield` | string | "All Fields" | This property is useful when the dataSet is an array of objects. It decides the dataValue to be returned by the component. If set to All Fields, the whole object is returned against the selection. If set to a particular field, the returned value will be the value of that field in the selected object. In the case of multi-selection, the returned dataValue will also be an array. |
+        | `datafield` | string | - | This property is useful when the dataSet is an array of objects. It decides the dataValue to be returned by the component. If set to All Fields, the whole object is returned against the selection. If set to a particular field, the returned value will be the value of that field in the selected object. In the case of multi-selection, the returned dataValue will also be an array. |
         | `displayfield` | string | - | This property sets the displayvalue to show in the select editor when the list is populated using the dataSet property. |
         | `displayexpression` | string | - | This is an advanced property that gives more control over what is displayed in the drop-down select list. A display Expression uses a Javascript expression to format exactly what is shown. |
         | `groupby` | string | - | This property allows for grouping the list of rows in the variable bound to a dataset by selecting one of the field names from the drop-down list. |
@@ -51,7 +51,7 @@
     <div>
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
-        | `datavalue` | any | - | The default value sets what the user sees initially in the chips component. Note that this display value is for presentation only and may differ from the actual datavalue returned by the component. Its type depends on the selected data field—for example, if the data field is bound to "name," the display value will be a string. |
+        | `datavalue` | - | - | The default value sets what the user sees initially in the chips component. Note that this display value is for presentation only and may differ from the actual datavalue returned by the component. Its type depends on the selected data field for example, if the data field is bound to "name," the display value will be a string. |
     </div>
 </details>
 

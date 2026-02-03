@@ -1,7 +1,8 @@
 # Callback Events
 
-## Panel Events
-
+<details open>
+  <summary>Panel Events</summary>
+    <div>
 | Event | Description |
 |-------|-------------|
 | onLoad | Triggered when the panel is loaded |
@@ -12,34 +13,21 @@
 | onExitfullscreen | Triggered when the panel exits full-screen mode |
 | onActionsclick | Triggered when an action item in the menu is clicked |
 | onPropertyChange | Triggered when any property of the panel is changed |
+    </div>
+</details>
 
-## Mouse Events
 
+
+<details >
+  <summary>Mouse Events</summary>
+    <div>
 | Event | Description |
 |-------|-------------|
 | onMouseenter | Triggered when the mouse pointer enters the panel area |
 | onMouseleave | Triggered when the mouse pointer leaves the panel area |
 | onMouseover | Triggered when the mouse pointer moves over the panel |
 | onMouseout | Triggered when the mouse pointer moves out of the panel |
+ </div>
+</details>
 
-## Event Handler Example
 
-```javascript
-// Handle panel collapse event
-Page.onCollapsePanel = function(event, widget) {
-  console.log('Panel collapsed:', widget.name);
-  
-  // Update other UI elements in response
-  Page.Variables.notificationVar.notify('Panel collapsed');
-};
-
-// Handle panel action click
-Page.onActionClickPanel = function(event, item) {
-  console.log('Action clicked:', item.label);
-  
-  // Perform action based on which item was clicked
-  if (item.label === 'Refresh') {
-    Page.Variables.employeeData.update();
-  }
-};
-```

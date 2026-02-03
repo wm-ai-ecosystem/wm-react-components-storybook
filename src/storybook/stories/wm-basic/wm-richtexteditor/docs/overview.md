@@ -25,7 +25,7 @@ Page.Widgets.richtexteditor.readonly = true;
 ```
 
 
-#### Events 
+<!-- #### Events 
 
 
 - Triggered on change whenever the value of the richtext editor is updated.
@@ -43,5 +43,5 @@ Page.Widgets.richtexteditor.readonly = true;
     Page.richtexteditorBeforerender = function ($event, widget) {
     console.log("Rich Text Editor is about to render.");
 };
-```
+``` -->
 

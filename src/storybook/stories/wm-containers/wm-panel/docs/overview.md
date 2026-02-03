@@ -1,17 +1,96 @@
 # Overview
 
-The Panel component is a versatile container widget that allows grouping of content with a structured layout featuring a header, body, and optional footer. It provides a collapsible title bar with options for additional functionality like full-screen mode, help text, and custom actions.
+The **Panel** component is a container used to group and display content with a header. It supports features like expand, collapse, full-screen view, and header elements such as title, icons, and badges. Panels help organize content and improve UI structure.
 
-The Panel serves as an organizational element that can contain other widgets or even entire pages, making it ideal for sectioning content in a clean, manageable way.
+### Markup
 
-## Features
+```javascript
+<wm-panel
+  subheading="subheading"
+  iconclass="wi wi-account-circle"
+  autoclose="outsideClick"
+  title="Title"
+  name="panel1"
+  class="panel panel-default"
+  variant="default:default"
+>
+  <wm-panel-footer name="panel_footer1">
+    <wm-label
+      padding="unset 0.5em"
+      class="text-muted p"
+      caption="Addition Info"
+      name="label1"
+      variant="default:p"
+    ></wm-label>
+  </wm-panel-footer>
+</wm-panel>
+```
 
-- **Collapsible header** with title and optional subheading
-- **Flexible content area** that can contain widgets or pages
-- **Full-screen mode** for expanded viewing
-- **Badge display** with customizable type and value
-- **Custom actions** through dropdown menu
-- **Help text** support with popup display
-- **Icon support** in the header area
-- **Animation** controls for expand/collapse behavior
-- **Programmatic control** through JavaScript methods
+### Examples
+
+#### Properties
+
+```Javascript
+// Update panel title
+Page.Widgets.myPanel.title = "Performance - Q1";
+
+// Add badge to show total alerts
+Page.Widgets.myPanel.badgeValue = "2";
+Page.Widgets.myPanel.badgeType = "danger";
+
+// ----- Behavior -----
+
+// Enable or disable panel collapsing
+Page.Widgets.myPanel.collapsible = true;
+
+// Enable full screen option
+Page.Widgets.myPanel.enableFullScreen = true;
+
+// Enable default close button
+Page.Widgets.myPanel.enableDefaultCloseAction = true;
+
+```
+
+#### Events
+
+```Javascript
+
+// Load complaint details when panel loads
+Page.panelLoad = function (widget) {
+    // Load complaint summary data
+    Page.Variables.svGetComplaintSummary.invoke();
+};
+
+// When action menu item is clicked
+Page.panelActionsclick = function ($item) {
+
+    if ($item.label === "Refresh") {
+        Page.Variables.svGetComplaintDetails.invoke();
+    }
+
+    if ($item.label === "Export") {
+        Page.Variables.svExportComplaintReport.invoke();
+    }
+};
+
+
+```
+
+#### Methods
+
+```Javascript
+// When panel is expanded → Load full complaint details
+Page.panelExpand = function ($event, widget) {
+    Page.Variables.svGetComplaintDetails.invoke();
+};
+
+// When panel is collapsed → Hide sensitive details
+Page.panelCollapse = function ($event, widget) {
+    Page.Widgets.txtCustomerNotes.show = false;
+};
+
+// When panel is closed → Reset selected complaint
+Page.panelClose = function ($event, widget) {
+    Page.Variables.selectedComplaint.setValue(null);
+};
+```

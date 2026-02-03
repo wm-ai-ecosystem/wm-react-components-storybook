@@ -1,31 +1,43 @@
 # Callback Events
 
-## Value Events
+<details open>
+  <summary>Basic Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `change` | This event handler is called each time your component's value changes. |
+        | `onFocus` | This event handler is called each time your component is focused. |
+        | `onBlur` | This event handler is called each time your focus leaves your component. |
+    </div>
+</details>
 
-| Event | Description |
-|-------|-------------|
-| Change | Triggered when the textarea's value changes |
-| On focus | Triggered when the textarea receives focus |
-| On blur | Triggered when focus leaves the textarea |
+<details>
+  <summary>Mouse Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onClick` | This event handler is called whenever the click event is triggered on a component. |
+        | `onMouseEnter` | This event handler is called whenever the mouse enters the component. |
+        | `onMouseLeave` | This event handler is called whenever the mouse leaves the component. |
+    </div>
+</details>
 
-## Mouse Events
+<details>
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onTap` | This event handler is called whenever the component is tapped. |
+    </div>
+</details>
 
-| Event | Description |
-|-------|-------------|
-| On click | Triggered when the user clicks on the textarea |
-| On mouse enter | Triggered when the mouse cursor enters the textarea area |
-| On mouse leave | Triggered when the mouse cursor leaves the textarea area |
-
-## Touch Events
-
-| Event | Description |
-|-------|-------------|
-| On tap | Triggered when the user taps on the textarea |
-
-## Keyboard Events
-
-| Event | Description |
-|-------|-------------|
-| Key Down | Triggered when a key is pressed down while the textarea has focus |
-| Key Press | Triggered when a key is pressed while the textarea has focus |
-| Key Up | Triggered when a key is released while the textarea has focus |
+<details>
+  <summary>Keyboard Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onKeyDown` | This event handler is called whenever a key is pressed down. |
+        | `onKeyPress` | This event handler is called whenever a key is pressed. |
+        | `onKeyUp` | This event handler is called whenever a key is released. |
+    </div>
+</details>

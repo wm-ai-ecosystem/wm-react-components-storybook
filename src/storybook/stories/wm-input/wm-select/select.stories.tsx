@@ -3,13 +3,18 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography, Button, TextField } from "@mui/material";
 
 import SelectDefaultExport from "../../../../components/input/select/index";
+import WmComposite from "../../../../components/input/composite";
+import WmLabel from "../../../../components/basic/label";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
 import overview from "./docs/overview.md?raw";
 import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
-import styling from "./docs/styling.md?raw";
+// import styling from "./docs/styling.md?raw";
+import token from "./docs/token.md?raw";
+
+import formTokensData from "../../../../designTokens/components/form-controls/form-controls.json";
 
 const meta: Meta<typeof SelectDefaultExport> = {
   title: "Input/Select",
@@ -34,6 +39,20 @@ const Template = (args: any) => (
   </Box>
 );
 
+const DesignTokenTemplate = (args: any) => {
+  //component can't spread data-design-token-target, so we apply it to a wrapper
+  const { "data-design-token-target": dataAttr, ...componentArgs } = args;
+
+  return (
+    <Box className="wm-app" style={{ padding: 16 }} data-design-token-target={dataAttr}>
+       <WmComposite captionposition="left" listener={mockListener} name="selectComposite">
+       <WmLabel caption="Select" listener={mockListener} name="selectLabel" className="control-label"/>
+      <SelectDefaultExport {...componentArgs} listener={mockListener} />
+      </WmComposite>
+    </Box>
+  );
+};
+
 export const Docs: Story = {
   render: () => (
     <ComponentDocumentation
@@ -41,7 +60,8 @@ export const Docs: Story = {
       properties={props}
       events={events}
       methods={methods}
-      styling={styling}
+      // styling={styling}
+      token={token}
     />
   ),
   args:{
@@ -141,7 +161,7 @@ export const Showcase: Story = {
 // Basic Examples
 export const Standard: Story = {
   tags: ['show-panel'],
-  render: Template,
+  render: DesignTokenTemplate,
   args: {
     name: "standardSelect",
     placeholder: "Select an option",
@@ -156,6 +176,8 @@ export const Standard: Story = {
     listener: mockListener,
     disabled: false,
     readonly: false,
+    "data-design-token-target":true,
+    required: false,
   },
   argTypes: {
     autofocus: { control: "boolean" },
@@ -172,6 +194,17 @@ export const Standard: Story = {
     disabled: { control: "boolean" },
     name: { table: { disable: true } },
     listener: { table: { disable: true } },
+    required: { control: "boolean" },
+    "data-design-token-target": { table: { disable: true } },
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: formTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "form",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
   },
 };
 

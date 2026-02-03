@@ -1,6 +1,8 @@
 # Styling
 
-The Tree component can be styled using CSS classes. Here are the key classes that affect the appearance of the tree:
+The Tree component does not expose any design tokens.
+
+<!-- The Tree component can be styled using CSS classes. Here are the key classes that affect the appearance of the tree:
 
 | CSS Class | Description |
 |-----------|-------------|
@@ -37,4 +39,4 @@ The Tree component can be styled using CSS classes. Here are the key classes tha
 }
 ```
 
-You can also apply conditional styling through the app-level CSS or through inline styles by accessing the component in your scripts.
+You can also apply conditional styling through the app-level CSS or through inline styles by accessing the component in your scripts. -->

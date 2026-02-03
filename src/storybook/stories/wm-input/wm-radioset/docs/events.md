@@ -1,29 +1,30 @@
 # Callback Events
 
-| Event | Description |
-|-------|-------------|
-| **Value Events** ||
-| Change | Triggered when the selected value changes. The event handler receives the new value and old value. |
-| **Interaction Events** ||
-| onClick | Triggered when a radio button option is clicked. |
-| onMouseEnter | Triggered when the mouse pointer enters the component area. |
-| onMouseLeave | Triggered when the mouse pointer leaves the component area. |
-| onTap | Triggered when the component is tapped on a touch device. |
+<details open>
+  <summary>Basic Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `change` | This event handler is called each time your component's value changes. |
+    </div>
+</details>
 
-## Example Usage
+<details>
+  <summary>Mouse Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onClick` | This event handler is called whenever the click event is triggered on a component. |
+        | `onMouseEnter` | This event handler is called whenever the mouse enters the component. |
+        | `onMouseLeave` | This event handler is called whenever the mouse leaves the component. |
+    </div>
+</details>
 
-```javascript
-Page.Widgets.paymentMethodRadioset.onChange = function(newValue, oldValue) {
-  // Show/hide additional fields based on payment method selection
-  if (newValue === "creditCard") {
-    Page.Widgets.cardDetailsContainer.show = true;
-    Page.Widgets.bankDetailsContainer.show = false;
-  } else if (newValue === "bankTransfer") {
-    Page.Widgets.cardDetailsContainer.show = false;
-    Page.Widgets.bankDetailsContainer.show = true;
-  } else {
-    Page.Widgets.cardDetailsContainer.show = false;
-    Page.Widgets.bankDetailsContainer.show = false;
-  }
-};
-```
+<details>
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onTap` | This event handler is called whenever the component is tapped. |
+    </div>
+</details>

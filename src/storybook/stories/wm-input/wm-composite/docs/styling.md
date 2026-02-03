@@ -1,6 +1,6 @@
 # Styling
 
-By default, the Composite component requires no extra styling.
+The Composite component does not expose any design tokens.
 
 <!-- ```css
 .wm-app .app-composite-widget {

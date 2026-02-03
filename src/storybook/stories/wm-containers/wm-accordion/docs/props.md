@@ -1,45 +1,35 @@
-# Props
+# Properties
 
-## Basic Configuration
+<details open>
+  <summary>Basic</summary>
+| Name               | Type                    | Default    | Description                                                          |
+| ------------------ | ----------------------- | ---------- | -------------------------------------------------------------------- |
+| `type`             | `"static" \| "dynamic"` | `"static"` | Defines whether panes are manually created or generated from dataset |
+| `closeothers`      | `boolean`               | `true`     | Allows only one pane open at a time                                  |
+| `defaultpaneindex` | `number`                | `0`        | Specifies which pane opens by default                                |
+| `dataset`          | `array`                 | `-`        | Data source used when accordion type is dynamic                      |
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `type` | `"static" | "dynamic"` | `"static"` | Determines if the accordion uses static content or generates panes from a dataset |
-| `closeothers` | `boolean` | `true` | When true, only one pane can be open at a time |
-| `defaultpaneindex` | `number` | `0` | Index of the pane that should be open by default |
-| `statehandler` | `StateHandler` | - | Custom state handler for managing accordion state |
+</details>
 
-## Data Configuration
+<details>
+  <summary>Layout</summary>
+    <div>
+       | Property | Type     | Default | Description                             |
+| -------- | -------- | ------- | --------------------------------------- |
+| `width`  | `string` | `-`     | Sets accordion width (px, %, em, etc.)  |
+| `height` | `string` | `-`     | Sets accordion height (px, %, em, etc.) |
+|
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `dataset` | `any[]` | `[]` | Array of data objects used to generate panes in dynamic mode |
-| `nodatamessage` | `string` | `"No Data Found"` | Message displayed when dataset is empty |
-| `render` | `(props: any, index?: number, dataset?: any[]) => ReactNode` | - | Custom renderer function for dynamic accordion panes |
-
-## Content
-
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `children` | `React.ReactNode` | - | Content to be displayed within accordion panes (for static type) |
-
-## Configure Accordion Behavior
-
-```javascript
-// Allow multiple panes to be open
-Page.Widgets.myAccordion.closeothers = false;
-
-// Set default expanded pane
-Page.Widgets.myAccordion.defaultpaneindex = 2;
-```
-
-### Using Dynamic Data
-
-```javascript
-// Sample dataset for dynamic accordion
-Page.Widgets.myAccordion.dataset = [
-  { title: "Engineering", content: "Team details..." },
-  { title: "Sales", content: "Sales information..." },
-  { title: "Marketing", content: "Marketing data..." }
-];
-```
+<details>
+  <summary>Behavior</summary>
+    <div>
+       | Property       | Type      | Default | Description                                              |
+| -------------- | --------- | ------- | -------------------------------------------------------- |
+| `show`         | `boolean` | `true`  | Controls visibility of accordion                         |
+| `loadOnDemand` | `boolean` | `false` | Loads accordion only when visible to improve performance |
+| `statehandler` | `string`  | `-`     | Maintains accordion state using URL or page state        |
+|
+    </div>
+</details>

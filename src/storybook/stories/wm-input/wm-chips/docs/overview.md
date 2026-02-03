@@ -1,6 +1,6 @@
 # Overview
 
-**Chips** are small UI blocks used to represent complex entities like contacts, tags, or rules in a compact way. They can include text, icons, or predefined values. Chips are commonly used in social and communication apps, allowing users to select and manage items—like recipients—through tokenized, auto-completing text fields. This approach is more intuitive, visually appealing, and easier to interact with than traditional list-based interfaces.
+**Chips** are small UI blocks used to represent complex entities like contacts, tags, or rules in a compact way. They can include text, icons, or predefined values. Chips are commonly used in social and communication apps, allowing users to select and manage items like recipients through tokenized, auto completing text fields. This approach is more intuitive, visually appealing, and easier to interact with than traditional list-based interfaces.
 
 ### Markup
 

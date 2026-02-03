@@ -1,29 +1,43 @@
 # Callback Events
 
-| Event | Description |
-|-------|-------------|
-| Change | Triggered when the selected value changes. Not triggered by programmatic changes when skipeventfromscript is enabled. |
-| On focus | Triggered when the Select receives focus. |
-| On blur | Triggered when focus leaves the Select. |
+<details open>
+  <summary>Basic Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `change` | This event handler is called each time your component's value changes. |
+        | `onFocus` | This event handler is called each time your component is focused. |
+        | `onBlur` | This event handler is called each time your focus leaves your component. |
+    </div>
+</details>
 
-## Mouse Events
+<details>
+  <summary>Mouse Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onClick` | This event handler is called whenever the click event is triggered on a component. |
+        | `onMouseEnter` | This event handler is called whenever the mouse enters the component. |
+        | `onMouseLeave` | This event handler is called whenever the mouse leaves the component. |
+    </div>
+</details>
 
-| Event | Description |
-|-------|-------------|
-| On click | Triggered when the Select is clicked. |
-| On mouse enter | Triggered when mouse pointer enters the Select area. |
-| On mouse leave | Triggered when mouse pointer leaves the Select area. |
+<details>
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onTap` | This event handler is called whenever the component is tapped. |
+    </div>
+</details>
 
-## Touch Events
-
-| Event | Description |
-|-------|-------------|
-| On tap | Triggered when the Select is tapped on touch devices. |
-
-## Keyboard Events
-
-| Event | Description |
-|-------|-------------|
-| On key down | Triggered when a key is pressed down while the Select has focus. |
-| On key press | Triggered when a key is pressed while the Select has focus. |
-| On key up | Triggered when a key is released while the Select has focus. |
+<details>
+  <summary>Keyboard Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onKeyDown` | This event handler is called whenever a key is pressed down. |
+        | `onKeyPress` | This event handler is called whenever a key is pressed. |
+        | `onKeyUp` | This event handler is called whenever a key is released. |
+    </div>
+</details>

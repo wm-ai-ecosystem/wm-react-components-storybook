@@ -1,11 +1,48 @@
 # Overview
 
-The Switch widget in a application provides users with the ability to toggle between multiple options with a single tap. Unlike a simple toggle switch that provides binary options (on/off), this component allows selection from three or more values, making it versatile for scenarios where users need to choose from multiple discrete options.
+**Switch** component can help switching between 3 or more different options by pressing a single key.
 
-## Features
-- Toggle between multiple predefined options
-- Customizable dataset for populating switch options
-- Support for both default and custom values
-- Accessible interface with hint and tab index properties
-- Flexible layout configuration
-- Integration with form validation
+### Markup
+
+```javascript
+<wm-switch
+  name="switch"
+  dataset="bind:Variables.stvViewOptions.dataSet"
+  datafield="id"
+  displayfield="value"
+  multiple="true"
+  checkediconclass="wi wi-check"
+  iconclass=""
+></wm-switch>
+```
+
+### Examples
+
+#### Properties
+
+- Enables multiple selections on the Switch component.
+
+```javascript
+Page.Widgets.switch.multiple = true;
+```
+
+- Sets the icon for the selected (checked) state of the Switch component.
+
+```javascript
+Page.Widgets.switch.checkediconclass = "fa fa-check";
+```
+
+#### Events
+
+- Triggered whenever the switch component selection is updated.
+
+```javascript
+Page.switchChange = function ($event, widget, newVal, oldVal) {
+    // newVal can be "daily", "weekly", or "monthly"
+    Page.Variables.setReportFrequency.setInput("frequency", newVal);
+    Page.Variables.setReportFrequency.invoke();
+
+    // Optional: Show a toast confirming the selected frequency
+    Page.Actions.reportFrequencyToaster.invoke();
+};
+```

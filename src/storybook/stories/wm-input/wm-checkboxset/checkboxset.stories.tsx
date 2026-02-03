@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography } from "@mui/material";
 
 import CheckboxsetDefaultExport from "../../../../components/input/default/checkboxset/index";
+import WmComposite from "../../../../components/input/composite";
+import WmLabel from "../../../../components/basic/label";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
 import overview from "./docs/overview.md?raw";
@@ -44,7 +46,10 @@ const DesignTokenTemplate = (args: any) => {
   
       return (
         <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
-          <CheckboxsetDefaultExport {...componentArgs} listener={mockListener} />
+          <WmComposite captionposition="top" listener={mockListener} name="checkboxsetComposite">
+            <WmLabel caption="Countries" listener={mockListener} name="checkboxsetLabel" className="control-label"/>
+            <CheckboxsetDefaultExport {...componentArgs} listener={mockListener} />
+          </WmComposite>
         </Box>
       );
     };

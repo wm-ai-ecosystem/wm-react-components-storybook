@@ -3,13 +3,18 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography, Button } from "@mui/material";
 
 import TextDefaultExport from "../../../../components/input/text/index";
+import WmComposite from "../../../../components/input/composite";
+import WmLabel from "../../../../components/basic/label";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
 import overview from "./docs/overview.md?raw";
 import props from "./docs/props.md?raw";
 import events from "./docs/events.md?raw";
 import methods from "./docs/methods.md?raw";
-import styling from "./docs/styling.md?raw";
+// import styling from "./docs/styling.md?raw";
+import token from "./docs/token.md?raw";
+
+import formTokensData from "../../../../designTokens/components/form-controls/form-controls.json";
 
 const meta: Meta<typeof TextDefaultExport> = {
   title: "Input/Text",
@@ -39,6 +44,20 @@ const Template = (args: any) => {
   );
 };
 
+const DesignTokenTemplate = (args: any) => {
+  //component can't spread data-design-token-target, so we apply it to a wrapper
+  const { "data-design-token-target": dataAttr, ...componentArgs } = args;
+
+  return (
+    <Box className="wm-app" style={{ padding: 16 }} data-design-token-target={dataAttr}>
+       <WmComposite captionposition="left" listener={mockListener} name="textComposite">
+       <WmLabel caption="Text" listener={mockListener} name="textLabel" className="control-label"/>
+      <TextDefaultExport {...componentArgs} listener={mockListener} />
+      </WmComposite>
+    </Box>
+  );
+};
+
 export const Docs: Story = {
   render: () => (
     <ComponentDocumentation
@@ -46,7 +65,8 @@ export const Docs: Story = {
       properties={props}
       events={events}
       methods={methods}
-      styling={styling}
+      // styling={styling}
+      token={token}
       externalLink={{
         href: "https://www.figma.com/design/F6S1sF5vM38mn6aLNnGGon/WaveMaker-UI-Kit--Community-?node-id=55141-14259&p=f&t=TmoXZ4j5uVxcseDO-0",
         label: "",
@@ -182,7 +202,7 @@ export const Showcase: Story = {
 // Basic Examples
 export const Standard: Story = {
   tags: ['show-panel'],
-  render: Template,
+  render: DesignTokenTemplate,
   args: {
     name: "standardText",
     placeholder: "Enter text",
@@ -193,8 +213,9 @@ export const Standard: Story = {
     autocapitalize: "none",
     autotrim: true,
     autofocus: false,
-    maxchars: 40
-    // required: false,
+    maxchars: 40,
+    required: false,
+    "data-design-token-target":true,
   },
   argTypes: {
     datavalue: { control: "text" },
@@ -209,10 +230,10 @@ export const Standard: Story = {
     autotrim: { control: "boolean" },
     disabled: { control: "boolean" },
     readonly: { control: "boolean" },
-    // required: { control: "boolean" },
+    required: { control: "boolean" },
     maxchars: { control: "number" },
-    minvalue: { control: "number" },
-    maxvalue: { control: "number" },
+    // minvalue: { control: "number" },
+    // maxvalue: { control: "number" },
     step: { control: "number" },
     // displayformat: { control: "text" },
     // showdisplayformaton: {
@@ -226,5 +247,15 @@ export const Standard: Story = {
     },
     name: { table: { disable: true } },
     listener: { table: { disable: true } },
+    "data-design-token-target": { table: { disable: true } },
+  },
+  parameters: {
+    designTokens: {
+      enabled: true,
+      tokenData: formTokensData,  // Pass raw JSON data instead of pre-parsed config
+      componentKey: "form",  // Component identifier for parsing
+      extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
+    },
+    layout: 'fullscreen',
   },
 };

@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { Box, Stack, Typography } from "@mui/material";
 
 import RadiosetDefaultExport from "../../../../components/input/default/radioset/index";
+import WmComposite from "../../../../components/input/composite";
+import WmLabel from "../../../../components/basic/label";
 
 import { ComponentDocumentation } from "../../../../../.storybook/components/DocumentRenderer";
 import overview from "./docs/overview.md?raw";
@@ -45,7 +47,10 @@ const DesignTokenTemplate = (args: any) => {
   
   return (
     <Box style={{ padding: 16 }} data-design-token-target={dataAttr}>
-      <RadiosetDefaultExport {...componentArgs} listener={mockListener} />
+      <WmComposite captionposition="top" listener={mockListener} name="radiosetComposite">
+        <WmLabel caption="Travel Class" listener={mockListener} name="radiosetLabel" className="control-label"/>
+        <RadiosetDefaultExport {...componentArgs} listener={mockListener} />
+        </WmComposite>
     </Box>
   );
 };

@@ -6,7 +6,7 @@
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
         | `name` | string | - | A unique identifier for the currency component. Special characters and spaces are not allowed. |
-        | `name` | placeholder | - | A placeholder is text to show in the editor when there is no value. A common use of this is a search box that says in faint gray italicized text "Search..." which disappears as soon as the user starts to edit the text box. This is a useful alternative to a caption if you are constrained in space and asking for something simple of the user. |
+        | `placeholder` | - | - | A placeholder is text to show in the editor when there is no value. A common use of this is a search box that says in faint gray italicized text "Search..." which disappears as soon as the user starts to edit the text box. This is a useful alternative to a caption if you are constrained in space and asking for something simple of the user. |
         | `currency` | string | "USD" | Currency determines which currency symbol should be shown for the currency component. Choose from the available list. |
     </div>
 </details>
@@ -38,7 +38,7 @@
     <div>
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
-        | `datavalue` | - | - | This (Value) property is the default value to display value for an editor component. Note that the display value is just what the user sees initially, and is not always the datavalue returned by the component. |
+        | `datavalue` | number | - | This (Value) property is the default value to display value for an editor component. Note that the display value is just what the user sees initially, and is not always the datavalue returned by the component. |
     </div>
 </details>
 
@@ -65,5 +65,6 @@
         | `disabled` | boolean | false | If the disabled property is true (checked) the component becomes display-only and user input will not be accepted. It can also set programmatically by binding it to a boolean type variable. |
         | `inputmode` | string | "natural" | This property determines how to handle numbers as the user types them. FINANCIAL - Numbers start at the highest precision decimal. Numbers will be shifted to the left on the type. Most cash registers work this way. |
         | `trailingzero` | boolean | false | This property specifies whether to keep trailing zeros after decimal point or not. |
+        | `updateon` | string | "blur" | If the selected value is **blur**: datavalue will be updated on blur event, **keypress**: datavalue will be updated on keypress. |
     </div>
 </details>

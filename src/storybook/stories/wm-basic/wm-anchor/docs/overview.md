@@ -38,22 +38,19 @@ Page.Widgets.anchor.iconposition = "left";
 
 ```javascript
     Page.anchorClick = function ($event, widget) {
+    // Navigate to the Dashboard page when anchor is clicked
     App.Actions.goToPage_Dashboard.invoke();
 };
 ```
 
-- Triggered on anchor click to update the caption text dynamically.
+- Triggered on anchor click to toggle panel content.
 
 ```javascript
     Page.anchorClick = function ($event, widget) {
-    widget.caption = "Clicked";
-};
-```
+    // Toggle visibility
+    Page.Widgets.projectDetailsPanel.show = !Page.Widgets.projectDetailsPanel.show;
 
-- Triggered when the anchor receives keyboard focus (i.e via the Tab key)
-
-```javascript
-    Page.anchorFocus = function ($event, widget) {
-        console.log("Anchor is focused");
+    // Update anchor text dynamically
+    widget.caption = Page.Widgets.projectDetailsPanel.show ? "Hide Details" : "Show Details";
 };
 ```

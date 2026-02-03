@@ -46,21 +46,15 @@ Page.searchDatasetready = function (widget, data) {
 };
 ```
 
-- Triggered when a user selects a value from the search component.
+- Triggered when a user selects a value from the Search component. You can use this event to fetch or filter data based on the selected value.
 
 ```javascript
 Page.searchSelect = function ($event, widget, selectedValue) {
-  //Allows to perform actions based on the selected item.
-  console.log("Selected Value", selectedValue);
-};
-```
+  // Invoke the service variable with the selected value
+  Page.Variables.svGetArtifacts.setInput('name', selectedValue);
+  Page.Variables.svGetArtifacts.invoke();
 
-- Triggered on change whenever the value of the search is updated.
-
-```javascript
-Page.searchChange = function ($event, widget, newVal, oldVal) {
-  console.log("Old Value:", oldVal);
-  console.log("New Value:", newVal);
+  // The resulting data can be bound to tables, cards, or lists to display filtered results
 };
 ```
 

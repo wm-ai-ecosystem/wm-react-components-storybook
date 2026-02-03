@@ -1,84 +1,78 @@
-# Props
+# Properties
 
-## Basic Configuration
+<details open>
+  <summary>Basic</summary>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| name | string | "" | A unique identifier for the panel |
-| title | string | "" | Primary text displayed in the panel header |
-| subheading | string | "" | Secondary text displayed below the title |
-| height | string \| number | "auto" | The height of the panel, can be specified in px or % |
-| content | any | null | Content to be displayed inside the panel body |
-| className | string | "" | Additional CSS class names to apply to the panel |
-| style | React.CSSProperties | {} | Inline styles to apply to the panel |
-| children | ReactNode | null | Child components to render inside the panel |
+| Name | Type | Description |
+|------|------|-------------|
+| `title` | string | Sets the main title of the panel |
+| `subheading` | string | Sets the sub heading text below the title |
+| `name` | string | Unique identifier for the panel widget |
+| `badgeValue` | string / number | Displays badge value on the panel header |
+| `badgeType` | string | Defines badge style (success, warning, danger,info etc.) |
 
-## Header Configuration
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| badgetype | BadgeType | "default" | Controls the color of the badge. Values: default, primary, success, info, warning, danger |
-| badgevalue | string \| number | "" | Value displayed in the badge span |
-| iconclass | string | "" | CSS class for the icon displayed in the panel header |
-| iconurl | string | "" | URL for the icon image to be displayed in the header |
-| iconwidth | string \| number | "auto" | Width of the icon |
-| iconheight | string \| number | "auto" | Height of the icon |
-| iconmargin | string | "" | Margin around the icon |
-| helptext | string | "" | Text displayed when the help icon is clicked |
-| hint | string | "" | Text displayed as a tooltip |
+<details>
+  <summary>Accessibility</summary>
 
-## Behavior Configuration
+| Name | Type | Description |
+|------|------|-------------|
+| `helpText` | string | Provides accessibility help text for assistive technologies |
+| `hint` | string | Displays additional hint or tooltip text |
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| closable | boolean | false | When true, shows a close button in the panel header |
-| collapsible | boolean | false | When true, shows expand/collapse controls |
-| expanded | boolean | true | Sets the default expansion state of the panel |
-| enablefullscreen | boolean | false | When true, allows the panel to enter full-screen mode |
-| fullscreen | boolean | false | Sets the initial full-screen state of the panel |
-| actions | ActionItem[] | [] | Configuration for dropdown menu actions in the header |
+</details>
 
-## Actions Configuration (when bound to a variable)
+<details>
+  <summary>Layout</summary>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| itemlabel | string | "" | Label for action items generated dynamically |
-| itemicon | string | "" | Icon class for action items |
-| itemlink | string | "" | Link for action items |
-| itemaction | string | "" | Task/function to execute when action item is clicked |
-| itemchildren | any | null | Sub-items for nested action menus |
-| userrole | string | "" | Role-based visibility control for menu items |
+| Name | Type | Description |
+|------|------|-------------|
+| `height` | string | Sets the height of the panel |
 
-## Configure Panel Behavior
+</details>
 
-```javascript
-// Set collapsible behavior
-Page.Widgets.myPanel.collapsible = true;
+<details>
+  <summary>Content</summary>
 
-// Toggle expansion state
-Page.Widgets.myPanel.expanded = !Page.Widgets.myPanel.expanded;
+| Name | Type | Description |
+|------|------|-------------|
+| `content` | Inline/Partial | Defines content displayed inside the panel|
 
-// Enable full-screen capability
-Page.Widgets.myPanel.enablefullscreen = true;
+</details>
 
-// Add a help text popup
-Page.Widgets.myPanel.helptext = "This panel contains important user information";
-```
+<details>
+  <summary>Actions</summary>
 
-## Configure Actions Menu
+| Name | Type | Description |
+|------|------|-------------|
+| `menuActions` | array | Adds menu action items to the panel header |
 
-```javascript
-// Set panel actions programmatically
-Page.Widgets.myPanel.actions = [
-  {
-    "label": "Edit",
-    "icon": "fa fa-pencil",
-    "action": "editItemFunction()"
-  },
-  {
-    "label": "Delete",
-    "icon": "fa fa-trash",
-    "action": "deleteItemFunction()"
-  }
-];
-```
+</details>
+
+<details>
+  <summary>Behavior</summary>
+
+| Name | Type | Description |
+|------|------|-------------|
+| `show` | boolean | Controls visibility of the panel |
+| `collapsible` | boolean | Allows the panel to expand or collapse |
+| `enableFullScreen` | boolean | Enables fullscreen option for the panel |
+| `enableDefaultCloseAction` | boolean | Enables default close button functionality |
+| `expanded` | boolean | Sets panel expansion state |
+| `animation` | select | Select pre existing animation |
+
+</details>
+
+<details>
+  <summary>Graphics</summary>
+
+| Name | Type | Description |
+|------|------|-------------|
+| `titleIconClass` | string | Sets icon class displayed near panel title |
+| `iconUrl` | string | Loads custom icon using image URL |
+| `iconWidth` | string | Sets width of the icon |
+| `iconHeight` | string | Sets height of the icon |
+| `iconMargin` | string | Sets margin around the icon |
+
+</details>

@@ -1,6 +1,8 @@
 # Styling
 
-The HTML component can be styled using the `styles` prop, which accepts a React.CSSProperties object. This allows you to apply inline styles directly to the component container.
+The HTML component does not expose any design tokens.
+
+<!-- The HTML component can be styled using the `styles` prop, which accepts a React.CSSProperties object. This allows you to apply inline styles directly to the component container.
 
 For more comprehensive styling, you can include CSS class definitions in your HTML content and reference them from your application's stylesheets.
 
@@ -52,4 +54,4 @@ Then in your CSS file:
 }
 ```
 
-Note that the HTML component essentially acts as a container, and the styling within it follows standard HTML and CSS rules.
+Note that the HTML component essentially acts as a container, and the styling within it follows standard HTML and CSS rules. -->

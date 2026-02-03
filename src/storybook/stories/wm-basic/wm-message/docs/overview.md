@@ -34,7 +34,6 @@ Page.Widgets.message.hideclose = true;
     if(widget.type === "success") {
         //Reset the feedback form input after user closes the message
         Page.Widgets.feedbackInput.value = undefined;
-        console.log("Feedback message closed, form input cleared.");
     }
 };
 ```

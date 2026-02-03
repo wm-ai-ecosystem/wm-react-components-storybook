@@ -1,55 +1,76 @@
-# Props
+# Properties
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| **Basic** |||||
-| name | string | "" | A unique identifier for the radioset component. |
-| **Data** |||||
-| value | any | undefined | The default selected value for the radioset. |
-| dataset | array | [] | An array of objects used to populate the radioset options. |
-| useKeys | boolean | false | When true, uses the keys of the dataset objects as radioset options. |
-| dataField | string | "" | Specifies which field in the dataset to use as the value for each option. |
-| displayField | string | "" | Specifies which field in the dataset to display as the label for each option. |
-| displayExpression | string | "" | JavaScript expression that defines custom formatting for option display text. |
-| orderBy | string | "" | Controls the sorting order of options based on fields in ascending or descending order. |
-| **Layout** |||||
-| width | string | "100%" | The width of the component (px, em, or %). |
-| height | string | "auto" | The height of the component (px, em, or %). |
-| itemsPerRow | number | 0 | Determines the number of radio buttons to display in each row. |
-| layout | string | "stacked" | Controls how options are displayed - 'inline' or 'stacked'. |
-| **Behavior** |||||
-| required | boolean | false | When true, requires a selection before form submission. |
-| readOnly | boolean | false | When true, prevents the user from changing the selection. |
-| show | boolean | true | Controls the visibility of the component. |
-| loadOnDemand | boolean | false | When true and show property is bound, defers initialization until the widget becomes visible. |
-| disabled | boolean | false | When true, disables user interaction with the component. |
-| skipOnChangeEventFromScript | boolean | false | When true, the Change event won't trigger when the value is updated programmatically. |
-| **Accessibility** |||||
-| tabIndex | number | 0 | Controls the tab order for keyboard navigation. Set to -1 to make non-focusable. |
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `name` | string | - | A unique identifier for the radioset component. Special characters and spaces are not allowed. |
+    </div>
+</details>
 
-## Examples
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `tabindex` | number | 0 | The tab index attribute specifies the tab order of an element. You can use this property to change the default tabbing order for component access using the tab key. The value can range from 0 to 32767. The default is 0 and -1 makes the element non-focusable. NOTE: In Safari browsers, by default, Tab highlights only text fields. To enable Tab functionality, in Safari Browser from Preferences -> Advanced -> Accessibility set the option "Press Tab to highlight each item on a webpage". |
+        | `hint` | string | - | Any text you enter for this property will be shown as a tooltip if the mouse hovers over this component for 1.5 seconds. |
+    </div>
+</details>
 
-#### Basic Configuration
-```javascript
-// Setting up a radioset with predefined options
-Page.Widgets.genderRadioset.dataset = [
-  { value: "male", label: "Male" },
-  { value: "female", label: "Female" },
-  { value: "other", label: "Other" }
-];
-Page.Widgets.genderRadioset.dataField = "value";
-Page.Widgets.genderRadioset.displayField = "label";
-```
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | "auto" | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
 
-#### Using Display Expression
-```javascript
-// Format display text using expression
-Page.Widgets.employeeRadioset.displayExpression = "${firstName} ${lastName} (${department})";
-```
+<details>
+  <summary>Dataset</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `dataset` | array | - | Set this property to a variable to populate the list of values to display. |
+        | `usekeys` | boolean | false | Use the keys of the live variable object as radio set options. |
+        | `datafield` | string | - | This property sets the datavalue to be returned by a select editor when the list is populated using the dataSet property. |
+        | `displayfield` | string | - | This property sets the displayvalue to show in the select editor when the list is populated using the dataSet property. |
+        | `displayexpression` | string | - | This is an advanced property that gives more control over what is displayed in the drop-down select list. A Display Expression uses a Javascript expression to format exactly what is shown. |
+        | `groupby` | string | - | This property allows for grouping the list of rows in the variable bound to a dataset by selecting one of the field names from the drop-down list. |
+        | `orderby` | string | - | This allows for multiple selection for ordering the display of rows based on fields in asc or desc order - up arrow for asc and down arrow for desc. |
+    </div>
+</details>
 
-#### Changing Layout Dynamically
-```javascript
-// Switch to horizontal layout with 3 items per row
-Page.Widgets.categoryRadioset.layout = "inline";
-Page.Widgets.categoryRadioset.itemsPerRow = 3;
-```
+<details>
+  <summary>Default Value</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `datavalue` | - | - | This is the default value to display value for an editor component. Note that the display value is just what the user sees initially, and is not always the datavalue returned by the component. Its type depends on the selected data field for example, if the data field is bound to "name," the display value will be a string. |
+    </div>
+</details>
+
+<details>
+  <summary>Validation</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `required` | boolean | false | A required editor in wm.LiveForm may refuse to save without a required field. |
+    </div>
+</details>
+
+
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `readonly` | boolean | false | This property prevents the user from being able to change the data value of a component. It is a bindable property. |
+        | `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
+        | `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+        | `disabled` | boolean | false | If the disabled property is true (checked) the component becomes display-only and user input will not be accepted. It can also set programmatically by binding it to a boolean type variable. |
+    </div>
+</details>

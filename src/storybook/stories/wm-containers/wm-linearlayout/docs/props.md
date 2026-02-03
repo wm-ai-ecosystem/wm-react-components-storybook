@@ -1,42 +1,96 @@
-# Props
+# Properties
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| **direction** | "row" \| "row-reverse" \| "column" \| "column-reverse" | "row" | Determines the direction in which child elements are laid out. "row" arranges elements horizontally from left to right, "row-reverse" horizontally from right to left, "column" vertically from top to bottom, and "column-reverse" vertically from bottom to top. |
-| **horizontalalign** | "left" \| "right" \| "center" | "left" | Controls the horizontal alignment of child elements within the container. |
-| **verticalalign** | "top" \| "bottom" \| "center" | "top" | Controls the vertical alignment of child elements within the container. |
-| **spacing** | string \| number | 0 | Defines the space between child elements. Can be specified as a numeric value (in pixels) or as a string with units (e.g., "10px", "1rem"). |
+<details open>
+  <summary>Basic</summary>
 
-## Common Use Cases
+| Name       | Type                     | Default      | Description                                   |
+| ---------- | ------------------------ | ------------ | --------------------------------------------- |
+| `name`     | `string`                 | `-`          | Unique name used to identify the container    |
+| `position` | `"relative" \| "sticky"` | `"relative"` | Defines positioning behavior of the container |
 
-#### Creating a Horizontal Layout
-```javascript
-// Create a row layout with centered items and 10px spacing
-Page.Widgets.linearLayout1.direction = "row";
-Page.Widgets.linearLayout1.horizontalalign = "center";
-Page.Widgets.linearLayout1.spacing = 10;
-```
+</details>
 
-#### Creating a Vertical Layout
-```javascript
-// Create a column layout with right-aligned items and 1rem spacing
-Page.Widgets.linearLayout1.direction = "column";
-Page.Widgets.linearLayout1.horizontalalign = "right";
-Page.Widgets.linearLayout1.spacing = "1rem";
-```
+<details>
+  <summary>Layout</summary>
+<table>
+  <thead>
+    <tr>
+      <th>Property</th>
+      <th>Type</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>direction</code></td>
+      <td>"row" | "column"</td>
+      <td>Defines the direction in which child elements are arranged</td>
+    </tr>
+    <tr>
+      <td><code>wrap</code></td>
+      <td>boolean</td>
+      <td>Allows child elements to wrap to next line if space is insufficient</td>
+    </tr>
+    <tr>
+      <td><code>width</code></td>
+      <td>string</td>
+      <td>Sets container width(px)</td>
+    </tr>
+    <tr>
+      <td><code>height</code></td>
+      <td>string</td>
+      <td>Sets container height(px)</td>
+    </tr>
+    <tr>
+      <td><code>clipContent</code></td>
+      <td>boolean</td>
+      <td>Clips or hides content that overflows container boundaries</td>
+    </tr>
+    <tr>
+      <td><code>horizontalAlign</code></td>
+      <td>"start" | "center" | "end" | "space-between" | "space-around"</td>
+      <td>Aligns child elements horizontally</td>
+    </tr>
+    <tr>
+      <td><code>verticalAlign</code></td>
+      <td>"start" | "center" | "end" | "stretch"</td>
+      <td>Aligns child elements vertically</td>
+    </tr>
+    <tr>
+      <td><code>gap</code></td>
+      <td>string</td>
+      <td>Sets spacing between child elements(px)</td>
+    </tr>
+    <tr>
+      <td><code>horizontalSpacing</code></td>
+      <td>string</td>
+      <td>Defines horizontal spacing between child elements(px)</td>
+    </tr>
+    <tr>
+      <td><code>verticalSpacing</code></td>
+      <td>string</td>
+      <td>Defines vertical spacing between child elements(px)</td>
+    </tr>
+  </tbody>
+</table>
 
-#### Reversing Element Order
-```javascript
-// Reverse the order of elements in a row
-Page.Widgets.linearLayout1.direction = "row-reverse";
+</details>
 
-// Reverse the order of elements in a column
-Page.Widgets.linearLayout1.direction = "column-reverse";
-```
+<details>
+  <summary>Content</summary>
 
-#### Centering Content Both Ways
-```javascript
-// Center content both horizontally and vertically
-Page.Widgets.linearLayout1.horizontalalign = "center";
-Page.Widgets.linearLayout1.verticalalign = "center";
-```
+| Property  | Type     | Description                                                                      |
+| --------- | -------- | -------------------------------------------------------------------------------- |
+| `partial` | `string` | Loads a partial page inside the container or bind the partial based on condition |
+
+</details>
+
+<details>
+  <summary>Behavior</summary>
+
+| Property       | Type      | Default | Description                                                      |
+| -------------- | --------- | ------- | ---------------------------------------------------------------- |
+| `show`         | `boolean` | `true`  | Controls visibility of the container                             |
+| `loadOnDemand` | `boolean` | `false` | Loads container content only when visible to improve performance |
+
+</details>

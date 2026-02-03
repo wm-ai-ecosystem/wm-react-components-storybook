@@ -1,34 +1,36 @@
-# Props
+# Properties
 
-## Basic Properties
+<details open>
+<summary>Basic Properties</summary>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| name | string | "" | A unique identifier for the tile component |
-| show | boolean | true | Determines whether the tile is visible. Can be bound to variables for conditional display |
-| loadOnDemand | boolean | false | When enabled and the show property is bound, defers initialization until the tile becomes visible |
+| Name | Type | Description |
+|------|------|-------------|
+| name | string | A unique identifier for the tile component |
+| show | boolean | Determines whether the tile is visible. Can be bound to variables for conditional display |
+| loadOnDemand | boolean | When enabled and the show property is bound, defers initialization until the tile becomes visible |
 
-## Layout Properties
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| width | string | "" | Width of the tile, can be specified in px or % (e.g., "50px", "75%") |
-| height | string | "" | Height of the tile, can be specified in px or % (e.g., "50px", "75%") |
-| horizontalAlign | string | "left" | Sets the horizontal text alignment within the tile |
 
-## Behavior Properties
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| animation | string | "none" | Controls the animation effect applied to the tile. Works only at runtime |
+<details>
+<summary>Layout Properties</summary>
 
-## Configure Tile Layout Example
+| Name | Type | Description |
+|------|------|-------------|
+| width | string | Width of the tile, can be specified in px or % |
+| height | string | Height of the tile, can be specified in px or % |
+| horizontalAlign | string <br> "left" <br> "center" <br> "right" | Sets the horizontal text alignment within the tile |
 
-```javascript
-// Set tile dimensions
-Page.Widgets.myTile.width = "250px";
-Page.Widgets.myTile.height = "200px";
+</details>
 
-// Change horizontal alignment
-Page.Widgets.myTile.horizontalAlign = "center";
-```
+
+
+<details>
+<summary>Behavior Properties</summary>
+
+| Name | Type | Description |
+|------|------|-------------|
+| animation | string <br> "none" <br> "fade" <br> "slide" <br> "bounce" | Controls the animation effect applied to the tile. Works only at runtime |
+
+</details>

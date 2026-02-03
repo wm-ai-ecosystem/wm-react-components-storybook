@@ -1,27 +1,43 @@
 # Callback Events
 
-## Value Events
-| Event | Description |
-| --- | --- |
-| Change | Triggered when the input value changes |
-| Focus | Triggered when the widget receives focus |
-| Blur | Triggered when focus leaves the widget |
+<details open>
+  <summary>Basic Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `change` | This event handler is called each time your component's value changes. |
+        | `onFocus` | This event handler is called each time your component is focused. |
+        | `onBlur` | This event handler is called each time your focus leaves your component. |
+    </div>
+</details>
 
-## Mouse Events
-| Event | Description |
-| --- | --- |
-| Click | Triggered when the widget is clicked |
-| MouseEnter | Triggered when the mouse pointer enters the widget area |
-| MouseLeave | Triggered when the mouse pointer leaves the widget area |
+<details>
+  <summary>Mouse Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onClick` | This event handler is called whenever the click event is triggered on a component. |
+        | `onMouseEnter` | This event handler is called whenever the mouse enters the component. |
+        | `onMouseLeave` | This event handler is called whenever the mouse leaves the component. |
+    </div>
+</details>
 
-## Touch Events
-| Event | Description |
-| --- | --- |
-| Tap | Triggered when the widget is tapped on a touch device |
+<details>
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onTap` | This event handler is called whenever the component is tapped. |
+    </div>
+</details>
 
-## Keyboard Events
-| Event | Description |
-| --- | --- |
-| KeyDown | Triggered when a key is pressed down while the widget has focus |
-| KeyPress | Triggered when a key is pressed while the widget has focus |
-| KeyUp | Triggered when a key is released while the widget has focus |
+<details>
+  <summary>Keyboard Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onKeyDown` | This event handler is called whenever a key is pressed down. |
+        | `onKeyPress` | This event handler is called whenever a key is pressed. |
+        | `onKeyUp` | This event handler is called whenever a key is released. |
+    </div>
+</details>

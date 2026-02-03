@@ -1,31 +1,53 @@
 # Callback Events
 
-## Value Events
+<details open>
+  <summary>Basic Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `change` | This event handler is called each time your component's value changes. |
+        | `onFocus` | This event handler is called each time your component is focused. |
+        | `onBlur` | This event handler is called each time your focus leaves your component. |
+    </div>
+</details>
 
-| Event | Description |
-|-------|-------------|
-| Change | Triggered when the input value changes |
-| On focus | Triggered when the input receives focus |
-| On blur | Triggered when focus leaves the input |
+<details>
+  <summary>Mouse Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onClick` | This event handler is called whenever the click event is triggered on a component. |
+        | `onMouseEnter` | This event handler is called whenever the mouse enters the component. |
+        | `onMouseLeave` | This event handler is called whenever the mouse leaves the component. |
+    </div>
+</details>
 
-## Mouse Events
+<details>
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onTap` | This event handler is called whenever the component is tapped. |
+    </div>
+</details>
 
-| Event | Description |
-|-------|-------------|
-| On click | Triggered when the input is clicked |
-| On mouse enter | Triggered when the mouse pointer enters the input area |
-| On mouse leave | Triggered when the mouse pointer leaves the input area |
+<details>
+  <summary>Keyboard Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onKeyDown` | This event handler is called whenever a key is pressed down. |
+        | `onKeyPress` | This event handler is called whenever a key is pressed. |
+        | `onKeyUp` | This event handler is called whenever a key is released. |
+    </div>
+</details>
 
-## Touch Events
-
-| Event | Description |
-|-------|-------------|
-| On tap | Triggered when the input is tapped (mobile equivalent of click) |
-
-## Keyboard Events
-
-| Event | Description |
-|-------|-------------|
-| On key down | Triggered when a key is pressed down while the input has focus |
-| On key press | Triggered when a key is pressed while the input has focus |
-| On key up | Triggered when a key is released while the input has focus |
+<details>
+  <summary>Design System Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onLeadingIconClick` | This event handler is called whenever the click event is triggered on a leading icon. |
+        | `onTrailingIconClick` | This event handler is called whenever the click event is triggered on a trailing icon. |
+    </div>
+</details>

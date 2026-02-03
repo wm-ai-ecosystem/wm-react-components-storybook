@@ -1,6 +1,6 @@
 # Overview
 
-A **Checkbox** component is a specific type of two-states button that can be either checked or unchecked. Checkboxes let a user select an option. Examples: "I agree to terms and conditions" etc. checked and unchecked options.
+A **Checkbox** component is a specific type of two-states button that can be either checked or unchecked. Checkboxes let a user select an option.
 
 ### Markup
 
@@ -29,12 +29,6 @@ Page.Widgets.checkbox.datavalue = true;
 ```javascript
 Page.checkboxChange = function ($event, widget, newVal, oldVal) {
      // Perform actions based on the checkbox state
-    if (newVal === true) {
-        // Execute logic when the checkbox is checked
-        console.log("Checkbox is checked");
-    } else {
-        // Execute logic when the checkbox is unchecked
-        console.log("Checkbox is unchecked");
-    }
+    Page.Widgets.submitBtn.disabled = !newVal;
 };
 ```

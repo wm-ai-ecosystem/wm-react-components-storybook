@@ -1,47 +1,86 @@
-# Props
+# Properties
 
-| Property | Type | Default | Description |
-| --- | --- | --- | --- |
-| **Basic** |
-| name | string | - | A unique identifier for the Switch widget |
-| value | string | "yes" | The default selected option to display initially |
-| **Dataset** |
-| dataset | array/object | ["yes", "no", "maybe"] | The list of values/options to display in the switch |
-| datafield | string | - | Specifies which field from the dataset should be used as the value |
-| displayfield | string | - | Specifies which field from the dataset should be shown as display text |
-| orderby | string | - | Determines the ordering of options based on fields in ascending or descending order |
-| **Validation** |
-| required | boolean | false | When true, the widget must have a value selected for form submission |
-| **Behavior** |
-| show | boolean | true | Controls the visibility of the component |
-| loadOnDemand | boolean | false | When enabled and the 'show' property is bound to a variable, widget initialization is deferred until it becomes visible |
-| disabled | boolean | false | When true, prevents user interaction with the switch |
-| skipOnChangeEventFromScript | boolean | false | When enabled, the Change event triggers only when user interacts with the widget, not when value is changed programmatically |
-| **Accessibility** |
-| hint | string | - | Tooltip text displayed when hovering over the widget |
-| tabindex | number | 0 | Controls the tab order for keyboard navigation. Set to -1 to make it non-focusable |
-| **Layout** |
-| width | string | - | The width of the widget, can be specified in pixels or percentage |
-| height | string | - | The height of the widget, can be specified in pixels or percentage |
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `name` | string | - | A unique identifier for the switch component. Special characters and spaces are not allowed. |
+    </div>
+</details>
 
-## Common Use Cases
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `tabindex` | number | 0 | The tab index attribute specifies the tab order of an element. You can use this property to change the default tabbing order for component access using the tab key. The value can range from 0 to 32767. The default is 0 and -1 makes the element non-focusable. NOTE: In Safari browsers, by default, Tab highlights only text fields. To enable Tab functionality, in Safari Browser from Preferences -> Advanced -> Accessibility set the option "Press Tab to highlight each item on a webpage". |
+        | `arialabel` | string | - | Accessibility label for screen readers |
+        | `hint` | string | - | Any text you enter for this property will be shown as a tooltip if the mouse hovers over this component for 1.5 seconds. |
+    </div>
+</details>
 
-```javascript
-// Setting custom options for the switch
-Page.Widgets.mySwitch.dataset = ["Red", "Green", "Blue"];
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | - | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
 
-// Working with object datasets
-Page.Widgets.mySwitch.dataset = [
-  {id: 1, name: "Low"},
-  {id: 2, name: "Medium"},
-  {id: 3, name: "High"}
-];
-Page.Widgets.mySwitch.datafield = "id";
-Page.Widgets.mySwitch.displayfield = "name";
+<details>
+  <summary>Dataset</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `dataset` | array | - | Set this property to a variable to populate the list of values to display. |
+        | `datafield` | string | - | This property sets the datavalue to be returned by a select editor when the list is populated using the dataSet property. |
+        | `displayfield` | string | - | This property sets the displayvalue to show in the select editor when the list is populated using the dataSet property. |
+        | `displayexpression` | string | - | This is an advanced property that gives more control over what is displayed in the drop-down select list. A Display Expression uses a Javascript expression to format exactly what is shown. |
+        | `groupby` | string | - | This property allows for grouping the list of rows in the variable bound to a dataset by selecting one of the field names from the drop-down list. |
+        | `orderby` | string | - | This allows for multiple selection for ordering the display of rows based on fields in asc or desc order - up arrow for asc and down arrow for desc. |
+    </div>
+</details>
 
-// Setting a default value
-Page.Widgets.mySwitch.value = "Green";
+<details>
+  <summary>Default Value</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `datavalue` | - | - | This is the default value to display value for an editor component. Note that the display value is just what the user sees initially, and is not always the datavalue returned by the component. Its type depends on the selected data field for example, if the data field is bound to "name," the display value will be a string. |
+    </div>
+</details>
 
-// Programmatically enabling/disabling the switch
-Page.Widgets.mySwitch.disabled = true;
-```
+<details>
+  <summary>Validation</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `required` | boolean | false | A required editor in wm.LiveForm may refuse to save without a required field. |
+    </div>
+</details>
+
+
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `multiple` | boolean | false | Enable/Disable to switch between Multiple/Single select. |
+        | `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
+        | `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+        | `disabled` | boolean | false | If the disabled property is true (checked) the component becomes display-only and user input will not be accepted. It can also set programmatically by binding it to a boolean type variable. |
+    </div>
+</details>
+
+<details>
+  <summary>Graphics</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `checkediconclass` | string | - | Specifies the icon to display when the switch is in the selected (checked) state. |
+        | `iconclass` | string | - | Specifies the icon to display when the switch is not selected (unchecked) state. |
+    </div>
+</details>
