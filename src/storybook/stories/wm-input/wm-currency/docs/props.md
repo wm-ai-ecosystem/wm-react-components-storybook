@@ -6,7 +6,7 @@
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
         | `name` | string | - | A unique identifier for the currency component. Special characters and spaces are not allowed. |
-        | `name` | placeholder | - | A placeholder is text to show in the editor when there is no value. A common use of this is a search box that says in faint gray italicized text "Search..." which disappears as soon as the user starts to edit the text box. This is a useful alternative to a caption if you are constrained in space and asking for something simple of the user. |
+        | `placeholder` | - | - | A placeholder is text to show in the editor when there is no value. A common use of this is a search box that says in faint gray italicized text "Search..." which disappears as soon as the user starts to edit the text box. This is a useful alternative to a caption if you are constrained in space and asking for something simple of the user. |
         | `currency` | string | "USD" | Currency determines which currency symbol should be shown for the currency component. Choose from the available list. |
     </div>
 </details>

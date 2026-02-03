@@ -1,113 +1,97 @@
 # Overview
 
-The **Calender component** is used to schedule and display events in a full-sized calendar inside a web application. It allows developers to display events using dataset data, where each event includes details such as title, start date, end date, and event type. It supports multiple views like Month, Week, and Day, making it easy for users to navigate and manage schedules.
+The **Calendar** component is used to schedule and display events. It displays events from a dataset, where each event includes details such as title, start date, end date, and type. It supports multiple views like Month, Week, and Day for easy navigation and schedule management.
 
 ### Markup
 
 ```javascript
 <wm-calendar
-  name="calendar2"
-  calendartype="list"
-  controls="navigation,today,year,month,week,day"
+  name="calendar"
+  calendartype="basic"
   view="month"
-  dataset="bind:Variables.mdCalenderData.dataSet"
+  selectionmode="multiple"
   eventtitle="title"
-  eventclass="className"
+  dataset="bind:Variables.stvCalendarEvents.dataSet"
+  eventstart="start"
+  eventclass="classname"
 ></wm-calendar>
 ```
+### Examples
 
-### Properties Usage
+#### Properties
 
-```javascript
-// Show / Hide Calender component
-Page.Widgets.myCalendar.show = false;
-
-// Setting calendar data field mappings
-Page.Widgets.calendar2.dataset = [];
-Page.Widgets.myCalendar.title = "eventTitle";
-Page.Widgets.myCalendar.start = "startDate";
-Page.Widgets.myCalendar.end = "endDate";
-Page.Widgets.myCalendar.allDay = "isAllDay";
-
-// Changing calendar view (month | week | day)
-Page.Widgets.myCalendar.view = "week";
-
-// Setting selection mode (single | multiple)
-Page.Widgets.myCalendar.selectionMode = "multiple";
-```
-
-### Callback Events
+- Configures the calendar to display events in a list-based daily view.
 
 ```javascript
-//Will Add call back events
+Page.Widgets.calendar.calendartype = "list";
+Page.Widgets.calendar.view = "day";
 ```
 
-### Methods Usage
-
-
+- To set the first day of the month view [Default: 0 (Sunday)]
 
 ```javascript
-
-
-//Shows the calendar view for the default or specified date.
-Page.Widgets.calendar.datavalue = "01/01/2017";
-Page.Widgets.calendar.gotoDate();
-Page.Widgets.calendar.datavalue = {start:'01/01/2023', end:'10/01/2023'};
-Page.Widgets.calendar.selectDate();
-
-//To set the first day of the Month view (Default: 0 – Sunday)
-Page.Widgets.wmcalendar.calendarOptions.calendar.firstDay = 0;
-//To hide the All-Day slot in Agenda view
-Page.Widgets.wmcalendar.calendarOptions.calendar.allDaySlot = false;
-
-//To hide the All-Day slot in Agenda view
-Page.Widgets.wmcalendar.calendarOptions.calendar.allDaySlot = false;
-
-//To change the All-Day slot text in Agenda view
-Page.Widgets.wmcalendar.calendarOptions.calendar.allDayText = "all-day";
-
-//To set Calendar language and re-render widget
-
-Page.Widgets.calendar2.applyCalendarOptions('option', 'locale', 'en');
-Page.Widgets.calendar2.applyCalendarOptions('render');
-
-
-
-
-
+Page.Widgets.calendar.calendarOptions.calendar.firstDay = 0;
 ```
 
-### Sample Dataset
+#### Events
+
+- Triggered when a user selects a date on the calendar.
+
+```javascript
+Page.calendarSelect = function ($start, $end, $view, $data) {
+  //Example: Used to capture selected dates and perform business actions such as opening a form, validating overlaps, or creating events.
+
+    // Convert selected dates to readable format
+    let startDate = moment($start).format("YYYY-MM-DD");
+    let endDate = moment($end).format("YYYY-MM-DD");
+
+    // Example 1: Open a dialog to create a new HR event
+    Page.Widgets.createEventDialog.open();
+
+    // Pass selected dates to the dialog fields
+    Page.Widgets.startDateInput.datavalue = startDate;
+    Page.Widgets.endDateInput.datavalue = endDate;
+};
+```
+
+#### Methods
+
+- To view the next month in calendar component.
+
+```javascript
+Page.Widgets.calendar.gotoNextMonth();
+```
+
+- To view the February month in calendar component.
+
+```javascript
+Page.Widgets.calendar.gotoMonth(2);
+```
+
+#### Sample calendar dataset
 
 ```json
 [
   {
-    "title": "Team Meeting",
-    "start": "2026-02-02T10:00:00",
-    "end": "2026-02-02T11:00:00",
-    "description": "Weekly team sync meeting",
-    "type": "Meeting"
+    "title": "Company Retreat",
+    "start": "2026-02-05",
+    "end": "2026-02-08",
+    "allday": true,
+    "classname": "event-primary"
   },
   {
-    "title": "Project Deadline",
-    "start": "2026-02-05T00:00:00",
-    "end": "2026-02-05T23:59:00",
-    "description": "Final submission of project",
-    "type": "Deadline"
+    "title": "Employee Training Program",
+    "start": "2026-02-12",
+    "end": "2026-02-16",
+    "allday": true,
+    "classname": "event-success"
   },
   {
-    "title": "Client Call",
-    "start": "2026-02-07T15:30:00",
-    "end": "2026-02-07T16:30:00",
-    "description": "Discussion with client regarding requirements",
-    "type": "Call"
-  },
-  {
-    "title": "Workshop",
-    "start": "2026-02-10T09:00:00",
-    "end": "2026-02-10T13:00:00",
-    "description": "Angular training workshop",
-    "type": "Training"
+    "title": "Annual Leave",
+    "start": "2026-02-20",
+    "end": "2026-02-25",
+    "allday": true,
+    "classname": "event-info"
   }
 ]
 ```

@@ -1,11 +1,58 @@
 # Overview
 
-The Number widget is an editor component specifically designed for numeric input in applications. It provides formatted number display and input capabilities that adapt to the app's locale settings, ensuring proper number representation across different regions.
+The **Number** component is a form input component used to capture and display numeric values.
 
-## Features
-- Locale-aware number formatting for proper display across regions
-- Input validation with minimum and maximum value constraints
-- Step increment/decrement functionality for precise value control
-- Placeholder text support for improved user experience
-- Option to maintain trailing zeros after decimal points
-- Client-side validation using regular expressions
+### Markup
+
+```javascript
+<wm-number textalign="right" name="number"></wm-number>
+```
+
+### Examples
+
+#### Properties
+
+- Sets the minimum and maximum allowed values for the Number component.
+
+```javascript
+Page.Widgets.number.minvalue = 100;
+Page.Widgets.number.maxvalue = 1000;
+```
+
+- Sets the default value of the number component and enables financial input mode. This formats the value with thousands separators and decimal precision.
+
+```javascript
+// Output displayed: 8,976.25
+Page.Widgets.number.datavalue = 8976.25;
+Page.Widgets.number.inputmode = "financial"
+```
+
+#### Events
+
+- Triggered whenever the number component’s value changes.
+
+```javascript
+Page.numberChange = function ($event, widget, newVal, oldVal) {
+  // Recalculate total amount when quantity changes
+    if (newVal) {
+        let price = Page.Widgets.numberPrice.datavalue || 0;
+        let quantity = newVal;
+        Page.Widgets.numberTotalAmount.datavalue = price * quantity;
+    }
+};
+```
+
+- Triggered every time the user releases a key while typing in the number field.
+
+```javascript
+Page.numberKeyup = function ($event, widget) {
+  //Requires “Update value on Keypress” to be enabled in the component’s properties panel.
+  if (widget.datavalue > 100000) {
+        Page.Widgets.warningLabel.caption = "Amount exceeds approval limit";
+        Page.Widget.warningLabel.show = true;
+    } else {
+        Page.Widgets.warningLabel.caption = "";
+        Page.Widgets.warningLabel.show = false;
+    }
+};
+```

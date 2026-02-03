@@ -1,6 +1,6 @@
 # Overview
 
-A **Checkbox** component is a specific type of two-states button that can be either checked or unchecked. Checkboxes let a user select an option. Examples: "I agree to terms and conditions" etc. checked and unchecked options.
+A **Checkbox** component is a specific type of two-states button that can be either checked or unchecked. Checkboxes let a user select an option.
 
 ### Markup
 

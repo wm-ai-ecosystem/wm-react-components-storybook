@@ -18,32 +18,6 @@ The **Tree** component displays data in a hierarchical structure, allowing you t
 Page.Widgets.tree.levels = 3;
 ```
 
-- Simple tree dataset.
-
-```javascript
-[
-  {
-    "id": 1,
-    "label": "Item 1",
-    "icon": "glyphicon glyphicon-music",
-    "children": [
-      {
-        "id": 1.1,
-        "label": "Item 1.1",
-        "icon": "glyphicon glyphicon-bookmark",
-        "children": []
-      }
-    ]
-  },
-  {
-    "id": 2,
-    "label": "Item 2",
-    "icon": "fa fa-align-left",
-    "children": []
-  }
-]
-```
-
 #### Events 
 
 - Triggered when a tree node is selected.
@@ -89,4 +63,31 @@ Page.Widgets.tree.levels = 3;
 
 ```javascript
     Page.Widgets.tree.selectById(1);
+```
+
+
+#### Sample tree dataset.
+
+```javascript
+[
+  {
+    "id": 1,
+    "label": "Item 1",
+    "icon": "glyphicon glyphicon-music",
+    "children": [
+      {
+        "id": 1.1,
+        "label": "Item 1.1",
+        "icon": "glyphicon glyphicon-bookmark",
+        "children": []
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "label": "Item 2",
+    "icon": "fa fa-align-left",
+    "children": []
+  }
+]
 ```
