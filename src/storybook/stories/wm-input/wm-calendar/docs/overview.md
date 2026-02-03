@@ -68,7 +68,7 @@ Page.Widgets.calendar.gotoNextMonth();
 Page.Widgets.calendar.gotoMonth(2);
 ```
 
-#### Sample calendar dataset
+<!-- #### Sample calendar dataset
 
 ```json
 [
@@ -94,4 +94,4 @@ Page.Widgets.calendar.gotoMonth(2);
     "classname": "event-info"
   }
 ]
-```
+``` -->
