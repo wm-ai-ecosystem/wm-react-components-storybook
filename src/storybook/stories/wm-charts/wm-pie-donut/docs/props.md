@@ -112,17 +112,3 @@
         | `iconclass` | string | - | Defines the class of the icon that is applied to the pie/donut chart component. |
     </div>
 </details>
-
-### Use Cases
-
-- Sets the visual theme for the pie in the chart
-
-```javascript
-Page.Widgets.pieChart.theme = "Retro";
-```
-
-- Sets the visual colors for the donut in the chart
-
-```javascript
-Page.Widgets.donutChart.customcolors = "#4CAF50, #2196F3, #FFC107";
-```

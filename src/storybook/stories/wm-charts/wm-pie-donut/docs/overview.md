@@ -17,8 +17,31 @@ The **Pie** or **Donut** Chart component allows you to display data as a pie or 
 ```
 
 
-### Use Cases
+### Examples
 
-- Show how a total budget is distributed across departments or projects.
-- Display responses or preferences as percentages of the total.
-- Visualize the percentage contribution of each company in a market.
+#### Properties 
+
+- Sets the visual theme for the pie in the chart
+
+```javascript
+Page.Widgets.pieChart.theme = "Retro";
+```
+
+- Sets the visual colors for the donut in the chart
+
+```javascript
+Page.Widgets.donutChart.customcolors = "#4CAF50, #2196F3, #FFC107";
+```
+
+#### Events 
+
+- Triggered during the initialization phase of the Pie Chart, just before it is rendered on the page (same applies to Donut Chart, only the component name differs and some properties).
+
+```javascript
+    Page.pieChartBeforerender = function (widget, chartInstance) {
+    // Show the legend
+    // Set legend type to "classic"
+    widget.legendtype = "classic";
+    widget.showlegend = true;
+};
+```

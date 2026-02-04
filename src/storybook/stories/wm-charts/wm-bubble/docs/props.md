@@ -143,17 +143,3 @@
         | `iconclass` | string | - | Defines the class of the icon that is applied to the bubble component. |
     </div>
 </details>
-
-### Use Cases
-
-- Sets the visual theme for the bubbles in the chart
-
-```javascript
-Page.Widgets.bubbleChart.theme = "Retro";
-```
-
-- Sets the visual colors for the bubbles in the chart
-
-```javascript
-Page.Widgets.bubbleChart.customcolors = "#4CAF50, #2196F3, #FFC107";
-```

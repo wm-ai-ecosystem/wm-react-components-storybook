@@ -8,8 +8,29 @@ The **Bubble Chart** component is a powerful visualization tool that displays da
 <wm-chart type="Bubble" title="Bubble Chart" height="250px" iconclass="wi wi-bubble-chart" name="bubbleChart"></wm-chart>
 ```
 
-### Use Cases
+### Examples
 
-- Compare multiple products based on sales volume, revenue, and profitability in a single view.
-- Analyze stock performance by showing price trends, trading activity, and overall company size together.
-- Assess patient health patterns by comparing age, vital indicators, and overall risk levels at once.
+#### Properties 
+
+- Sets the visual theme for the bubbles in the chart
+
+```javascript
+Page.Widgets.bubbleChart.theme = "Retro";
+```
+
+- Sets the visual colors for the bubbles in the chart
+
+```javascript
+Page.Widgets.bubbleChart.customcolors = "#4CAF50, #2196F3, #FFC107";
+```
+
+#### Events 
+
+- Triggered during the initialization phase of the bubble chart, just before it is rendered on the page.
+
+```javascript
+    Page.bubbleChartBeforerender = function (widget, chartInstance) {
+    // Example: Customize the bubble appearance before rendering
+    chartInstance.pointShape("square");
+};
+```

@@ -8,8 +8,37 @@ The **Cumulative Line Chart** component displays data as a continuously increasi
 <wm-chart type="Cumulative Line" title="Cumulative Line Chart" height="250px" iconclass="wi wi-line-chart" name="cumulativeLineChart"></wm-chart>
 ```
 
-### Use Cases
+### Examples
 
-- Monitor cumulative revenue or units sold over a quarter or year to see overall performance.
-- Display cumulative profit, expenses, or investment returns for budgeting and forecasting.
-- Visualize cumulative task completion or milestones to track overall project advancement.
+#### Properties 
+
+- Sets the visual theme for the chart
+
+```javascript
+Page.Widgets.cumulativeLineChart.theme = "Retro";
+```
+
+- Sets the visual colors for the  the chart
+
+```javascript
+Page.Widgets.cumulativeLineChart.customcolors = "#4CAF50, #2196F3, #FFC107";
+```
+
+#### Events 
+
+- Triggered during the initialization phase of the chart, just before it is rendered on the page.
+
+```javascript
+    Page.cumulativeLineChartBeforerender = function (widget, chartInstance) {
+    // Example: Choose line interpolation based on a dataset or configuration variable
+    const chartMode = App.Variables.reportConfig.dataSet.lineStyle; // "linear", "step", "cardinal"
+
+    if(chartMode === "linear") {
+        chartInstance.interpolate("linear");    // Smooth straight lines
+    } else if(chartMode === "step") {
+        chartInstance.interpolate("step");      // Step-like progression
+    } else if(chartMode === "cardinal") {
+        chartInstance.interpolate("cardinal");  // Smooth curves
+    }
+};
+```

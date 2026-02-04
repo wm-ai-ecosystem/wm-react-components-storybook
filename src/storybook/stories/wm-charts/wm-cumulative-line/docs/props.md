@@ -127,17 +127,3 @@
         | `iconclass` | string | - | Defines the class of the icon that is applied to the chart component. |
     </div>
 </details>
-
-### Use Cases
-
-- Sets the visual theme for the chart
-
-```javascript
-Page.Widgets.cumulativeLineChart.theme = "Retro";
-```
-
-- Sets the visual colors for the  the chart
-
-```javascript
-Page.Widgets.cumulativeLineChart.customcolors = "#4CAF50, #2196F3, #FFC107";
-```

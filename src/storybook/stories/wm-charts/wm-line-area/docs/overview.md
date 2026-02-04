@@ -16,9 +16,37 @@ The **Line Chart** or **Area Chart** component allows you to display data as a l
 <wm-chart type="Area" title="Area Chart" height="250px" iconclass="fa fa-area-chart" name="areaChart"></wm-chart>
 ```
 
+### Examples
 
-### Use Cases
+#### Properties 
 
-- Track stock prices or indices over time to visualize growth, dips, and trends.
-- Plot temperature, rainfall, or humidity trends over time.
-- Visualize revenue or expense predictions alongside historical data.
+- Sets the visual theme for the line in the chart
+
+```javascript
+Page.Widgets.lineChart.theme = "Retro";
+```
+
+- Sets the visual colors for the area in the chart
+
+```javascript
+Page.Widgets.areaChart.customcolors = "#4CAF50, #2196F3, #FFC107";
+```
+
+#### Events 
+
+- Triggered during the initialization phase of the Line Chart, just before it is rendered on the page (same applies to Area Chart, only the component name differs and some properties).
+
+```javascript
+    Page.lineChartBeforerender = function (widget, chartInstance) {
+    // Example: Choose line interpolation based on a dataset or configuration variable
+    const chartMode = App.Variables.reportConfig.dataSet.lineStyle; // "linear", "step", "cardinal"
+
+    if(chartMode === "linear") {
+        chartInstance.interpolate("linear");    // Smooth straight lines
+    } else if(chartMode === "step") {
+        chartInstance.interpolate("step");      // Step-like progression
+    } else if(chartMode === "cardinal") {
+        chartInstance.interpolate("cardinal");  // Smooth curves
+    }
+};
+```

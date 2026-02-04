@@ -131,17 +131,3 @@
         | `iconclass` | string | - | Defines the class of the icon that is applied to the bar/column chart component. |
     </div>
 </details>
-
-### Use Cases
-
-- Sets the visual theme for the bars in the chart
-
-```javascript
-Page.Widgets.barChart.theme = "Retro";
-```
-
-- Sets the visual colors for the column in the chart
-
-```javascript
-Page.Widgets.columnChart.customcolors = "#4CAF50, #2196F3, #FFC107";
-```

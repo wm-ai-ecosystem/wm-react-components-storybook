@@ -130,17 +130,3 @@
         | `iconclass` | string | - | Defines the class of the icon that is applied to the line/area chart component. |
     </div>
 </details>
-
-### Use Cases
-
-- Sets the visual theme for the line in the chart
-
-```javascript
-Page.Widgets.lineChart.theme = "Retro";
-```
-
-- Sets the visual colors for the area in the chart
-
-```javascript
-Page.Widgets.areaChart.customcolors = "#4CAF50, #2196F3, #FFC107";
-```
