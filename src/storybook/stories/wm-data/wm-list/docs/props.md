@@ -1,110 +1,106 @@
-# Props
+# Properties
 
-## Data Configuration
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `dataset` | `T[]` | `[]` | Array of data items to be displayed in the list. |
-| `datasource` | `LiveVariableConfig` | - | Configuration for binding to a live data source instead of static dataset. |
-| `orderby` | `string` | - | Field name to sort the list items. |
-| `groupby` | `string` | - | Field name to group the list items. |
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `title` | string | - | Set the title of the component. |
+        | `subheading` | string | - | Set the sub heading of the component. |
+        | `name` | string | - | A unique identifier for the list component. Special characters and spaces are not allowed. |
+    </div>
+</details>
 
-## Display Configuration
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `name` | `string` | - | Unique identifier for the list component. |
-| `title` | `string` | - | Title displayed at the top of the list. |
-| `subheading` | `string` | - | Subtitle displayed below the title. |
-| `dateformat` | `string` | - | Format string for date values in the list. |
-| `direction` | `IDirection` | `'vertical'` | List layout direction ('vertical' or 'horizontal'). |
-| `itemsperrow` | `string` | - | Number of items to display per row in grid layout. |
-| `horizontalalign` | `IAlignment` | `'left'` | Horizontal alignment of items ('left', 'center', 'right'). |
-| `columnalign` | `IColumnAlignment` | - | Alignment of columns within the list. |
-| `hidehorizontalscrollbar` | `boolean` | `false` | Whether to hide horizontal scrollbar. |
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `tabindex` | number | 0 | The tab index attribute specifies the tab order of an element. You can use this property to change the default tabbing order for component access using the tab key. The value can range from 0 to 32767. The default is 0 and -1 makes the element non-focusable. NOTE: In Safari browsers, by default, Tab highlights only text fields. To enable Tab functionality, in Safari Browser from Preferences -> Advanced -> Accessibility set the option "Press Tab to highlight each item on a webpage". |
+    </div>
+</details>
 
-## Pagination
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `navigation` | `INavigation` | `'Basic'` | Pagination navigation type ('Basic', 'Pager', 'Classic', etc.). |
-| `navigationalign` | `IAlignment` | `'center'` | Alignment of the navigation controls. |
-| `pagesize` | `number` | `20` | Number of items per page. |
-| `boundarylinks` | `boolean` | `false` | Show boundary links (first/last) in pagination. |
-| `paginationclass` | `string` | - | CSS class for pagination controls. |
-| `showrecordcount` | `boolean` | `false` | Display the record count information. |
-| `allowpagesizechange` | `boolean` | `false` | Allow users to change page size. |
-| `pagesizeoptions` | `string` | - | Comma-separated list of available page size options. |
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | "250px" | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
 
-## Selection and Interaction
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `multiselect` | `boolean` | `false` | Enable selection of multiple items. |
-| `selectionlimit` | `number` | - | Maximum number of items that can be selected in multiselect mode. |
-| `selectfirstitem` | `boolean` | `false` | Automatically select the first item when list loads. |
-| `disableitem` | `boolean` | `false` | Disable item selection. |
-| `enablereorder` | `boolean` | `false` | Enable drag-and-drop reordering of items. |
+<details>
+  <summary>Dataset</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `dataset` | array | - | Set this property to a variable to populate the list of values to display. |
+        | `groupby` | string | - | This property allows for grouping the list of rows in the variable bound to a dataset by selecting one of the field names from the drop-down list. |
+        | `orderby` | string | - | This allows for multiple selection for ordering the display of rows based on fields in asc or desc order - up arrow for asc and down arrow for desc. |
+    </div>
+</details>
 
-## Style and Custom Content
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `listclass` | `string` | - | CSS class for the list container. |
-| `itemclass` | `string \| ((item: T) => string \| null \| undefined)` | - | CSS class for list items, or function to dynamically generate classes. |
-| `iconclass` | `string` | - | CSS class for icons in list items. |
-| `children` | `React.ReactNode` | - | Custom template for list item rendering. |
-| `selectedItemWidgets` | `Array<any> \| any` | - | Custom template for selected items. |
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `direction` | string | "vertical" | Changes the direction of the scroll. |
+        | `enablereorder` | boolean | false | This property will allow users to reorder the list items at runtime. |
+        | `statehandler` | string | "URL" | This (Retain State) property will allow users to maintain component states using state handling on the URL, Local Storage or Session Storage. **Note**: It does not work if the Pagination property is set as "On Demand" or "Infinite Scroll". |
+        | `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
+        | `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+        | `disableitem` | boolean | false | If this property is set to true (checked), selection of List item won't be allowed at run-time. |
+        | `pagesize` | number | 5 | This property sets the maximum number of items to show in the drop-down list. For example, setting the pageSize property to 10 will cause the select menu list to show ten items, with an 11th item labelled "more choices." Selecting the "more choices" option will display an item labelled "previous choices" followed by the next 10 items |
+        | `collapsible` | boolean | false | Enable control for collapsing and expanding the component. |
+        | `showcount` | boolean | false | Count of list items in list group will be shown, if set to true |
+        | `multiselect` | boolean | false | On checking this property users can select multiple items. |
+        | `selectfirstitem` | boolean | false | If this bindable property is checked, the first item of the livelist will be selected automatically when the livelist is displayed. |
+        | `selectionlimit` | number | - | This bindable property will allow users to select only a limited number of items. |
+        | `hidehorizontalscrollbar` | boolean | false | The horizontal scrollbar will be hidden if set to true. |
+    </div>
+</details>
 
-## Messages and Loading States
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `nodatamessage` | `string` | `'No data found'` | Message displayed when list is empty. |
-| `ondemandmessage` | `string` | - | Message for on-demand loading. |
-| `loadingdatamsg` | `string` | `'Loading...'` | Message displayed during data loading. |
-| `loadingicon` | `string` | - | Icon shown during loading state. |
-| `showcount` | `boolean` | `false` | Show count of items beside group headers. |
+<details>
+  <summary>Pagination</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `navigation` | string | - | Select the pagination type for the list. This property determines how records are fetched. It can be: Basic, Pager, Classic, Infinite Scroll, Horizontal Slider or None |
+        | `showrecordcount` | boolean | false | This property controls whether the total record count is displayed in the pagination or not. |
+        | `navigationalign` | string | - | This property specifies how the paginator should be aligned horizontally: Left, center or right. |
+        | `ondemandmessage` | string | "Load More" | The property can be used to customize the on demand navigation message. |
+        | `allowpagesizechange` | boolean | false | This property lets users adjust how many records are shown per page dynamically. For example, switching between 10, 25, or 50 records based on preference. |
+        | `pagesizeoptions` | string | "5,10,20,50,100" | This property allows users to customize the page size options. For example: 3, 7, 10. |
+    </div>
+</details>
 
-## Advanced Configuration
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `statehandler` | `StorageType` | - | Storage type for maintaining component state. |
-| `maxsize` | `number` | - | Maximum number of items to display. |
-| `collapsible` | `boolean` | `false` | Enable collapsible groups when using groupby. |
+<details>
+  <summary>Graphics</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `loadingicon` | string | "fa fa-circle-o-notch" | This property can assign an icon that is shown while loading list items. |
+        | `iconclass` | string | - | This property defines the class of the icon that is applied to the list. |
+    </div>
+</details>
 
-## Common Use Cases
+<details>
+  <summary>Format</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `horizontalalign` | string | "left" | This property specifies how the elements should be aligned horizontally. |
+    </div>
+</details>
 
-### Basic List Configuration
-```javascript
-// Configure a basic list with static data
-Page.Widgets.basicList.dataset = [
-  { id: 1, name: "Item 1" },
-  { id: 2, name: "Item 2" },
-  { id: 3, name: "Item 3" }
-];
-```
-
-### Pagination Configuration
-```javascript
-// Configure pagination settings
-Page.Widgets.paginatedList.navigation = "Classic";
-Page.Widgets.paginatedList.pagesize = 10;
-Page.Widgets.paginatedList.boundarylinks = true;
-Page.Widgets.paginatedList.showrecordcount = true;
-```
-
-### Selection Configuration
-```javascript
-// Configure multi-select with limit
-Page.Widgets.multiList.multiselect = true;
-Page.Widgets.multiList.selectionlimit = 3;
-
-// Handle selection limit exceeded
-Page.Widgets.multiList.onSelectionlimitexceed = function(widget, limit) {
-  app.notify.error("You can select a maximum of " + limit + " items.");
-};
-```
-
-### Grouping and Sorting
-```javascript
-// Configure grouping and sorting
-Page.Widgets.organizedList.groupby = "category";
-Page.Widgets.organizedList.orderby = "name asc";
-Page.Widgets.organizedList.showcount = true;
-Page.Widgets.organizedList.collapsible = true;
-```
+<details>
+  <summary>Message</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `nodatamessage` | string | "No data found" | This message will be displayed when there is no data to display. |
+        | `loadingdatamsg` | string | "Loading..." | This message will be displayed when waiting for data to load. |
+    </div>
+</details>

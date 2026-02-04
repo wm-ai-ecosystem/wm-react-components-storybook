@@ -40,7 +40,6 @@ Page.Widgets.form.formWidgets.name.show = true;
 
 // 2. Using the mapped field name (defined in Form Advanced Settings → Fields tab)
 Page.Widgets.form.formfields.name.show = true;
-
 ```
 
 - Access form output.

@@ -1,15 +1,41 @@
 # Callback Events
 
-| Event | Description |
-|-------|-------------|
-| `onSelect` | Triggered when an item is selected. Provides the selected item and selection details. |
-| `onClick` | Triggered when a list item is clicked. Provides the clicked item and event details. |
-| `onDblclick` | Triggered when a list item is double-clicked. Provides the double-clicked item and event details. |
-| `onMouseEnter` | Triggered when the mouse pointer enters a list item. Provides the item and event details. |
-| `onMouseLeave` | Triggered when the mouse pointer leaves a list item. Provides the item and event details. |
-| `onReorder` | Triggered when an item is reordered through drag-and-drop. Provides the reordered item details and new order. |
-| `onSelectionlimitexceed` | Triggered when the selection limit is exceeded in multiselect mode. Provides the widget and limit value. |
-| `onBeforedatarender` | Triggered before the data is rendered in the list. Allows for manipulation of the dataset before rendering. |
-| `onRender` | Triggered after the data is rendered in the list. Provides access to the rendered dataset. |
-| `onPaginationchange` | Triggered when the pagination changes (page number or page size). Provides pagination details. |
-| `onSetrecord` | Triggered when the current record is set. Provides the record details. |
+<details open>
+  <summary>Mouse Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onClick` | This event handler is called whenever the click event is triggered on a component. |
+        | `onDoubleClick` | This event handler is called whenever the double click event is triggered on a component. |
+        | `onMouseEnter` | This event handler is called whenever the mouse enters the component. |
+        | `onMouseLeave` | This event handler is called whenever the mouse leaves the component. |
+    </div>
+</details>
+
+<details>
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onTap` | This event handler is called whenever the component is tapped. |
+        | `onDoubleTap` | This event handler is called whenever the component is double tapped. |
+    </div>
+</details>
+
+<details>
+  <summary>Callback Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onSelect` | This event handler is called when the tab is selected. |
+        | `onReorder` | This event is triggered when the item in a list is reordered. |
+        | `onSelectionLimitExceed` | This event is triggered when selected items cross the Selection Limit. |
+        | `onBeforeDataRender` | This event handler is called before the data is rendered on component. |
+        | `onRender` | When component is rendered, this event will be fired. |
+        | `onBeforePaginationChange` | This event handler is called when the page is changed through navigation controls. |
+        | `onPaginationChange` | This event handler is called when the data is set using the pagination. |
+    </div>
+</details>
+
+
+

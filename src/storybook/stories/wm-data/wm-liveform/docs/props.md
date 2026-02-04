@@ -1,72 +1,114 @@
-# Props
+# Properties
 
-## Basic Configuration
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `title` | string | "Form" | Set the title of the component. |
+        | `subheading` | string | - | Set the sub heading of the component. |
+        | `name` | string | - | A unique identifier for the liveform component. Special characters and spaces are not allowed. |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | string | "" | The main heading text displayed at the top of the form. |
-| `subheading` | string | "" | Secondary descriptive text displayed below the main title. |
-| `iconclass` | string | "" | CSS class name for an icon to display alongside the form title. |
-| `formType` | string | "" | Defines the type of form (e.g., "standard", "inline", etc.). |
-| `defaultmode` | "create" \| "edit" \| "view" | "create" | Sets the initial operation mode of the form. |
-| `isViewMode` | boolean | false | When true, displays the form in read-only view mode. |
+<details>
+  <summary>Advanced Settings</summary>
+    <div>
+        <details open>
+          <summary>Form</summary>
+            <div>
+              | Property | Type | Default | Description |
+              | --- | --- | --- | --- |
+              | **Validation** |  |  |  |
+              | `validationtype` | string | "default" | This property defines the type of validation applied on the form. **Default**: Shows validation messages below each field that fails validation, **HTML**: Uses browser (HTML) validations and displays the message for the first invalid field when it loses focus, **No Validations**: Skips all form validations. |
+              | **Behavior** |  |  |  |
+              | `defaultmode` | string | "edit" | This property controls whether live form is in view or edit mode when form is opened. |
+              | `autocomplete` | boolean | true | Enabling this property turns on auto-completion in the editor. As the user types into the pull-down select editor, the choices change dynamically. |
+              | **Caption** |  |  |  |
+              | `captionalign` | string | - | Caption for your component can be left, center or right aligned. |
+              | `captionposition` | string | "top" | This property determines where your caption appears with respect to the edit field. It is up to you to insure that there is sufficient height or width for the caption to fit in the selected position. |
+              | `captionwidth` | width | "xs-12 sm-4 md-4 lg-4" | Accepts integer(x) between 1-12 and adds class col-xs-(x) for mobile, col-sm-(x) for Tablet Potrait, col-md-(x) for Laptop Tablet Landscape, col-lg-(x) for Large screen to suit fluid grid system. **Note**: This property is displayed only when the caption position is set to left or right. |
+              | **Message** |  |  |  |
+              | `messagelayout` | string | "inline" | Select the value to decide the appreance of the success/error message after CRUD operation. If no message is required for any operation, clear the respective message |
+              | `errormessage` | string | - | This message will be displayed, if there is an error during the CRUD operation. |
+              | `insertmessage` | string | "Record added successfully" | This message will be displayed, when data is inserted by liveform. |
+              | `updatemessage` | string | "Record updated successfully" | This message will be displayed, when data is updated by liveform. |
+              | `deletemessage` | string | "Record deleted successfully" | This message will be displayed, when data is deleted by liveform. |
+            </div>
+        </details>
+        <details>
+          <summary>Fields</summary>
+            <div>
+              | Property | Type | Default | Description |
+              | --- | --- | --- | --- |
+              |  |  |  | Specifies the component used to represent each data field and the component type (such as Text, Number, Select, etc.) can be chosen. Additional properties like conditional classes and other field-specific settings can also be configured. |
+              |  |  |  | create custom columns by clicking on the **'+'** icon. **Note**: If a custom column is not selected on the left panel, it will be deleted when the Form Designer is saved. |
+            </div>
+        </details>
+        <details>
+          <summary>Actions</summary>
+            <div>
+              | Property | Type | Default | Description |
+              | --- | --- | --- | --- |
+              |  |  |  | Action items can be added to a Live Form for both View and Edit modes. View mode supports actions like New, Edit, and Delete, while Edit mode includes Save and Reset. Each action can be configured as a Button or Anchor with properties such as title, icon, visibility (show/hide), and event handling. |
+              |  |  |  | create custom actions by clicking on the **'+'** icon. **Note**: If a custom action is not selected on the left panel, it will be deleted when the Form Designer is saved. |
+            </div>
+        </details>
+    </div>
+</details>
 
-## Data Configuration
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `tabindex` | number | 0 | The tab index attribute specifies the tab order of an element. You can use this property to change the default tabbing order for component access using the tab key. The value can range from 0 to 32767. The default is 0 and -1 makes the element non-focusable. NOTE: In Safari browsers, by default, Tab highlights only text fields. To enable Tab functionality, in Safari Browser from Preferences -> Advanced -> Accessibility set the option "Press Tab to highlight each item on a webpage". |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `formdatasource` | string | "" | The data source name that this form binds to for data operations. |
-| `dataset` | string | "" | The dataset to use when binding form fields. |
-| `numberoffields` | number | 0 | Specifies the number of fields in the form. |
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | - | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
 
-## Form Behavior
+<details>
+  <summary>Dataset</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `dataset` | object | - | (Value) Data can come from various sources like database, web service or another component and can be accessed through binding to Live or Service Variables. |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `method` | string | "post" | HTTP method used for form submission ("get" or "post"). |
-| `enctype` | string | "application/x-www-form-urlencoded" | The encoding type for form data when submitted. |
-| `autocomplete` | boolean | true | Enables or disables browser autocomplete functionality. |
-| `collapsible` | boolean | false | Allows the form to be collapsed/expanded when true. |
-| `expanded` | boolean | true | Initial expanded state when collapsible is enabled. |
+<details>
+  <summary>Default Value</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `formdata` | object | - | This property can be set to value or bound to another widget like Data Table, List or Live Filter or service variable. These define the values to be displayed when the Form is first loaded |
+    </div>
+</details>
 
-## Layout and Presentation
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
+        | `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `captionposition` | string | "top" | Position of field captions relative to input fields. |
-| `captionalign` | string | "left" | Horizontal alignment of field captions. |
-| `tabindex` | number | 0 | The tab order of the form within the page. |
-| `isLayoutDialog` | boolean | false | When true, optimizes the form for dialog/modal display. |
-| `isInsideWizard` | boolean | false | Configures the form for use within a wizard component. |
-
-## Error Handling
-
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `errormessage` | string | "" | Custom error message to display when form validation fails. |
-
-## Common Use Cases
-
-#### Basic Form Configuration
-```javascript
-// Configure a basic edit form
-Page.Widgets.userForm.defaultmode = "edit";
-Page.Widgets.userForm.formdatasource = "UserDataService";
-Page.Widgets.userForm.title = "User Profile";
-Page.Widgets.userForm.subheading = "Update your personal information";
-```
-
-#### Form Submission Configuration
-```javascript
-// Configure form to upload files
-Page.Widgets.documentForm.method = "post";
-Page.Widgets.documentForm.enctype = "multipart/form-data";
-Page.Widgets.documentForm.autocomplete = false;
-```
-
-#### Collapsible Form
-```javascript
-// Make form collapsible and set initial state
-Page.Widgets.advancedOptionsForm.collapsible = true;
-Page.Widgets.advancedOptionsForm.expanded = false;
-```
+<details>
+  <summary>Graphics</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `iconclass` | string | - | Defines the class of the icon that is applied to the component. |
+    </div>
+</details>

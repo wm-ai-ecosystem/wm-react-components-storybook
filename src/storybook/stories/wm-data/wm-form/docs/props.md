@@ -110,6 +110,6 @@
     <div>
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
-        | `iconclass` | string | - | Defines the class of the icon that is applied to the bar/column chart component. |
+        | `iconclass` | string | - | Defines the class of the icon that is applied to the component. |
     </div>
 </details>
