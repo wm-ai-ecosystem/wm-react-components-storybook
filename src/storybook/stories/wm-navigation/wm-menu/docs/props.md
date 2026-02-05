@@ -50,7 +50,7 @@
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
         | `itemlabel` | string | - | Label for menu items. It can be bound to a variable or set to a field from the Dataset Value variable. |
-        | `itemicon` | string | - | Label for menu items. It can be bound to a variable or set to a field from the Dataset Value variable. |
+        | `itemicon` | string | - | Class for the icon for menu items. Example- 'fa fa-ban' or 'glyphicon glyphicon-cloud' |
         | `itemlink` | string | - | Link for the items. It can be bound to a variable or set to a field from the Dataset Value variable. **Note**: Item link has priority over onSelect actions i.e. when the link is selected the onSelect actions won't get executed. |
         | `itemaction` | string | - | Action Task for anchor or menu items generated dynamically. |
         | `userrole` | string | - | Role for anchor or menu items generated dynamically. |

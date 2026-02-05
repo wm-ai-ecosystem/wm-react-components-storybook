@@ -15,7 +15,7 @@
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
         | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
-        | `height` | string | "250px" | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | - | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
     </div>
 </details>
 

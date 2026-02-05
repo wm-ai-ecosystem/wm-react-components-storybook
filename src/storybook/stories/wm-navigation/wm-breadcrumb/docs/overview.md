@@ -34,9 +34,13 @@ Page.breadcrumbBeforenavigate = function (widget, $item) {
     //Allows you to validate, confirm, or take actions based on the target breadcrumb item before the navigation occurs.
     const form = Page.Widgets.employeeForm.valid;
     if (!form) {
-        alert("Employee profile is incomplete. Complete all required fields before navigating.");
+        Page.Widgets.alertDialog.message = "Employee profile is incomplete. Complete all required fields before navigating.";
+        Page.Widgets.alertDialog.open();
+        
         return false; // Block navigation
     }
+
+    // Form is valid, allow breadcrumb navigation
     return true;
 };
 ```

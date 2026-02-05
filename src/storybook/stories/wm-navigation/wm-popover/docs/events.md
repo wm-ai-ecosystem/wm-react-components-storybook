@@ -1,13 +1,20 @@
 # Callback Events
 
-Typical popover components would include the following events, though specific events aren't defined in the provided data:
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onLoad` | This event handler is called when the component is loaded. |
+    </div>
+</details>
 
-| Event | Description |
-|-------|-------------|
-| `onOpen` | Triggered when the popover is displayed |
-| `onClose` | Triggered when the popover is hidden |
-| `onClickOutside` | Triggered when a user clicks outside the popover boundary |
-| `onEscapeKeyDown` | Triggered when the escape key is pressed while the popover is open |
-| `onPositionChange` | Fired when the calculated position of the popover changes |
-
-These events allow for custom behaviors when users interact with the popover component.
+<details>
+  <summary>Callback Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onShow` | This event should fire any time a component is shown due to changes in its parent's state. |
+        | `onHide` | This event should fire any time a component is hidden due to changes in its parent's state. |
+    </div>
+</details>
