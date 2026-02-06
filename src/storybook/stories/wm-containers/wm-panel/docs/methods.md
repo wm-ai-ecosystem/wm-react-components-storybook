@@ -1,7 +1,8 @@
 # Methods
 
-The Panel component exposes several methods that can be accessed via JavaScript using the pattern.
-
+<details open>
+  <summary>Methods</summary>
+    <div>
 | Method | Parameters | Return Type | Description |
 |--------|------------|------------|-------------|
 | close | none | void | Closes the panel if it's closable |
@@ -10,3 +11,5 @@ The Panel component exposes several methods that can be accessed via JavaScript 
 | toggle | none | void | Toggles the panel between expanded and collapsed states |
 | toggleFullScreen | none | void | Toggles the panel between normal and full-screen states |
 | toggleHelp | none | void | Shows or hides the help text popup |
+    </div>
+</details>

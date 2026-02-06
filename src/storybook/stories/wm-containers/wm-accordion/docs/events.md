@@ -1,16 +1,22 @@
 # Callback Events
 
-| Event      | Parameters                                   | Description                        |
-| ---------- | -------------------------------------------- | ---------------------------------- |
-| `onChange` | `$event, widget, newPaneIndex, oldPaneIndex` | Triggered when user switches panes |
+<details open>
+  <summary>Basic Events</summary>
+  <div>
+| Event | Description |
+| ----- | ----------- |
+| `onChange` | Triggered when user switches panes  |
+  </div>
+</details>
 
 <details>
-  <summary>Accordion Pane Events</summary>
-
-| Event        | Parameters       | Description                   |
-| ------------ | ---------------- | ----------------------------- |
-| `onLoad`     | `widget`         | Triggered when pane loads     |
-| `onExpand`   | `$event, widget` | Triggered when pane expands   |
-| `onCollapse` | `$event, widget` | Triggered when pane collapses |
-
+  <summary>Accordionpane Events</summary>
+  <div>
+| Event | Description |
+| ----- | ----------- |
+| `onLoad`     | Triggered when pane loads     |
+| `onExpand`   | Triggered when pane expands   |
+| `onCollapse` | Triggered when pane collapses |
+  </div>
 </details>
+

@@ -1,6 +1,6 @@
 # Overview
 
-The **Panel** component is a container used to group and display content with a header. It supports features like expand, collapse, full-screen view, and header elements such as title, icons, and badges. Panels help organize content and improve UI structure.
+A **Panel** is used to organize and group related components inside a container. It includes a collapsible section with a title bar for better structure and readability.
 
 ### Markup
 
@@ -30,66 +30,87 @@ The **Panel** component is a container used to group and display content with a 
 
 #### Properties
 
-```Javascript
-// Update panel title
+- Adding title to panel widget
+
+```javascript
 Page.Widgets.myPanel.title = "Performance - Q1";
+```
 
-// Add badge to show total alerts
+- Adding badge to show total alerts
+
+```javascript
 Page.Widgets.myPanel.badgeValue = "2";
-Page.Widgets.myPanel.badgeType = "danger";
+Page.Widgets.myPanel.badgeType = "success";
+```
 
-// ----- Behavior -----
+- Enable or disable panel collapsing
 
-// Enable or disable panel collapsing
+```javascript
 Page.Widgets.myPanel.collapsible = true;
+```
 
-// Enable full screen option
+- Enable full screen option
+
+```javascript
 Page.Widgets.myPanel.enableFullScreen = true;
+```
 
-// Enable default close button
+- Enable default close button
+
+```javascript
 Page.Widgets.myPanel.enableDefaultCloseAction = true;
-
 ```
 
 #### Events
 
-```Javascript
+- On load of panel
 
-// Load complaint details when panel loads
+```javascript
 Page.panelLoad = function (widget) {
     // Load complaint summary data
     Page.Variables.svGetComplaintSummary.invoke();
 };
 
-// When action menu item is clicked
+```
+
+- When action menu item is clicked
+
+```javascript
 Page.panelActionsclick = function ($item) {
+  if ($item.label === "Refresh") {
+    Page.Variables.svGetComplaintDetails.invoke();
+  }
 
-    if ($item.label === "Refresh") {
-        Page.Variables.svGetComplaintDetails.invoke();
-    }
-
-    if ($item.label === "Export") {
-        Page.Variables.svExportComplaintReport.invoke();
-    }
+  if ($item.label === "Export") {
+    Page.Variables.svExportComplaintReport.invoke();
+  }
 };
-
-
 ```
 
 #### Methods
 
-```Javascript
-// When panel is expanded → Load full complaint details
+- When panel is expanded 
+
+```javascript
+//Load full complaint details
 Page.panelExpand = function ($event, widget) {
     Page.Variables.svGetComplaintDetails.invoke();
 };
+```
 
-// When panel is collapsed → Hide sensitive details
+- When panel is collapsed
+
+```javascript
+//Hide sensitive details
 Page.panelCollapse = function ($event, widget) {
     Page.Widgets.txtCustomerNotes.show = false;
 };
+```
 
-// When panel is closed → Reset selected complaint
+- When panel is closed 
+
+```javascript
+//Reset selected complaint
 Page.panelClose = function ($event, widget) {
     Page.Variables.selectedComplaint.setValue(null);
 };

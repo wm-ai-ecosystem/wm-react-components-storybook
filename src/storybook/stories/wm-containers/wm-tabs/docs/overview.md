@@ -27,7 +27,7 @@ The Tabs component can be used in both static mode (with predefined panes) or dy
 
 #### Properties
 
-```Javascript
+```javascript
 // Set default tab
 Page.Widgets.dashboardTab.defaultpaneindex = 1;
 
@@ -46,7 +46,7 @@ Page.Widgets.dashboardTab.transition = "slide";
 
 - Select JavaScript for the on click event of previousBtn and use the following as javascript function with the following script:
 
-```Javascript 
+```javascript 
 Page.previousbtnClick = function($event, widget) {
 Page.Widgets.dashboardTab.prev(); //Navigates to previous tab
 };
@@ -54,7 +54,7 @@ Page.Widgets.dashboardTab.prev(); //Navigates to previous tab
 
 - Select JavaScript for the on click event for nextBtn and use the following script:
 
-```Javascript 
+```javascript 
 Page.nextbtnClick = function($event, widget) {
 Page.Widgets.dashboardTab.next(); //Navigates to next tab
 };
@@ -62,7 +62,7 @@ Page.Widgets.dashboardTab.next(); //Navigates to next tab
 
 - Select JavaScript for the on click event for goToSalesBtn and use the following script:
 
-```Javascript 
+```javascript 
 Page.gototabbtnClick = function($event, widget) {
 Page.Widgets.dashboardTab.goToTab(2); //Navigates to sales tab
 };
@@ -70,16 +70,10 @@ Page.Widgets.dashboardTab.goToTab(2); //Navigates to sales tab
 
 #### Events
 
-```Javascript
-
-//on load event
-Page.onTabsLoad = function() {
-  Page.Variables.EngineeringEmployeesData.update();
-};
+```javascript
 
 //on change event
-Page.dashboardTabchange = function($event, widget) {
-
+Page.dashboardTabchange = function ($event, widget, newPaneIndex, oldPaneIndex) {
     if(widget.defaultpaneindex === 1) {
         Page.Variables.svLoadReports.invoke();
     }
@@ -89,19 +83,15 @@ Page.dashboardTabchange = function($event, widget) {
     }
 };
 
-
 ```
 
 #### Methods
 
-```Javascript
-// Move to Overview tab
-Page.Widgets.dashboardTab.selectTab(0);
-
+```javascript
+// Go to specific tab
+Page.Widgets.tabs1.goToTab(2)
 // Move to next tab
 Page.Widgets.dashboardTab.next();
-
 // Move to previous tab
 Page.Widgets.dashboardTab.previous();
-
 ```

@@ -6,7 +6,7 @@ Wizards are commonly used in onboarding flows, registration forms, checkout proc
 
 ### Markup
 
-```Javascript
+```javascript
 <wm-wizard type="static" stepstyle="justified" class="number app-wizard" name="wizard1" variant="number">
 
   <wm-wizardstep name="wizardstep1"></wm-wizardstep>
@@ -15,8 +15,8 @@ Wizards are commonly used in onboarding flows, registration forms, checkout proc
 
   <wm-wizardaction name="wizardaction1">
     <wm-anchor class="app-wizard-skip" caption="Skip »" show="bind:skippable()" on-click="skip()" name="anchor1"></wm-anchor>
-
     <wm-container class="app-wizard-actions-right app-container-default" name="container4" variant="default">
+
       <wm-button class="btn-filled btn-default" type="button" caption="bind:cancelbtnlabel()" show="bind:cancelable()" on-click="cancel()" name="button1" variant="filled:default"></wm-button>
       <wm-button class="btn-filled btn-default" type="button" iconclass="wi wi-chevron-left" caption="bind:previousbtnlabel()" show="bind:hasPreviousStep()" on-click="previous()" disabled="bind:disablePrevious()" name="button2" variant="filled:default"></wm-button>
       <wm-button class="btn-filled btn-default" type="button" iconclass="wi wi-chevron-right" iconposition="right" caption="bind:nextbtnlabel()" show="bind:hasNextStep()" on-click="next()" disabled="bind:disableNext()" name="button3" variant="filled:default"></wm-button>
@@ -24,7 +24,6 @@ Wizards are commonly used in onboarding flows, registration forms, checkout proc
     </wm-container>
 
   </wm-wizardaction>
-  
 </wm-wizard>
 
 
@@ -35,83 +34,48 @@ Wizards are commonly used in onboarding flows, registration forms, checkout proc
 
 #### Properties
 
-- Customize Navigation Button Labels
+- Update navigation button labels
 
 ```javascript
-
-// Update navigation button labels
 Page.Widgets.employeeWizard.nextbtnlabel = "Continue";
-Page.Widgets.employeeWizard.previousbtnlabel = "Back";
-Page.Widgets.employeeWizard.donebtnlabel = "Submit";
-Page.Widgets.employeeWizard.cancelbtnlabel = "Cancel";
+```
 
-// Start onboarding from Personal Details step
+- Start onboarding from Personal Details step
+
+```javascript
 Page.Widgets.employeeWizard.defaultstepindex = 0;
-
-// Start onboarding from Personal Details step
-Page.Widgets.employeeWizard.defaultstepindex = 0;
-
 ```
 
 #### Events
 
+- On Load (invoke service variable)
 
 ```javascript
+Page.step2Load = function (step, stepIndex) {
+  Page.Variables.svGetCustomerPreferences.invoke();
+};
+```
 
+- On Next (Validate the form when the Next button in the Wizard is clicked)
 
+```javascript
 Page.step1Next = function (widget, currentStep, stepIndex) {
-
   var form = Page.Widgets.registrationForm;
-
   if (form.isValid) {
     return true;
   }
-
   app.notify.error("Please complete required fields");
   return false;
 };
+```
 
-Page.step2Load = function (step, stepIndex) {
+- On Done (Triggered when the Wizard completes all step)
 
-  // Load customer preferences
-  Page.Variables.svGetCustomerPreferences.invoke();
-};
-
-Page.wizard1Done = function (currentStep, steps) {
-
+```javascript
+Page.wizardEmployeeDone = function (currentStep, steps) {
   // Submit registration data
   Page.Variables.svRegisterCustomer.invoke();
-
   // Show success message
   app.notify.success("Customer registration completed successfully");
 };
-
-
-```
-
-#### Methods
-
-```Javascript
-
-// Move user to Document Upload step
-Page.Widgets.loanWizard.defaultstepindex = 2;
-
-
-//Disable button on form validation
-Page.validateLoanForm = function () {
-  var formData = Page.Widgets.loanForm.datavalue;
-
-  if (!formData.loanAmount) {
-    Page.Widgets.loanWizard.disablenext = true;
-  } else {
-    Page.Widgets.loanWizard.disablenext = false;
-  }
-};
-
-//Hiding wizard after final submit
-Page.completeLoanProcess = function () {
-  Page.Widgets.loanWizard.show = false;
-  Page.Widgets.successMessage.show = true;
-};
-
 ```

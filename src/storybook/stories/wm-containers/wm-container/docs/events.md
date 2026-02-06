@@ -1,9 +1,14 @@
 # Callback Events
 
-
- `onLoad`     Only Triggered when container renders the mapped partial.
-
 <details open>
+  <summary>Basic Events</summary>
+  <div>
+        | Event | Description |
+        | ----- | ----------- |
+        | `onLoad` | Only Triggered when container renders the mapped partial. |
+  </div>
+</details>
+<details >
   <summary>Mouse Events</summary>
     <div>
         | Event | Description |

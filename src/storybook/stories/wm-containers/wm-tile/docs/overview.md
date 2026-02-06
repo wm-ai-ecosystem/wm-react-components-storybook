@@ -66,42 +66,30 @@ The **Tile** to highlight key metrics, summaries, or quick navigation items. Til
 
 #### Properties
 
+- Add class name on click of button
+
 ```javascript
-// Update tile size
-Page.Widgets.myTile.width = "300px";
-Page.Widgets.myTile.height = "200px";
-
-// Update alignment
-Page.Widgets.myTile.horizontalAlign = "center";
-
-// Update tile content dynamically
-Page.Widgets.labelTitle.caption = "Active Users";
-Page.Widgets.labelValue.caption = "1,240";
+Page.buttonClick = function ($event, widget) {
+  Page.Widgets.myTile.class = "bg-info";
+};
 ```
 
 #### Events
 
+- Navigate to detailed report when tile is clicked
+
 ```javascript
-// Navigate to detailed report when tile is clicked
 Page.myTileClick = function ($event, widget) {
   App.Actions.goToPage_DetailedReport.invoke();
 };
+```
 
-// Highlight tile on mouse hover
+- Highlight tile on mouse hover
+
+```javascript
 Page.myTileMouseenter = function ($event, widget) {
   widget.class = "tile tile-highlight";
 };
-
-// Remove highlight when mouse leaves
-Page.myTileMouseleave = function ($event, widget) {
-  widget.class = "tile-default";
-};
 ```
 
-#### Methods
 
-```javascript
-// Show tile
-Page.Widgets.myTile.show = true;
-
-```
