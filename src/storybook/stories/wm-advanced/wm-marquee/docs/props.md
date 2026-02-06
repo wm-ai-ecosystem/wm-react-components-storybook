@@ -1,34 +1,33 @@
-# Props
+# Properties
 
-The Marquee component accepts the following properties to customize its behavior and appearance:
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `name` | string | - | A unique identifier for the marquee component. Special characters and spaces are not allowed. |
+    </div>
+</details>
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `speed` | Number | `50` | Controls the scrolling speed in pixels per second |
-| `direction` | String | `'left'` | Sets the scroll direction (`'left'` or `'right'`) |
-| `pauseOnHover` | Boolean | `true` | When true, pauses scrolling when the user hovers over the component |
-| `loop` | Number | `0` | Number of times to loop the content (0 for infinite) |
-| `delay` | Number | `0` | Initial delay before starting animation (in milliseconds) |
-| `gradient` | Boolean | `false` | Enables gradient fade effect at the edges |
-| `gradientWidth` | Number | `200` | Width of the gradient effect in pixels |
-| `gradientColor` | String | `'#fff'` | Color of the gradient effect |
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | - | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
 
-## Common Use Cases
-
-```javascript
-// Basic news ticker implementation
-Page.Widgets.newsMarquee.speed = 30;
-Page.Widgets.newsMarquee.direction = 'left';
-Page.Widgets.newsMarquee.pauseOnHover = true;
-
-// Right-to-left scrolling announcement with gradients
-Page.Widgets.announcementMarquee.direction = 'right';
-Page.Widgets.announcementMarquee.gradient = true;
-Page.Widgets.announcementMarquee.gradientWidth = 150;
-Page.Widgets.announcementMarquee.gradientColor = '#f5f5f5';
-
-// Fast-scrolling limited loop
-Page.Widgets.alertMarquee.speed = 100;
-Page.Widgets.alertMarquee.loop = 3;
-Page.Widgets.alertMarquee.delay = 1000;
-```
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `scrolldelay` | number | - | Sets the delay in the scroll of the Marquee. |
+        | `scrollamount` | number | - | Increasing scroll amount increases the speed of the scroll. |
+        | `direction` | string | - | Changes the direction of the scroll, choose from up, down, left or right. |
+        | `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
+        | `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+    </div>
+</details>

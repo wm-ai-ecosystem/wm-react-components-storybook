@@ -1,5 +1,9 @@
 # Styling
 
+The Marquee component does not expose any design tokens.
+
+<!-- # Styling
+
 The Marquee component can be styled using the following CSS classes:
 
 | CSS Class | Description |
@@ -62,4 +66,4 @@ The Marquee component can be styled using the following CSS classes:
 }
 ```
 
-You can target specific marquee instances by combining the widget ID with these classes, such as `#myMarquee .marquee-container`.
+You can target specific marquee instances by combining the widget ID with these classes, such as `#myMarquee .marquee-container`. -->
