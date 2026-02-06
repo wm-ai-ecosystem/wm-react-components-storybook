@@ -395,6 +395,10 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
           background-color: #eff6ff; 
         }
 
+        .component-documentation-container details > div img{
+          margin: 24px 0 8px !important;
+        }
+
         /* Inline Code Styling */
         .component-documentation-container code {
           background: rgba(41, 109, 246, 0.1);

@@ -39,19 +39,18 @@
         <details>
           <summary>Fields</summary>
             <div>
-              | Property | Type | Default | Description |
-              | --- | --- | --- | --- |
-              |  |  |  | Specifies the component used to represent each data field and the component type (such as Text, Number, Select, etc.) can be chosen. Additional properties like conditional classes and other field-specific settings can also be configured. |
-              |  |  |  | create custom columns by clicking on the **'+'** icon. **Note**: If a custom column is not selected on the left panel, it will be deleted when the Form Designer is saved. |
+              - You can control platform-specific display, choosing which fields or columns are visible on desktop and mobile to keep the layout clean and responsive.
+            - Specifies the component used to represent each data field and the component type (such as Text, Number, Select, etc.) can be chosen. Additional properties like conditional classes and other field-specific settings can also be configured.
+            - Create custom columns by clicking on the **'+'** icon. **Note**: If a custom column is not selected on the left panel, it will be deleted when the Form Designer is saved.
+              ![Form Fields](/wm-assets/components/liveform/advanceSettingsFields.png)
             </div>
         </details>
         <details>
           <summary>Actions</summary>
             <div>
-              | Property | Type | Default | Description |
-              | --- | --- | --- | --- |
-              |  |  |  | Action items can be added to a Live Form for both View and Edit modes. View mode supports actions like New, Edit, and Delete, while Edit mode includes Save and Reset. Each action can be configured as a Button or Anchor with properties such as title, icon, visibility (show/hide), and event handling. |
-              |  |  |  | create custom actions by clicking on the **'+'** icon. **Note**: If a custom action is not selected on the left panel, it will be deleted when the Form Designer is saved. |
+              - Action items can be added to a Live Form for both View and Edit modes. View mode supports actions like New, Edit, and Delete, while Edit mode includes Save and Reset. Each action can be configured as a Button or Anchor with properties such as title, icon, visibility (show/hide), and event handling. 
+            - Create custom actions by clicking on the **'+'** icon. **Note**: If a custom action is not selected on the left panel, it will be deleted when the Form Designer is saved.
+              ![Form Actions Basic](/wm-assets/components/liveform/advanceSettingsActionsBasic.png)
             </div>
         </details>
     </div>
