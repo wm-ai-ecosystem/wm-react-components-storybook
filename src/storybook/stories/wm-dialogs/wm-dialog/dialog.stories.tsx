@@ -139,7 +139,7 @@ export const Showcase: Story = {
                     Name
                   </Typography>
                   <Typography variant="body1">
-                    Vinith Krishna
+                    Ethan Clark
                   </Typography>
                 </Box>
 
@@ -312,7 +312,7 @@ export const Standard: Story = {
   args: {
     name: "standardDialog",
     title: "Standard Dialog",
-    dialogtype: "design-dialog",
+    // dialogtype: "design-dialog",
     showheader: true,
     closable: true,
     modal: true,
@@ -324,10 +324,10 @@ export const Standard: Story = {
   argTypes: {
     title: { control: "text" },
     iconclass:{ control:{ type:"select"}, options: iconClassNames },
-    dialogtype: {
-      control: { type: "select" },
-      options: ["design-dialog", "custom"],
-    },
+    // dialogtype: {
+    //   control: { type: "select" },
+    //   options: ["design-dialog", "custom"],
+    // },
     showheader: { control: "boolean" },
     closable: { control: "boolean" },
     modal: { control: "boolean" },

@@ -1,41 +1,33 @@
 # Callback Events
 
 <details open>
-<summary>Mouse Events</summary>
-
-| Event | Description |
-|-------|-------------|
-| onClick | Triggered when the tile is clicked |
-| onDoubleClick | Triggered when the tile is double-clicked |
-| onMouseover | Fired when the mouse pointer hovers over the tile |
-| onMouseout | Fired when the mouse pointer moves away from the tile |
-| onMouseenter | Triggered when the mouse pointer enters the tile area |
-| onMouseleave | Triggered when the mouse pointer leaves the tile area |
-
+  <summary>Mouse Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onClick` | This event handler is called whenever the click event is triggered on a component. |
+        | `onDoubleClick` | This event handler is called whenever the double click event is triggered on a component. |
+        | `onMouseOver` | This event fires when the mouse hovers over this component.. |
+        | `onMouseOut` | This event fires when the mouse moves away from this component. |
+        | `onMouseEnter` | This event handler is called whenever the mouse enters the component. |
+        | `onMouseLeave` | This event handler is called whenever the mouse leaves the component. |
+    </div>
 </details>
 
 <details>
-<summary>Touch Events</summary>
-
-| Event | Description |
-|-------|-------------|
-| onTap | Triggered when the tile is tapped |
-| onDoubleTap | Triggered when the tile is double-tapped |
-| onLongTap | Triggered when a long tap is performed on the tile (React Native only) |
-| onSwipeup | Triggered when a swipe up gesture is performed on the tile |
-| onSwipedown | Triggered when a swipe down gesture is performed on the tile |
-| onSwipeleft | Triggered when a swipe left gesture is performed on the tile |
-| onSwiperight | Triggered when a swipe right gesture is performed on the tile |
-| onPinchin | Triggered when a pinch in gesture is performed on the tile |
-| onPinchout | Triggered when a pinch out gesture is performed on the tile |
-
-</details>
-
-<details>
-<summary>Keyboard Events</summary>
-
-| Event | Description |
-|-------|-------------|
-| onEnterKeypress | Triggered when the Enter/Return key is pressed while the tile has focus |
-
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onTap` | This event handler is called whenever the component is tapped. |
+        | `onDoubleTap` | This event handler is called whenever the component is double tapped. |
+        | `onTouchStart` | This event handler is called whenever user touches the component. |
+        | `onTouchEnd` | This event handler is called whenever user releases touch from the component. |
+        | `onSwipeUp` | This event handler is called whenever swipeup event is triggered. |
+        | `onSwipeDown` | This event handler is called whenever swipedown event is triggered. |
+        | `onSwipeLeft` | This event handler is called whenever swipeleft event is triggered. |
+        | `onSwipeRight` | This event handler is called whenever swiperight event is triggered. |
+        | `onPinchIn` | This event handler is called whenever pinchin event is triggered. |
+        | `onPinchOut` | This event handler is called whenever pinchout event is triggered. |
+    </div>
 </details>

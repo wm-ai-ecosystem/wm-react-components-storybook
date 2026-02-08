@@ -31,7 +31,7 @@ const SampleBox = ({ label, color }: { label: string; color?: string }) => (
 );
 
 const meta = {
-  title: "Containers/Linear Layout",
+  title: "Containers/Container",
   component: WmLinearLayout,
   parameters: {
     layout: "fullscreen",

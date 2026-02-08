@@ -165,6 +165,14 @@ body.sb-show-main {
     --wm-form-help-block-color: var(--wm-color-error) !important;
 }
 
+/* Dialog with form in story */
+.app-dialog .css-1yrc8ca-MuiInputBase-input-MuiInput-input{
+    border: 0 !important;
+    border-bottom: 1px solid var(--wm-form-control-border-color) !important;
+    padding: var(--wm-form-control-padding) !important;
+}
+
+
 /* progress-bar index.tsx file class append is done to child instead of parent and it is not working,
 wrote custom styles as per current DOM, once fixed in index.tsx file below to be removed, it is temp
 */

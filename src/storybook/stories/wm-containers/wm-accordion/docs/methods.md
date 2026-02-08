@@ -1,13 +1,12 @@
 # Methods
 
-
-| Method           | Description                   |
-| ---------------- | ----------- | ----------------------------- |
-| `expand()`    | Expands specified pane        |
-| `collapse()`  | Collapses specified pane      |
-| `toggle()`    | Toggles pane open/close state |
-
-
-
-
-
+<details open>
+  <summary>Methods</summary>
+    <div>
+    | Method     | Parameters | Return Type | Description                   |
+    | ---------- | ---------- | ----------- | ----------------------------- |
+    | `expand`   | none       | void        | Expands specified pane        |
+    | `collapse` | none       | void        | Collapses specified pane      |
+    | `toggle`   | none       | void        | Toggles pane open/close state |
+    </div>
+</details>

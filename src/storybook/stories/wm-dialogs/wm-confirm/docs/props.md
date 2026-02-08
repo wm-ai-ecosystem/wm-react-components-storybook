@@ -1,44 +1,57 @@
-# Props
+# Properties
 
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| **Dialog Control** | | | |
-| isopen | boolean | false | Controls the visibility of the dialog. When `true`, the dialog is displayed. |
-| name | string | "" | Unique identifier for the confirm dialog component. |
-| onClose | function | - | Callback function triggered when the dialog is closed by any means. |
-| **Content Configuration** | | | |
-| title | string | "Confirm" | The title text displayed in the dialog header. |
-| message | string \| React.ReactNode | - | The primary message content of the dialog. Can be a string or React node. |
-| text | string \| React.ReactNode | - | Alternative to message, provides content for the dialog body. |
-| iconclass | string | - | CSS class for an optional icon to display in the dialog. |
-| **Button Configuration** | | | |
-| oktext | string | "OK" | The text displayed on the confirmation button. |
-| canceltext | string | "Cancel" | The text displayed on the cancellation button. |
-| **Event Handlers** | | | |
-| onOk | function | - | Callback function triggered when the confirmation button is clicked. |
-| onCancel | function | - | Callback function triggered when the cancellation button is clicked. |
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `title` | string | "Confirm" | Set the title of an confirm dialog. |
+        | `name` | string | - | A unique identifier for the confirm dialog component. Special characters and spaces are not allowed. |
+        | `message` | string | "I am confirm box!" | Set the message of the component. |
+        | `oktext` | string | "Ok" | This property sets the text displayed on the OK button of the dialog. |
+        | `canceltext` | string | "CANCEL" | This property sets the text displayed on the CANCEL button of the dialog. |
+    </div>
+</details>
 
-## Common Use Cases
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `tabindex` | number | 0 | The tab index attribute specifies the tab order of an element. You can use this property to change the default tabbing order for component access using the tab key. The value can range from 0 to 32767. The default is 0 and -1 makes the element non-focusable. NOTE: In Safari browsers, by default, Tab highlights only text fields. To enable Tab functionality, in Safari Browser from Preferences -> Advanced -> Accessibility set the option "Press Tab to highlight each item on a webpage". |
+        | `headinglevel` | string | "h4" | This property allows you to select the HTML heading level for the dialog title. Choose from the options h1 to h6 based on the context and hierarchy of your content. |
+    </div>
+</details>
 
-```javascript
-// Basic confirmation dialog
-Page.Widgets.confirmDialog.isopen = true;
-Page.Widgets.confirmDialog.title = "Delete Item";
-Page.Widgets.confirmDialog.message = "Are you sure you want to delete this item? This action cannot be undone.";
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | - | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
 
-// Customizing button text
-Page.Widgets.confirmDialog.oktext = "Delete";
-Page.Widgets.confirmDialog.canceltext = "Keep Item";
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `closable` | boolean | true | This property allows the user to access close action from header through an "x" icon; and also enables close through ESC key. |
+        | `animation` | string | - | This property controls the animation of an element. The animation is based on the CSS classes and works only in the run mode. |
+    </div>
+</details>
 
-// Using with custom icon
-Page.Widgets.confirmDialog.iconclass = "fa fa-exclamation-triangle text-warning";
-
-// Using React nodes for rich content
-Page.Widgets.confirmDialog.message = <div>
-  <p>You're about to perform an irreversible action.</p>
-  <ul>
-    <li>All associated data will be removed</li>
-    <li>This cannot be undone</li>
-  </ul>
-</div>;
-```
+<details>
+  <summary>Graphics</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `iconclass` | string | "wi wi-done" | Defines the class of the icon that is applied to the alert dialog. |
+        | `iconurl` | string | - | This optional property allows you to add an icon to the confirm title, it can be an URL of the image. |
+        | `iconwidth` | string | - | Optional property; but you will need this if you are using the confirm's iconUrl. Please enter the width of your icon. WARNING: It's best to specify size in pixels, not percent. |
+        | `iconheight` | string | - | Optional property; but you will need this if you are using the confirm's iconUrl. Please enter the height of your icon. WARNING: It's best to specify size in pixels, not percent. |
+        | `iconmargin` | string | - | Optional property; only has meaning if you specify the confirm's iconUrl. Values should all have "px" next to them. Use this to adjust the space between the icon and the alert title text. |
+    </div>
+</details>

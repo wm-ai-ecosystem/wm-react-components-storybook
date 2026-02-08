@@ -25,43 +25,43 @@ The **Accordion** component contains multiple panes where developers can add int
 
 #### Properties
 
-- Set the title of accordion panel
+- Set the title of accordionpane
 
-```Javascript
+```javascript
 Page.Widgets.accordionpane.title = "Panel title"
-```
-
-- Set the type of accordion
-
-```Javascript
-Page.Widgets.myAccordion.type = "dynamic";
 ```
 
 - Set the badge values and type
 
-```Javascript
+```javascript
 Page.Widgets.accordionpane.badgevalue = "10";
 Page.Widgets.accordionpane.badgetype = "success";
 ```
 
 #### Events
 
-```javascript
+- Triggered on load of accordionpane
 
-//Event on load of accordion pane
+```javascript
+//Hide edit form initially & show only when edit button clicked
 Page.accordionpaneLoad = function (widget) {
   Page.Widgets.editProfileForm.show = false;
 };
+```
 
-//Event on expand of accordion pane
+- Triggered on expand of accordionpane
+
+```javascript
 Page.accordionpaneExpand = function ($event, widget) {
   if (widget.name === "orderDetailsPane") {
     Page.Variables.svOrderDetails.invoke(); // Call service
   }
 };
+```
 
-//Event on collapse of accordion pane
+- Triggered on collapse of accordionpane
 
+```javascript
 Page.accordionpaneCollapse = function ($event, widget) {
   if (widget.name === "accountBalancePane") {
     Page.Widgets.txtBalance.show = false;
@@ -71,13 +71,20 @@ Page.accordionpaneCollapse = function ($event, widget) {
 
 #### Methods
 
+- Expand a specific accordionpane
+
 ```javascript
-// Expand a specific pane
-Page.Widgets.engineeringEmpPane.expand();
+Page.Widgets.accordionpaneUser.expand();
+```
 
-// Collapse a specific pane
-Page.Widgets.salesEmpPane.collapse();
+- Collapse a specific accordionpane
 
-// Toggle a pane (open if closed, close if opened)
-Page.Widgets.marketingEmpPane.toggle();
+```javascript
+Page.Widgets.accordionpaneEmp.collapse();
+```
+
+- Toggle a accordionpane (open if closed, close if opened)
+
+```javascript
+Page.Widgets.accordionpaneDept.toggle();
 ```

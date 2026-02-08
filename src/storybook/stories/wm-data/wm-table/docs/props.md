@@ -62,12 +62,11 @@
         <details>
           <summary>Columns</summary>
             <div>
-              | Property | Type | Default | Description |
-              | --- | --- | --- | --- |
-              |  |  |  | **Platform-specific display**: Choose which columns or fields are visible on desktop and mobile to keep views clean. |
-              |  |  |  | **Column ordering and grouping**: Specify a custom column order, group columns under a common heading, or add custom columns. |
-              |  |  |  | **Field representation and formatting**: Display fields according to their type (e.g., images for picture URLs, checkboxes for booleans) and define formats like date, currency, or decimals. |
-              |  |  |  | **Styling and access control**: Apply styles for readability or highlighting, restrict columns based on security roles, and set filter criteria for inline or quick-edit tables. |
+              - **Platform-specific display**: Choose which columns or fields are visible on desktop and mobile to keep views clean.
+            - **Column ordering and grouping**: Specify a custom column order, group columns under a common heading, or add custom columns. 
+            - **Field representation and formatting**: Display fields according to their type (e.g., images for picture URLs, checkboxes for booleans) and define formats like date, currency, or decimals. 
+            - **Styling and access control**: Apply styles for readability or highlighting, restrict columns based on security roles, and set filter criteria for inline or quick-edit tables.
+              ![Form Columns Basic](/wm-assets/components/table/advanceSettingsColumnsBasic.png)
             </div>
         </details>
         <details>
@@ -93,10 +92,9 @@
         <details>
           <summary>Actions</summary>
             <div>
-              | Property | Type | Default | Description |
-              | --- | --- | --- | --- |
-              |  |  |  | **CRUD and Custom Actions**: Data Table supports Create, Read, Update, Delete operations via table-level (e.g., New row) and row-level (e.g., updateRow, deleteRow) actions. Custom actions can also be defined using JavaScript functions and displayed as Button or Anchor, with optional shortcut keys for quick access. |
-              |  |  |  | **Action Layout**: Configure the action column with custom settings such as title, position, and CSS classes for styling. |
+              - **CRUD and Custom Actions**: Data Table supports Create, Read, Update, Delete operations via table-level (e.g., New row) and row-level (e.g., updateRow, deleteRow) actions. Custom actions can also be defined using JavaScript functions and displayed as Button or Anchor, with optional shortcut keys for quick access. 
+            - **Action Layout**: Configure the action column with custom settings such as title, position, and CSS classes for styling.
+              ![Form Actions](/wm-assets/components/table/advanceSettingsActionsBasic.png)
             </div>
         </details>
     </div>

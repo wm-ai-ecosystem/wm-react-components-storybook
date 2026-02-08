@@ -1,54 +1,66 @@
-# Props
+# Properties
 
-## Dialog Control Props
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `open` | boolean | `false` | Controls whether the dialog is visible or hidden. |
-| `modal` | boolean | `true` | When true, blocks interaction with content behind the dialog. |
-| `closable` | boolean | `true` | When true, displays a close button and allows ESC key to close the dialog. |
-| `showheader` | boolean | `true` | Controls visibility of the dialog header section. |
-| `showactions` | boolean | `true` | Controls visibility of the dialog action buttons. |
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `title` | string | "External Content" | Set the title of an iframe dialog. |
+        | `name` | string | - | A unique identifier for the iframe dialog component. Special characters and spaces are not allowed. |
+        | `oktext` | string | "Ok" | This property sets the text displayed on the OK button of the dialog. |
+    </div>
+</details>
 
-## Content Props
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `url` | string | `""` | The URL to load in the iframe. |
-| `encodeurl` | boolean | `false` | When true, encodes the URL to handle special characters. |
-| `hint` | string | `""` | Additional information displayed as a tooltip or helper text. |
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `tabindex` | number | 0 | The tab index attribute specifies the tab order of an element. You can use this property to change the default tabbing order for component access using the tab key. The value can range from 0 to 32767. The default is 0 and -1 makes the element non-focusable. NOTE: In Safari browsers, by default, Tab highlights only text fields. To enable Tab functionality, in Safari Browser from Preferences -> Advanced -> Accessibility set the option "Press Tab to highlight each item on a webpage". |
+        | `headinglevel` | string | "h4" | This property allows you to select the HTML heading level for the dialog title. Choose from the options h1 to h6 based on the context and hierarchy of your content. |
+    </div>
+</details>
 
-## Header Props
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `title` | string | `""` | Text displayed in the dialog header. |
-| `headinglevel` | "h1" \| "h2" \| "h4" | `"h2"` | Semantic heading level for the dialog title. |
-| `iconclass` | string | `""` | CSS class for an icon displayed in the header. |
-| `iconurl` | string | `""` | URL to an image to display as an icon in the header. |
-| `iconwidth` | string | `""` | Width of the header icon. |
-| `iconheight` | string | `""` | Height of the header icon. |
-| `iconmargin` | string | `""` | Margin around the header icon. |
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | "400px" | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
 
-## Action Props
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| `oktext` | string | `"OK"` | Text displayed on the primary action button. |
+<details>
+  <summary>Content</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `url` | string | "https://www.wavemaker.com" | Any URL entered for this property will be shown in the dialog content. |
+    </div>
+</details>
 
-## Common Use Cases
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `closable` | boolean | true | This property allows the user to access close action from header through an "x" icon; and also enables close through ESC key. |
+        | `showactions` | boolean | true | This property shows/hides actions section of the iframe dialog. |
+        | `animation` | string | - | This property controls the animation of an element. The animation is based on the CSS classes and works only in the run mode. |
+        | `encodeurl` | boolean | false | Check this if you want the provided URL to be encoded at the run time. Enabling this property will encode the special characters in the URL and enable rendering of the page which otherwise might fail. By default, it is set to false. |
+    </div>
+</details>
 
-```javascript
-// Basic implementation with required URL
-Page.Widgets.iframeDialog.url = "https://example.com/embedded-content";
-Page.Widgets.iframeDialog.open = true;
-
-// Create a modal dialog with custom title and icon
-Page.Widgets.iframeDialog.modal = true;
-Page.Widgets.iframeDialog.title = "External Documentation";
-Page.Widgets.iframeDialog.iconclass = "wi wi-file-text";
-Page.Widgets.iframeDialog.url = "https://docs.example.com/guide";
-Page.Widgets.iframeDialog.open = true;
-
-// Non-modal dialog with custom action button
-Page.Widgets.iframeDialog.modal = false;
-Page.Widgets.iframeDialog.oktext = "Apply Changes";
-Page.Widgets.iframeDialog.url = "https://example.com/configuration";
-Page.Widgets.iframeDialog.open = true;
-```
+<details>
+  <summary>Graphics</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `iconclass` | string | "wi wi-globe" | Defines the class of the icon that is applied to the iframe dialog. |
+        | `iconurl` | string | - | This optional property allows you to add an icon to the iframe title, it can be an URL of the image. |
+        | `iconwidth` | string | - | Optional property; but you will need this if you are using the iframe's iconUrl. Please enter the width of your icon. WARNING: It's best to specify size in pixels, not percent. |
+        | `iconheight` | string | - | Optional property; but you will need this if you are using the iframe's iconUrl. Please enter the height of your icon. WARNING: It's best to specify size in pixels, not percent. |
+        | `iconmargin` | string | - | Optional property; only has meaning if you specify the iframe's iconUrl. Values should all have "px" next to them. Use this to adjust the space between the icon and the alert title text. |
+    </div>
+</details>

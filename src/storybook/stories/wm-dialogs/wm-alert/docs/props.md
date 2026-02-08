@@ -1,40 +1,57 @@
-# Props
+# Properties
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| **Basic Configuration** |
-| name | string | — | Unique identifier for the alert dialog component |
-| title | string | "Alert" | The title text displayed in the header of the alert dialog |
-| text | string | — | The main message content displayed in the body of the alert dialog |
-| oktext | string | "OK" | The text displayed on the confirmation button |
-| **Appearance** |
-| alerttype | string | "info" | Determines the visual style of the alert dialog. Possible values: "error", "warning", "success", "info" |
-| iconclass | string | — | Custom CSS class for the icon displayed in the alert dialog. If not specified, a default icon based on alerttype will be used |
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `title` | string | "Alert" | Set the title of an alert dialog. |
+        | `name` | string | - | A unique identifier for the alert dialog component. Special characters and spaces are not allowed. |
+        | `message` | string | "I am an alert box!" | Set the message of the component. |
+        | `oktext` | string | "Ok" | This property sets the text displayed on the OK button of the dialog. |
+        | `alerttype` | string | "error" | This property will help in identifying the type of alert in the alert box. Can be set to error (default), information, success, and warning. |
+    </div>
+</details>
 
-## Common Use Cases
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `tabindex` | number | 0 | The tab index attribute specifies the tab order of an element. You can use this property to change the default tabbing order for component access using the tab key. The value can range from 0 to 32767. The default is 0 and -1 makes the element non-focusable. NOTE: In Safari browsers, by default, Tab highlights only text fields. To enable Tab functionality, in Safari Browser from Preferences -> Advanced -> Accessibility set the option "Press Tab to highlight each item on a webpage". |
+        | `headinglevel` | string | "h4" | This property allows you to select the HTML heading level for the dialog title. Choose from the options h1 to h6 based on the context and hierarchy of your content. |
+    </div>
+</details>
 
-### Basic Alert Dialog
-```javascript
-// Configure a simple information alert
-Page.Widgets.myAlertDialog.title = "Information";
-Page.Widgets.myAlertDialog.text = "Your profile has been updated successfully.";
-Page.Widgets.myAlertDialog.alerttype = "info";
-```
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+        | `height` | string | - | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
 
-### Error Alert Dialog
-```javascript
-// Configure an error alert
-Page.Widgets.myAlertDialog.title = "Error";
-Page.Widgets.myAlertDialog.text = "Failed to save changes. Please try again.";
-Page.Widgets.myAlertDialog.alerttype = "error";
-Page.Widgets.myAlertDialog.oktext = "Dismiss";
-```
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `closable` | boolean | true | This property allows the user to access close action from header through an "x" icon; and also enables close through ESC key. |
+        | `animation` | string | - | This property controls the animation of an element. The animation is based on the CSS classes and works only in the run mode. |
+    </div>
+</details>
 
-### Custom Icon Alert
-```javascript
-// Configure an alert with a custom icon
-Page.Widgets.myAlertDialog.title = "Warning";
-Page.Widgets.myAlertDialog.text = "This action cannot be undone.";
-Page.Widgets.myAlertDialog.alerttype = "warning";
-Page.Widgets.myAlertDialog.iconclass = "fa fa-exclamation-triangle";
-```
+<details>
+  <summary>Graphics</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `iconclass` | string | "wi wi-warning" | Defines the class of the icon that is applied to the alert dialog. |
+        | `iconurl` | string | - | This optional property allows you to add an icon to the alert title, it can be an URL of the image. |
+        | `iconwidth` | string | - | Optional property; but you will need this if you are using the alert's iconUrl. Please enter the width of your icon. WARNING: It's best to specify size in pixels, not percent. |
+        | `iconheight` | string | - | Optional property; but you will need this if you are using the alert's iconUrl. Please enter the height of your icon. WARNING: It's best to specify size in pixels, not percent. |
+        | `iconmargin` | string | - | Optional property; only has meaning if you specify the alert's iconUrl. Values should all have "px" next to them. Use this to adjust the space between the icon and the alert title text. |
+    </div>
+</details>

@@ -5,7 +5,7 @@
     <div>
         | Method | Parameters | Return Type | Description |
         |--------|------------|------------|-------------|
-        | `gotoMonth` | `Number` | void | This method renders the present view (i.e. year view will be the same) for the specified month. For example: To view the February month. |
+        | `gotoMonth` | Number | void | This method renders the present view (i.e. year view will be the same) for the specified month. For example: To view the February month. |
         | `gotoNextMonth` | None | void | This method renders the present view (i.e. year view will be the same) for the next month. For example: To view the next month. |
         | `gotoPrevMonth` | None | void | This method renders the present view (i.e. year view will be the same) for the prev month. For example: To view the prev month. |
         | `gotoNextYear` | None | void | This method renders the present view (i.e. month/week view will be the same) for the next year. For example: To view the next year. |

@@ -1,41 +1,51 @@
-# Props
+# Properties
 
-| Name | Type | Default | Description |
-|------|------|---------|-------------|
-| **Basic Configuration** ||||
-| name | string | "loginDialog" | Unique identifier for the login dialog component |
-| title | string | "Login" | Text displayed in the dialog header |
-| iconclass | string | "wm-icon wm-icon-lock" | CSS class for the icon displayed in the dialog header |
-| logintext | string | "Login" | Text displayed on the submit/login button |
-| canceltext | string | "Cancel" | Text displayed on the cancel button |
-| **Content** ||||
-| errormessage | string | "" | Error message to display when login fails |
-| **Data & Events** ||||
-| eventsource | IEventSource | null | Event source for the dialog component |
-| onSubmit | function | null | Callback function triggered when the login form is submitted |
-| onOpened | function | null | Callback function triggered when the dialog is opened |
-| onClose | function | null | Callback function triggered when the dialog is closed |
-| onSuccess | function | null | Callback function triggered when login is successful |
-| onError | function | null | Callback function triggered when login fails |
+<details open>
+  <summary>Basic</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `title` | string | - | Set the title of an login dialog. |
+        | `name` | string | - | A unique identifier for the login dialog component. Special characters and spaces are not allowed. |
+    </div>
+</details>
 
-## Common Use Cases
+<details>
+  <summary>Accessibility</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `headinglevel` | string | "h4" | This property allows you to select the HTML heading level for the dialog title. Choose from the options h1 to h6 based on the context and hierarchy of your content. |
+    </div>
+</details>
 
-### Basic Login Dialog Configuration
-```javascript
-// Configure a basic login dialog
-Page.Widgets.loginDialog.title = "Account Access";
-Page.Widgets.loginDialog.logintext = "Sign In";
-Page.Widgets.loginDialog.canceltext = "Back";
-```
+<details>
+  <summary>Layout</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `width` | string | - | The width of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
+    </div>
+</details>
 
-### Setting Error Messages Dynamically
-```javascript
-// Display a custom error message
-Page.Widgets.loginDialog.errormessage = "Invalid username or password. Please try again.";
-```
+<details>
+  <summary>Behavior</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `animation` | string | - | This property controls the animation of an element. The animation is based on the CSS classes and works only in the run mode. |
+    </div>
+</details>
 
-### Customizing the Dialog Icon
-```javascript
-// Change the dialog icon
-Page.Widgets.loginDialog.iconclass = "fa fa-user-circle";
-```
+<details>
+  <summary>Graphics</summary>
+    <div>
+        | Property | Type | Default | Description |
+        | --- | --- | --- | --- |
+        | `iconclass` | string | "wi wi-sign-in" | Defines the class of the icon that is applied to the login dialog. |
+        | `iconurl` | string | - | This optional property allows you to add an icon to the login title, it can be an URL of the image. |
+        | `iconwidth` | string | - | Optional property; but you will need this if you are using the login's iconUrl. Please enter the width of your icon. WARNING: It's best to specify size in pixels, not percent. |
+        | `iconheight` | string | - | Optional property; but you will need this if you are using the login's iconUrl. Please enter the height of your icon. WARNING: It's best to specify size in pixels, not percent. |
+        | `iconmargin` | string | - | Optional property; only has meaning if you specify the login's iconUrl. Values should all have "px" next to them. Use this to adjust the space between the icon and the alert title text. |
+    </div>
+</details>

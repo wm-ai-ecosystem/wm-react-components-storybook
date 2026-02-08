@@ -1,5 +1,10 @@
 # Styling
 
+The login component does not expose any design tokens.
+
+
+<!-- # Styling
+
 The Login component provides several CSS classes for styling customization:
 
 | CSS Class | Description |
@@ -62,4 +67,4 @@ The Login component provides several CSS classes for styling customization:
         margin-bottom: 15px;
     }
 }
-```
+``` -->

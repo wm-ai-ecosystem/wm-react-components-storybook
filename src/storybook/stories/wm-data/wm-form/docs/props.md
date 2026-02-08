@@ -40,19 +40,18 @@
         <details>
           <summary>Fields</summary>
             <div>
-              | Property | Type | Default | Description |
-              | --- | --- | --- | --- |
-              |  |  |  | Specifies the component used to represent each data field and the component type (such as Text, Number, Select, etc.) can be chosen. Additional properties like conditional classes and other field-specific settings can also be configured. |
-              |  |  |  | create custom columns by clicking on the **'+'** icon. **Note**: If a custom column is not selected on the left panel, it will be deleted when the Form Designer is saved. |
+              - You can control platform-specific display, choosing which fields or columns are visible on desktop and mobile to keep the layout clean and responsive.
+            - Specifies the component used to represent each data field and the component type (such as Text, Number, Select, etc.) can be chosen. Additional properties like conditional classes and other field-specific settings can also be configured.
+            - Create custom columns by clicking on the **'+'** icon. **Note**: If a custom column is not selected on the left panel, it will be deleted when the Form Designer is saved.
+              ![Form Fields](/wm-assets/components/form/advanceSettingsFields.png)
             </div>
         </details>
         <details>
           <summary>Actions</summary>
             <div>
-              | Property | Type | Default | Description |
-              | --- | --- | --- | --- |
-              |  |  |  | Action Items can be added to a form, with default actions such as **Save**, **Reset**. Each action can be configured as a Button or an Anchor, and supports properties like title, icon, visibility (show/hide), and event handling etc. |
-              |  |  |  | create custom actions by clicking on the **'+'** icon. **Note**: If a custom action is not selected on the left panel, it will be deleted when the Form Designer is saved. |
+              - Action Items can be added to a form, with default actions such as **Save**, **Reset**. Each action can be configured as a Button or an Anchor, and supports properties like title, icon, visibility (show/hide), and event handling etc.
+            - Create custom actions by clicking on the **'+'** icon. **Note**: If a custom action is not selected on the left panel, it will be deleted when the Form Designer is saved.
+              ![Form Actions Basic](/wm-assets/components/form/advanceSettingsActionsBasic.png)
             </div>
         </details>
     </div>
