@@ -1,7 +1,7 @@
 # Callback Events
 
 <details open>
-  <summary>Basic Events</summary>
+  <summary>Wizard</summary>
     <div>
         | Event | Description |
         |-------|-------------|
@@ -10,7 +10,7 @@
     </div>
 </details>
 <details >
-  <summary>Wizard Step Events</summary>
+  <summary>Wizard Steps</summary>
     <div>
         | Event | Description |
         |-------|-------------|

@@ -1,34 +1,36 @@
-# Props
+# Properties
 
-The Header component does not have any specific props defined in the provided component data. This suggests the Header component may be a simple container or structural element without configurable properties.
-
-## Basic Usage
-
-```javascript
-// Basic header implementation
-<Header>
-  <Logo />
-  <NavigationMenu />
-  <ActionButtons />
-</Header>
-```
-
-## Custom Implementation
-
-Since the Header component doesn't have predefined props, functionality would typically be added by nesting child components within it:
-
-```javascript
-// Custom header with specific layout needs
-<Header>
-  <div className="left-section">
-    <Logo />
+<details open>
+  <summary>Basic</summary>
+  <div>
+  | Property   | Type                  | Default    | Description                                   |
+  | ---------- | --------------------- | ---------- | --------------------------------------------- |
+| `name` | string | - | The name is a unique identifier for the container. Special characters and spaces are not allowed in component name. |
   </div>
-  <div className="center-section">
-    <SearchBar />
+</details>
+<details>
+  <summary>Accessibility</summary>
+    <div>
+      | Property | Type | Default | Description |
+      | --- | --- | --- | --- |
+      | `arialabel` | string | - | Accessibility label for screen readers. |
+      | `hint` | string | - | Any text or html you enter for this property will be shown as a tooltip if the mouse hovers over this component for 1.5 seconds. |
+    </div>
+</details>
+<details>
+<summary>Layout</summary>
+  <div>
+    | Property   | Type | Default | Description |
+    | ---------- | ------------------------ | -------- | --------------------------------------------- |
+    | `height` | string | - | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%), hug (refers fit-content), fill (refers width 100%). |
   </div>
-  <div className="right-section">
-    <UserProfile />
-    <NotificationsIcon />
+</details>
+<details>
+  <summary>Content</summary>
+  <div>
+| Property  | Type | Default    | Description |
+| --------- | ---- | ---------- | ------------|
+| `content` | string | - | Defines content displayed inside the panel or chosse partial.<br> **Note:** In case of Page content, on switching from inline content the component content is lost and cannot be undone. onLoad callback will be triggered only when the content is a partial  |
   </div>
-</Header>
-```
+</details>
+

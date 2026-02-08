@@ -276,9 +276,6 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .component-documentation-container details:last-of-type{
-          margin-bottom: 40px;
-        }
 
         .component-documentation-container details[open] {
           box-shadow: 0 10px 15px -3px rgba(41, 109, 246, 0.1), 0 4px 6px -2px rgba(41, 109, 246, 0.05);

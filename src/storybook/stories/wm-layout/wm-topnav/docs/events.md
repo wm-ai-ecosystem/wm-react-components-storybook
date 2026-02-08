@@ -1,10 +1,23 @@
 # Callback Events
 
-The topnav component currently does not have any documented events. However, typical events for a navigation component might include:
-
-| Event | Description |
-|-------|-------------|
-| onLinkClick | Triggered when a navigation link is clicked |
-| onMenuToggle | Triggered when the mobile menu is opened or closed |
-| onSearch | Triggered when a search is performed from the navigation bar |
-| onBrandClick | Triggered when the brand logo or text is clicked |
+<details open>
+  <summary>Basic Events</summary>
+  <div>
+        | Event | Description |
+        | ----- | ----------- |
+        | `onLoad` | This event handler is called when the component is loaded. |
+  </div>
+</details>
+<details>
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onSwipeup` | This event handler is called whenever swipeup event is triggered. |
+        | `onSwipedown` | This event handler is called whenever swipedown event is triggered. |
+        | `onSwipeleft` | This event handler is called whenever swipeleft event is triggered. |
+        | `onSwiperight` | This event handler is called whenever swiperight event is triggered. |
+        | `onPinchin` | This event handler is called whenever pinchin event is triggered. |
+        | `onPinchout` | This event handler is called whenever pinchout event is triggered. |
+    </div>
+</details>

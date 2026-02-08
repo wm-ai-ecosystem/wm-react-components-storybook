@@ -1,22 +1,20 @@
 # Callback Events
 
 <details open>
-  <summary>Basic Events</summary>
-  <div>
+<summary>Accordion</summary>
+<div>
 | Event | Description |
 | ----- | ----------- |
-| `onChange` | Triggered when user switches panes  |
-  </div>
+| `onChange` | This event handler is called each time your element's value changes. |
+</div>
 </details>
-
 <details>
-  <summary>Accordionpane Events</summary>
+  <summary>Accordionpane</summary>
   <div>
 | Event | Description |
 | ----- | ----------- |
-| `onLoad`     | Triggered when pane loads     |
-| `onExpand`   | Triggered when pane expands   |
-| `onCollapse` | Triggered when pane collapses |
+| `onLoad`     | This event handler is called when the component is loaded.    |
+| `onExpand`   | This property defines the event handler for the expand event of the component.   |
+| `onCollapse` | This property defines the event handler for the collapse event of the component. |
   </div>
 </details>
-

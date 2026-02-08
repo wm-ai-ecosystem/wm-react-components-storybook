@@ -1,7 +1,14 @@
 # Methods
 
 <details open>
-  <summary>Methods</summary>
+  <summary>Accordion</summary>
+    <div>
+    The **Accordion** component does not expose any specific methods.
+    </div>
+</details>
+
+<details open>
+  <summary>Accordionpane</summary>
     <div>
     | Method     | Parameters | Return Type | Description                   |
     | ---------- | ---------- | ----------- | ----------------------------- |

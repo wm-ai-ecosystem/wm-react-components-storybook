@@ -1,18 +1,23 @@
 # Callback Events
 
-The Header component does not have any specific events defined in the provided component data. As a primarily structural layout component, it may not have built-in interactive events.
-
-If event handling is required for the Header, it would typically be implemented through:
-
-1. Event handlers on child components placed within the Header
-2. Custom event handlers added to the Header during implementation
-
-## Example with Child Component Events
-
-```javascript
-<Header>
-  <Logo onClick={handleLogoClick} />
-  <NavigationMenu onItemSelect={handleNavSelection} />
-  <Button onClick={handleProfileClick}>Profile</Button>
-</Header>
-```
+<details open>
+  <summary>Basic Events</summary>
+  <div>
+        | Event | Description |
+        | ----- | ----------- |
+        | `onLoad` | This event handler is called when the component is loaded. |
+  </div>
+</details>
+<details>
+  <summary>Touch Events</summary>
+    <div>
+        | Event | Description |
+        | --- | --- |
+        | `onSwipeup` | This event handler is called whenever swipeup event is triggered. |
+        | `onSwipedown` | This event handler is called whenever swipedown event is triggered. |
+        | `onSwipeleft` | This event handler is called whenever swipeleft event is triggered. |
+        | `onSwiperight` | This event handler is called whenever swiperight event is triggered. |
+        | `onPinchin` | This event handler is called whenever pinchin event is triggered. |
+        | `onPinchout` | This event handler is called whenever pinchout event is triggered. |
+    </div>
+</details>
