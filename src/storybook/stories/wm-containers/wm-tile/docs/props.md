@@ -5,10 +5,9 @@
 <div>
 | Property | Type | Default | Description |
 |------|------|---------|-------------|
-| `name` | string | - | The name is a unique identifier for the tabs component. Special characters and spaces are not allowed in component name. |
+| `name` | string | - | The name is a unique identifier for the accordion. Special characters and spaces are not allowed in component name. |
 </div>
 </details>
-
 <details>
   <summary>Layout</summary>
     <div>
@@ -18,22 +17,24 @@
         | `height` | string | - | The height of the component can be specified in em, pt, px or % (i.e 50px, 75%). |
     </div>
 </details>
-
-<summary>Behavior</summary>
+<details>
+  <summary>Behavior</summary>
 <div>
-| Property | Type | Default | Description |
-| -------------- | --------- | ------- | -------------------------------------------------------- |
+| Property       | Type    | Default | Description                                                      |
+| -------------- | ------- | ------- | ---------------------------------------------------------------- |
 | `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
-| `loadOnDemand` | boolean | - | Defers component initialization until it becomes visible. Improves load performance but prevents script interaction until initialization. |
-| `animation` | string | - | Controls animation using CSS classes. Works only in run mode. |
+| `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+| `animation`    | string  |  -       | Controls the animation of the component. |
 </div>
 </details>
+
 <details>
   <summary>Format</summary>
   <div>
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
-| `horizontal align` | string | - | This property specifies how the elements should be aligned horizontally. |
+| `horizontalalign` | string | - | This property specifies how the elements should be aligned horizontally. |
+</div>
 </details>
 
 

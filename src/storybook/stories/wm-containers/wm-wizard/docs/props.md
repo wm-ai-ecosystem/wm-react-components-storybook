@@ -1,5 +1,10 @@
 # Properties
 
+
+
+<details open>
+<summary>Wizard</summary>
+<div>
 <details open>
 <summary>Basic</summary>
 <div>
@@ -69,5 +74,42 @@
 | Property | Type | Default | Description |
 | -------- | ---- | ------- | ----------- |
 | `no data message` | string | "No data found" | This message will be displayed when there is no data to display. |
+</div>
+</details>
+</div>
+</details>
+
+
+<details>
+<summary>Wizard step</summary>
+<div>
+<details>
+<summary>Basic</summary>
+<div>
+| Property | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | string | "Step Title" | Set the title of the component. |
+| `subtitle` | string | "static" | Set the subtitle of the component |
+| `name` | string | - | The name is a unique identifier for your component. Each page element and component must be uniquely identified. WaveMaker automatically renames any non-unique element. Special characters and spaces are not allowed in component name. |
+</div>
+</details>
+<details>
+  <summary>Content</summary>
+  <div>
+| Property  | Type | Default    | Description |
+| --------- | ---- | ---------- | ------------|
+| `content` | string | - | Defines content displayed inside the panel or chosse partial.<br> **Note:** In case of Page content, on switching from inline content the component content is lost and cannot be undone. onLoad callback will be triggered only when the content is a partial  |
+  </div>
+</details>
+<details>
+  <summary>Behavior</summary>
+<div>
+| Property       | Type    | Default | Description                                                      |
+| -------------- | ------- | ------- | ---------------------------------------------------------------- |
+| `show` | boolean | true | Showing determines whether or not a component is visible. It is a bindable property. |
+| `loadOnDemand` | boolean | false | When this property is set and show property is bound, the initialization of the component will be deferred till the component becomes visible. This behavior improves the load time. Use this feature with caution, as it has a downside (as we will not be able to interact with the component through script until the component is initialized). When show property is not bound the component will be initialized immediately. |
+| `enableskip`    | string  | - | Set this property to enable skip option on current step. |
+</div>
+</details>
 </div>
 </details>

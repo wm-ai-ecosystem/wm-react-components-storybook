@@ -5,22 +5,12 @@ A **Panel** is used to organize and group related components inside a container.
 ### Markup
 
 ```javascript
-<wm-panel
-  subheading="subheading"
-  iconclass="wi wi-account-circle"
-  autoclose="outsideClick"
-  title="Title"
-  name="panel1"
+<wm-panel subheading="subheading" iconclass="wi wi-account-circle" autoclose="outsideClick" title="Title" name="panel"
   class="panel panel-default"
   variant="default:default"
 >
   <wm-panel-footer name="panel_footer1">
-    <wm-label
-      padding="unset 0.5em"
-      class="text-muted p"
-      caption="Addition Info"
-      name="label1"
-      variant="default:p"
+    <wm-label padding="unset 0.5em" class="text-muted p" caption="Addition Info" name="label1" variant="default:p"
     ></wm-label>
   </wm-panel-footer>
 </wm-panel>
@@ -30,88 +20,48 @@ A **Panel** is used to organize and group related components inside a container.
 
 #### Properties
 
-- Adding title to panel widget
+- Adding title to panel
 
 ```javascript
-Page.Widgets.myPanel.title = "Performance - Q1";
+Page.Widgets.panel.title = "Performance";
 ```
 
-- Adding badge to show total alerts
+- Adding badge to panel
 
 ```javascript
-Page.Widgets.myPanel.badgeValue = "2";
-Page.Widgets.myPanel.badgeType = "success";
+Page.Widgets.panel.badgevalue = "2";
+Page.Widgets.panel.badgetype = "success";
 ```
 
-- Enable or disable panel collapsing
+- Enable full screen
 
 ```javascript
-Page.Widgets.myPanel.collapsible = true;
-```
-
-- Enable full screen option
-
-```javascript
-Page.Widgets.myPanel.enableFullScreen = true;
-```
-
-- Enable default close button
-
-```javascript
-Page.Widgets.myPanel.enableDefaultCloseAction = true;
+Page.Widgets.panel.enablefullscreen = true;
 ```
 
 #### Events
 
-- On load of panel
+- Invoke service on load of panel
 
 ```javascript
 Page.panelLoad = function (widget) {
-    // Load complaint summary data
-    Page.Variables.svGetComplaintSummary.invoke();
-};
-
-```
-
-- When action menu item is clicked
-
-```javascript
-Page.panelActionsclick = function ($item) {
-  if ($item.label === "Refresh") {
-    Page.Variables.svGetComplaintDetails.invoke();
-  }
-
-  if ($item.label === "Export") {
-    Page.Variables.svExportComplaintReport.invoke();
-  }
+  Page.Variables.svGetComplaintSummary.invoke();
 };
 ```
 
 #### Methods
 
-- When panel is expanded 
+- Trigger close panel action
 
 ```javascript
-//Load full complaint details
-Page.panelExpand = function ($event, widget) {
-    Page.Variables.svGetComplaintDetails.invoke();
-};
+
+Page.Widgets.panel.close();
+
 ```
 
-- When panel is collapsed
+- To toggle panel status
 
 ```javascript
-//Hide sensitive details
-Page.panelCollapse = function ($event, widget) {
-    Page.Widgets.txtCustomerNotes.show = false;
-};
-```
-
-- When panel is closed 
-
-```javascript
-//Reset selected complaint
-Page.panelClose = function ($event, widget) {
-    Page.Variables.selectedComplaint.setValue(null);
-};
+// i.e expands if closed, closes if expanded
+Page.Widgets.panel.toggle(); 
 ```
