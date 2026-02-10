@@ -104,6 +104,211 @@ export const Showcase: Story = {
         </Box>
 
         <Stack spacing={6} sx={{ mt: 4 }}>
+
+                  {/* CREATE MODE - User Registration with Comprehensive Validations */}
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary">
+              Create Mode - User Registration with Validations
+            </Typography>
+            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }} style={{marginBottom: 12}} fontWeight={300}>
+              Register new user with comprehensive field validation
+            </Typography>
+
+            <WmLiveForm {...({
+              name: "createModeForm",
+              title: "User Registration",
+              subheading: "Create a new user account",
+              iconclass: "fa fa-user-plus",
+              datasource: createMockDataSource(),
+              defaultmode: "create",
+              formlayout: "inline",
+              insertmessage: "User registered successfully!",
+              errormessage: "Failed to register user. Please check the errors below.",
+              messagelayout: "Toaster",
+              listener: mockListener,
+              formSubmit: (data: any, operation: string, success: any) => {
+                console.log("Form submit:", operation, data);
+                setTimeout(() => {
+                  success({ success: true, operationType: operation });
+                }, 500);
+              },
+            } as any)}>
+              <Box sx={{ padding: 3 }}>
+                <Stack spacing={3}>
+                  {/* First Name & Last Name & Username - 3 Column */}
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+                    <Box sx={{ flex: 1 }}>
+                      <WmComposite captionposition="top" required={true} listener={mockListener} name="regFirstName_composite">
+                        <WmLabel caption="Full Name" required={true} listener={mockListener} name="regFirstName_label" className="control-label"/>
+                        <WmText
+                          name="fullName"
+                          placeholder="Full Name"
+                          datavalue=""
+                          listener={mockListener}
+                          validators={[
+                            { type: "required", validator: true, errorMessage: "Full name is required" },
+                            { type: "regexp", validator: "^[A-Za-z ]+$", errorMessage: "Use letters and space only" },
+                            { type: "maxchars", validator: 25, errorMessage: "Full name cannot exceed 25 characters" },
+                          ] as any}
+                        />
+                      </WmComposite>
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmComposite captionposition="top" required={true} listener={mockListener} name="regUsername_composite">
+                        <WmLabel caption="Username" required={true} listener={mockListener} name="regUsername_label" className="control-label"/>
+                        <WmText
+                          name="username"
+                          placeholder="Choose username"
+                          datavalue=""
+                          listener={mockListener}
+                          validators={[
+                            { type: "required", validator: true, errorMessage: "Username is required" },
+                            { type: "regexp", validator: "^[A-Za-z0-9_]+$", errorMessage: "Use letters, numbers and underscores only" },
+                            { type: "maxchars", validator: 30, errorMessage: "Username cannot exceed 30 characters" },
+                          ] as any}
+                        />
+                      </WmComposite>
+                    </Box>
+                  </Stack>
+
+                  {/* Email & Mobile Number - 2 Column */}
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+                    <Box sx={{ flex: 1 }}>
+                      <WmComposite captionposition="top" required={true} listener={mockListener} name="regEmail_composite">
+                        <WmLabel caption="Email Address" required={true} listener={mockListener} name="regEmail_label" className="control-label"/>
+                        <WmText
+                          name="emailField"
+                          type="email"
+                          placeholder="your.email@example.com"
+                          datavalue=""
+                          listener={mockListener}
+                          validators={[
+                            { type: "required", validator: true, errorMessage: "Email is required" },
+                            { type: "regexp", validator: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$", errorMessage: "Enter a valid email address" },
+                            { type: "maxchars", validator: 100, errorMessage: "Email cannot exceed 100 characters" },
+                          ] as any}
+                        />
+                      </WmComposite>
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmComposite captionposition="top" required={true} listener={mockListener} name="regMobile_composite">
+                        <WmLabel caption="Mobile Number" required={true} listener={mockListener} name="regMobile_label" className="control-label"/>
+                        <WmText
+                          name="mobilenumber"
+                          type="tel"
+                          placeholder="Mobile number"
+                          datavalue=""
+                          listener={mockListener}
+                          validators={[
+                            { type: "required", validator: true, errorMessage: "Mobile number is required" },
+                            { type: "regexp", validator: "^[1-9][0-9]{9}$", errorMessage: "Enter a valid mobile number" },
+                            { type: "maxchars", validator: 10, errorMessage: "Mobile number cannot exceed 10 digits" },
+                          ] as any}
+                        />
+                      </WmComposite>
+                    </Box>
+                  </Stack>
+
+                  {/* Password & Confirm Password - 2 Column */}
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+                    <Box sx={{ flex: 1 }}>
+                      <WmComposite captionposition="top" required={true} listener={mockListener} name="regPassword_composite">
+                        <WmLabel caption="Password" required={true} listener={mockListener} name="regPassword_label" className="control-label"/>
+                        <WmText
+                          name="password"
+                          type="password"
+                          placeholder="Enter password"
+                          datavalue=""
+                          listener={mockListener}
+                          validators={[
+                            { type: "required", validator: true, errorMessage: "Password is required" },
+                            { type: "maxchars", validator: 100, errorMessage: "Password cannot exceed 100 characters" },
+                          ] as any}
+                        />
+                      </WmComposite>
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmComposite captionposition="top" required={true} listener={mockListener} name="regConfirmPassword_composite">
+                        <WmLabel caption="Confirm Password" required={true} listener={mockListener} name="regConfirmPassword_label" className="control-label"/>
+                        <WmText
+                          name="confirmPassword"
+                          type="password"
+                          placeholder="Confirm password"
+                          datavalue=""
+                          listener={mockListener}
+                          validators={[
+                            { type: "required", validator: true, errorMessage: "Please confirm your password" },
+                            (async ({ value }: any, form: any) => {
+                              if (!value) return true;
+                              const passwordInput = document.querySelector('input[name="password"]') as HTMLInputElement;
+                              const passwordValue = passwordInput?.value || "";
+                              if (passwordValue && value !== passwordValue) {
+                                return "Passwords do not match";
+                              }
+                              return true;
+                            }) as any,
+                          ] as any}
+                        />
+                      </WmComposite>
+                    </Box>
+                  </Stack>
+
+                  {/* Date of Birth & Country - 2 Column */}
+                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
+                    <Box sx={{ flex: 1 }}>
+                      <WmComposite captionposition="top" required={true} listener={mockListener} name="regDOB_composite">
+                        <WmLabel caption="Date of Birth" required={true} listener={mockListener} name="regDOB_label" className="control-label"/>
+                        <WmDate
+                          name="dob"
+                          datavalue=""
+                          listener={mockListener}
+                          validators={[
+                            { type: "required", validator: true, errorMessage: "Date of birth is required" },
+                          ] as any}
+                        />
+                      </WmComposite>
+                    </Box>
+                    <Box sx={{ flex: 1 }}>
+                      <WmComposite captionposition="top" required={true} listener={mockListener} name="regCountry_composite">
+                        <WmLabel caption="Country" required={true} listener={mockListener} name="regCountry_label" className="control-label"/>
+                        <WmSelect
+                          name="country"
+                          datavalue=""
+                          dataset={["USA", "Canada", "UK", "Australia", "India", "Other"]}
+                          listener={mockListener}
+                          validators={[
+                            { type: "required", validator: true, errorMessage: "Please select a country" },
+                          ] as any}
+                          placeholder="Select Country"
+                        />
+                      </WmComposite>
+                    </Box>
+                  </Stack>
+
+                  {/* Terms Checkbox */}
+                  <WmCheckbox
+                    name="terms"
+                    caption="I agree to the terms and conditions *"
+                    datavalue={false}
+                    listener={mockListener}
+                    validators={[
+                      { type: "required", validator: true, errorMessage: "You must agree to the terms and conditions" },
+                    ] as any}
+                  />
+
+                  <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
+                    <Button variant="outlined" type="reset">
+                      Clear
+                    </Button>
+                    <Button variant="contained" type="submit">
+                      Register User
+                    </Button>
+                  </Box>
+                </Stack>
+              </Box>
+            </WmLiveForm>
+          </Box>
+
           {/* VIEW MODE - Read-only form with pre-filled data */}
           <Box>
             <Typography variant="subtitle2" color="text.secondary">
@@ -289,7 +494,7 @@ export const Showcase: Story = {
                     <Button variant="outlined" type="reset">
                       Cancel
                     </Button>
-                    <Button variant="contained" type="submit">
+                    <Button variant="contained" type="button">
                       Update
                     </Button>
                   </Box>
@@ -298,123 +503,6 @@ export const Showcase: Story = {
             </WmLiveForm>
           </Box>
 
-          {/* CREATE MODE - Empty form for new records */}
-          <Box>
-            <Typography variant="subtitle2" color="text.secondary">
-              Create Mode (New Record)
-            </Typography>
-            <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 2 }} style={{marginBottom: 12}} fontWeight={300}>
-              Add new products with custom success messages
-            </Typography>
-
-            <WmLiveForm {...({
-              name: "createModeForm",
-              title: "Add New Product",
-              subheading: "Create a new product entry",
-              iconclass: "fa fa-archive",
-              datasource: createMockDataSource(),
-              defaultmode: "create",
-              formlayout: "inline",
-              insertmessage: "Product added successfully!",
-              errormessage: "Failed to save product. Please try again.",
-              messagelayout: "Toaster",
-              listener: mockListener,
-              formSubmit: (data: any, operation: string, success: any) => {
-                console.log("Form submit:", operation, data);
-                setTimeout(() => {
-                  success({ success: true, operationType: operation });
-                }, 500);
-              },
-            } as any)}>
-              <Box sx={{ padding: 3 }}>
-                <Stack spacing={3}>
-                  <WmComposite captionposition="top" required={true} listener={mockListener} name="createProductName_composite">
-                    <WmLabel caption="Product Name" required={true} listener={mockListener} name="createProductName_label" className="control-label"/>
-                    <WmText
-                      name="productName"
-                      placeholder="Enter product name"
-                      datavalue=""
-                      listener={mockListener}
-                      required={true}
-                    />
-                  </WmComposite>
-
-                  <WmComposite captionposition="top" required={true} listener={mockListener} name="createSku_composite">
-                    <WmLabel caption="SKU" required={true} listener={mockListener} name="createSku_label" className="control-label"/>
-                    <WmText
-                      name="sku"
-                      placeholder="Enter SKU"
-                      datavalue=""
-                      listener={mockListener}
-                      required={true}
-                    />
-                  </WmComposite>
-
-                  <WmComposite captionposition="top" listener={mockListener} name="createDescription_composite">
-                    <WmLabel caption="Description" listener={mockListener} name="createDescription_label" className="control-label"/>
-                    <WmTextarea
-                      name="description"
-                      placeholder="Enter product description"
-                      datavalue=""
-                      listener={mockListener}
-                      rows={4}
-                    />
-                  </WmComposite>
-
-                  <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
-                    <Box sx={{ flex: 1 }}>
-                      <WmComposite captionposition="top" listener={mockListener} name="createPrice_composite">
-                        <WmLabel caption="Price ($)" listener={mockListener} name="createPrice_label" className="control-label"/>
-                        <WmNumber
-                          name="price"
-                          datavalue={null}
-                          listener={mockListener}
-                          minvalue={0}
-                        />
-                      </WmComposite>
-                    </Box>
-                    <Box sx={{ flex: 1 }}>
-                      <WmComposite captionposition="top" listener={mockListener} name="createStock_composite">
-                        <WmLabel caption="Stock Quantity" listener={mockListener} name="createStock_label" className="control-label"/>
-                        <WmNumber
-                          name="stock"
-                          datavalue={null}
-                          listener={mockListener}
-                          minvalue={0}
-                        />
-                      </WmComposite>
-                    </Box>
-                  </Stack>
-
-                  <WmComposite captionposition="top" listener={mockListener} name="createCategory_composite">
-                    <WmLabel caption="Category" listener={mockListener} name="createCategory_label" className="control-label"/>
-                    <WmSelect
-                      name="category"
-                      datavalue=""
-                      dataset={["Electronics", "Clothing", "Food", "Books", "Toys"]}
-                      listener={mockListener}
-                    />
-                  </WmComposite>
-
-                  <WmSwitch
-                    name="active"
-                    caption="Active"
-                    datavalue={true}
-                    listener={mockListener}
-                  />
-
-                  <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
-                    <Button variant="outlined" type="reset">
-                      Clear
-                    </Button>
-                    <Button variant="contained" type="submit">
-                      Create Product
-                    </Button>
-                  </Box>
-                </Stack>
-              </Box>
-            </WmLiveForm>
-          </Box>
         </Stack>
       </Box>
     );
@@ -477,27 +565,27 @@ export const Standard: Story = {
               <Box sx={{ padding: 3 }}>
                 <Stack spacing={3}>
                   {/* Text Input */}
-                  <WmComposite captionposition={args.captionposition} required={true} listener={mockListener} name="stdFullName_composite">
-                    <WmLabel caption="Full Name" required={true} listener={mockListener} name="stdFullName_label" className="control-label"/>
+                  <WmComposite captionposition={args.captionposition} required={false} listener={mockListener} name="stdFullName_composite">
+                    <WmLabel caption="Full Name" required={false} listener={mockListener} name="stdFullName_label" className="control-label"/>
                     <WmText
                       name="fullName"
                       placeholder="Enter your full name"
                       datavalue=""
                       listener={mockListener}
-                      required={true}
+                      required={false}
                     />
                   </WmComposite>
 
                   {/* Email Input */}
-                  <WmComposite captionposition={args.captionposition} required={true} listener={mockListener} name="stdEmail_composite">
-                    <WmLabel caption="Email Address" required={true} listener={mockListener} name="stdEmail_label" className="control-label"/>
+                  <WmComposite captionposition={args.captionposition} required={false} listener={mockListener} name="stdEmail_composite">
+                    <WmLabel caption="Email Address" required={false} listener={mockListener} name="stdEmail_label" className="control-label"/>
                     <WmText
                       name="email"
                       type="email"
                       placeholder="your.email@example.com"
                       datavalue=""
                       listener={mockListener}
-                      required={true}
+                      required={false}
                     />
                   </WmComposite>
 
@@ -515,7 +603,7 @@ export const Standard: Story = {
                   </WmComposite>
 
                   {/* Currency Input */}
-                  <WmComposite captionposition={args.captionposition} listener={mockListener} name="stdSalary_composite">
+                  {/* <WmComposite captionposition={args.captionposition} listener={mockListener} name="stdSalary_composite">
                     <WmLabel caption="Expected Salary" listener={mockListener} name="stdSalary_label" className="control-label"/>
                     <WmCurrency
                       name="salary"
@@ -525,40 +613,40 @@ export const Standard: Story = {
                       currency="USD"
                       decimalplaces={2}
                     />
-                  </WmComposite>
+                  </WmComposite> */}
 
                   {/* Date Input */}
-                  <WmComposite captionposition={args.captionposition} required={true} listener={mockListener} name="stdStartDate_composite">
-                    <WmLabel caption="Start Date" required={true} listener={mockListener} name="stdStartDate_label" className="control-label"/>
+                  <WmComposite captionposition={args.captionposition} required={false} listener={mockListener} name="stdStartDate_composite">
+                    <WmLabel caption="Start Date" required={false} listener={mockListener} name="stdStartDate_label" className="control-label"/>
                     <WmDate
                       name="startDate"
                       datavalue=""
                       listener={mockListener}
-                      required={true}
+                      required={false}
                     />
                   </WmComposite>
 
                   {/* Select Dropdown */}
-                  <WmComposite captionposition={args.captionposition} required={true} listener={mockListener} name="stdDepartment_composite">
-                    <WmLabel caption="Department" required={true} listener={mockListener} name="stdDepartment_label" className="control-label"/>
+                  <WmComposite captionposition={args.captionposition} required={false} listener={mockListener} name="stdDepartment_composite">
+                    <WmLabel caption="Department" required={false} listener={mockListener} name="stdDepartment_label" className="control-label"/>
                     <WmSelect
                       name="department"
                       datavalue=""
                       dataset={["Engineering", "Marketing", "Sales", "HR", "Operations"]}
                       listener={mockListener}
-                      required={true}
+                      required={false}
                     />
                   </WmComposite>
 
                   {/* Radio Button Set */}
-                  <WmComposite captionposition={args.captionposition} required={true} listener={mockListener} name="stdEmploymentType_composite">
-                    <WmLabel caption="Employment Type" required={true} listener={mockListener} name="stdEmploymentType_label" className="control-label"/>
+                  <WmComposite captionposition={args.captionposition} required={false} listener={mockListener} name="stdEmploymentType_composite">
+                    <WmLabel caption="Employment Type" required={false} listener={mockListener} name="stdEmploymentType_label" className="control-label"/>
                     <WmRadioset
                       name="employmentType"
                       datavalue="Full-time"
                       dataset="Full-time, Part-time, Contract, Intern"
                       listener={mockListener}
-                      required={true}
+                      required={false}
                     />
                   </WmComposite>
 
@@ -585,15 +673,15 @@ export const Standard: Story = {
                   </WmComposite>
 
                   {/* Textarea */}
-                  <WmComposite captionposition={args.captionposition} required={true} listener={mockListener} name="stdExperience_composite">
-                    <WmLabel caption="Work Experience" required={true} listener={mockListener} name="stdExperience_label" className="control-label"/>
+                  <WmComposite captionposition={args.captionposition} required={false} listener={mockListener} name="stdExperience_composite">
+                    <WmLabel caption="Work Experience" required={false} listener={mockListener} name="stdExperience_label" className="control-label"/>
                     <WmTextarea
                       name="experience"
                       placeholder="Describe your work experience..."
                       datavalue=""
                       listener={mockListener}
                       rows={5}
-                      required={true}
+                      required={false}
                     />
                   </WmComposite>
 
@@ -603,7 +691,7 @@ export const Standard: Story = {
                     caption="I agree to the terms and conditions *"
                     datavalue={false}
                     listener={mockListener}
-                    required={true}
+                    required={false}
                   />
 
                   <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end", mt: 2 }}>

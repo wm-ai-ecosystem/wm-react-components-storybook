@@ -173,7 +173,6 @@ export const Showcase: Story = {
                         <WmLabel caption="Email Address" required={true} listener={mockListener} name="regEmail_label" className="control-label"/>
                         <WmText
                           name="email"
-                          type="email"
                           placeholder="your.email@example.com"
                           datavalue=""
                           listener={mockListener}
