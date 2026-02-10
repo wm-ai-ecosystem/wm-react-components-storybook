@@ -397,7 +397,7 @@ export const Showcase: Story = {
                           type="number"
                           placeholder="Enter phone number"
                           listener={mockListener}
-                          datavalue={9876543210}
+                          datavalue="9876543210"
                         />
                       </WmComposite>
                     </Box>
@@ -629,7 +629,7 @@ export const Standard: Story = {
                       <WmCheckboxset
                         name="skills"
                         datavalue="Python"
-                        dataset="JavaScript, Python, React, Node.js, AWS"
+                        dataset={["JavaScript", "Python", "React", "Node.js", "AWS"]}
                         listener={mockListener}
                       />
                     </WmComposite>
