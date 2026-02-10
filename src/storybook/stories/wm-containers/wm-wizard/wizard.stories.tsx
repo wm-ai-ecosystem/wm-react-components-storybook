@@ -828,73 +828,76 @@ export const Showcase: Story = {
 // ============================================================================
 
 export const Number: Story = {
-  render: (args) => (
-    <Box sx={{ p: 4 }}>
-      <WmWizard {...args}>
-        <WmWizardstep
-          name="step1"
-          title="Step 1: Getting Started"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Getting Started
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              The number style wizard displays step numbers in circular indicators. This is the default and most common wizard style.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Click Next to proceed to the next step.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WmWizardstep
-          name="step2"
-          title="Step 2: Configuration"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Configuration
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              This is the second step of the wizard. You can navigate back to the previous step or continue forward.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Use the Previous and Next buttons to navigate.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WmWizardstep
-          name="step3"
-          title="Step 3: Review & Complete"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Review & Complete
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              This is the final step. Review your information and click Done to complete the wizard.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              The Done button appears on the last step.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WizardActions
-          actionsalignment={args.actionsalignment}
-          cancelable={args.cancelable}
-          enablenext={args.enablenext}
-          nextbtnlabel={args.nextbtnlabel}
-          previousbtnlabel={args.previousbtnlabel}
-          donebtnlabel={args.donebtnlabel}
-          cancelbtnlabel={args.cancelbtnlabel}
-          skipbtnlabel="Skip"
-        />
-      </WmWizard>
-    </Box>
-  ),
+  render: (args) => {
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args;
+    return (
+      <Box sx={{ p: 4, width: "100%" }} data-design-token-target={dataAttr}>
+        <WmWizard {...componentArgs}>
+          <WmWizardstep
+            name="step1"
+            title="Step 1: Getting Started"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Getting Started
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                The number style wizard displays step numbers in circular indicators. This is the default and most common wizard style.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Click Next to proceed to the next step.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WmWizardstep
+            name="step2"
+            title="Step 2: Configuration"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Configuration
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                This is the second step of the wizard. You can navigate back to the previous step or continue forward.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Use the Previous and Next buttons to navigate.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WmWizardstep
+            name="step3"
+            title="Step 3: Review & Complete"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Review & Complete
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                This is the final step. Review your information and click Done to complete the wizard.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                The Done button appears on the last step.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WizardActions
+            actionsalignment={componentArgs.actionsalignment}
+            cancelable={componentArgs.cancelable}
+            enablenext={componentArgs.enablenext}
+            nextbtnlabel={componentArgs.nextbtnlabel}
+            previousbtnlabel={componentArgs.previousbtnlabel}
+            donebtnlabel={componentArgs.donebtnlabel}
+            cancelbtnlabel={componentArgs.cancelbtnlabel}
+            skipbtnlabel="Skip"
+          />
+        </WmWizard>
+      </Box>
+    );
+  },
   args: {
     name: "numberWizard",
     className: "number",
@@ -909,7 +912,7 @@ export const Number: Story = {
     actionsalignment: "right",
     listener: mockListener,
     stepstyle: "auto",
-    "data-design-token-target":false
+    "data-design-token-target":true
   },
   argTypes: {
     orientation: {
@@ -960,7 +963,7 @@ export const Number: Story = {
     // which is incompatible with CSS variable approach. To enable design tokens,
     // the wizard component would need to be rewritten without MUI Stepper.
     designTokens: {
-      enabled: false,
+      enabled: true,
       tokenData: wizardTokensData,
       componentKey: "wizard",
       extractCSSVariablesAtRuntime: true,
@@ -970,79 +973,82 @@ export const Number: Story = {
 };
 
 export const IconStepper: Story = {
-  render: (args) => (
-    <Box sx={{ p: 4 }}>
-      <WmWizard {...args}>
-        <WmWizardstep
-          name="account"
-          title="Create Account"
-          iconclass="fa fa-user"
-          doneiconclass="fa fa-check"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Create Account
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              The icon stepper style uses custom icons for each step instead of numbers. This provides a more visual and intuitive experience.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Each step can have its own unique icon defined via the iconclass prop.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WmWizardstep
-          name="settings"
-          title="Configure Settings"
-          iconclass="fa fa-cog"
-          doneiconclass="fa fa-check"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Configure Settings
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Configure your preferences in this step. The gear icon represents configuration.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Icons change to a checkmark when steps are completed.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WmWizardstep
-          name="finish"
-          title="Complete Setup"
-          iconclass="fa fa-flag-checkered"
-          doneiconclass="fa fa-check"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Complete Setup
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Finish the setup process. The flag icon indicates the final step.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Click Done to complete the wizard.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WizardActions
-          actionsalignment={args.actionsalignment}
-          cancelable={args.cancelable}
-          enablenext={args.enablenext}
-          nextbtnlabel={args.nextbtnlabel}
-          previousbtnlabel={args.previousbtnlabel}
-          donebtnlabel={args.donebtnlabel}
-          cancelbtnlabel={args.cancelbtnlabel}
-          skipbtnlabel="Skip"
-        />
-      </WmWizard>
-    </Box>
-  ),
+  render: (args) => {
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args;
+    return (
+      <Box sx={{ p: 4, width: "100%" }} data-design-token-target={dataAttr}>
+        <WmWizard {...componentArgs}>
+          <WmWizardstep
+            name="account"
+            title="Create Account"
+            iconclass="fa fa-user"
+            doneiconclass="fa fa-check"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Create Account
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                The icon stepper style uses custom icons for each step instead of numbers. This provides a more visual and intuitive experience.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Each step can have its own unique icon defined via the iconclass prop.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WmWizardstep
+            name="settings"
+            title="Configure Settings"
+            iconclass="fa fa-cog"
+            doneiconclass="fa fa-check"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Configure Settings
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Configure your preferences in this step. The gear icon represents configuration.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Icons change to a checkmark when steps are completed.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WmWizardstep
+            name="finish"
+            title="Complete Setup"
+            iconclass="fa fa-flag-checkered"
+            doneiconclass="fa fa-check"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Complete Setup
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Finish the setup process. The flag icon indicates the final step.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Click Done to complete the wizard.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WizardActions
+            actionsalignment={componentArgs.actionsalignment}
+            cancelable={componentArgs.cancelable}
+            enablenext={componentArgs.enablenext}
+            nextbtnlabel={componentArgs.nextbtnlabel}
+            previousbtnlabel={componentArgs.previousbtnlabel}
+            donebtnlabel={componentArgs.donebtnlabel}
+            cancelbtnlabel={componentArgs.cancelbtnlabel}
+            skipbtnlabel="Skip"
+          />
+        </WmWizard>
+      </Box>
+    );
+  },
   args: {
     name: "iconStepperWizard",
     className: "iconstepper",
@@ -1057,7 +1063,7 @@ export const IconStepper: Story = {
     actionsalignment: "right",
     listener: mockListener,
     stepstyle: "auto",
-    "data-design-token-target":false
+    "data-design-token-target":true
   },
   argTypes: {
     orientation: {
@@ -1108,7 +1114,7 @@ export const IconStepper: Story = {
     // which is incompatible with CSS variable approach. To enable design tokens,
     // the wizard component would need to be rewritten without MUI Stepper.
     designTokens: {
-      enabled: false,
+      enabled: true,
       tokenData: wizardTokensData,
       componentKey: "wizard",
       extractCSSVariablesAtRuntime: true,
@@ -1118,79 +1124,82 @@ export const IconStepper: Story = {
 };
 
 export const IconStepperTextInline: Story = {
-  render: (args) => (
-    <Box sx={{ p: 4 }}>
-      <WmWizard {...args}>
-        <WmWizardstep
-          name="upload"
-          title="Upload Files"
-          iconclass="fa fa-upload"
-          doneiconclass="fa fa-check"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Upload Files
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              The text-inline variant displays step labels alongside icons horizontally. This is ideal when you have more horizontal space.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              The inline layout works well for workflows with longer step titles.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WmWizardstep
-          name="process"
-          title="Process Data"
-          iconclass="fa fa-spinner"
-          doneiconclass="fa fa-check"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Process Data
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Your files are being processed. The spinner icon indicates ongoing activity.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Text appears inline with the icon for better readability.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WmWizardstep
-          name="complete"
-          title="Complete"
-          iconclass="fa fa-check-circle"
-          doneiconclass="fa fa-check"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Complete
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Processing is complete. Click Done to finish.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              The check-circle icon indicates successful completion.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WizardActions
-          actionsalignment={args.actionsalignment}
-          cancelable={args.cancelable}
-          enablenext={args.enablenext}
-          nextbtnlabel={args.nextbtnlabel}
-          previousbtnlabel={args.previousbtnlabel}
-          donebtnlabel={args.donebtnlabel}
-          cancelbtnlabel={args.cancelbtnlabel}
-          skipbtnlabel="Skip"
-        />
-      </WmWizard>
-    </Box>
-  ),
+  render: (args) => {
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args;
+    return (
+      <Box sx={{ p: 4, width: "100%" }} data-design-token-target={dataAttr}>
+        <WmWizard {...componentArgs}>
+          <WmWizardstep
+            name="upload"
+            title="Upload Files"
+            iconclass="fa fa-upload"
+            doneiconclass="fa fa-check"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Upload Files
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                The text-inline variant displays step labels alongside icons horizontally. This is ideal when you have more horizontal space.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                The inline layout works well for workflows with longer step titles.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WmWizardstep
+            name="process"
+            title="Process Data"
+            iconclass="fa fa-spinner"
+            doneiconclass="fa fa-check"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Process Data
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Your files are being processed. The spinner icon indicates ongoing activity.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Text appears inline with the icon for better readability.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WmWizardstep
+            name="complete"
+            title="Complete"
+            iconclass="fa fa-check-circle"
+            doneiconclass="fa fa-check"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Complete
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Processing is complete. Click Done to finish.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                The check-circle icon indicates successful completion.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WizardActions
+            actionsalignment={componentArgs.actionsalignment}
+            cancelable={componentArgs.cancelable}
+            enablenext={componentArgs.enablenext}
+            nextbtnlabel={componentArgs.nextbtnlabel}
+            previousbtnlabel={componentArgs.previousbtnlabel}
+            donebtnlabel={componentArgs.donebtnlabel}
+            cancelbtnlabel={componentArgs.cancelbtnlabel}
+            skipbtnlabel="Skip"
+          />
+        </WmWizard>
+      </Box>
+    );
+  },
   args: {
     name: "iconStepperTextInlineWizard",
     className: "iconstepper text-inline",
@@ -1205,7 +1214,7 @@ export const IconStepperTextInline: Story = {
     actionsalignment: "right",
     listener: mockListener,
     stepstyle: "auto",
-    "data-design-token-target":false
+    "data-design-token-target":true
   },
   argTypes: {
     orientation: {
@@ -1256,7 +1265,7 @@ export const IconStepperTextInline: Story = {
     // which is incompatible with CSS variable approach. To enable design tokens,
     // the wizard component would need to be rewritten without MUI Stepper.
     designTokens: {
-      enabled: false,
+      enabled: true,
       tokenData: wizardTokensData,
       componentKey: "wizard",
       extractCSSVariablesAtRuntime: true,
@@ -1266,73 +1275,76 @@ export const IconStepperTextInline: Story = {
 };
 
 export const DottedStepper: Story = {
-  render: (args) => (
-    <Box sx={{ p: 4 }}>
-      <WmWizard {...args}>
-        <WmWizardstep
-          name="basic"
-          title="Basic Information"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Basic Information
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              The dotted stepper style provides a minimal, clean appearance with small dots as step indicators.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              This style is perfect for modern, minimalist interfaces.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WmWizardstep
-          name="advanced"
-          title="Advanced Options"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Advanced Options
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Configure advanced settings in this step. The dotted line connects the steps visually.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Simple dots keep the focus on the content rather than the navigation.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WmWizardstep
-          name="summary"
-          title="Summary"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Summary
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Review your information and complete the wizard.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              The minimal design keeps users focused on the task.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WizardActions
-          actionsalignment={args.actionsalignment}
-          cancelable={args.cancelable}
-          enablenext={args.enablenext}
-          nextbtnlabel={args.nextbtnlabel}
-          previousbtnlabel={args.previousbtnlabel}
-          donebtnlabel={args.donebtnlabel}
-          cancelbtnlabel={args.cancelbtnlabel}
-          skipbtnlabel="Skip"
-        />
-      </WmWizard>
-    </Box>
-  ),
+  render: (args) => {
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args;
+    return (
+      <Box sx={{ p: 4, width: "100%" }} data-design-token-target={dataAttr}>
+        <WmWizard {...componentArgs}>
+          <WmWizardstep
+            name="basic"
+            title="Basic Information"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Basic Information
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                The dotted stepper style provides a minimal, clean appearance with small dots as step indicators.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                This style is perfect for modern, minimalist interfaces.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WmWizardstep
+            name="advanced"
+            title="Advanced Options"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Advanced Options
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Configure advanced settings in this step. The dotted line connects the steps visually.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Simple dots keep the focus on the content rather than the navigation.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WmWizardstep
+            name="summary"
+            title="Summary"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Summary
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Review your information and complete the wizard.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                The minimal design keeps users focused on the task.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WizardActions
+            actionsalignment={componentArgs.actionsalignment}
+            cancelable={componentArgs.cancelable}
+            enablenext={componentArgs.enablenext}
+            nextbtnlabel={componentArgs.nextbtnlabel}
+            previousbtnlabel={componentArgs.previousbtnlabel}
+            donebtnlabel={componentArgs.donebtnlabel}
+            cancelbtnlabel={componentArgs.cancelbtnlabel}
+            skipbtnlabel="Skip"
+          />
+        </WmWizard>
+      </Box>
+    );
+  },
   args: {
     name: "dottedStepperWizard",
     className: "dottedstepper",
@@ -1347,7 +1359,7 @@ export const DottedStepper: Story = {
     actionsalignment: "right",
     listener: mockListener,
     stepstyle: "auto",
-    "data-design-token-target":false
+    "data-design-token-target":true
   },
   argTypes: {
     orientation: {
@@ -1398,7 +1410,7 @@ export const DottedStepper: Story = {
     // which is incompatible with CSS variable approach. To enable design tokens,
     // the wizard component would need to be rewritten without MUI Stepper.
     designTokens: {
-      enabled: false,
+      enabled: true,
       tokenData: wizardTokensData,
       componentKey: "wizard",
       extractCSSVariablesAtRuntime: true,
@@ -1408,73 +1420,78 @@ export const DottedStepper: Story = {
 };
 
 export const DottedStepperTextInline: Story = {
-  render: (args) => (
-    <Box sx={{ p: 4 }}>
-      <WmWizard {...args}>
-        <WmWizardstep
-          name="start"
-          title="Getting Started"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Getting Started
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              The dotted stepper with text-inline combines minimal design with clear, inline step labels.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              This variant is excellent for modern, clean interfaces with good readability.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WmWizardstep
-          name="configure"
-          title="Configuration"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Configuration
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Set your preferences. The inline text layout provides clear labels while maintaining a minimal aesthetic.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Labels appear horizontally next to the dots for better space utilization.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WmWizardstep
-          name="finalize"
-          title="Finalize"
-          listener={mockListener}
-        >
-          <Box sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Finalize
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              Complete the wizard setup. This style balances minimalism with usability.
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Click Done to finish the setup process.
-            </Typography>
-          </Box>
-        </WmWizardstep>
-        <WizardActions
-          actionsalignment={args.actionsalignment}
-          cancelable={args.cancelable}
-          enablenext={args.enablenext}
-          nextbtnlabel={args.nextbtnlabel}
-          previousbtnlabel={args.previousbtnlabel}
-          donebtnlabel={args.donebtnlabel}
-          cancelbtnlabel={args.cancelbtnlabel}
-          skipbtnlabel="Skip"
-        />
-      </WmWizard>
-    </Box>
-  ),
+  render: (args) => {
+    const { "data-design-token-target": dataAttr, ...componentArgs } = args;
+    return (
+      <Box sx={{ p: 4, width: "100%" }} data-design-token-target={dataAttr}>
+        <WmWizard {...componentArgs}>
+          <WmWizardstep
+            name="start"
+            title="Getting Started"
+            subtitle="Begin your journey"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Getting Started
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                The dotted stepper with text-inline combines minimal design with clear, inline step labels.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                This variant is excellent for modern, clean interfaces with good readability.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WmWizardstep
+            name="configure"
+            title="Configuration"
+            subtitle="Set your preferences"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Configuration
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Set your preferences. The inline text layout provides clear labels while maintaining a minimal aesthetic.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Labels appear horizontally next to the dots for better space utilization.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WmWizardstep
+            name="finalize"
+            title="Finalize"
+            listener={mockListener}
+          >
+            <Box sx={{ p: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                Finalize
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Complete the wizard setup. This style balances minimalism with usability.
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Click Done to finish the setup process.
+              </Typography>
+            </Box>
+          </WmWizardstep>
+          <WizardActions
+            actionsalignment={componentArgs.actionsalignment}
+            cancelable={componentArgs.cancelable}
+            enablenext={componentArgs.enablenext}
+            nextbtnlabel={componentArgs.nextbtnlabel}
+            previousbtnlabel={componentArgs.previousbtnlabel}
+            donebtnlabel={componentArgs.donebtnlabel}
+            cancelbtnlabel={componentArgs.cancelbtnlabel}
+            skipbtnlabel="Skip"
+          />
+        </WmWizard>
+      </Box>
+    );
+  },
   args: {
     name: "dottedStepperTextInlineWizard",
     className: "dottedstepper text-inline",
@@ -1489,7 +1506,7 @@ export const DottedStepperTextInline: Story = {
     actionsalignment: "right",
     listener: mockListener,
     stepstyle: "auto",
-    "data-design-token-target":false
+    "data-design-token-target":true
   },
   argTypes: {
     orientation: {
@@ -1540,7 +1557,7 @@ export const DottedStepperTextInline: Story = {
     // which is incompatible with CSS variable approach. To enable design tokens,
     // the wizard component would need to be rewritten without MUI Stepper.
     designTokens: {
-      enabled: false,
+      enabled: true,
       tokenData: wizardTokensData,
       componentKey: "wizard",
       extractCSSVariablesAtRuntime: true,
