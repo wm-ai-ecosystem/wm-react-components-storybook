@@ -22,6 +22,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useStorybookApi } from "storybook/manager-api";
+import { addons } from "storybook/preview-api";
 import { styled } from "storybook/theming";
 import { DesignTokenParameters, TokenDefinition, ComponentTokenConfig } from "./types";
 import { getTokensForClassName, parseDesignTokens, detectAvailableStates, extractLabelFromCSSVariable } from "./tokenParser";
@@ -546,6 +547,25 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
   const iframeObserverRef = useRef<MutationObserver | null>(null);
   const managerObserverRef = useRef<MutationObserver | null>(null);
 
+  // Storybook channel for manager -> preview communication (official mechanism)
+  const channelRef = useRef<ReturnType<typeof addons.getChannel> | null>(null);
+  useEffect(() => {
+    try {
+      channelRef.current = addons.getChannel();
+    } catch (e) {
+      channelRef.current = null;
+    }
+  }, []);
+
+  const emitTokensToPreview = (tokenValues: Record<string, string>) => {
+    try {
+      const storyId = api?.getUrlState?.().storyId;
+      channelRef.current?.emit("wm/designTokens/apply", { tokenValues, storyId });
+    } catch (e) {
+      // ignore
+    }
+  };
+
   /**
    * Effect: Monitor story changes and args updates
    *
@@ -983,6 +1003,11 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
   const applyTokens = (tokenValues: Record<string, string>) => {
     // Keep a snapshot for observers
     latestTokensRef.current = tokenValues;
+
+    // Also emit to preview via Storybook's channel so preview can apply tokens to :root.
+    // This covers portals (dialogs) and environments where manager can't reliably access iframe DOM.
+    emitTokensToPreview(tokenValues);
+
     const iframe = document.querySelector("#storybook-preview-iframe") as HTMLIFrameElement;
 
     // Helper to get the latest token values (observers will read from this)
@@ -1260,52 +1285,24 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
       ].join(',');
 
       const applyPortalsInDoc = (rootDoc: Document) => {
-        // Debug: where we're checking for portals (preview iframe vs manager)
-        try {
-          const locationLabel = rootDoc === document ? 'manager' : 'preview-iframe';
-          console.debug('[Design Tokens] Checking portals in', locationLabel, 'using selectors:', portalSelectors);
-        } catch (e) {
-          // ignore any cross-origin inspection errors in logging
-        }
-
         const portalNodes = rootDoc.querySelectorAll(portalSelectors);
-        try {
-          const locationLabel = rootDoc === document ? 'manager' : 'preview-iframe';
-          console.debug(`[Design Tokens] Found ${portalNodes.length} portal node(s) in ${locationLabel}`);
-        } catch (e) {
-          // ignore
-        }
-
         if (portalNodes.length > 0) {
-          console.debug('[Design Tokens] Applying tokens to portal nodes...');
           applyToElementAndChildren(portalNodes);
         }
       };
 
       // Apply immediately to portals in the preview iframe (if already mounted)
-      try {
-        console.debug('[Design Tokens] Attempting immediate portal application in preview iframe');
-      } catch (e) {
-        // ignore
-      }
       applyPortalsInDoc(iframe.contentDocument);
       // Retry on next frame to catch just-mounted portals after a click
       requestAnimationFrame(() => {
         if (iframe.contentDocument) {
-          console.debug('[Design Tokens] requestAnimationFrame: re-checking preview iframe portals');
           applyPortalsInDoc(iframe.contentDocument);
         }
       });
 
       // Fallback: some implementations may mount portals in the manager (top) document
-      try {
-        console.debug('[Design Tokens] Attempting portal application in manager document');
-      } catch (e) {
-        // ignore
-      }
       applyPortalsInDoc(document);
       requestAnimationFrame(() => {
-        console.debug('[Design Tokens] requestAnimationFrame: re-checking manager document portals');
         applyPortalsInDoc(document);
       });
 
