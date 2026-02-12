@@ -27,7 +27,8 @@
     "lint": "next lint",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "chromatic": "npx chromatic --project-token=${process.env.CHROMATIC_PROJECT_TOKEN}"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,scss,md}": [
@@ -96,6 +97,7 @@
     "@vitest/coverage-v8": "^4.0.15",
     "@wavemaker/variables": "file:.yalc/@wavemaker/variables",
     "babel-plugin-module-resolver": "^5.0.2",
+    "chromatic": "^15.1.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.4",
     "eslint-plugin-storybook": "^10.1.4",

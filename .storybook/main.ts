@@ -1,4 +1,9 @@
 import type { StorybookConfig } from '@storybook/nextjs-vite';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const config: StorybookConfig = {
   "stories": [
@@ -22,7 +27,7 @@ const config: StorybookConfig = {
     config.resolve = config.resolve || {};
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@wavemaker/variables': new URL('./mocks/variables.ts', import.meta.url).pathname,
+      '@wavemaker/variables': resolve(__dirname, './mocks/variables.ts'),
     };
     return config;
   },
