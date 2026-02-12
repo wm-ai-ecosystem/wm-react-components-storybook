@@ -2112,6 +2112,10 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
         </InfoText>
       </InfoBox> */}
 
+      <ButtonGroup style={{ marginTop: 0, paddingTop: 0, borderTop: 'none', marginBottom: 12 }}>
+        <ResetButton onClick={handleReset}>Reset to Defaults</ResetButton>
+      </ButtonGroup>
+
       {/* State Dropdown - Only shown if component has multiple states */}
       {availableStates.length > 1 && (
         <StateDropdownContainer>
@@ -2164,10 +2168,6 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
           })}
         </TokenSection>
       ))}
-
-      <ButtonGroup>
-        <ResetButton onClick={handleReset}>Reset to Defaults</ResetButton>
-      </ButtonGroup>
 
       {/* Render tooltip using portal to escape panel overflow constraints */}
       {activeTooltip && tooltipPosition && createPortal(
