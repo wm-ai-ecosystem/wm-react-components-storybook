@@ -22,7 +22,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useStorybookApi } from "storybook/manager-api";
-import { addons } from "storybook/preview-api";
 import { styled } from "storybook/theming";
 import { DesignTokenParameters, TokenDefinition, ComponentTokenConfig } from "./types";
 import { getTokensForClassName, parseDesignTokens, detectAvailableStates, extractLabelFromCSSVariable } from "./tokenParser";
@@ -547,25 +546,6 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
   const iframeObserverRef = useRef<MutationObserver | null>(null);
   const managerObserverRef = useRef<MutationObserver | null>(null);
 
-  // Storybook channel for manager -> preview communication (official mechanism)
-  const channelRef = useRef<ReturnType<typeof addons.getChannel> | null>(null);
-  useEffect(() => {
-    try {
-      channelRef.current = addons.getChannel();
-    } catch (e) {
-      channelRef.current = null;
-    }
-  }, []);
-
-  const emitTokensToPreview = (tokenValues: Record<string, string>) => {
-    try {
-      const storyId = api?.getUrlState?.().storyId;
-      channelRef.current?.emit("wm/designTokens/apply", { tokenValues, storyId });
-    } catch (e) {
-      // ignore
-    }
-  };
-
   /**
    * Effect: Monitor story changes and args updates
    *
@@ -1003,11 +983,6 @@ export const DesignTokenPanel: React.FC<DesignTokenPanelProps> = ({ active }) =>
   const applyTokens = (tokenValues: Record<string, string>) => {
     // Keep a snapshot for observers
     latestTokensRef.current = tokenValues;
-
-    // Also emit to preview via Storybook's channel so preview can apply tokens to :root.
-    // This covers portals (dialogs) and environments where manager can't reliably access iframe DOM.
-    emitTokensToPreview(tokenValues);
-
     const iframe = document.querySelector("#storybook-preview-iframe") as HTMLIFrameElement;
 
     // Helper to get the latest token values (observers will read from this)
