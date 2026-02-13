@@ -1,3 +1,5 @@
+/* This overrides file is for stories UI customizations which also include Design Tokens or missing foundation.css generated code */
+
 /* when dialog or modal open in any story book, it is applying as overflow:hidden causing scroll issue */
 body.sb-show-main {
   overflow: auto !important;
