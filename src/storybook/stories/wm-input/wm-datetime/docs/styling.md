@@ -1,6 +1,6 @@
 # Styling
 
-The Datetime component does not have its own specific styles. It inherits styling from the individual Date and Time components it combines. To customize its appearance, apply styles to the Date and Time components individually.
+The Datetime component does not have its own specific styles. It inherits styling from the individual **Date** and **Time** components it combines. To customize its appearance, apply styles to the Date and Time components individually.
 
 
 <!-- # Styling

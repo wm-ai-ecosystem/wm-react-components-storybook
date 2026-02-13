@@ -261,7 +261,7 @@ export const Standard: Story = {
   },
   parameters: {
     designTokens: {
-      enabled: true,
+      enabled: false,
       tokenData: dateTokensData,  // Pass raw JSON data instead of pre-parsed config
       componentKey: "datepicker",  // Component identifier for parsing
       extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction

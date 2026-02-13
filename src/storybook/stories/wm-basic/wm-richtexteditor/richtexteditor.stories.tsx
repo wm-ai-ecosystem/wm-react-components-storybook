@@ -224,7 +224,7 @@ export const Standard: Story = {
   },
   parameters: {
     designTokens: {
-      enabled: true,
+      enabled: false,
       tokenData: richTextEditTokensData,  // Pass raw JSON data instead of pre-parsed config
       componentKey: "note",  // Component identifier for parsing
       extractCSSVariablesAtRuntime: true,  // Enable runtime CSS variable extraction
