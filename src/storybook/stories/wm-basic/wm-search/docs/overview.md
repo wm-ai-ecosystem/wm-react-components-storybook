@@ -80,6 +80,29 @@ Page.searchSelect = function ($event, widget, selectedValue) {
 };
 ```
 
+```javascript
+// Alternate way to invoke a service variable programmatically when an event occurs (e.g., on-select of a search item).
+// This approach is generic and can be used for any event, not just on-select.
+
+Page.searchSelect = function ($event, widget, selectedValue) {
+  // Set the input value for the service variable
+  Page.Variables.svGetEmpDetails.setInput("empId", selectedValue);
+
+  // Invoke the service variable without inline callbacks
+  Page.Variables.svGetEmpDetails.invoke();
+};
+
+// Success and error handling can now be managed via variable-level events such as:
+//   - On Before Update
+//   - On Success
+//   - On Error
+// This approach separates the logic from the invocation and is recommended for cleaner code.
+// Refer to WaveMaker documentation for more details.
+
+// After the service variable is invoked successfully, bind its returned data to the any data components like table, list etc.
+Page.Widgets.tableEmpDetails.dataset = Page.Variables.svGetEmpDetails.dataSet;
+```
+
 #### Methods
 
 - Clears the entered/selected search text.
@@ -135,27 +158,3 @@ let employeesList = [
   }
 ];
 ```
-
-<!-- 
-```javascript
-// Alternate way to invoke a service variable programmatically when an event occurs (e.g., on-select of a search item).
-// This approach is generic and can be used for any event, not just on-select.
-
-Page.searchSelect = function ($event, widget, selectedValue) {
-  // Set the input value for the service variable
-  Page.Variables.svGetEmpDetails.setInput("empId", selectedValue);
-
-  // Invoke the service variable without inline callbacks
-  Page.Variables.svGetEmpDetails.invoke();
-};
-
-// Success and error handling can now be managed via variable-level events such as:
-//   - On Before Update
-//   - On Success
-//   - On Error
-// This approach separates the logic from the invocation and is recommended for cleaner code.
-// Refer to WaveMaker documentation for more details.
-
-// After the service variable is invoked successfully, bind its returned data to the any data components like table, list etc.
-Page.Widgets.tableEmpDetails.dataset = Page.Variables.svGetEmpDetails.dataSet;
-``` -->

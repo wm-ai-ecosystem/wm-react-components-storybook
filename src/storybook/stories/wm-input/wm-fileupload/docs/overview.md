@@ -5,27 +5,31 @@ The **FileUpload** component lets users select and upload files from their devic
 ### Markup
 
 ```javascript
-  <wm-fileupload
-  cleariconclass="wi wi-clear"
-  cleariconhint="Clear"
-  name="fileupload"
-  on-select="Variables.FileServiceUploadFile.invoke()"
-  on-delete="Variables.FileServiceDeleteFile.invoke()"
-></wm-fileupload>;
+<wm-fileupload name="fileupload" cleariconclass="wi wi-clear" cleariconhint="Clear" variant="standard"
+on-select="Variables.FileServiceUploadFile.invoke()"
+on-delete="Variables.FileServiceDeleteFile.invoke()"></wm-fileupload>
 ```
 
 ### Examples
 
 #### Properties
 
-- Specifies the allowed file types for upload.
+- This fileupload restricts the allowed file types, which can be configured in the markup or dynamically via script.
 
 ```javascript
-//Allow only image files to be uploaded
-Page.Widgets.fileupload.contenttype = ".jpe .jpeg .gif .jpg .png image/*";
+<wm-fileupload contenttype=".gif .jpe .jpeg .jpg .png image/*" name="fileupload"></wm-fileupload>
 ```
 
-- Sets the maximum allowed file size (in MB) for uploads in the FileUpload component.
+```javascript
+// Allow only image files to be uploaded
+Page.Widgets.fileupload.contenttype = ".gif .jpe .jpeg .jpg .png image/*";
+```
+
+- This fileupload sets the maximum allowed file size, which can be configured in the markup or dynamically via script.
+
+```javascript
+<wm-fileupload maxfilesize="10" name="fileupload"></wm-fileupload>
+```
 
 ```javascript
 // Limit file uploads to 10 MB
@@ -34,20 +38,29 @@ Page.Widgets.fileupload.maxfilesize = 10;
 
 #### Events
 
-- Triggered when the user selects one or more files in the FileUpload component.
+- This is the markup for a fileupload with an on-select event, executed when the user selects files to trigger actions or invoke service variables.
+
+```javascript
+<wm-fileupload on-select="fileuploadSelect($event, widget, selectedFiles)" name="fileupload"></wm-fileupload>
+```
 
 ```javascript
 Page.fileuploadSelect = function ($event, widget, selectedFiles) {
-    //Example: Bind the selected files as input to the variable/service
-    Page.Variables.FileServiceUploadFile.setInput("files", selectedFiles);
-    Page.Variables.FileServiceUploadFile.invoke();
+  // Note: The service variable 'FileServiceUploadFile' is automatically created when the FileUpload component is dragged onto the Studio canvas.
+
+  // Bind the selected files as input to the service variable
+  Page.Variables.FileServiceUploadFile.setInput("files", selectedFiles);
+
+  // Invoke the service to process the selected files
+  Page.Variables.FileServiceUploadFile.invoke();
 };
 ```
 
 #### Methods
 
-- Clears all files currently selected or uploaded in the FileUpload component.
+- This method clears all files currently selected or uploaded in the FileUpload component. 
 
 ```javascript
+// Remove all selected or uploaded files
 Page.Widgets.fileupload.clear();
 ```

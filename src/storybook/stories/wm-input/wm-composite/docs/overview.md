@@ -5,29 +5,25 @@ The **Composite** component is used to manage the caption position and alignment
 ### Markup
 
 ```javascript
-<wm-composite name="composite" captionposition="left" horizontalalign="left">
-  <wm-label
-    class="col-md-3 control-label p"
-    notag="true"
-    name="label"
-    variant="default:p"
-  ></wm-label>
-  <wm-container
-    class="col-md-9 app-container-default"
-    name="container"
-    variant="default"
-  >
-    <wm-text name="text"></wm-text>
-  </wm-container>
-</wm-composite>;
+<wm-composite name="composite"></wm-composite>
 ```
 
 ### Examples
 
 #### Properties
 
-- Sets the caption position for a text input within a Composite component.
+- This composite allows configuring the caption position for its child input, which can be set in the markup or dynamically via script.
 
 ```javascript
-Page.Widgets.composite.captionposition = "top";
+<wm-composite name="composite" captionposition="left">
+  <wm-label class="col-md-3 control-label p" notag="true" name="label" variant="default:p"></wm-label>
+  <wm-container class="col-md-9 app-container-default" name="container" variant="default">
+    <wm-text name="text" class="form-control app-textbox" variant="standard"></wm-text>
+  </wm-container>
+</wm-composite>
+```
+
+```javascript
+// Set the caption position to the left
+Page.Widgets.composite.captionposition = "left";
 ```

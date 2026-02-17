@@ -5,63 +5,102 @@ The **Rating** component lets users provide or view feedback using a visual star
 ### Markup
 
 ```javascript
-<wm-rating name="rating"></wm-rating>
+<wm-rating name="rating" variant="standard"></wm-rating>
 ```
 
 ### Examples
 
 #### Properties
 
-- Sets the rating’s component default value.
+- This rating allows setting a default value based on the bound datafield, which can be configured in the markup or dynamically via script.
 
 ```javascript
+<wm-rating datavalue="2" name="rating"></wm-rating>
+```
+
+```javascript
+// Set the default rating value dynamically, based on the bound datafield
 Page.Widgets.rating.datavalue = 2;
 ```
 
-- Controls the visibility of captions in the rating component. Setting it to false hides all captions.
+- This rating allows controlling the visibility of captions, which can be configured in the markup or dynamically via script.
 
 ```javascript
+<wm-rating showcaptions="false" name="rating"></wm-rating>
+```
+
+```javascript
+// Hide or show captions dynamically
 Page.Widgets.rating.showcaptions = false;
 ```
 
 #### Events
 
-- Triggered whenever the rating selection is updated.
+- This is the markup for a rating with an on-change event, executed when a user updates the selected rating to trigger actions such as submitting data.
+
+```javascript
+<wm-rating on-change="ratingChange($event, widget, newVal, oldVal)" name="rating"></wm-rating>
+```
 
 ```javascript
 Page.ratingChange = function ($event, widget, newVal, oldVal) {
-    if (newVal) {
-        // Submit the rating to backend
-        Page.Variables.svSubmitRating.setInput("productId", Page.Widgets.productId.datavalue);
-        Page.Variables.svSubmitRating.setInput("rating", newVal);
-        Page.Variables.svSubmitRating.invoke();
+  if (newVal) {
+    // Submit the selected rating to the backend service
+    Page.Variables.svSubmitRating.setInput(
+      "productId",
+      Page.Widgets.productId.datavalue,
+    );
+    Page.Variables.svSubmitRating.setInput("rating", newVal);
+    Page.Variables.svSubmitRating.invoke();
 
-        // Invoke a pre-configured toaster action after the service variable successfully submits the rating
-        Page.Actions.feedbackToaster.invoke();
-    }
+    // Invoke a toaster action to provide feedback to the user after successful submission
+    Page.Actions.feedbackToaster.invoke();
+  }
 };
-
 ```
 
-<!-- #### Sample checkboxset dataset
+#### Sample Rating Dataset
 
-```json
-[
+- This is the markup for a Rating component bound to a sample dataset of rating options, using displayfield to show the label, datafield for the value, and supporting a default selected rating.
+
+```javascript
+<wm-rating
+  name="rating"
+  dataset="bind:Variables.stvRatingOptions.dataSet"
+  datafield="value"
+  displayfield="label"
+  datavalue="5"
+></wm-rating>
+```
+
+```javascript
+// Sample dataset for the Rating component, containing id, value, and label
+
+let ratingOptions = [
   {
-    "name": "United States",
-    "code": "US"
+    "id": "r1",
+    "value": "1",
+    "label": "Poor"
   },
   {
-    "name": "United Kingdom",
-    "code": "UK"
+    "id": "r2",
+    "value": "2",
+    "label": "Fair"
   },
   {
-    "name": "Canada",
-    "code": "CA"
+    "id": "r3",
+    "value": "3",
+    "label": "Good"
   },
   {
-    "name": "Australia",
-    "code": "AU"
+    "id": "r4",
+    "value": "4",
+    "label": "Very Good"
   },
+  {
+    "id": "r5",
+    "value": "5",
+    "label": "Excellent"
+  }
 ]
-``` -->
+```

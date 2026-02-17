@@ -58,6 +58,30 @@ Page.treeSelect = function ($event, widget, $item, $path) {
 };
 ```
 
+
+```javascript
+// Alternate way to invoke a service variable programmatically when an event occurs (e.g., on-select of a tree item).
+// This approach is generic and can be used for any event, not just on-select.
+
+Page.treeSelect = function ($event, widget, $item, $path) {
+  // Set the input value for the service variable
+  Page.Variables.svGetDepartmentDetails.setInput("deptId", $item.id);
+
+  // Invoke the service variable without inline callbacks
+  Page.Variables.svGetDepartmentDetails.invoke();
+};
+
+// Success and error handling can now be managed via variable-level events such as:
+//   - On Before Update
+//   - On Success
+//   - On Error
+// This approach separates the logic from the invocation and is recommended for cleaner code.
+// Refer to WaveMaker documentation for more details.
+
+// After the service variable is invoked successfully, bind its returned data to the any data components like table, list etc.
+Page.Widgets.tableDepartment.dataset = Page.Variables.svGetDepartmentDetails.dataSet;
+```
+
 #### Methods 
 
 - Use this method to clear the current tree selection.
@@ -132,27 +156,4 @@ let treeData = [
     // Example: Clear selected subcategory products when parent category is collapsed
     Page.Widgets.productGrid.datavalue = [];
 };
-``` -->
-
-<!-- ```javascript
-// Alternate way to invoke a service variable programmatically when an event occurs (e.g., on-select of a tree item).
-// This approach is generic and can be used for any event, not just on-select.
-
-Page.treeSelect = function ($event, widget, $item, $path) {
-  // Set the input value for the service variable
-  Page.Variables.svGetDepartmentDetails.setInput("deptId", $item.id);
-
-  // Invoke the service variable without inline callbacks
-  Page.Variables.svGetDepartmentDetails.invoke();
-};
-
-// Success and error handling can now be managed via variable-level events such as:
-//   - On Before Update
-//   - On Success
-//   - On Error
-// This approach separates the logic from the invocation and is recommended for cleaner code.
-// Refer to WaveMaker documentation for more details.
-
-// After the service variable is invoked successfully, bind its returned data to the any data components like table, list etc.
-Page.Widgets.tableDepartment.dataset = Page.Variables.svGetDepartmentDetails.dataSet;
 ``` -->

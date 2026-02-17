@@ -5,43 +5,56 @@ The **Time** component allows users to select and manage time values using an in
 ### Markup
 
 ```javascript
-  <wm-time name="time" datavalue="CURRENT_TIME"></wm-time>
+<wm-time name="time" variant="standard"></wm-time>
 ```
 
 ### Examples
 
 #### Properties
 
-- Show AM/PM selection buttons in the datetime component.
+- This time uses a specific time format (hh:mm:ss), which can be configured in the markup or dynamically via script.
 
 ```javascript
-Page.Widgets.datetime.showampmbuttons = true;
+<wm-time timepattern="hh:mm:ss" name="time"></wm-time>
+```
+
+```javascript
+// Set the time format pattern dynamically
+Page.Widgets.datetime.timepattern = "hh:mm:ss";
 ```
 
 #### Events
 
-- Triggered when the user changes the time.
+- This is the markup for a time with an on-change event, executed when a user updates the time to trigger actions such as updating backend data.
+
+```javascript
+<wm-time on-change="timeChange($event, widget, newVal, oldVal)" name="time"></wm-time>
+```
 
 ```javascript
 Page.timeChange = function ($event, widget, newVal, oldVal) {
-    if (newVal) {
-        // Example: Update appointment time in the backend
-        Page.Variables.svUpdateAppointmentTime.setInput("appointmentId", Page.Widgets.appointmentId.datavalue);
-        Page.Variables.svUpdateAppointmentTime.setInput("time", newVal);
-        Page.Variables.svUpdateAppointmentTime.invoke();
+  if (newVal) {
+    // Update the appointment time in the backend using a service variable
+    Page.Variables.svUpdateAppointmentTime.setInput("appointmentId", Page.Widgets.appointmentId.datavalue,);
+    Page.Variables.svUpdateAppointmentTime.setInput("time", newVal);
+    Page.Variables.svUpdateAppointmentTime.invoke();
 
-         // Invoke a pre-configured toaster action after the service variable successfully submits the appointment
-        Page.Actions.successToaster.invoke();
-    }
+    // Trigger a toaster notification after successful update of service variable svUpdateAppointmentTime
+    // App.Actions.successToaster.invoke();
+  }
 };
 ```
 
-- Triggered when the time input gains focus.
+- This is the markup for a time with an on-focus event, executed when the user focuses on the input to trigger UI actions such as showing hints or highlighting the field.
 
 ```javascript
-Page.timeChange = function ($event, widget, newVal, oldVal) {
-    // Example: Highlight the time input or show tooltip
-    Page.Widgets.labelMsg.caption = "Select a suitable time for your appointment";
-    Page.Widgets.labelMsg.show = true;
+<wm-time on-focus="timeFocus($event, widget)" name="time"></wm-time>
+```
+
+```javascript
+Page.timeFocus = function ($event, widget) {
+  // Show a helper message or highlight the time input when focused
+  Page.Widgets.labelMsg.caption = "Select a suitable time for your appointment";
+  Page.Widgets.labelMsg.show = true;
 };
 ```

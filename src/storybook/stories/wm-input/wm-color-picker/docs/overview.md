@@ -5,26 +5,35 @@
 ### Markup
 
 ```javascript
-<wm-colorpicker name="colorpicker"></wm-colorpicker>
+<wm-colorpicker name="colorpicker" variant="standard"></wm-colorpicker>
 ```
 
 ### Examples
 
 #### Properties
 
-- Keeps the color picker popover open until the user presses Enter.
+- This colorpicker keeps the popover open until the user presses Enter, which can be configured in the markup or dynamically via script.
 
 ```javascript
+<wm-colorpicker autoclose="disabled" name="colorpicker"></wm-colorpicker>
+```
+
+```javascript
+// Set the autoclose behavior dynamically for colorpicker
 Page.Widgets.colorpicker.autoclose = "disabled";
 ```
 
 #### Events
 
-- Triggered whenever the color picker value changes.
+- This is the markup for a colorpicker with an on-change event, executed when a user changes the color to trigger actions or update other UI components.
+
+```javascript
+<wm-colorpicker on-change="colorpickerChange($event, widget, newVal, oldVal)" name="colorpicker"></wm-colorpicker>
+```
 
 ```javascript
 Page.colorpickerChange = function ($event, widget, newVal, oldVal) {
-    // Update the button's text color dynamically at runtime 
+    // Update the button's text color dynamically based on the selected color 
     Page.Widgets.buttonText.setProperty("color", newVal);
 };
 ```
