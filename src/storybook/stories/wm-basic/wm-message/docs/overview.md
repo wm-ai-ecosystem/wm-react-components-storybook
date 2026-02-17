@@ -5,7 +5,7 @@ The **Message** component helps to display a custom message on the page. Based o
 ### Markup
 
 ```javascript
-<wm-message type="success" class="app-message alert-success" caption="Your profile has been updated successfully" name="message" variant="filled:success"></wm-message>
+<wm-message name="message" type="success" class="app-message alert-success" variant="filled:success"></wm-message>
 ```
 
 
@@ -13,41 +13,54 @@ The **Message** component helps to display a custom message on the page. Based o
 
 #### Properties 
 
-- Set message type programmatically.
+- This message has a configurable type and caption, which can be set in the markup or updated dynamically via script.
 
 ```javascript
-Page.Widgets.message.type = "error";
+<wm-message type="danger" class="app-message alert-danger" caption="Failed to process your request. Please try again." name="message" variant="filled:danger"></wm-message>
 ```
 
-- Hide the close option.
-
 ```javascript
-Page.Widgets.message.hideclose = true;
+// Configure the message to show an error state with a user-friendly caption
+Page.Widgets.message.type = "error";
+Page.Widgets.message.caption = "Failed to process your request. Please try again.";
 ```
 
 #### Events 
 
-- Triggered on message close.
+- This is the markup for a message with an on-close event, executed when the user closes the message to perform follow-up actions such as resetting related inputs based on the message state.
 
 ```javascript
-    Page.messageClose = function ($event, widget) {
-    if(widget.type === "success") {
-        //Reset the feedback form input after user closes the message
-        Page.Widgets.feedbackInput.value = undefined;
-    }
+<wm-message on-close="messageClose($event, widget)" hideclose="false" name="message"></wm-message>
+```
+
+```javascript
+ Page.messageClose = function ($event, widget) {
+  // Check if the closed message is of type "success"
+  if (widget.type === "success") {
+    // Reset the feedback input field after the message is dismissed
+    Page.Widgets.feedbackInput.datavalue = undefined;
+  }
 };
 ```
 
 #### Methods 
 
-- Display a message.
+- This method shows the message component programmatically.
 
 ```javascript
-    Page.Widgets.message.showMessage();
+// Show the message component to the user
+Page.Widgets.message.showMessage();
 ```
 
-- Hide the currently displayed message.
+- This method hides the message component programmatically.
 
 ```javascript
-    Page.Widgets.message.hideMessage();
+// Hide the message component from the user
+Page.Widgets.message.hideMessage();
 ```
+
+<!-- - Hide the close option.
+
+```javascript
+Page.Widgets.message.hideclose = true;
+``` -->

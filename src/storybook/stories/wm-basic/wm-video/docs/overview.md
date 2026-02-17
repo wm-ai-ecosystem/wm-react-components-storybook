@@ -5,35 +5,30 @@ The **Video** component enables video playback within the application and provid
 ### Markup
 
 ```javascript
-    <wm-video controls="controls" videopreload="none" name="video" mp4format="https://videos.pexels.com/video-files/5155396/5155396-uhd_2560_1440_30fps.mp4"></wm-video>
+<wm-video controls="controls" videopreload="none" name="video" variant="standard"></wm-video>
 ```
-
 
 ### Examples
 
 #### Properties 
 
-- Enable autoplay.
+- This video supports autoplay, looping, muting, and showing controls, which can be set in the markup or dynamically via script.
 
 ```javascript
+<wm-video autoplay="true" loop="true" muted="true" controls="true" mp4format="https://videos.pexels.com/video-files/5155396/5155396-uhd_2560_1440_30fps.mp4" name="video"></wm-video>
+```
+
+```javascript
+// Enable autoplay so the video starts automatically when loaded
 Page.Widgets.video.autoplay = true;
-```
 
-- Enable looping.
-
-```javascript
+// Enable looping to play the video repeatedly
 Page.Widgets.video.loop = true;
-```
 
-- Mute video.
-
-```javascript
+// Mute the video by default
 Page.Widgets.video.muted = true;
-```
 
-- Show controls.
-
-```javascript
+// Show video controls (play, pause, volume) to the user
 Page.Widgets.video.controls = true;
 ```
 

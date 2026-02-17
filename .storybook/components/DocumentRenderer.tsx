@@ -444,7 +444,7 @@ export const ComponentDocumentation: React.FC<DocumentationProps> = ({
         }
 
         .docblock-source{
-          margin: 16px 0 40px;
+          margin: 16px 0 32px;
         }
 
         /* Copy button of the code */ 

@@ -5,28 +5,33 @@ A **Richtext Editor** component allows users to create formatted/styled text sim
 ### Markup
 
 ```javascript
-<wm-richtexteditor name="richtexteditor"></wm-richtexteditor>
+<wm-richtexteditor name="richtexteditor" variant="standard"></wm-richtexteditor>
 ```
 
 ### Examples
 
 #### Properties 
 
-- Enable preview mode to display the formatted HTML content created in the richtext editor.
+- This Rich Text Editor has configurable preview and read-only behavior, which can be set in the markup or dynamically via script.
 
 ```javascript
-Page.Widgets.richtexteditor.showpreview = true;
+<wm-richtexteditor showpreview="true" readonly="true" name="richtexteditor"></wm-richtexteditor>
 ```
 
-- Set the richtext editor to read-only mode to prevent editing while allowing content to be viewed.
-
 ```javascript
+// Enable preview mode to display the formatted HTML content
+Page.Widgets.richtexteditor.showpreview = true;
+
+// Set the editor to read-only to prevent editing of the content
 Page.Widgets.richtexteditor.readonly = true;
 ```
 
 
 <!-- #### Events 
 
+<wm-richtexteditor name="richtexteditor" variant="standard"
+                on-change="richtexteditorChange($event, widget, newVal, oldVal)"
+                on-beforerender="richtexteditorBeforerender($event, widget)"></wm-richtexteditor>
 
 - Triggered on change whenever the value of the richtext editor is updated.
 

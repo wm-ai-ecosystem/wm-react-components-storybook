@@ -5,37 +5,46 @@ The **Label** component represents a caption in a user interface. The label disp
 ### Markup
 
 ```javascript
-<wm-label
-  caption="label"
-  name="label"
-  class="p"
-  type="p"
-  variant="default:p"
-></wm-label>
+<wm-label name="label" caption="label" class="p" type="p" variant="default:p"></wm-label>
 ```
 
 ### Examples
 
 #### Properties
 
-- Show label only when a condition is met.
+- This is the markup for a label, that conditionally displays based on a dataset or expression. The visibility can be set directly in the markup or dynamically via script.
 
 ```javascript
-Page.Widgets.label.show = Page.Variables.svGetUsersData.dataSet.length > 0;
+<wm-label show="bind:Variables.svGetUsersData.dataSet.status === &quot;Active&quot;" name="label"></wm-label>
 ```
 
-- Use bold (rich text) formatting to highlight important information.
+```javascript
+// Show the label only if the user's status is "Active"
+Page.Widgets.label.show = Page.Variables.svGetUsersData.dataSet.status === "Active";
+```
+
+- This is the markup for a label that displays a combined string from a variable and can be set either in the markup or dynamically via script.
 
 ```javascript
-Page.Widgets.label.caption = "Payment Status: <b>Completed</b>";
+<wm-label caption="bind:Variables.svGetUsersData.dataSet.name + &quot; - &quot; + Variables.svGetUsersData.dataSet.role" name="label"></wm-label>
+```
+
+```javascript
+// Set the label caption to display the user's name and role in the format: "Name - Role"
+Page.Widgets.label.caption = Page.Variables.svGetUsersData.dataSet.name + " - " + Page.Variables.svGetUsersData.dataSet.role;
 ```
 
 #### Events
 
-- Triggered on label mouse enter to apply hover styling and improve user interaction feedback.
+- This is the markup for a label with an on-mouseenter event, executed when the user hovers over the label to apply styling.
+
+```javascript
+<wm-label on-mouseenter="labelMouseenter($event, widget)" name="label"></wm-label>
+```
 
 ```javascript
 Page.labelMouseenter = function ($event, widget) {
+  // Apply a hover style to the label by updating its CSS class
   widget.class = "text-primary";
 };
 ```

@@ -5,17 +5,21 @@ An inline frame (**Iframe**) is used to embed another document within the curren
 ### Markup
 
 ```javascript
-<wm-iframe name="iframe" iframesrc="https://www.wavemaker.com/"></wm-iframe>
+<wm-iframe name="iframe" variant="standard"></wm-iframe>
 ```
-
 
 ### Examples
 
 #### Properties
 
-- Embedding a iframesrc with encoded URL parameters.
+- The iframe source and encoding can be set in the markup or dynamically via script.
 
 ```javascript
+<wm-iframe iframesrc="https://www.wavemaker.com" encodeurl="true" name="iframe"></wm-iframe>
+```
+
+```javascript
+// Set the iframe's source URL and enable URL encoding dynamically
 Page.Widgets.iframe.iframesrc = "https://www.wavemaker.com";
 Page.Widgets.iframe.encodeurl = true;
 ```
