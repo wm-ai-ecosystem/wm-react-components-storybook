@@ -6,25 +6,39 @@ The **RightNav** component is a specialized layout container designed for creati
 # Markup
 
 ```javascript
-  <wm-right-panel columnwidth="2" content="rightnav" navtype="rail" navheight="full" name="rightnav"></wm-right-panel>
+<wm-right-panel columnwidth="2" content="rightnav" navtype="rail" navheight="full" name="rightpanel">
 ```
 
 ### Examples
 
 #### Properties
 
-- Add addon class to leftnav
+- This setting controls the right-panel width in a 12-column grid layout and can be configured either in the markup or dynamically using script.
 
 ```javascript
-Page.Widgets.rightnav.class="expand"
+// Configure right-panel column width dynamically
+Page.Widgets.rightpanel.columnwidth = "2";
+```
+
+- This property is used to load or update the content (partial) displayed inside the right-panel. It can be set in the markup or dynamically through script to show different right-panel layouts.
+
+```javascript
+//The 'content' property specifies a partial page to render inside the right-panel.
+Page.Widgets.rightpanel.content = "rightnav";
 ```
 
 #### Events
 
-- Hide skeleton loader container on load of left nav
+- This is the markup for a right-panel component with an on-load event, which is executed when the right-panel is initialized and rendered on the page.
 
 ```javascript
-Page.rightnavLoad = function ($event, widget) {
+<wm-right-panel on-load="rightpanelLoad($event, widget)" name="rightpanel">
+```
+
+```javascript
+Page.rightpanelLoad = function ($event, widget) {
+  // Hide the skeleton loader container once the RightPanel is fully loaded
+  // This ensures a smooth user experience by displaying content only after initialization
   Page.Widgets.skeletonLoaderContainer.show = false;
 };
 ```

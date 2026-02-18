@@ -13,18 +13,15 @@ A **Button** indicates a possible user action. The button provides a styled clic
 
 #### Properties
 
-- Configure the button caption.
+- This button displays a caption (text), which can be set directly in the markup or updated dynamically via script.
+
+```javascript
+<wm-button caption="WaveMaker" name="button"></wm-button>
+```
 
 ```javascript
 // Set or update the button's caption dynamically
 Page.Widgets.button.caption = "WaveMaker";
-```
-
-- Disable/enable button based on a condition.
-
-```javascript
-// Disable the button if the form is invalid, enable it if the form is valid
-Page.Widgets.button.disabled = !Page.Widgets.formCreate.valid;
 ```
 
 - This button displays an icon using an image, with customizable width, height, and margin that can be set in the markup or dynamically via script.
@@ -138,6 +135,17 @@ Page.buttonClick = function ($event, widget) {
 };
 ```
 
+- Executed when the toggle button is clicked to expand or collapse the LeftPanel by adding or removing a CSS class that controls its width.
+
+```javascript
+Page.buttonClick = function ($event, widget) {
+  // Toggle the left panel between expanded and collapsed states
+  // Achieved by dynamically modifying the DOM using classList.toggle()
+  // Styles for expanded/collapsed states should be defined in CSS
+  document.querySelector(".wm-app").classList.toggle("left-panel-expanded");
+};
+```
+
 - This is the markup for a button with an on-mouseenter event, executed on hover to show a tooltip or provide UI feedback.
 
 ```javascript
@@ -168,4 +176,12 @@ Page.buttonClick = function ($event, widget) {
   // Open a dialog or modal window
   Page.Widgets.dialog.open();
 };
+``` -->
+
+
+<!-- - Disable/enable button based on a condition.
+
+```javascript
+// Disable the button if the form is invalid, enable it if the form is valid
+Page.Widgets.button.disabled = !Page.Widgets.formCreate.valid;
 ``` -->
