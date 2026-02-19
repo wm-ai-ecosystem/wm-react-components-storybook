@@ -20,9 +20,9 @@
         | Event | Description |
         | --- | --- |
         | `onBeforeSubmit` | This event will be called before submitting the form. Any validation checks can be performed here. Returning false from the script will stop the form submit. |
-        | `onSubmit` | This event handler is called whenever a submit event is triggered. |
-        | `onResult` | This event is called after invoking an insert, update or delete service call, whether or not the service call was successful. |
-        | `onSuccess` | This event handler is called whenever a success event is triggered. |
-        | `onError` | This event handler is called whenever a error event is triggered. |
+        | `onSubmit` | This event will be called on submitting the form. (This is called after ‘on before submit’. If on before submit returns false, this function will not be called). |
+        | `onResult` | This event will be called after the form is submitted and API returns a response. This event is triggered in both success and failure cases. |
+        | `onSuccess` | This event will be called after the form is submitted and API returns a success response. |
+        | `onError` | This event will be called after the form is submitted and API returns a failure response. |
     </div>
 </details>

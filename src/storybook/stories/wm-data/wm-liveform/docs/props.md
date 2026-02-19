@@ -5,7 +5,7 @@
     <div>
         | Property | Type | Default | Description |
         | --- | --- | --- | --- |
-        | `title` | string | "Form" | Set the title of the component. |
+        | `title` | string | - | Set the title of the component. |
         | `subheading` | string | - | Set the sub heading of the component. |
         | `name` | string | - | A unique identifier for the liveform component. Special characters and spaces are not allowed. |
     </div>
