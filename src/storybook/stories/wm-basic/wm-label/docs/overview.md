@@ -40,6 +40,12 @@ Page.Widgets.label.caption = Page.Variables.svGetUsersData.dataSet.name + " - " 
 <wm-label caption="bind:&quot;1234.000&quot; | toCurrency: '$': '2'" name="label"></wm-label>
 ```
 
+- This is the markup for a label that displays a combined string using dynamic data and a custom function; the function can be defined at the app level (called as App.formatDate()) or at the page level (called directly as formatDate()), and is invoked within the caption bind expression in the markup.
+
+```javascript
+<wm-label caption="bind:&quot;Created on&quot; + &quot; &quot; + App.formatDate(Widgets.listUserDetails.selecteditem.createdAt)" name="label"></wm-label>
+```
+
 #### Events
 
 - This is the markup for a label with an on-mouseenter event, executed when the user hovers over the label to apply styling.
