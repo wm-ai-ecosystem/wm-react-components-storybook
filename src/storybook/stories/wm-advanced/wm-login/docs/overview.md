@@ -6,7 +6,7 @@
 
 ```javascript
 <wm-login name="login">
-    <wm-form name="form1">
+    <wm-form name="form">
         <wm-composite name="composite1">
             <wm-label class="col-md-12 control-label p" caption="Username" name="label1" variant="default:p"></wm-label>
             <wm-container class="col-md-12 app-container-default" name="container1" variant="default">
@@ -36,33 +36,46 @@
 
 #### Properties 
 
-- Sets a static error message on the Login component.
+- This login has a configurable errormessage property that determines the message displayed when login fails, which can be set in the markup or dynamically via script.
 
 ```javascript
+<wm-login errormessage="Login failed. Please try again" name="login"></wm-login>
+```
+
+```javascript
+// Set the error message for the login component dynamically
 Page.Widgets.login.errormessage = "Login failed. Please try again";
 ```
 
 #### Events 
 
-- Triggered when login fails.
+- This is the markup for a login with an on-error event, executed when login fails.
+
+```javascript
+<wm-login on-error="loginError($event, widget)" name="login"></wm-login>
+```
 
 ```javascript
 Page.loginError = function ($event, widget) {
-    //You can display the error message returned by the API or a custom message.
+  //You can display the error message returned by the API or a custom message.
 
-    // Display a static error message
-    widget.loginMessage.caption = "Login failed. Please try again";
+  // Display a static error message
+  widget.loginMessage.caption = "Login failed. Please try again";
 };
 ```
 
-- Triggered when login succeeds.
+- This is the markup for a login with an on-success event, executed when login succeeds.
+
+```javascript
+<wm-login on-success="loginSuccess($event, widget)" name="login"></wm-login>
+```
 
 ```javascript
 Page.loginSuccess = function ($event, widget) {
-    // Fetch logged-in user details after successful login
-    App.Variables.svGetLoggedInUserDetails.invoke();
+  // Example: Fetch details of the logged-in user
+  App.Variables.svGetLoggedInUserDetails.invoke();
 
-    // Optional: Redirect to another page or perform additional actions
-    App.Actions.goToPage_Home.invoke();
+  // Optional: Perform additional actions after successful login, e.g., navigate to the home page
+  App.Actions.goToPage_Home.invoke();
 };
 ```
