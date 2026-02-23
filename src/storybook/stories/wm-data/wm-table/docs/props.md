@@ -78,7 +78,7 @@
               | **Content** |  |  |  |
               | `content` | string | - | Content (Partial) to be loaded on row expansion. |
               | **Behavior** |  |  |  |
-              | `component` | string | "button" | Content (Partial) to be loaded on row expansion. |
+              | `component` | string | "button" | Select a component from the list of available components. The selected component will be displayed in the table column. |
               | `expandtitle` | string | - | Expand title against the field. |
               | `collapsetitle` | string | - | Collapse title against the field. |
               | `position` | string | "0" | This property determines the position of the expand/collapse icon column. A value of "0" places the column at the beginning of the table, while "-1" places it at the end. |

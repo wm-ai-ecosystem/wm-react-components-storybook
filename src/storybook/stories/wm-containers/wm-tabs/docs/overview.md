@@ -30,14 +30,14 @@ Page.Widgets.tabs.tabsposition = "left";
 - The tab pane has a configurable content property which determines the partial page displayed inside it. This property can be set in the markup or dynamically via script.
 
 ```javascript
-<wm-tabpane content="bind:Variables.loggedInUser.dataSet.role == &quot;admin&quot; ? &quot;partialEditLatestVersion&quot; : &quot;partialLatestVersion&quot;" title="Latest Version" name="tabpaneLatestVersion"></wm-tabpane>
+<wm-tabpane content="bind:Variables.loggedInUser.dataSet.role == &quot;ADMIN&quot; ? &quot;partialEditLatestVersion&quot; : &quot;partialLatestVersion&quot;" title="Latest Version" name="tabpaneLatestVersion"></wm-tabpane>
 ```
 
 ```javascript
 // Dynamically load a partial based on the logged-in user's role
 // - Editable version for admins
 // - Read-only version for other users
-Page.Widgets.tabpaneLatestVersion.content = App.Variables.loggedInUser.dataSet.role === "Admin" ? "partialEditLatestVersion" : "partialLatestVersion";
+Page.Widgets.tabpaneLatestVersion.content = App.Variables.loggedInUser.dataSet.role === "ADMIN" ? "partialEditLatestVersion" : "partialLatestVersion";
 ```
 
 #### Events

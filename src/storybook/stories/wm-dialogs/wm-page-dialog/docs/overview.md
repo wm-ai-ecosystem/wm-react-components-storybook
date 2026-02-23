@@ -5,55 +5,67 @@ The **Page Dialog** is a modal popup that displays the content of a page within 
 ### Markup
 
 ```javascript
-<wm-pagedialog name="pagedialog" content="partialArtifacts" on-ok="Widgets.pagedialog.close()"></wm-pagedialog>
+<wm-pagedialog on-ok="Widgets.pagedialog.close()" name="pagedialog"></wm-pagedialog>
 ```
 
 ### Examples
 
 #### Properties 
 
-- Sets the title displayed for the page dialog.
+- This page dialog has a configurable title property that determines the text displayed in the dialog header. The title can be set directly in the markup or updated dynamically via script.
 
 ```javascript
-// Set the title of the login dialog to indicate session expiration
+<wm-pagedialog title="Artifacts" name="pagedialog"></wm-pagedialog>
+```
+
+```javascript
+// Set the title of the page dialog dynamically
 Page.Widgets.pagedialog.title = "Artifacts";
 ```
 
-- Controls whether the page dialog shows the action buttons and controls its appearance behavior.
+- This page dialog has a configurable showactions property that determines whether the action buttons are displayed. The property can be set directly in the markup or updated dynamically via script.
 
 ```javascript
-// Disable the default action buttons (like OK/Cancel) in the page dialog
+<wm-pagedialog showactions="false" name="pagedialog"></wm-pagedialog>
+```
+
+```javascript
+// Disable the default action buttons in the page dialog dynamically
 Page.Widgets.dialog.showactions = false;
 ```
 
 #### Events 
 
-- Triggered when the page dialog content is loaded.
+- This is the markup for a page dialog with an on-load event, executed when the dialog content is loaded.
+
+```javascript
+<wm-pagedialog on-load="pagedialogLoad(widget)" name="pagedialog"></wm-pagedialog>
+```
 
 ```javascript
 Page.pagedialogLoad = function (widget) {
   // Dynamically set the dialog content based on the selected item
-  widget.content =
-    Page.Widgets.pageSelectionList.selecteditem.name === "Artifacts"
+  widget.content = Page.Widgets.pageSelectionList.selecteditem.name === "Artifacts"
       ? "partialArtifacts" // Load partial page for Artifacts
       : "partialHero"; // Load partial page for Hero
 
-   // Set the dialog title dynamically to reflect the loaded content
-  widget.title =
-    widget.content === "partialArtifacts" ? "Artifact Details" : "Hero Details";
+  // Optionally, set the dialog title dynamically to reflect the loaded content
+  widget.title = widget.content === "partialArtifacts" ? "Artifact Details" : "Hero Details";
 };
 ```
 
 #### Methods
 
-- Opens the page dialog.
+- This method opens the page dialog programmatically.
 
 ```javascript
+// Open the page dialog and display it to the user
 Page.Widgets.pagedialog.open();
 ```
 
-- Closes the page dialog.
+- This method closes the page dialog programmatically.
 
 ```javascript
+// Close the page dialog and hide it from the user
 Page.Widgets.pagedialog.close();
 ```

@@ -5,52 +5,57 @@ The **Iframe Dialog** is a dialog component that displays content from an extern
 ### Markup
 
 ```javascript
-<wm-iframedialog name="iframedialog" on-ok="Widgets.iframedialog.close()" class="modal-dialog modal-xs"
-variant="default:xs"></wm-iframedialog>
+<wm-iframedialog on-ok="Widgets.iframedialog.close()" name="iframedialog" class="modal-dialog modal-xs" variant="default:xs"></wm-iframedialog>
 ```
 
 ### Examples
 
 #### Properties 
 
-- Sets the title displayed for the iframe dialog.
+- This iframe dialog has a configurable title property that determines the text displayed in the dialog header. The title can be bound to localized messages (i18N) for multi-language support and can be set either in the markup or updated dynamically via script.
 
 ```javascript
-Page.Widgets.iframedialog.title = "External Content";
+<wm-iframedialog title="bind:appLocale.LBL_EXTERNAL_CONTENT" name="iframedialog"></wm-iframedialog>
 ```
 
-- Controls the animation used when the iframe dialog appears.
-
 ```javascript
-Page.Widgets.dialog.animation = "flash";
+// Set the iframe dialog title dynamically using a localized message (i18N)
+Page.Widgets.iframedialog.title = Page.appLocale.LBL_EXTERNAL_CONTENT;
+//Page.Widgets.iframedialog.title = "External Content";
 ```
 
 #### Events 
 
-- Triggered on iframe dialog open.
+- This is the markup for an iframe dialog with an on-opened event, executed when the dialog is displayed.
+
+```javascript
+<wm-iframedialog on-opened="iframedialogOpened($event, widget)" name="iframedialog"></wm-iframedialog>
+```
 
 ```javascript
 Page.iframedialogOpened = function ($event, widget) {
-    // Dynamically set the iframe URL based on the selected module
-    widget.url = Page.Widgets.moduleList.selecteditem.type === "API"
-        ? "https://docs.example.com/api-guide"
-        : "https://docs.example.com/user-guide";
+  // Example: Dynamically set the iframe URL based on the selected module
+  widget.url = Page.Widgets.moduleList.selecteditem.type === "API"
+      ? "https://docs.example.com/api-guide"
+      : "https://docs.example.com/user-guide";
 
-    // Optionally, set the dialog title dynamically
-    widget.title = "Documentation - " + Page.Widgets.moduleList.selecteditem.name;
+  // Optionally, dynamically set the dialog title based on selected module
+  widget.title = "Documentation - " + Page.Widgets.moduleList.selecteditem.name;
 };
 ```
 
 #### Methods
 
-- Opens the iframe dialog.
+- This method opens the iframe dialog programmatically.
 
 ```javascript
+// Open the iframe dialog and display it to the user
 Page.Widgets.iframedialog.open();
 ```
 
-- Closes the iframe dialog.
+- This method closes the iframe dialog programmatically.
 
 ```javascript
+// Close the iframe dialog and hide it from the user
 Page.Widgets.iframedialog.close();
 ```

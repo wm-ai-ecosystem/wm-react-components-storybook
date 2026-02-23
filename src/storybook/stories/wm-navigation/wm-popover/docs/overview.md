@@ -5,57 +5,93 @@ The **Popover** component is a lightweight UI component used to display addition
 ### Markup
 
 ```javascript
-<wm-popover
-  popoverwidth="240"
-  popoverheight="360"
-  margin="unset 0.5em"
-  name="popover"
-  contentsource="partial"
-  content="partialUserProfiles"
-></wm-popover>
+<wm-popover popoverwidth="240" popoverheight="360" margin="unset 0.5em" name="popover" variant="standard"></wm-popover>
 ```
 
 ### Examples
 
 #### Properties 
 
-- Sets the caption displayed for the Popover.
+- This popover sets the caption text displayed for the popover and the title text displayed for the popover content, both of which can be configured in the markup or dynamically via script.
 
 ```javascript
+<wm-popover caption="User Profiles" title="User Details" name="popover"></wm-popover>
+```
+
+```javascript
+// Set the popover caption text dynamically
 Page.Widgets.popover.caption = "User Profiles";
+
+// Set the popover content title text dynamically
+Page.Widgets.popover.title = "User Details";
 ```
 
-- Controls whether an arrow is displayed pointing from the Popover to its trigger element.
+- This popover has a configurable content property that determines which partial is rendered inside it when the content source is set to partial. The partial can be specified in the markup or dynamically via script.
 
 ```javascript
-// When false, displays the popover without an arrow
-Page.Widgets.popover.popoverarrow = false;
+<wm-popover contentsource="partial" content="partialEmployees" name="popover"></wm-popover>
 ```
+
+```javascript
+// Set the partial content to be rendered inside the Popover dynamically
+Page.Widgets.popover.content = "partialEmployees";
+```
+
+- This popover supports inline content, where WaveMaker components or custom HTML can be placed directly as content inside the popover markup when the content source is set to inline.
+
+```javascript
+<wm-popover contentsource="inline" name="popover">
+    <wm-label padding="unset" caption="Popover Inline Content" class="p" type="p" name="label" variant="default:p"></wm-label>
+</wm-popover>
+```
+
 
 #### Events 
 
-- Triggered when the notifications popover is shown.
+- This is the markup for a popover with an on-show event, executed when the popover content is displayed.
+
+```javascript
+<wm-popover on-show="popoverShow($event, widget)" contentsource="partial" content="partialEmployees" name="popover"></wm-popover>
+```
 
 ```javascript
 Page.popoverShow = function ($event, widget) {
-    // Fetch the latest notifications from the server when popover opens
-    Page.Variables.getNotifications.invoke();
+  // Example: Invoke variables or access components from the loaded partial
+  if (App.Variables.loggedInUser.dataSet.role === "Admin") {
+    // Invoke a variable defined inside the partial
+    widget.Variables.svGetEmployeesDetails.invoke();
+  }
+
+  // Components inside the partial can also be accessed if needed
+  // Example: widget.Widgets.EmployeeList.show
 };
 ```
 
-- Triggered when the notifications popover is hidden.
+- This is the markup for a popover with an on-hide event, executed when the popover content is hidden.
+
+```javascript
+<wm-popover on-hide="popoverHide($event, widget)" name="popover"></wm-popover>
+```
 
 ```javascript
 Page.popoverHide = function ($event, widget) {
-    // Mark notifications as read or log the closing event
-    Page.Variables.markNotificationsRead.invoke();
+  // Example: Mark notifications as read or perform any cleanup
+  Page.Variables.svMarkNotificationsRead.invoke();
 };
 ```
 
 #### Methods 
 
-- Opens the popover and displays its content.
+- This method opens the popover programmatically and displays its content.
 
 ```javascript
+// Open the Popover and display its content
 Page.Widgets.popover.open();
+```
+
+- This method closes the popover programmatically and hides its content.
+
+```javascript
+// Close the Popover and hide its content
+Page.Widgets.popover.close();
 ```

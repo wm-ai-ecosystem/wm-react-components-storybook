@@ -1,7 +1,7 @@
 # Methods
 
 <details open>
-  <summary>Methods</summary>
+  <summary>Table Methods</summary>
     <div>
         | Method | Parameters | Return Type | Description |
         |--------|------------|------------|-------------|
@@ -17,6 +17,20 @@
         | `cancelRow` | None | void | To cancel a row edit (applicable to inline and quick edit data tables alone). |
         | `deleteRow` | None | void | To delete a row (applicable to inline and quick edit data tables alone). |
         | `hideEditRow` | None | void | To hide the edit row and go back to view mode (applicable to inline and quick edit data tables alone). |
+    </div>
+</details>
+
+<details>
+  <summary>Table Summary Row Methods</summary>
+    <div>
+        | Method | Parameters | Return Type | Description |
+        |--------|------------|------------|-------------|
+        | `sum` | None | Number | Calculates the total sum of all values in the column. |
+        | `average` | None | Number | Calculates the average (mean) value of the column. |
+        | `count` | None | Number | Returns the total number of rows available for the column. |
+        | `minimum` | None | Number | Returns the smallest value present in the column. |
+        | `maximum` | None | Number | Returns the largest value present in the column. |
+        | `percent` | None | Number | Calculates the percentage value based on the column’s total. |
     </div>
 </details>
 

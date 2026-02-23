@@ -7,25 +7,25 @@ The **Login Dialog** is a modal popup used to authenticate users within the appl
 ```javascript
 <wm-logindialog modal="false" caption="Login" iconclass="wi wi-sign-in" name="logindialog" class="modal-dialog modal-xs"
     variant="default:xs">
-    <wm-form errormessage="" captionposition="top" name="form1">
+    <wm-form errormessage="" captionposition="top" name="form">
         <wm-message scopedataset="loginMessage" class="app-login-dialog-message" name="message"></wm-message>
-        <wm-composite name="composite1">
-            <wm-label caption="Username" class="col-md-3 control-label" name="label1"></wm-label>
-            <wm-container class="col-md-9" name="container1">
+        <wm-composite name="composite4">
+            <wm-label caption="Username" class="col-md-3 control-label" name="labelUserName"></wm-label>
+            <wm-container class="col-md-9" name="container3">
                 <wm-text placeholder="Enter username" class="app-login-dialog-username" name="j_username"
                     updateon="default"></wm-text>
             </wm-container>
         </wm-composite>
-        <wm-composite name="composite2">
-            <wm-label caption="Password" class="col-md-3 control-label" name="label2"></wm-label>
-            <wm-container class="col-md-9" name="container2">
+        <wm-composite name="composite5">
+            <wm-label caption="Password" class="col-md-3 control-label" name="labelPassword"></wm-label>
+            <wm-container class="col-md-9" name="container4">
                 <wm-text type="password" placeholder="Enter password" class="app-login-dialog-password"
                     name="j_password" updateon="default"></wm-text>
             </wm-container>
         </wm-composite>
     </wm-form>
-    <wm-dialogactions name="dialogactions1">
-        <wm-button class="btn-primary btn-filled" caption="Sign in" data-role="loginbutton" name="button3">
+    <wm-dialogactions name="dialogactions">
+        <wm-button class="btn-primary btn-filled" caption="Sign in" data-role="loginbutton" name="buttonLogin">
         </wm-button>
     </wm-dialogactions>
 </wm-logindialog>
@@ -35,58 +35,66 @@ The **Login Dialog** is a modal popup used to authenticate users within the appl
 
 #### Properties 
 
-- Sets the title displayed for the login dialog.
+- This login dialog has a configurable title property that controls the text shown in the dialog header. The title can be set in the markup or updated dynamically via script.
+
+```javascript
+<wm-logindialog title="Session Expired – Please Log In Again" name="logindialog"></wm-logindialog>
+```
 
 ```javascript
 // Set the title of the login dialog to indicate session expiration
 Page.Widgets.logindialog.title = "Session Expired – Please Log In Again";
 ```
 
-- Controls the animation used when the iframe dialog appears.
-
-```javascript
-Page.Widgets.dialog.animation = "fadeIn";
-```
-
 #### Events 
 
-- Triggered on login dialog open.
+- This is the markup for a login dialog with an on-opened event, executed when the login dialog is displayed.
+
+```javascript
+<wm-logindialog on-opened="logindialogOpened($event, widget)" name="logindialog"></wm-logindialog>
+```
 
 ```javascript
 Page.logindialogOpened = function ($event, widget) {
-    // Display a contextual message if the user was redirected due to session expiration
-    Page.Widgets.message.caption = "Your session has expired. Please log in again to continue.";
+  // Example: Show a message explaining why the login dialog was opened
+  Page.Widgets.message.caption = "Your session has expired. Please log in again to continue.";
 
-    // Optionally, prefill the username from local storage or previous session
-    Page.Widgets.j_username.datavalue = localStorage.getItem("lastLoggedInUser") || "";
+  // Example: Pre-fill the username field using data from a previous session
+  Page.Widgets.j_username.datavalue = localStorage.getItem("lastLoggedInUser") || "";
 };
 ```
 
-- Triggered when login succeeds.
+- This is the markup for a login dialog with an on-success event, executed when the user logs in successfully.
+
+```javascript
+<wm-logindialog on-success="logindialogSuccess($event, widget)" name="logindialog"></wm-logindialog>
+```
 
 ```javascript
 Page.logindialogSuccess = function ($event, widget) {
-    // Fetch logged-in user details after successful login
-    App.Variables.svGetLoggedInUserDetails.invoke();
+  // Example: Invoke a service or variable to fetch details of the logged-in user
+  App.Variables.svGetLoggedInUserDetails.invoke();
 
-     // Close the login dialog after successful authentication
-    Page.Widgets.logindialog.close();
+  // Close the login dialog after successful authentication
+  Page.Widgets.logindialog.close();
 
-     // Optional: You can add additional post-login logic here, 
-    // such as navigating to a dashboard or showing a welcome message
+  // Additional post-login logic can be added here
+  // For example: navigate to a dashboard or display a welcome message
 };
 ```
 
 #### Methods
 
-- Opens the login dialog.
+- This method opens the login dialog programmatically.
 
 ```javascript
+// Open the login dialog and display it to the user
 Page.Widgets.logindialog.open();
 ```
 
-- Closes the login dialog.
+- This method closes the login dialog programmatically.
 
 ```javascript
+// Close the login dialog and hide it from the user
 Page.Widgets.logindialog.close();
 ```

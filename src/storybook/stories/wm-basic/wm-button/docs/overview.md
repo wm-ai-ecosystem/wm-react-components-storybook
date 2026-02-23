@@ -13,15 +13,18 @@ A **Button** indicates a possible user action. The button provides a styled clic
 
 #### Properties
 
-- This button displays a caption (text), which can be set directly in the markup or updated dynamically via script.
+- This button displays a caption (text), which can be set directly in the markup or updated dynamically via script. The caption can also be bound to localized messages (i18N) for multi-language support.
 
 ```javascript
-<wm-button caption="WaveMaker" name="button"></wm-button>
+<wm-button caption="bind:appLocale.LABEL_APPLICATION_NAME" name="button"></wm-button>
 ```
 
 ```javascript
-// Set or update the button's caption dynamically
-Page.Widgets.button.caption = "WaveMaker";
+// Set or update the button's caption dynamically using a localized message (i18N)
+Page.Widgets.button.caption = Page.appLocale.LABEL_APPLICATION_NAME;
+
+// Alternatively, set a static caption directly
+// Page.Widgets.button.caption = "WaveMaker";
 ```
 
 - This button displays an icon using an image, with customizable width, height, and margin that can be set in the markup or dynamically via script.

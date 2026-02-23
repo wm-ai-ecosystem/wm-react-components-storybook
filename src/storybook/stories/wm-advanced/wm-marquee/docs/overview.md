@@ -14,9 +14,13 @@
 
 #### Properties 
 
-- Control the scrolling speed of the marquee text.
+- This marquee has configurable scroll delay and direction properties that determine the scrolling speed and direction of the text, which can be set directly in the markup.
 
 ```javascript
+<wm-marquee scrolldelay="200" direction="left" name="marquee"></wm-marquee>
+```
+
+<!-- ```javascript
 // Sets the delay (in milliseconds) between each scroll movement.
 // Higher values result in slower scrolling.
 Page.Widgets.marquee.scrolldelay = 200;
@@ -28,4 +32,4 @@ Page.Widgets.marquee.scrolldelay = 200;
 // Controls the direction in which the marquee text scrolls.
 // Possible values: "left", "right", "up", "down".
 Page.Widgets.marquee.direction = "right";
-```
+``` -->

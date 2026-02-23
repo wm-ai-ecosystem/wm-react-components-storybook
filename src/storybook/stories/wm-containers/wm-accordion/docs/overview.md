@@ -7,9 +7,9 @@ The **Accordion** component contains multiple panes where developers can add int
 ```javascript
 <wm-accordion type="static" statehandler="URL" name="accordion" class="app-accordion panel panel-default"
     variant="default:default">
-    <wm-accordionpane name="accordionpaneUser" class="panel panel-default" variant="default:default"></wm-accordionpane>
-    <wm-accordionpane name="accordionpaneEmp" class="panel panel-default" variant="default:default"></wm-accordionpane>
-    <wm-accordionpane name="accordionpaneDept" class="panel panel-default" variant="default:default"></wm-accordionpane>
+    <wm-accordionpane name="accordionpaneUser"></wm-accordionpane>
+    <wm-accordionpane name="accordionpaneEmp"></wm-accordionpane>
+    <wm-accordionpane name="accordionpaneDept"></wm-accordionpane>
 </wm-accordion>
 ```
 

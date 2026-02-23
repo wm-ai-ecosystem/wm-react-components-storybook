@@ -14,8 +14,8 @@ The **Design Dialog** is a flexible dialog component that appears on top of the 
         <wm-label padding="unset 0.5em" caption="Title" name="label3"></wm-label>
         <wm-label padding="unset 0.5em" caption="Engineer" name="label4"></wm-label>
     </wm-container>
-    <wm-dialogactions name="dialogactions">
-        <wm-button class="btn-primary btn-filled" caption="Close" on-click="closeDialog()" name="button3">
+    <wm-dialogactions name="dialogactions1">
+        <wm-button class="btn-primary btn-filled" caption="Close" on-click="closeDialog()" name="button1">
         </wm-button>
     </wm-dialogactions>
 </wm-dialog>
@@ -25,51 +25,63 @@ The **Design Dialog** is a flexible dialog component that appears on top of the 
 
 #### Properties 
 
-- Sets the title displayed for the dialog.
+- This is the markup for a dialog that displays a combined string as the dialog title using dynamic data from other components, such as a selected item from a list, which can be set either in the markup or dynamically via script.
 
 ```javascript
-Page.Widgets.dialog.title = "S3 Bucket Configuration";
+<wm-dialog title="bind:Widgets.listArtifactsForSpace.selecteditem.title + &quot; - &quot; + &quot;Thumbnail Image&quot;" dialogtype="design-dialog" name="dialog"></wm-dialog>
 ```
 
-- Controls the animation used when the dialog appears.
-
 ```javascript
-Page.Widgets.dialog.animation = "pulse";
+// Set the dialog title dynamically by combining selected item data with static text
+Page.Widgets.dialog.title = Page.Widgets.listArtifactsForSpace.selecteditem.title + " - " + "Thumbnail Image";
 ```
 
 #### Events 
 
-- Triggered on dialog open.
+- This is the markup for a dialog with an on-opened event, executed when the dialog is opened, either by invoking a direct action in the markup (such as calling a variable) or by handling the event through a handler function to perform additional logic when the dialog is displayed.
+
+```javascript
+<wm-dialog on-opened="Variables.svGetDomainDetails.invoke()" dialogtype="design-dialog" name="dialog"></wm-dialog>
+```
+
+```javascript
+<wm-dialog on-opened="dialogOpened($event, widget)" dialogtype="design-dialog" name="dialog"></wm-dialog>
+```
 
 ```javascript
 Page.dialogOpened = function ($event, widget) {
-    // Setting form validators on dialog open. 
-    // The dialog contains a form component with input fields, and validators are applied dynamically at runtime.
-    
-    Page.Widgets.domainSettingsForm.formWidgets.domainUrl.setValidators([{
-        type: VALIDATOR.REQUIRED,
-        validator: true,
-        errorMessage: "Please enter the domain url"
+  // Example: Dynamically set form validators inside the dialog
+  // The dialog contains a form component with input fields, and validators are applied at runtime
+
+  var VALIDATOR = App.getDependency('CONSTANTS').VALIDATOR;
+
+  Page.Widgets.domainSettingsForm.formWidgets.domainUrl.setValidators([
+    {
+      type: VALIDATOR.REQUIRED,
+      validator: true,
+      errorMessage: "Please enter the domain url",
     },
     {
-        type: VALIDATOR.REGEXP,
-        validator: /^[A-Za-z](?:[A-Za-z0-9\-]*[A-Za-z0-9])?$/,
-        errorMessage: "Use letters, numbers, or hyphens. Must start with a letter, no ending hyphen, no spaces"
-    }
-    ]);
+      type: VALIDATOR.REGEXP,
+      validator: /^[A-Za-z](?:[A-Za-z0-9\-]*[A-Za-z0-9])?$/,
+      errorMessage: "Use letters, numbers, or hyphens. Must start with a letter, no ending hyphen, no spaces",
+    },
+  ]);
 };
 ```
 
 #### Methods
 
-- Opens the confirm dialog.
+- This method opens the dialog programmatically.
 
 ```javascript
+// Open the dialog and display it to the user
 Page.Widgets.dialog.open();
 ```
 
-- Closes the confirm dialog.
+- This method closes the dialog programmatically.
 
 ```javascript
+// Close the dialog and hide it from the user
 Page.Widgets.dialog.close();
 ```

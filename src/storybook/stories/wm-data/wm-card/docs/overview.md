@@ -7,23 +7,8 @@ The **Card** component is a flexible UI element for displaying content like titl
 ```javascript
 <wm-card name="card" class="app-card card-default" variant="default">
     <wm-card-content fontsize="0.8" fontunit="em" name="card_content">
-        <wm-container direction="column" alignment="middle-center" gap="8" width="280" wrap="false" padding="12px"
-            class="app-container-default" variant="default" name="container8">
-            <wm-picture resizemode="cover" class="img-rounded" variant="default:rounded" width="100%"
-                picturesource="resources/images/imagelists/login-bg.jpg" name="Picture"></wm-picture>
-            <wm-container direction="column" alignment="top-left" gap="4" width="fill" wrap="false"
-                class="app-container-default" variant="default" name="container9">
-                <wm-label padding="unset" caption="Item Title" class="h5 p" type="p"
-                    variant="default:p" show="true" required="required" name="Title"></wm-label>
-            </wm-container>
-            <wm-container direction="row" alignment="middle-right" gap="4" width="fill" class="app-container-default"
-                variant="default" height="hug" name="container10">
-                <wm-button class="btn-transparent" caption="" type="button" margin="unset" variant="transparent"
-                    name="buttonEdit" iconclass="wi wi-mode-edit"></wm-button>
-                <wm-button class="btn-transparent" caption="" type="button" margin="unset" variant="transparent"
-                    name="buttonDelete" iconclass="wi wi-delete"></wm-button>
-            </wm-container>
-        </wm-container>
+        <wm-container direction="row" alignment="top-left" gap="4" width="280px" class="app-container-default"
+            variant="default" height="260px" name="Blank" padding="12px"></wm-container>
     </wm-card-content>
 </wm-card>
 ```
@@ -32,74 +17,85 @@ The **Card** component is a flexible UI element for displaying content like titl
 
 #### Properties 
 
-- Sets or updates the title of the Card component.
+- This card displays a title (text) in its header, which can be set directly in the markup or updated dynamically via script.
 
 ```javascript
-Page.Widgets.card.title = "Products";
+<wm-card title="Card" name="card"></wm-card>
 ```
 
-- Applies an entry animation to the Card component when it is rendered.
+```javascript
+// Set or update the Card's title dynamically
+Page.Widgets.card.title = "Card";
+```
+
+- This card displays an image, where the image source and its title can be set directly in the markup or updated dynamically via script.
 
 ```javascript
-Page.Widgets.card.animation = "bounceIn";
+<wm-card picturesource="resources/images/imagelists/default-image.png" picturetitle="Card Image" name="card"></wm-card>
+```
+
+```javascript
+// Set or update the Card image source and image title dynamically
+Page.Widgets.card.picturesource = "resources/images/imagelists/default-image.png";
+Page.Widgets.card.picturetitle = "Card Image";
 ```
 
 #### Events 
 
-- Triggered when a standalone Card component (not placed inside a List) is clicked.
+- This is the markup for a standalone Card component with an on-click event, executed whenever the user clicks on the Card (when it is not placed inside a List Component).
+
+```javascript
+<wm-card on-click="cardClick($event, widget)" name="card"></wm-card>
+```
 
 ```javascript
 Page.cardClick = function ($event, widget) {
-    // Example: Toggle visibility of a details panel for this card
+  // Verify that the click was triggered by a direct user interaction
+  if ($event.type === "click") {
+    // Toggle the visibility of a related details panel for this Card
     Page.Widgets.cardDetailsPanel.show = !Page.Widgets.cardDetailsPanel.show;
 
-    // Optionally, call a service to fetch related information
-    Page.Variables.getDashboardMetrics.invoke();
+    // Optionally invoke a service to load or refresh data related to this Card
+    Page.Variables.svGetDashboardMetrics.invoke();
+  }
 };
 ```
 
-- Triggered when a Card component inside a List is clicked.
+- This is the markup for a card component placed inside a List with an on-click event, executed whenever a user clicks a Card rendered from the List’s dataset. (This is the standard structure of Cards when dragged onto the design canvas.)
 
 ```javascript
-Page.cardClick = function ($event, widget, item, currentItemWidgets) {
-    // Assign the clicked item's productId to an app-level variable
-    App.Variables.reportConfig.dataSet.productId = item.productId;
-
-    // Optionally, pass the productId as a page parameter while navigating
-    App.Actions.goToPage_ProductsDetails.invoke();
-};
-```
-
-
-
-
-
-<!-- ```javascript
-<wm-list listclass="list-group" template="true" template-name="Media Card" itemsperrow="auto" class="list-card"
-    statehandler="URL" name="stvCardsDataList" dataset="bind:Variables.stvCardsData.dataSet" navigation="Basic"
+<wm-list listclass="list-group" template="true" template-name="Blank Card" itemsperrow="auto" class="list-card"
+    statehandler="URL" name="stvProductsList" dataset="bind:Variables.stvProductsList.dataSet" navigation="Basic"
     variant="standard">
     <wm-listtemplate layout="media" name="listtemplate">
-        <wm-card name="card" class="app-card card-default" variant="default">
+        <wm-card name="card" class="app-card card-default" variant="default"
+            on-click="cardClick($event, widget, item, currentItemWidgets)">
             <wm-card-content fontsize="0.8" fontunit="em" name="card_content">
-                <wm-container direction="column" alignment="middle-center" gap="8" width="280" wrap="false"
-                    padding="12px" class="app-container-default" variant="default" name="container8">
-                    <wm-picture resizemode="cover" class="img-rounded" variant="default:rounded" width="100%"
-                        picturesource="bind:Widgets.stvCardsDataList.currentItem.image" name="Picture"></wm-picture>
-                    <wm-container direction="column" alignment="top-left" gap="4" width="fill" wrap="false"
-                        class="app-container-default" variant="default" name="container9">
-                        <wm-label padding="unset" caption="bind:Variables.stvCardsData.dataSet[$i].title" class="h5 p"
-                            type="p" variant="default:p" show="true" required="required" name="Title"></wm-label>
-                    </wm-container>
-                    <wm-container direction="row" alignment="middle-right" gap="4" width="fill"
-                        class="app-container-default" variant="default" height="hug" name="container10">
-                        <wm-button class="btn-transparent" caption="" type="button" margin="unset" variant="transparent"
-                            name="buttonEdit" iconclass="wi wi-mode-edit"></wm-button>
-                        <wm-button class="btn-transparent" caption="" type="button" margin="unset" variant="transparent"
-                            name="buttonDelete" iconclass="wi wi-delete"></wm-button>
-                    </wm-container>
-                </wm-container>
+                <wm-container direction="row" alignment="top-left" gap="4" width="280px" class="app-container-default"
+                    variant="default" height="260px" name="Blank" padding="12px"></wm-container>
             </wm-card-content>
         </wm-card>
     </wm-listtemplate>
 </wm-list>
-``` -->
+```
+
+```javascript
+Page.cardClick = function ($event, widget, item, currentItemWidgets) {
+  // Access the data object associated with the clicked Card (current list item) store its productId in an app-level variable
+  App.Variables.reportConfig.dataSet.productId = item.productId;
+
+  // Optionally, pass the selected productId as a page parameter during navigation.
+  // Refer to the WaveMaker documentation for details on passing page parameters to a page or a partial.
+  App.Actions.goToPage_ProductsDetails.invoke();
+
+
+  // currentItemWidgets contains all components inside this Card within the List
+  // Examples: labels, buttons, containers, etc.
+  // Note: currentItem and currentItemWidgets cannot be accessed globally in the script
+  // They are provided as parameters for events of components inside a List template
+  // The current item's data is available as the `item` argument
+  
+  // Example: Update a label's caption inside the clicked Card
+  // currentItemWidgets.label.caption = "Updated Caption";
+};
+```

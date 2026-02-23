@@ -22,49 +22,63 @@ The **Carousel** component is a responsive slider component used to display cont
 
 #### Properties 
 
-- Configure carousel controls.
+- This carousel has a configurable controls property that determines the type of navigation controls displayed (navs, indicators, both or none), which can be set in the markup or dynamically via script.
 
 ```javascript
-// Sets the type of navigation controls displayed on the carousel.
-Page.Widgets.carousel.controls = "indicators";
+<wm-carousel controls="both" name="carousel"></wm-carousel>
 ```
 
-- Control slide animation timing.
+```javascript
+// Set the type of navigation controls for the carousel dynamically
+Page.Widgets.carousel.controls = "both";
+```
+
+- This carousel has configurable animation and animationinterval properties to control slide transitions, which can be set in the markup or dynamically via script.
 
 ```javascript
-// Sets the time interval (in seconds) between automatic slide transitions.
+<wm-carousel animation="auto" animationinterval="5" name="carousel"></wm-carousel>
+```
+
+```javascript
+// Set the carousel to advance slides automatically
 Page.Widgets.carousel.animation = "auto";
+
+// Set the time interval (in seconds) between automatic slide transitions
 Page.Widgets.carousel.animationinterval = 5;
 ```
 
 #### Events 
 
-- Triggered when the active carousel slide changes.
+- This is the markup for a carousel with an on-change event, executed when the active slide changes.
+
+```javascript
+<wm-carousel on-change="carouselChange(widget, newIndex, oldIndex)" name="carousel"></wm-carousel>
+```
 
 ```javascript
 Page.carouselChange = function (widget, newIndex, oldIndex) {
-    /*
-     * Triggered when the active slide in the carousel changes.
-     *
-     * newIndex  : Index of the newly active slide
-     * oldIndex  : Index of the previously active slide
-     *
-     * For dynamic carousels:
-     * widget.currentslide  -> Data object of the active slide
-     * widget.previousslide -> Data object of the previous slide
-     */
+  /*
+   * Triggered when the active slide in the carousel changes.
+   *
+   * newIndex  : Index of the newly active slide
+   * oldIndex  : Index of the previously active slide
+   *
+   * For dynamic carousels:
+   * widget.currentslide  -> Data object of the active slide
+   * widget.previousslide -> Data object of the previous slide
+   */
 
-    // Example use case: E-commerce promotional banner carousel
+  // Example use case: E-commerce promotional banner carousel
 
-    // Track which promotional banner is currently viewed
-    const activeBanner = widget.currentslide;
+  // Track which promotional banner is currently viewed
+  const activeBanner = widget.currentslide;
 
-    // Log analytics for banner impression
-    Page.Variables.svTrackBannerView.setInput("bannerId", activeBanner.id);
-    Page.Variables.svTrackBannerView.invoke();
+  // Log analytics for banner impression
+  Page.Variables.svTrackBannerView.setInput("bannerId", activeBanner.id);
+  Page.Variables.svTrackBannerView.invoke();
 
-    // Update related UI content based on the active slide
-    Page.Widgets.promoTitle.caption = activeBanner.title;
-    Page.Widgets.promoDescription.caption = activeBanner.description;
+  // Update related UI content based on the active slide
+  Page.Widgets.promoTitle.caption = activeBanner.title;
+  Page.Widgets.promoDescription.caption = activeBanner.description;
 };
 ```
